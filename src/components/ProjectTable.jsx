@@ -1,50 +1,54 @@
-import React, { useState } from "react";
-import DataTable from "datatables.net-react";
-import DT from 'datatables.net-dt';
-DataTable.use(DT);
-
-
+import React from "react";
+import {DataGrid} from "@mui/x-data-grid";
 
 export default function ProjectTable({ projects }) {
-   const dataTableOptions = {
-    //scrollX: "2000px",
-    lengthMenu: [5, 10, 15, 20, 100, 200, 500],
-    columnDefs: [
-        { className: "centered", targets: [0, 1, 2, 3, 4, 5, 6] },
-        { orderable: false, targets: [5, 6] },
-        { searchable: false, targets: [1] }
-        //{ width: "50%", targets: [0] }
-    ],
-    pageLength: 3,
-    destroy: true,
-    language: {
-        lengthMenu: "Mostrar _MENU_ registros por página",
-        zeroRecords: "Ningún usuario encontrado",
-        info: "Mostrando de _START_ a _END_ de un total de _TOTAL_ registros",
-        infoEmpty: "Ningún usuario encontrado",
-        infoFiltered: "(filtrados desde _MAX_ registros totales)",
-        search: "Buscar:",
-        loadingRecords: "Cargando...",
 
-    }
+  const handleVerMas = (row) => {
+  console.log("Proyecto seleccionado:", row);
+  // Puedes navegar, abrir un modal, etc.
 };
 
-  return (
-    <>
-      <div>
-        <DataTable className="display" options={dataTableOptions}> 
-          <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>Estado</th>
-            </tr>
-           
-          </thead>
+  // Define columnas, ajusta los campos según tus datos reales
+  const columns = [
+    { field: "proyectoId", headerName: "ID", width: 70 },
+    { field: "nombre", headerName: "Nombre", width: 200 },
+    { field: "descripcion", headerName: "Descripción", width: 300 },
+    {
+      field: "estatus",
+      headerName: "Estado",
+      width: 130,
+        resizable: false,
+      // Opcional: mostrar 'Activo' o 'Inactivo' según booleano
+      valueFormatter: (params) => (params.value ? "Activo" : "Inactivo"),
+    },
+    {
+    field: 'acciones',
+    headerName: 'Acciones',
+    width: 150,
+    sortable: false,
+    filterable: false,
+    renderCell: (params) => (
+      <button onClick={() => handleVerMas(params.row)}>Ver más</button>
+    ),
+  },
+  ];
 
-        </DataTable>
-      </div>
-    </>
-    
+  return (
+    <div style={{ height: 500, width: "100%" }}>
+      <DataGrid
+        rows={projects}
+        columns={columns}
+        pageSize={5}
+        rowsPerPageOptions={[5, 10, 20]}
+        pagination
+        disableSelectionOnClick // Esto evita que se seleccione la fila al hacer clic
+        checkboxSelection={false}
+        isRowSelectable={() => false}
+        showToolbar
+        getRowId={(row) => row.proyectoId} // Aquí le dices que use proyectoId como id único
+        disableColumnMenu 
+      />
+    </div>
   );
-  
 }
+
