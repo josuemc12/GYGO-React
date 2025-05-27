@@ -1,9 +1,7 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -11,16 +9,6 @@ function App() {
   return (
     <>
       <div>
-        <div class="navbar navbar-dark">
-          <div class="navbar__logo">
-            <img src="/vite.svg" alt="Vite logo" />
-          </div>
-          <div class="navbar__title">Vite + React</div>
-          <div class="navbar__links">
-            <a href="https://vite.dev" target="_blank">Vite</a>
-            <a href="https://react.dev" target="_blank">React</a>
-          </div>
-        </div>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
