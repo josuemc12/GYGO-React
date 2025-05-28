@@ -6,16 +6,31 @@ export async function getProjects(grupo) {
     if(response.ok){
         const data = await response.json();
         return data;
-    }  
+    }else{
+        return []
+    }
 }
 
 //API para los projectos pendientes
 export async function getProjectsbyStatus(status,grupo){
-    const response = await fetch(`${appsettings.apiUrl}Projects/status/${status}?group=${grupo}`);
+    const response = await fetch(`${appsettings.apiUrl}Projects/status/${status}?groupID=${grupo}`);
     if (response.ok) {
     const data = await response.json();
     return data;
   } else {
-    throw new Error('Error al obtener proyectos por estado');
+    return []
+    
   }
+}
+
+//API para obtener los proyectos por fechas
+export async function getProjectsByDates(startDate,endDate, grupo) {
+    const response = await fetch( `${appsettings.apiUrl}Projects/dates?Start_date=${startDate}&End_date=${endDate}&groupID=${grupo}`);
+    if(response.ok){
+        const data = await response.json();
+        return data;
+    }else{
+        return []
+    }
+    
 }
