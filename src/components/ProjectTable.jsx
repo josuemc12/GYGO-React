@@ -1,17 +1,25 @@
-import React from "react";
-import {DataGrid} from "@mui/x-data-grid";
+import React, { useState } from "react";
+import { DataGrid } from "@mui/x-data-grid";
 import dayjs from "dayjs";
-import { IconButton } from "@mui/material";
+import {
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  Typography,
+  Modal,
+  Box,
+} from "@mui/material";
+
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-export default function ProjectTable({ projects }) {
+export default function ProjectTable({ projects, onViewMore  }) {
+  const [open, setOpen] = useState(false);
 
-  const handleVerMas = (row) => {
-  console.log("Proyecto seleccionado:", row);
-  // Puedes navegar, abrir un modal, etc.
-};
 
   // Define columnas, ajusta los campos según tus datos reales
   const columns = [
@@ -39,14 +47,12 @@ export default function ProjectTable({ projects }) {
       headerName: "Fecha Inicio",
       width: 120,
       resizable: false,
- 
     },
     {
       field: "fechaFinal",
       headerName: "Fecha Final",
       width: 120,
       resizable: false,
-     
     },
     {
       field: "estatus",
@@ -62,23 +68,26 @@ export default function ProjectTable({ projects }) {
       sortable: false,
       filterable: false,
       renderCell: (params) => (
-       <div>
-      <IconButton  title="Ver detalles">
-        <VisibilityIcon />
-      </IconButton>
-      <IconButton  title="Editar">
-        <EditIcon />
-      </IconButton>
-      <IconButton  title="Eliminar">
-        <DeleteIcon />
-      </IconButton>
-    </div>
+        <div>
+          <IconButton
+            onClick={() => onViewMore(params.row.proyectoId)}
+            title="Ver detalles"
+          >
+            <VisibilityIcon />
+          </IconButton>
+          <IconButton title="Editar">
+            <EditIcon />
+          </IconButton>
+          <IconButton title="Eliminar">
+            <DeleteIcon />
+          </IconButton>
+        </div>
       ),
     },
   ];
 
   return (
-    <div style={{ height: 500, width: "100%" }}>
+    <div style={{ height: 410, width: "100%" }}>
       <DataGrid
         rows={projects}
         columns={columns}
@@ -90,9 +99,10 @@ export default function ProjectTable({ projects }) {
         isRowSelectable={() => false}
         showToolbar
         getRowId={(row) => row.proyectoId} // Aquí le dices que use proyectoId como id único
-        disableColumnMenu 
+        disableColumnMenu
       />
+
+      
     </div>
   );
 }
-
