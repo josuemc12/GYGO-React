@@ -3,6 +3,7 @@ import { useState } from "react";
 import "./App.css";
 import { BrowserRouter, Route, Routes, NavLink } from "react-router-dom";
 import { ProjectsPage } from "./Pages/ProjectsPage";
+import { DashboardGroupPage } from "./Pages/DashboardGroupPage";
 
 function App() {
   return (
@@ -23,9 +24,9 @@ function App() {
             >
               <ul className="navbar-nav">
                 <li className="nav-item">
-                  <a className="nav-link active" aria-current="page" href="#">
-                    ????????????
-                  </a>
+                  <NavLink className="nav-link active" to="/DashboardGroupPage">
+                    Dashboard
+                  </NavLink>
                 </li>
 
                 <li className="nav-item">
@@ -56,6 +57,7 @@ function App() {
           </nav>
            <Routes>
             <Route path="/ProjectsPage" element={<ProjectsPage />} />
+            <Route path="/DashboardGroupPage" element={<DashboardGroupPage/>}></Route>
            </Routes>
           
 

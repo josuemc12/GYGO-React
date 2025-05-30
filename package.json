@@ -10,13 +10,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^7.1.0",
     "@mui/material": "^7.1.0",
+    "@mui/x-data-grid": "^8.5.0",
     "@mui/x-date-pickers": "^8.4.0",
     "@mui/x-date-pickers-pro": "^8.4.0",
-    "bootstrap": "^5.3.3",
+    "bootstrap": "^5.3.6",
     "dayjs": "^1.11.13",
     "react": "^19.1.0",
+    "react-bootstrap": "^2.10.10",
     "react-data-table-component": "^7.7.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.0",
