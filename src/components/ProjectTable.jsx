@@ -11,15 +11,17 @@ import {
   Typography,
   Modal,
   Box,
+  Stack,
+  Tooltip,
+  Menu, MenuItem,
 } from "@mui/material";
 
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-export default function ProjectTable({ projects, onViewMore  }) {
+export default function ProjectTable({ projects, onViewMore, createPdf }) {
   const [open, setOpen] = useState(false);
-
 
   // Define columnas, ajusta los campos según tus datos reales
   const columns = [
@@ -63,46 +65,58 @@ export default function ProjectTable({ projects, onViewMore  }) {
     },
     {
       field: "acciones",
-      headerName: "Acciones",
-      width: 150,
-      sortable: false,
-      filterable: false,
-      renderCell: (params) => (
-        <div>
-          <IconButton
-            onClick={() => onViewMore(params.row.proyectoId)}
-            title="Ver detalles"
-          >
-            <VisibilityIcon />
-          </IconButton>
-          <IconButton title="Editar">
-            <EditIcon />
-          </IconButton>
-          <IconButton title="Eliminar">
-            <DeleteIcon />
-          </IconButton>
-        </div>
-      ),
+headerName: "Acciones",
+width: 150,
+sortable: false,
+filterable: false,
+renderCell: (params) => (
+  <div style={{ display: "flex", justifyContent: "flex-end", width: "100%" }}>
+    <Tooltip title="Ver detalles">
+      <IconButton onClick={() => onViewMore(params.row.proyectoId)}>
+        <VisibilityIcon />
+      </IconButton>
+    </Tooltip>
+    <Tooltip title="Editar">
+      <IconButton>
+        <EditIcon />
+      </IconButton>
+    </Tooltip>
+    <Tooltip title="Eliminar">
+      <IconButton color="error">
+        <DeleteIcon />
+      </IconButton>
+    </Tooltip>
+  </div>
+),
     },
   ];
 
   return (
-    <div style={{ height: 410, width: "100%" }}>
-      <DataGrid
-        rows={projects}
-        columns={columns}
-        pageSize={5}
-        rowsPerPageOptions={[5, 10, 20]}
-        pagination
-        disableSelectionOnClick // Esto evita que se seleccione la fila al hacer clic
-        checkboxSelection={false}
-        isRowSelectable={() => false}
-        showToolbar
-        getRowId={(row) => row.proyectoId} // Aquí le dices que use proyectoId como id único
-        disableColumnMenu
-      />
+    <div style={{ height: 410, width: "100%", textAlign: "left" }}>
+      <Stack
+        spacing={3}
+        sx={{
+          border: "1px solid #ccc",
+          borderRadius: 2, // bordes redondeados (usa unidades MUI)
+          padding: 2,
+        }}
+      >
+        <h4 style={{ fontWeight: "bold" }}>Lista de Proyectos</h4>
 
-      
+        <DataGrid
+          rows={projects}
+          columns={columns}
+          pageSize={5}
+          rowsPerPageOptions={[5, 10, 20]}
+          pagination
+          disableSelectionOnClick // Esto evita que se seleccione la fila al hacer clic
+          checkboxSelection={false}
+          isRowSelectable={() => false}
+          showToolbar
+          getRowId={(row) => row.proyectoId} // Aquí le dices que use proyectoId como id único
+          disableColumnMenu
+        />
+      </Stack>
     </div>
   );
 }
