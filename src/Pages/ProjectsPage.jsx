@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import ProjectTable from "../components/ProjectTable";
-import { jsPDF } from "jspdf";
+import { CreatePDF } from "../utils/CreatePDF";
+
 import {
   getProjects,
   getProjectsbyStatus,
   getProjectsByDates,
+  getProjectsPDF,
 } from "../API/Projects";
 import { getTasks, UpdateStatusTask } from "../API/Tasks";
 import {
@@ -46,7 +48,6 @@ export function ProjectsPage() {
 
   const [taskStatus, setTaskStatus] = useState({});
 
-
   const [data, setData] = useState([]);
 
   //Constante para encontrar proyectos
@@ -55,8 +56,12 @@ export function ProjectsPage() {
     try {
       let data = [];
       if (startDate && endDate) {
-        const formattedStart = encodeURIComponent(dayjs(startDate).format("MM/DD/YYYY"));
-        const formattedEnd = encodeURIComponent(dayjs(endDate).format("MM/DD/YYYY"));
+        const formattedStart = encodeURIComponent(
+          dayjs(startDate).format("MM/DD/YYYY")
+        );
+        const formattedEnd = encodeURIComponent(
+          dayjs(endDate).format("MM/DD/YYYY")
+        );
         data = await getProjectsByDates(formattedStart, formattedEnd, grupo);
         setData(data);
       } else if (filter === "todos") {
@@ -124,6 +129,8 @@ export function ProjectsPage() {
       ...prev,
       [taskId]: newStatus,
     }));
+    console.log(taskId);
+    console.log(newStatus);
 
     UpdateStatusTask(taskId, newStatus)
       .then(() => {
@@ -134,7 +141,16 @@ export function ProjectsPage() {
       });
   };
 
-  const CreatePdf = () => {
+  const CreatePDFAPI = async (grupoID) => {
+    try {
+      const projectsPDF = await getProjectsPDF(grupoID);
+      console.log(projectsPDF);
+      CreatePDF(projectsPDF); 
+    } catch (error) {
+      console.log("Error a crear el pdf");
+    } finally {
+    }
+
     const doc = new jsPDF();
 
     doc.text("¡Hola mundo!", 10, 10);
@@ -173,7 +189,7 @@ export function ProjectsPage() {
                     </Box>
                   </Grid>
                   <Grid item>
-                    <Button variant="contained">Nuevo Proyecto</Button>
+                    <Button variant="contained" style={{ backgroundColor: "#44af69" , fontWeight: "bold" }}>Nuevo Proyecto</Button>
                   </Grid>
                 </Grid>
 
@@ -246,7 +262,7 @@ export function ProjectsPage() {
                               slotProps={{
                                 textField: {
                                   size: "small",
-                                  sx: { width: 180 },
+                                  sx: { width: 180},
                                 },
                               }}
                             />
@@ -257,23 +273,20 @@ export function ProjectsPage() {
 
                     <Grid item>
                       <Box display="flex" gap={1}>
-                        <Button variant="contained" onClick={SearchByDate}>
+                        <Button variant="contained" onClick={SearchByDate} style={{ backgroundColor: "#44af69" , fontWeight: "bold"}}>
                           Buscar por fecha
                         </Button>
-                        <Button variant="contained" onClick={CleanDates}>
+                        <Button variant="contained" onClick={CleanDates} style={{ backgroundColor: "#44af69", fontWeight: "bold" }}>
                           Limpiar Fechas
                         </Button>
-                        {data.length > 0 &&(
-                        
-                            <Button
-                              variant="outlined"
-                              color="secondary"
-                              onClick={() => alert("Botón adicional")}
-                              
-                            >
-                              Descargar pdf
-                            </Button>
-                   
+                        {data.length > 0 && (
+                          <Button
+                            variant="outlined"
+                            color="secondary"
+                            onClick={() => CreatePDFAPI(1)}
+                          >
+                            Descargar pdf
+                          </Button>
                         )}
                       </Box>
                     </Grid>
@@ -285,7 +298,7 @@ export function ProjectsPage() {
             <ProjectTable
               projects={projects}
               onViewMore={VerMas}
-              createPdf={CreatePdf}
+            
             />
           </Box>
         </LocalizationProvider>

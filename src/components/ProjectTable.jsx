@@ -13,7 +13,7 @@ import {
   Box,
   Stack,
   Tooltip,
-  Menu, MenuItem,
+  Menu, MenuItem,Card
 } from "@mui/material";
 
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -93,7 +93,7 @@ renderCell: (params) => (
 
   return (
     <div style={{ height: 410, width: "100%", textAlign: "left" }}>
-      <Stack
+      <Card variant="outlined"
         spacing={3}
         sx={{
           border: "1px solid #ccc",
@@ -116,7 +116,7 @@ renderCell: (params) => (
           getRowId={(row) => row.proyectoId} // Aquí le dices que use proyectoId como id único
           disableColumnMenu
         />
-      </Stack>
+      </Card>
     </div>
   );
 }

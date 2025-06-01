@@ -20,7 +20,7 @@ export async function getProjectsbyStatus(status,grupo){
   } else {
     return []
     
-  }
+  }CreatePdf
 }
 
 //API para obtener los proyectos por fechas
@@ -32,5 +32,15 @@ export async function getProjectsByDates(startDate,endDate, grupo) {
     }else{
         return []
     }
-    
+}
+
+//API para obtener los proyectos y tareas para el pdf
+export async function getProjectsPDF(grupo) {
+    const response = await fetch(`${appsettings.apiUrl}Projects/CreatePdf/${grupo}`);
+    if(response.ok){
+        const data = await response.json();
+        return data;
+    }else{
+        return []
+    }
 }
