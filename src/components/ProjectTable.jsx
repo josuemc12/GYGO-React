@@ -20,7 +20,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-export default function ProjectTable({ projects, onViewMore, createPdf }) {
+export default function ProjectTable({ projects, onViewMore, updateProject,deleteProject }) {
   const [open, setOpen] = useState(false);
 
   // Define columnas, ajusta los campos según tus datos reales
@@ -77,12 +77,12 @@ renderCell: (params) => (
       </IconButton>
     </Tooltip>
     <Tooltip title="Editar">
-      <IconButton>
+      <IconButton onClick={() => updateProject(params.row)}>
         <EditIcon />
       </IconButton>
     </Tooltip>
     <Tooltip title="Eliminar">
-      <IconButton color="error">
+      <IconButton color="error" onClick={() => deleteProject(params.row.proyectoId)}>
         <DeleteIcon />
       </IconButton>
     </Tooltip>
