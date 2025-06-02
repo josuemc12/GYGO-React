@@ -4,6 +4,7 @@ import "./App.css";
 import { BrowserRouter, Route, Routes, NavLink } from "react-router-dom";
 import { ProjectsPage } from "./Pages/ProjectsPage";
 import { DashboardGroupPage } from "./Pages/DashboardGroupPage";
+import { AddGroupSAPage } from "./Pages/AddGroupSAPage";
 
 function App() {
   return (
@@ -58,6 +59,7 @@ function App() {
            <Routes>
             <Route path="/ProjectsPage" element={<ProjectsPage />} />
             <Route path="/DashboardGroupPage" element={<DashboardGroupPage/>}></Route>
+            <Route path="/AddGroup" element={<AddGroupSAPage />}></Route>
            </Routes>
           
 
