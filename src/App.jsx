@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes, NavLink } from "react-router-dom";
 import { ProjectsPage } from "./Pages/ProjectsPage";
 import { DashboardGroupPage } from "./Pages/DashboardGroupPage";
 import { AddGroupSAPage } from "./Pages/AddGroupSAPage";
+import { ChangePasswordPage } from "./Pages/ChangePasswordPage";
 
 function App() {
   return (
@@ -60,6 +61,7 @@ function App() {
             <Route path="/ProjectsPage" element={<ProjectsPage />} />
             <Route path="/DashboardGroupPage" element={<DashboardGroupPage/>}></Route>
             <Route path="/AddGroup" element={<AddGroupSAPage />}></Route>
+            <Route path="/ChangePassword" element={<ChangePasswordPage />}></Route> 
            </Routes>
           
 
