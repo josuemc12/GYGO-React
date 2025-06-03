@@ -147,7 +147,7 @@ export function ProjectsPage() {
       console.log(tasks);
       const initialStatus = {};
       tasks.forEach((task) => {
-        initialStatus[task.taskId] = task.estado; // suponiendo que `estado` es booleano
+        initialStatus[task.taskId] = task.status;
       });
       setTaskStatus(initialStatus);
       setTasks(tasks);
@@ -162,6 +162,7 @@ export function ProjectsPage() {
   const CloseModal = () => {
     setOpenModal(false);
     setTasks(null);
+     fetchProjects();
   };
 
   const UpdateStatusTasks = (taskId) => (event) => {
@@ -172,7 +173,7 @@ export function ProjectsPage() {
     }));
     console.log(taskId);
     console.log(newStatus);
-
+    console.log("Estado taskStatus:", taskStatus);
     UpdateStatusTask(taskId, newStatus)
       .then(() => {
         console.log("Estado actualizado");
@@ -248,6 +249,20 @@ export function ProjectsPage() {
     try {
       let result;
       setOpenModalProjects(false);
+      const camposenBlanco = Object.values(projectData).some(
+        (value) => value === "" || value === null || value === undefined
+      );
+
+      if (camposenBlanco) {
+        Swal.fire({
+          icon: "warning",
+          title: "Campos vacíos",
+          text: "Por favor, completá todos los campos antes de continuar.",
+          confirmButtonColor: "#d33",
+        });
+        return;
+      }
+
       if (modoEdicion) {
         console.log(projectData);
         result = await UpdateProject(projectData);
@@ -257,18 +272,16 @@ export function ProjectsPage() {
             title: "¡Proyecto actualizaxo!",
             text: "El proyecto se ha actualizado correctamente.",
             confirmButtonColor: "#44af69",
-            }).then(() => {
-          window.location.reload(); 
-        });
+          })
+           fetchProjects();
         } else {
           Swal.fire({
             icon: "error",
             title: "No se pudo actualizar el proyecto",
             text: "Por favor, revisá los datos e intentá nuevamente.",
             confirmButtonColor: "#d33",
-            }).then(() => {
-          window.location.reload(); 
-        });
+          });
+           fetchProjects();
         }
       } else {
         result = await AddProject(projectData);
@@ -278,18 +291,16 @@ export function ProjectsPage() {
             title: "¡Proyecto guardado!",
             text: "El proyecto se ha guardado correctamente.",
             confirmButtonColor: "#44af69",
-            }).then(() => {
-          window.location.reload(); 
-        });
+          });
+           fetchProjects();
         } else {
           Swal.fire({
             icon: "error",
             title: "No se pudo agregar el proyecto",
             text: "Por favor, revisá los datos e intentá nuevamente.",
             confirmButtonColor: "#d33",
-            }).then(() => {
-          window.location.reload(); 
-        });
+          });
+           fetchProjects();
         }
       }
     } catch (error) {
@@ -298,9 +309,8 @@ export function ProjectsPage() {
         title: "Error en el servidor",
         text: "Ocurrió un error inesperado. Intentalo más tarde.",
         confirmButtonColor: "#d33",
-       }).then(() => {
-          window.location.reload(); 
-        });
+      });
+       fetchProjects();
     }
   };
 
@@ -313,18 +323,16 @@ export function ProjectsPage() {
         title: "¡Proyecto Eliminado!",
         text: "El proyecto se ha eliminado correctamente.",
         confirmButtonColor: "#44af69",
-      }).then(() => {
-        window.location.reload(); 
       });
+       fetchProjects();
     } else {
       Swal.fire({
         icon: "error",
         title: "No se pudo eliminar el proyecto",
         text: "Por favor, revisá los datos e intentá nuevamente.",
         confirmButtonColor: "#d33",
-      }).then(() => {
-        window.location.reload(); 
       });
+       fetchProjects();
     }
   };
 
@@ -337,8 +345,6 @@ export function ProjectsPage() {
           title: "Campos incompletos",
           text: "Por favor completá el título y la descripción.",
           confirmButtonColor: "#f0ad4e",
-         }).then(() => {
-          window.location.reload(); 
         });
         return;
       }
@@ -350,18 +356,16 @@ export function ProjectsPage() {
           title: "¡Tarea agregada!",
           text: "La tarea se agregó correctamente.",
           confirmButtonColor: "#44af69",
-         }).then(() => {
-          window.location.reload(); 
         });
+         fetchProjects();
       } else {
         Swal.fire({
           icon: "error",
           title: "No se pudo agregar la tarea",
           text: "Por favor, revisá los datos e intentá nuevamente.",
           confirmButtonColor: "#d33",
-          }).then(() => {
-          window.location.reload(); 
         });
+         fetchProjects();
       }
     } catch (error) {
       Swal.fire({
@@ -369,9 +373,9 @@ export function ProjectsPage() {
         title: "Error en el servidor",
         text: "Ocurrió un error inesperado. Intentalo más tarde.",
         confirmButtonColor: "#d33",
-        }).then(() => {
-          window.location.reload(); 
-        });
+      }).then(() => {
+        window.location.reload();
+      });
     }
   };
 
@@ -385,7 +389,7 @@ export function ProjectsPage() {
           text: "Por favor completá el título y la descripción.",
           confirmButtonColor: "#f0ad4e",
         }).then(() => {
-          window.location.reload(); 
+          window.location.reload();
         });
         return;
       }
@@ -397,9 +401,8 @@ export function ProjectsPage() {
           title: "¡Tarea actaulizada!",
           text: "La tarea se agregó correctamente.",
           confirmButtonColor: "#44af69",
-        }).then(() => {
-          window.location.reload(); 
         });
+         fetchProjects();
       } else {
         Swal.fire({
           icon: "error",
@@ -407,7 +410,7 @@ export function ProjectsPage() {
           text: "Por favor, revisá los datos e intentá nuevamente.",
           confirmButtonColor: "#d33",
         }).then(() => {
-          window.location.reload(); 
+          window.location.reload();
         });
       }
     } catch (error) {
@@ -417,7 +420,7 @@ export function ProjectsPage() {
         text: "Ocurrió un error inesperado. Intentalo más tarde.",
         confirmButtonColor: "#d33",
       }).then(() => {
-        window.location.reload(); 
+        window.location.reload();
       });
     }
   };
@@ -431,9 +434,8 @@ export function ProjectsPage() {
         title: "Tarea Eliminado!",
         text: "El proyecto se ha eliminado correctamente.",
         confirmButtonColor: "#44af69",
-      }).then(() => {
-        window.location.reload(); 
       });
+       fetchProjects();
     } else {
       Swal.fire({
         icon: "error",
@@ -441,7 +443,7 @@ export function ProjectsPage() {
         text: "Por favor, revisá los datos e intentá nuevamente.",
         confirmButtonColor: "#d33",
       }).then(() => {
-        window.location.reload(); 
+        window.location.reload();
       });
     }
   };
@@ -704,6 +706,7 @@ export function ProjectsPage() {
                       <Typography>Descripción: {task.descripcion}</Typography>
                       <Typography>
                         Estado:{" "}
+                      
                         {taskStatus[task.taskId] ? "Completada" : "Pendiente"}
                       </Typography>
                       <Switch
@@ -752,7 +755,13 @@ export function ProjectsPage() {
               ))}
               {/* Parte para agregar una tarea */}
 
-              <Box
+            
+            </>
+
+          ) : (
+            <Typography>No hay tareas para mostrar</Typography>
+          )}
+           <Box
                 sx={{
                   mt: 3,
                   border: "1px solid #ccc",
@@ -796,10 +805,6 @@ export function ProjectsPage() {
                   Agregar
                 </Button>
               </Box>
-            </>
-          ) : (
-            <Typography>No hay tareas para mostrar</Typography>
-          )}
         </Box>
       </Modal>
 
