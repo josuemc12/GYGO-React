@@ -1,8 +1,9 @@
 import { useState } from "react";
-
 import "./App.css";
 import { BrowserRouter, Route, Routes, NavLink } from "react-router-dom";
 import { ProjectsPage } from "./Pages/ProjectsPage";
+import  Login  from "./Pages/Login";
+import SignInButton from "./components/LoginButton";
 
 function App() {
   return (
@@ -32,7 +33,6 @@ function App() {
                   <NavLink className="nav-link active" to="/ProjectsPage">
                   Proyectos
                   </NavLink>
-
                 </li>
 
                 <li className="nav-item">
@@ -51,11 +51,14 @@ function App() {
                   <a className="nav-link" href="#"></a>
                 </li>
               </ul>
+
+              <div><SignInButton/></div>
             </div>
           </div>
           </nav>
            <Routes>
             <Route path="/ProjectsPage" element={<ProjectsPage />} />
+            <Route path="/login" element={<Login />}/>
            </Routes>
           
 
