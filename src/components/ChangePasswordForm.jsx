@@ -21,6 +21,11 @@ export const ChangePasswordForm = () => {
     setShowPassword((show) => !show);
   }
 
+  //funcion para validar que cumpla con identity y no sean iguales
+  const isValidPassword = () => {
+    return currentPassword === newPassword;
+  }
+
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
@@ -33,7 +38,16 @@ export const ChangePasswordForm = () => {
     event.preventDefault();
 
     setLoading(true);
-
+    if(isValidPassword){
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'La nueva contraseña no puede ser la misma que la actual.',
+        confirmButtonText: 'Ok'
+      });
+      setLoading(false);
+      return;
+    }
     const UserDTO = {
       UserId: 'getuserid',
       CurrentPassword: currentPassword,
