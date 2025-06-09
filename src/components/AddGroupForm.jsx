@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from 'react'
-import { Box, TextField, Button, Grid, CircularProgress,InputLabel, MenuItem, 
-    FormControl, Select } from '@mui/material';
+import {
+    Box, TextField, Button, Grid, CircularProgress, InputLabel, MenuItem,
+    FormControl, Select
+} from '@mui/material';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import SendIcon from '@mui/icons-material/Send';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { PostAddGroup } from '../API/AddGroup';
 
+
+const containLetter = (name) => {
+    return /[a-zA-Z]/.test(name);
+}
 export const AddGroupForm = () => {
 
     const [nombreGrupo, setNombreGrupo] = useState('');
@@ -15,11 +21,30 @@ export const AddGroupForm = () => {
     const navigate = useNavigate();
 
 
-
-
     const handleSubmit = async (event) => {
         event.preventDefault();
         setLoading(true);
+
+        if (!containLetter(nombreGrupo.trim())) {
+            setLoading(false)
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Debe ingresar un nombre válido',
+                confirmButtonText: 'Ok'
+            });
+            return;
+        } else if (Servicio == '') {
+            setLoading(false)
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Debe seleccionar uno de los servicios disponibles',
+                confirmButtonText: 'Ok'
+            });
+            return;
+        }
+        
         const groupDTO = {
             Nombre: nombreGrupo,
             ServiceId: Servicio
@@ -38,7 +63,13 @@ export const AddGroupForm = () => {
 
             navigate('/DashboardGroupPage');
         } catch (error) {
-            console.error(error.message);
+            setLoading(false);
+            await Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error,
+                confirmButtonText: 'Ok'
+            });
         }
     }
 
@@ -54,7 +85,7 @@ export const AddGroupForm = () => {
                         ></TextField>
                     </Grid>
                     <Grid size={12}>
-                        <FormControl sx={{width: '50%'}}>
+                        <FormControl sx={{ width: '50%' }}>
                             <InputLabel id="demo-simple-select-label">Servicio</InputLabel>
                             <Select
                                 labelId="demo-simple-select-label"

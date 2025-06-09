@@ -15,7 +15,7 @@ export async function PostAddGroup(groupDTO) {
         return data;
     } else {
         const error = await response.text();
-        throw new Error(`Error al crear el nuevo grupo: ${error}`);
+        throw new Error(error);
     }
 }
 
