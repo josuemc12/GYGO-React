@@ -1,12 +1,15 @@
-import { useState } from "react";
-import "./App.css";
+import React from "react";
 import { BrowserRouter, Route, Routes, NavLink } from "react-router-dom";
-import { ProjectsPage } from "./Pages/ProjectsPage";
-import  Login  from "./Pages/Login";
-import SignInButton from "./components/LoginButton";
+import { DashboardGroupPage } from '../Pages/DashboardGroupPage'
+import { ProjectsPage } from "../Pages/ProjectsPage";
+import { ChangePasswordPage } from "../Pages/ChangePasswordPage";
+import { AddGroupSAPage } from "../Pages/AddGroupSAPage";
 
-function App() {
-  return (
+
+export const NavBar = () => {
+
+
+    return(
     <BrowserRouter>
       <div>
         <nav className="navbar navbar-expand-lg p-3">
@@ -24,15 +27,16 @@ function App() {
             >
               <ul className="navbar-nav">
                 <li className="nav-item">
-                  <a className="nav-link active" aria-current="page" href="#">
-                    ????????????
-                  </a>
+                  <NavLink className="nav-link active" to="/DashboardGroupPage">
+                    Dashboard
+                  </NavLink>
                 </li>
 
                 <li className="nav-item">
                   <NavLink className="nav-link active" to="/ProjectsPage">
                   Proyectos
                   </NavLink>
+
                 </li>
 
                 <li className="nav-item">
@@ -51,25 +55,18 @@ function App() {
                   <a className="nav-link" href="#"></a>
                 </li>
               </ul>
-
-              <div><SignInButton/></div>
             </div>
           </div>
           </nav>
            <Routes>
             <Route path="/ProjectsPage" element={<ProjectsPage />} />
-            <Route path="/login" element={<Login />}/>
+            <Route path="/DashboardGroupPage" element={<DashboardGroupPage/>}></Route>
+            <Route path="/AddGroup" element={<AddGroupSAPage />}></Route>
+            <Route path="/ChangePassword" element={<ChangePasswordPage />}></Route> 
            </Routes>
           
 
       </div>
     </BrowserRouter>
-import { NavBar } from "./components/NavBar";
-
-function App() {
-  return (
-    <NavBar />
-  );
+    )
 }
-
-export default App;
