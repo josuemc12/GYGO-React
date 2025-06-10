@@ -4,6 +4,8 @@ import { DashboardGroupPage } from '../Pages/DashboardGroupPage'
 import { ProjectsPage } from "../Pages/ProjectsPage";
 import { ChangePasswordPage } from "../Pages/ChangePasswordPage";
 import { AddGroupSAPage } from "../Pages/AddGroupSAPage";
+import Login from "../Pages/Login";
+import SignInButton from "./LoginButton";
 
 
 export const NavBar = () => {
@@ -55,6 +57,7 @@ export const NavBar = () => {
                   <a className="nav-link" href="#"></a>
                 </li>
               </ul>
+              <div><SignInButton/></div>
             </div>
           </div>
           </nav>
@@ -62,7 +65,9 @@ export const NavBar = () => {
             <Route path="/ProjectsPage" element={<ProjectsPage />} />
             <Route path="/DashboardGroupPage" element={<DashboardGroupPage/>}></Route>
             <Route path="/AddGroup" element={<AddGroupSAPage />}></Route>
-            <Route path="/ChangePassword" element={<ChangePasswordPage />}></Route> 
+            <Route path="/ChangePassword" element={<ChangePasswordPage />}></Route>
+            <Route path="/login" element={<Login />}/> 
+
            </Routes>
           
 

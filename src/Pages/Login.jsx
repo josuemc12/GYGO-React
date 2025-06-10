@@ -37,7 +37,7 @@ const Login = () => {
     }
 
     if (data.token) {
-      localStorage.setItem("authToken", data.token.AccessToken);
+      localStorage.setItem("authToken", data.token.accessToken);
       alert("Login successful!");
 
       // falta redirect a la pagina de dashboard

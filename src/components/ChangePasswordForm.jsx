@@ -7,6 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import Swal from 'sweetalert2';
 import { PostChangePassword } from '../API/ChangePassword';
+import { getUserFromToken } from '../utils/Auth';
+
 
 export const ChangePasswordForm = () => {
 
@@ -22,7 +24,7 @@ export const ChangePasswordForm = () => {
   }
 
   //funcion para validar que cumpla con identity y no sean iguales
-  const isValidPassword = () => {
+  const isSamePassword = () => {
     return currentPassword === newPassword;
   }
 
@@ -38,7 +40,7 @@ export const ChangePasswordForm = () => {
     event.preventDefault();
 
     setLoading(true);
-    if(isValidPassword){
+    if (isSamePassword()) {
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -48,13 +50,35 @@ export const ChangePasswordForm = () => {
       setLoading(false);
       return;
     }
+
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Sesión inválida',
+        text: 'No se encontró el token de autenticación. Inicia sesión de nuevo.',
+      });
+      setLoading(false);
+      return;
+    }
+
+    const userId = getUserFromToken(token);
+    if (!userId) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Token inválido',
+        text: 'No se pudo obtener el ID del usuario. Inicia sesión de nuevo.',
+      });
+      setLoading(false);
+      return;
+    }
     const UserDTO = {
-      UserId: 'getuserid',
+      UserId: userId,
       CurrentPassword: currentPassword,
       NewPassword: newPassword
     }
     try {
-      const result = await PostChangePassword(UserDTO);
+      const result = await PostChangePassword(UserDTO, token);
       setLoading(false);
 
       await Swal.fire({
@@ -67,7 +91,15 @@ export const ChangePasswordForm = () => {
       navigate('/DashboardGroupPage');
 
     } catch (error) {
-      console.error(error.message)
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error,
+        confirmButtonText: 'Ok'
+      });
+      setLoading(false)
+      console.error(error)
+      return;
     }
   }
 

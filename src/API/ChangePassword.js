@@ -1,11 +1,11 @@
 import { appsettings } from "../settings/appsettings";
 
-export async function PostChangePassword(UserDTO){
+export async function PostChangePassword(UserDTO, token){
     const response = await fetch(`${appsettings.apiUrl}user/ChangePassword`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            //autorizacion bearer / token
+            'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(UserDTO)
     });
@@ -15,6 +15,6 @@ export async function PostChangePassword(UserDTO){
         return data;
     } else {
         const error = await response.text();
-        throw new Error(`Error al cambiar la contraseña: ${error}`);
+        throw new Error(error);
     }
 }
