@@ -6,7 +6,7 @@ export async function AddProject(projectData) {
     console.log(projectData);
     const response = await fetch(`${appsettings.apiUrl}Projects/AddProject`, {
       method: "POST",
-      credentials: "include" ,
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -21,9 +21,30 @@ export async function AddProject(projectData) {
       return false;
     }
 
+    return true;
+
     const data = await response.json();
     console.log(data);
-    return true;
+
+    if (!data.isSuccess) {
+      setError(data.errors ? data.errors.join(", ") : "Login failed");
+      return;
+    }
+
+    if (data.is2FactorRequired) {
+      localStorage.setItem("tempToken", data.tempToken);
+      alert("Two-factor authentication required. Please verify.");
+      return;
+    }
+
+    if (data.token) {
+      //localStorage.setItem("authToken", data.token.AccessToken);
+      alert("Login successful!");
+      navigate("/DashboardGroupPage");
+      // falta redirect a la pagina de dashboard
+    } else {
+      throw new Error("Unexpected response from server");
+    }
   } catch (error) {
     console.error("AddProject error:", error);
     throw error;
@@ -37,7 +58,7 @@ export async function UpdateProject(projectData) {
       `${appsettings.apiUrl}Projects/UpdateProject`,
       {
         method: "PUT",
-        credentials: "include" ,
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -67,7 +88,7 @@ export async function DProject(projectID) {
     const response = await fetch(
       `${appsettings.apiUrl}Projects/DeleteProject?projectID=${projectID}`,
       {
-        method: 'DELETE',
+        method: "DELETE",
       }
     );
 
@@ -85,13 +106,10 @@ export async function DProject(projectID) {
 
 //API para llamar los proyectos por grupo
 export async function getProjects() {
-  const response = await fetch(
-    `${appsettings.apiUrl}Projects/AllProjects`,
-    {
-      method: "GET",
-      credentials: "include" 
-    }
-  );
+  const response = await fetch(`${appsettings.apiUrl}Projects/AllProjects`, {
+    method: "GET",
+    credentials: "include",
+  });
   if (response.ok) {
     const data = await response.json();
     return data;
@@ -104,9 +122,9 @@ export async function getProjects() {
 export async function getProjectsbyStatus(status) {
   const response = await fetch(
     `${appsettings.apiUrl}Projects/status/${status}`,
-     {
+    {
       method: "GET",
-      credentials: "include" 
+      credentials: "include",
     }
   );
   if (response.ok) {
@@ -122,9 +140,9 @@ export async function getProjectsbyStatus(status) {
 export async function getProjectsByDates(startDate, endDate) {
   const response = await fetch(
     `${appsettings.apiUrl}Projects/dates?Start_date=${startDate}&End_date=${endDate}`,
-         {
+    {
       method: "GET",
-      credentials: "include" 
+      credentials: "include",
     }
   );
   if (response.ok) {
@@ -137,13 +155,10 @@ export async function getProjectsByDates(startDate, endDate) {
 
 //API para obtener los proyectos y tareas para el pdf
 export async function getProjectsPDF() {
-  const response = await fetch(
-    `${appsettings.apiUrl}Projects/CreatePdf`,
-           {
-      method: "GET",
-      credentials: "include" 
-    }
-  );
+  const response = await fetch(`${appsettings.apiUrl}Projects/CreatePdf`, {
+    method: "GET",
+    credentials: "include",
+  });
   if (response.ok) {
     const data = await response.json();
     return data;
