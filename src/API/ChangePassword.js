@@ -3,6 +3,7 @@ import { appsettings } from "../settings/appsettings";
 export async function PostChangePassword(UserDTO){
     const response = await fetch(`${appsettings.apiUrl}user/ChangePassword`, {
         method: 'POST',
+        credentials: "include",
         headers: {
             'Content-Type': 'application/json',
             //autorizacion bearer / token

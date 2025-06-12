@@ -1,16 +1,17 @@
 import React from "react";
-import { BrowserRouter, Route, Routes, NavLink } from "react-router-dom";
+import { BrowserRouter, Route, Routes, NavLink,Navigate } from "react-router-dom";
 import { DashboardGroupPage } from '../Pages/DashboardGroupPage'
 import { ProjectsPage } from "../Pages/ProjectsPage";
 import { ChangePasswordPage } from "../Pages/ChangePasswordPage";
 import { AddGroupSAPage } from "../Pages/AddGroupSAPage";
+import Login from "../Pages/Login";
 
 
 export const NavBar = () => {
 
 
     return(
-    <BrowserRouter>
+  
       <div>
         <nav className="navbar navbar-expand-lg p-3">
           <div className="container-fluid d-flex justify-content-between align-items-center">
@@ -58,15 +59,10 @@ export const NavBar = () => {
             </div>
           </div>
           </nav>
-           <Routes>
-            <Route path="/ProjectsPage" element={<ProjectsPage />} />
-            <Route path="/DashboardGroupPage" element={<DashboardGroupPage/>}></Route>
-            <Route path="/AddGroup" element={<AddGroupSAPage />}></Route>
-            <Route path="/ChangePassword" element={<ChangePasswordPage />}></Route> 
-           </Routes>
+    
           
 
       </div>
-    </BrowserRouter>
+   
     )
 }

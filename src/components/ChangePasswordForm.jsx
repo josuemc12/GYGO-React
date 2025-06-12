@@ -35,7 +35,6 @@ export const ChangePasswordForm = () => {
     setLoading(true);
 
     const UserDTO = {
-      UserId: 'getuserid',
       CurrentPassword: currentPassword,
       NewPassword: newPassword
     }
