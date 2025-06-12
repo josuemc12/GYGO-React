@@ -135,6 +135,7 @@ export function CreatePDF(datos) {
     const proyectoInfo = [
       `Nombre: ${data.projectNombre || "-"}`,
       `Descripción: ${data.projectDescripcion || "-"}`,
+       `Unidad de reduccion: ${data.projectUnidadNombre || "-"}`,
       `Cantidad de reducción: ${data.projectCantidadReduccion || "-"} ${data.projectUnidadNombre || ""}`,
       `Estado: ${data.projectEstatus ? "Realizado" : "Pendiente"}`,
       `Fecha de inicio: ${data.fechaInicio || "-"}`,

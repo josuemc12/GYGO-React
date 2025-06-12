@@ -6,6 +6,7 @@ export async function AddProject(projectData) {
     console.log(projectData);
     const response = await fetch(`${appsettings.apiUrl}Projects/AddProject`, {
       method: "POST",
+      credentials: "include" ,
       headers: {
         "Content-Type": "application/json",
       },
@@ -36,6 +37,7 @@ export async function UpdateProject(projectData) {
       `${appsettings.apiUrl}Projects/UpdateProject`,
       {
         method: "PUT",
+        credentials: "include" ,
         headers: {
           "Content-Type": "application/json",
         },
@@ -82,9 +84,13 @@ export async function DProject(projectID) {
 }
 
 //API para llamar los proyectos por grupo
-export async function getProjects(grupo) {
+export async function getProjects() {
   const response = await fetch(
-    `${appsettings.apiUrl}Projects/AllProjects/${grupo}`
+    `${appsettings.apiUrl}Projects/AllProjects`,
+    {
+      method: "GET",
+      credentials: "include" 
+    }
   );
   if (response.ok) {
     const data = await response.json();
@@ -95,9 +101,13 @@ export async function getProjects(grupo) {
 }
 
 //API para los projectos pendientes
-export async function getProjectsbyStatus(status, grupo) {
+export async function getProjectsbyStatus(status) {
   const response = await fetch(
-    `${appsettings.apiUrl}Projects/status/${status}?groupID=${grupo}`
+    `${appsettings.apiUrl}Projects/status/${status}`,
+     {
+      method: "GET",
+      credentials: "include" 
+    }
   );
   if (response.ok) {
     const data = await response.json();
@@ -109,9 +119,13 @@ export async function getProjectsbyStatus(status, grupo) {
 }
 
 //API para obtener los proyectos por fechas
-export async function getProjectsByDates(startDate, endDate, grupo) {
+export async function getProjectsByDates(startDate, endDate) {
   const response = await fetch(
-    `${appsettings.apiUrl}Projects/dates?Start_date=${startDate}&End_date=${endDate}&group=${grupo}`
+    `${appsettings.apiUrl}Projects/dates?Start_date=${startDate}&End_date=${endDate}`,
+         {
+      method: "GET",
+      credentials: "include" 
+    }
   );
   if (response.ok) {
     const data = await response.json();
@@ -122,9 +136,13 @@ export async function getProjectsByDates(startDate, endDate, grupo) {
 }
 
 //API para obtener los proyectos y tareas para el pdf
-export async function getProjectsPDF(grupo) {
+export async function getProjectsPDF() {
   const response = await fetch(
-    `${appsettings.apiUrl}Projects/CreatePdf/${grupo}`
+    `${appsettings.apiUrl}Projects/CreatePdf`,
+           {
+      method: "GET",
+      credentials: "include" 
+    }
   );
   if (response.ok) {
     const data = await response.json();
