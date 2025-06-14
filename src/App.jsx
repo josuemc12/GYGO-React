@@ -5,6 +5,7 @@ import { ProjectsPage } from "./Pages/ProjectsPage";
 import { ChangePasswordPage } from "./Pages/ChangePasswordPage";
 import { AddGroupSAPage } from "./Pages/AddGroupSAPage";
 import { LoginPrueba } from "./Pages/LoginPrueba";
+import {ReportCompanies} from "./Pages/ReportCompaniesPage"
 
 import Login from "./Pages/Login";
 import "./App.css";
@@ -33,8 +34,9 @@ function Layout() {
         <Route path="/AddGroup" element={<AddGroupSAPage />} />
         <Route path="/ChangePassword" element={<ChangePasswordPage />} />
         <Route path="/LoginPrueba" element={<LoginPrueba />} />
-         <Route path="/" element={<Navigate to="/LoginPrueba" replace />} />
-
+        <Route path="/" element={<Navigate to="/LoginPrueba" replace />} />
+          {/*Rutas de los reportes*/}
+        <Route path="/ReportCompanies" element={<ReportCompanies />} />
       </Routes>
     </>
   );
