@@ -3,7 +3,15 @@ import "./App.css";
 import { BrowserRouter, Route, Routes, NavLink } from "react-router-dom";
 import { ProjectsPage } from "./Pages/ProjectsPage";
 import  Login  from "./Pages/Login";
+
+import RegisterPage from './Pages/Register';
+import TwoFactorPage from './pages/Verify2Fa';
+import InvitePage from './Pages/SendInvite';
+
+
 import SignInButton from "./components/LoginButton";
+import DebugRoutes from './Pages/DevDebugRoute';
+
 
 function App() {
   return (
@@ -37,7 +45,6 @@ function App() {
 
                 <li className="nav-item">
                   <a className="nav-link" href="">
-                    ????????????
                   </a>
                 </li>
 
@@ -59,9 +66,11 @@ function App() {
            <Routes>
             <Route path="/ProjectsPage" element={<ProjectsPage />} />
             <Route path="/login" element={<Login />}/>
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/register/:inviteToken" element={<RegisterPage />} />
+            <Route path="/2fa" element={<TwoFactorPage />} />
+            <Route path="/invite" element={<InvitePage />} />q
            </Routes>
-          
-
       </div>
     </BrowserRouter>
   );
