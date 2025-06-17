@@ -9,6 +9,10 @@ import {Register} from "./Pages/Register"
 import {SendInvite} from "./Pages/SendInvite"
 import {Verify2FA} from "./Pages/Verify2Fa"
 import { ChatWindow } from "./Pages/ChatWindow";
+import HomePage from "./Pages/HomePage";
+import "../src/App.css";
+import Login from "./Pages/Login";
+
 
 
 
@@ -20,7 +24,7 @@ import { NavBar } from "./components/NavBar";
 function App() {
   return (
     <BrowserRouter>
-      <Layout />
+      <HomePage />
     </BrowserRouter>
   );
 }
