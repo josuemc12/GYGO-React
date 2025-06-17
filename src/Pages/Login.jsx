@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -6,14 +8,17 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:7217/login", {
+      const response = await fetch("http://localhost:5135/login", {
         method: "POST",
+        credentials: "include",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({ email, username, password }),
       });
@@ -37,9 +42,9 @@ const Login = () => {
     }
 
     if (data.token) {
-      localStorage.setItem("authToken", data.token.AccessToken);
+      //localStorage.setItem("authToken", data.token.AccessToken);
       alert("Login successful!");
-
+      navigate("/DashboardGroupPage");
       // falta redirect a la pagina de dashboard
 
     } else {
