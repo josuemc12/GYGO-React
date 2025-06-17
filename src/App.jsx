@@ -5,9 +5,10 @@ import { ProjectsPage } from "./Pages/ProjectsPage";
 import { ChangePasswordPage } from "./Pages/ChangePasswordPage";
 import { AddGroupSAPage } from "./Pages/AddGroupSAPage";
 import { LoginPrueba } from "./Pages/LoginPrueba";
-
+import { ChatWindow } from "./Pages/ChatWindow";
+import "../src/App.css";
 import Login from "./Pages/Login";
-import "./App.css";
+
 import { NavBar } from "./components/NavBar";
 
 function App() {
@@ -33,7 +34,9 @@ function Layout() {
         <Route path="/AddGroup" element={<AddGroupSAPage />} />
         <Route path="/ChangePassword" element={<ChangePasswordPage />} />
         <Route path="/LoginPrueba" element={<LoginPrueba />} />
-         <Route path="/" element={<Navigate to="/LoginPrueba" replace />} />
+        <Route path="/Chat" element={<ChatWindow/>} />
+
+        <Route path="/" element={<Navigate to="/LoginPrueba" replace />} />
 
       </Routes>
     </>
