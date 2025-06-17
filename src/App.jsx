@@ -73,11 +73,6 @@ function App() {
            </Routes>
       </div>
     </BrowserRouter>
-import { NavBar } from "./components/NavBar";
-
-function App() {
-  return (
-    <NavBar />
   );
 }
 
