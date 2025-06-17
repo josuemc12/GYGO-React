@@ -53,7 +53,7 @@ export function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!email || !password || !username) {
+    if (!form.email || !form.password || !form.username) {
       Swal.fire({
         icon: "warning",
         title: "No se pudo registrar al usuario",
@@ -77,8 +77,8 @@ export function Register() {
       } else {
         Swal.fire({
           icon: "error",
-          title: "Error al iniciar sesión",
-          text: "Usuario o contraseña incorrectos",
+          title: "Error al registrar al usuario",
+          text: "",
           confirmButtonColor: "#d33",
         });
         return;
@@ -162,8 +162,10 @@ export function Register() {
                 <TextField
                   fullWidth
                   margin="normal"
+                   name="email"
                   label="Correo Eletronico"
                   variant="outlined"
+                  
                   value={form.email}
                   onChange={handleChange}
                 />
@@ -171,6 +173,7 @@ export function Register() {
                   fullWidth
                   margin="normal"
                   label="Nombre de usuario"
+                   name="username"
                   variant="outlined"
                   value={form.username}
                   onChange={handleChange}
@@ -180,6 +183,7 @@ export function Register() {
                   fullWidth
                   margin="normal"
                   label="Contraseña"
+                  name="password"
                   variant="outlined"
                   type={showPassword ? "text" : "password"}
                   value={form.password}

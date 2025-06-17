@@ -38,10 +38,6 @@ function Layout() {
         <Route path="/register" element={<Register />} />
         <Route path="/SendInvite" element={<SendInvite />} />
         <Route path="/Verify2FA" element={<Verify2FA />} />
-
-
-
-
         <Route path="/DashboardGroupPage" element={<DashboardGroupPage />} />
         <Route path="/ProjectsPage" element={<ProjectsPage />} />
         <Route path="/AddGroup" element={<AddGroupSAPage />} />
