@@ -7,8 +7,6 @@ import { useNavigate } from 'react-router-dom';
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import Swal from 'sweetalert2';
 import { PostChangePassword } from '../API/ChangePassword';
-import { getUserFromToken } from '../utils/Auth';
-
 
 export const ChangePasswordForm = () => {
 
@@ -40,7 +38,7 @@ export const ChangePasswordForm = () => {
     event.preventDefault();
 
     setLoading(true);
-    if (isSamePassword()) {
+     if (isSamePassword()) {
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -51,34 +49,12 @@ export const ChangePasswordForm = () => {
       return;
     }
 
-    const token = localStorage.getItem('authToken');
-    if (!token) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Sesión inválida',
-        text: 'No se encontró el token de autenticación. Inicia sesión de nuevo.',
-      });
-      setLoading(false);
-      return;
-    }
-
-    const userId = getUserFromToken(token);
-    if (!userId) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Token inválido',
-        text: 'No se pudo obtener el ID del usuario. Inicia sesión de nuevo.',
-      });
-      setLoading(false);
-      return;
-    }
     const UserDTO = {
-      UserId: userId,
       CurrentPassword: currentPassword,
       NewPassword: newPassword
     }
     try {
-      const result = await PostChangePassword(UserDTO, token);
+      const result = await PostChangePassword(UserDTO);
       setLoading(false);
 
       await Swal.fire({
