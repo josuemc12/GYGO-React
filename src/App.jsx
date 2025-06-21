@@ -8,6 +8,8 @@ import {ReportCompanies} from "./Pages/ReportCompaniesPage"
 import {Register} from "./Pages/Register"
 import {SendInvite} from "./Pages/SendInvite"
 import {Verify2FA} from "./Pages/Verify2Fa"
+import {DashboardConsumo} from "./Pages/ConsumoPage"
+
 
 
 
@@ -42,6 +44,7 @@ function Layout() {
         <Route path="/ProjectsPage" element={<ProjectsPage />} />
         <Route path="/AddGroup" element={<AddGroupSAPage />} />
         <Route path="/ChangePassword" element={<ChangePasswordPage />} />
+        <Route path="/ConsumoPage" element={<DashboardConsumo />} />
           {/*Rutas de los reportes*/}
         <Route path="/ReportCompanies" element={<ReportCompanies />} />
       </Routes>
