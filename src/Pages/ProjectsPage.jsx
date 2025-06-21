@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ProjectTable from "../components/ProjectTable";
 import { CreatePDF } from "../utils/CreatePDF";
-
+import { jsPDF } from "jspdf";
 import {
   getProjects,
   getProjectsbyStatus,
@@ -72,7 +72,6 @@ export function ProjectsPage() {
   const [editTaskId, setEditTaskId] = useState(null);
   const [projectData, setProjecttData] = useState({
     proyectId: "",
-    grupo: 1,
     nombre: "",
     descripcion: "",
     unidadreduccion: "",
@@ -101,13 +100,13 @@ export function ProjectsPage() {
         const formattedEnd = encodeURIComponent(
           dayjs(endDate).format("MM/DD/YYYY")
         );
-        data = await getProjectsByDates(formattedStart, formattedEnd, grupo);
+        data = await getProjectsByDates(formattedStart, formattedEnd);
         setData(data);
       } else if (filter === "todos") {
-        data = await getProjects(grupo);
+        data = await getProjects();
       } else {
         const status = filter === "true" ? true : false;
-        data = await getProjectsbyStatus(status, grupo);
+        data = await getProjectsbyStatus(status);
       }
       setProjects(data);
     } catch (err) {
@@ -171,9 +170,7 @@ export function ProjectsPage() {
       ...prev,
       [taskId]: newStatus,
     }));
-    console.log(taskId);
-    console.log(newStatus);
-    console.log("Estado taskStatus:", taskStatus);
+
     UpdateStatusTask(taskId, newStatus)
       .then(() => {
         console.log("Estado actualizado");
@@ -183,20 +180,15 @@ export function ProjectsPage() {
       });
   };
 
-  const CreatePDFAPI = async (grupoID) => {
+  const CreatePDFAPI = async () => {
     try {
-      const projectsPDF = await getProjectsPDF(grupoID);
+      const projectsPDF = await getProjectsPDF();
       console.log(projectsPDF);
       CreatePDF(projectsPDF);
     } catch (error) {
       console.log("Error a crear el pdf");
     } finally {
     }
-
-    const doc = new jsPDF();
-
-    doc.text("¡Hola mundo!", 10, 10);
-    doc.save("a4.pdf");
   };
 
   // Abrir modal y cargar detalles
@@ -204,7 +196,6 @@ export function ProjectsPage() {
     setModoEdicion(false);
     setProjectId(null);
     setProjecttData({
-      grupo: 1,
       nombre: "",
       descripcion: "",
       unidadreduccion: "",
@@ -222,7 +213,6 @@ export function ProjectsPage() {
     setProjectId(project.projectID);
     setProjecttData({
       proyectoId: project.proyectoId,
-      grupo: grupo,
       nombre: project.nombre,
       descripcion: project.descripcion,
       unidadreduccion: project.unidadreduccion,

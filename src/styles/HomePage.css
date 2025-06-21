@@ -1,0 +1,156 @@
+.home-page {
+  font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.6;
+  color: #616161;
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.brand-section {
+  background: linear-gradient(135deg, #e8e9ea 0%, #f5f5f5 100%);
+  padding: 80px 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.brand-section::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(48, 141, 33, 0.05) 0%, transparent 70%);
+  animation: float 20s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  33% {
+    transform: translate(30px, -30px) rotate(120deg);
+  }
+  66% {
+    transform: translate(-20px, 20px) rotate(240deg);
+  }
+}
+
+.brand-logo {
+  max-width: 600px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
+  margin-bottom: 30px;
+  animation: slideInUp 1s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.leaf-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 4px 12px rgba(48, 141, 33, 0.3));
+  transition: transform 0.3s ease;
+}
+
+.leaf-icon:hover {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.leaf-icon svg path:nth-child(1) {
+  fill: #308d21;
+}
+
+.leaf-icon svg path:nth-child(2) {
+  fill: #2d5732;
+}
+
+.leaf-icon svg circle:nth-child(3) {
+  fill: #44af69;
+}
+
+.leaf-icon svg circle:nth-child(4) {
+  fill: #376d4f;
+}
+
+.leaf-icon svg circle:nth-child(5) {
+  fill: #308d21;
+}
+
+.brand-name {
+  font-size: 4rem;
+  font-weight: 900;
+  color: #2d5732;
+  margin: 0;
+  text-shadow: 0 4px 8px rgba(45, 87, 50, 0.1);
+}
+
+.brand-name:not(.brand-on) {
+  background: linear-gradient(135deg, #2d5732 0%, #308d21 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.brand-on {
+  color: #308d21 !important;
+  position: relative;
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  -webkit-text-fill-color: #308d21 !important;
+  text-shadow: 0 2px 4px rgba(48, 141, 33, 0.3), 0 0 8px rgba(48, 141, 33, 0.2);
+  font-weight: 900;
+  filter: brightness(1.1) contrast(1.2);
+}
+
+.brand-tagline {
+  font-size: 1.3rem;
+  color: #7d4f50;
+  font-weight: 500;
+  letter-spacing: 3px;
+  margin: 0;
+  opacity: 0.9;
+  animation: slideInUp 1s ease-out 0.3s both;
+}
+
+@media (max-width: 768px) {
+  .logo-container {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .brand-name {
+    font-size: 3rem;
+  }
+
+  .brand-tagline {
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+  }
+}
