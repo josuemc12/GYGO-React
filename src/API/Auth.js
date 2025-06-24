@@ -1,6 +1,6 @@
 export  async function verify2FACode(tempToken, code) {
   try {
-    const response = await fetch('/api/auth/verify-2fa', {
+    const response = await fetch('http://localhost:5135/api/Auth/verify-2FA', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -22,9 +22,8 @@ export  async function verify2FACode(tempToken, code) {
 
 export  async function loginUser(email, password) {
   try {
-    const response = await fetch('http://localhost:5135/login', {
+    const response = await fetch('http://localhost:5135/api/Auth/login', {
       method: 'POST',
-      credentials: "include",
       headers: {
         'Content-Type': 'application/json',
       },
@@ -65,17 +64,19 @@ export  async function sendInvite(email) {
 
   try {
     const response = await fetch(`/send-invite/${adminToken}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(email),
+        method: 'POST',
+        credentials: 'include', // send cookies
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+      body: JSON.stringify(email)
     });
 
     if (response.ok) {
       return { success: true };
     }
-
+    
     const data = await response.json();
     return { success: false, error: data };
   } catch (error) {
@@ -85,7 +86,7 @@ export  async function sendInvite(email) {
 
 export async function registerUser(inviteToken, { email, username, password }) {
   
-  const url = inviteToken ? `/api/register/${inviteToken}` : '/api/register';
+  const url = inviteToken ? `http://localhost:5135/api/Auth/register/${inviteToken}` : 'http://localhost:5135/api/Auth/register';
 
   try {
     const response = await fetch(url, {
@@ -103,4 +104,25 @@ export async function registerUser(inviteToken, { email, username, password }) {
   } catch {
     return { success: false, error: 'Error al comunicarse con el servidor' };
   }
+}
+
+async function fetchGroupId() {
+    const token = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('token='))
+        ?.split('=')[1];
+
+    if (!token) {
+        console.error('Token not found in cookies');
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://localhost:5135/getGroupId?adminToken=${encodeURIComponent(token)}`);
+        const groupId = await response.json();
+        console.log('Group ID:', groupId);
+        return groupId;
+    } catch (error) {
+        console.error('Error fetching group ID:', error);
+    }
 }
