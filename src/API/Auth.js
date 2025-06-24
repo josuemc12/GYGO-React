@@ -1,4 +1,6 @@
 import { appsettings } from "../settings/appsettings";
+const { login } = useAuth();
+
 
 export  async function verify2FACode(tempToken, code) {
   try {
@@ -34,6 +36,8 @@ export  async function loginUser(email, password) {
     });
 
     const data = await response.json();
+
+    login(data.message);
 
     if (!response.ok) {
       return { success: false, error: data.error };

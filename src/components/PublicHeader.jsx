@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import "../styles/Header.css" // Asegúrate de tener este archivo CSS
 
-const Header = () => {
+export const PublicHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   // Cerrar menú al hacer clic fuera
@@ -90,4 +90,4 @@ const Header = () => {
   )
 }
 
-export default Header
+

@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import { useAuth } from '../AuthContext';
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../API/Auth";
 import {
@@ -42,6 +43,7 @@ const Paper = styled("div")(({ theme }) => ({
 
 
 export default function Login() {
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -76,7 +78,7 @@ export default function Login() {
 
         return;
       }
-
+      login();
       if (isTwoFactor) {
         // Redirect to 2FA page
         navigate(`/verify-2fa?tempToken=${encodeURIComponent(tempToken)}`);
