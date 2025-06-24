@@ -2,6 +2,13 @@ import { useState } from "react";
 import { BrowserRouter, Route, Routes, NavLink,Navigate,useLocation  } from "react-router-dom";
 import { DashboardGroupPage } from './Pages/DashboardGroupPage'
 import { ProjectsPage } from "./Pages/ProjectsPage";
+import { ConsumptionPage } from "./Pages/ConsumptionPage";
+import { MonthlyConsumptionPage } from "./Pages/MonthlyConsumPage";
+import { AddConsumptionPage } from "./Pages/AddConsumptionPage";
+import { MonthlyHistoryPage } from "./Pages/MonthlyHistoryPage";
+import { AddMonthlyConsumPage } from "./Pages/AddMonthlyConsmPage";
+import { UpdateMonthlyConsumPage } from "./Pages/UpdateMonthlyConsumPage";
+import { UpdateConsumptionPage } from "./Pages/UpdateConsumptionPage";
 import { ChangePasswordPage } from "./Pages/ChangePasswordPage";
 import { AddGroupSAPage } from "./Pages/AddGroupSAPage";
 import {ReportCompanies} from "./Pages/ReportCompaniesPage"
@@ -18,6 +25,7 @@ import { NavBar } from "./components/NavBar";
 
 
 function App() {
+  
   return (
     <BrowserRouter>
       <Layout />
@@ -44,6 +52,13 @@ function Layout() {
         <Route path="/AdminUserDashboard" element={<AdminUserDashboard />} />
         <Route path="/ProjectsPage" element={<ProjectsPage />} />
         <Route path="/AddGroup" element={<AddGroupSAPage />} />
+        <Route path="/consumption" element={<ConsumptionPage/>} />
+        <Route path="/consumption/monthly/:id" element={<MonthlyConsumptionPage/>} />
+        <Route path="/consumption/edit/:id" element={<UpdateConsumptionPage/>} />
+        <Route path="/consumption/monthly/history/:id" element={<MonthlyHistoryPage/>} />
+        <Route path="/consumption/add" element={<AddConsumptionPage/>} />
+        <Route path="/consumption/monthly/edit/:consumptionId/:monthlyId" element={<UpdateMonthlyConsumPage/>} />
+        <Route path="/consumption/monthly/add/:consumptionId" element={<AddMonthlyConsumPage/>} />
         <Route path="/ChangePassword" element={<ChangePasswordPage />} />
         <Route path="/Chat" element={<ChatWindow/>} />
           {/*Rutas de los reportes*/}

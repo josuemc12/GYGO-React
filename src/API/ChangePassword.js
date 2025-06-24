@@ -6,7 +6,6 @@ export async function PostChangePassword(UserDTO){
         credentials: "include",
         headers: {
             'Content-Type': 'application/json',
-            //autorizacion bearer / token
         },
         body: JSON.stringify(UserDTO)
     });
@@ -16,6 +15,6 @@ export async function PostChangePassword(UserDTO){
         return data;
     } else {
         const error = await response.text();
-        throw new Error(`Error al cambiar la contraseña: ${error}`);
+        throw new Error(error);
     }
 }

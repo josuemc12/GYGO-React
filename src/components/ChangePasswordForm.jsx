@@ -21,6 +21,11 @@ export const ChangePasswordForm = () => {
     setShowPassword((show) => !show);
   }
 
+  //funcion para validar que cumpla con identity y no sean iguales
+  const isSamePassword = () => {
+    return currentPassword === newPassword;
+  }
+
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
@@ -33,6 +38,16 @@ export const ChangePasswordForm = () => {
     event.preventDefault();
 
     setLoading(true);
+     if (isSamePassword()) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'La nueva contraseña no puede ser la misma que la actual.',
+        confirmButtonText: 'Ok'
+      });
+      setLoading(false);
+      return;
+    }
 
     const UserDTO = {
       CurrentPassword: currentPassword,
@@ -52,7 +67,15 @@ export const ChangePasswordForm = () => {
       navigate('/DashboardGroupPage');
 
     } catch (error) {
-      console.error(error.message)
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error,
+        confirmButtonText: 'Ok'
+      });
+      setLoading(false)
+      console.error(error)
+      return;
     }
   }
 

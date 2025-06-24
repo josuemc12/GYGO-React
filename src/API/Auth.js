@@ -22,7 +22,7 @@ export  async function verify2FACode(tempToken, code) {
 
 export  async function loginUser(email, password) {
   try {
-    const response = await fetch('http://localhost:5135/api/Auth/login', {
+    const response = await fetch('http://localhost:7217/api/Auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
