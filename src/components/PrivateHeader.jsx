@@ -69,6 +69,10 @@ import { useState, useEffect } from "react";
 import "../styles/Header.css"; // Asegúrate de tener este archivo CSS
 import { ProjectsPage } from "../Pages/ProjectsPage";
 import { DashboardGroupPage } from "../Pages/DashboardGroupPage";
+import { ChangePasswordPage } from "../Pages/ChangePasswordPage";
+import { AddGroupSAPage } from "../Pages/AddGroupSAPage";
+import { ReportCompanies } from "../Pages/ReportCompaniesPage";
+import { ConsumptionPage } from "../Pages/ConsumptionPage";
 
 export const PrivateHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -107,59 +111,122 @@ export const PrivateHeader = () => {
   };
 
   return (
-    <header className="header">
-      <div className="container">
-        <div className="header-content">
-          <div className="logo-small">
-            <a href="/DashboardGroupPage" className="me-4">
-              <img
-                src="src\assets\Logo.png"
-                alt="Green On Logo"
-                className="logo-image"
-              />
-              <span>Green On</span>
-            </a>
+    <>
+      <style>
+        {`
+     
+        
+      
+      
+    
+
+        /* Dropdown */
+        .dropdown {
+          position: relative;
+        }
+        .dropdown-menu {
+          display: none;
+          position: absolute;
+          background-color: white;
+          padding: 10px 0;
+          list-style: none;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+          z-index: 1000;
+          top: 100%;
+          left: 0;
+        }
+        .dropdown:hover .dropdown-menu {
+          display: block;
+        }
+        .dropdown-menu li {
+          padding: 8px 20px;
+        }
+        .dropdown-menu li a {
+          color: black;
+          text-decoration: none;
+          display: block;
+        }
+        .dropdown-menu li:hover {
+          background-color: #f0f0f0;
+        }
+
+        
+        }
+        `}
+      </style>
+
+      <header className="header">
+        <div className="container">
+          <div className="header-content">
+            <div className="logo-small">
+              <a href="/DashboardGroupPage" className="me-4">
+                <img
+                  src="src\assets\Logo.png"
+                  alt="Green On Logo"
+                  className="logo-image"
+                />
+                <span>Green On</span>
+              </a>
+            </div>
+
+            <nav className={`nav ${isMenuOpen ? "nav-open" : ""}`}>
+              <ul className="nav-list">
+                <li>
+                  <a href="/ProjectsPage" onClick={closeMenu}>
+                    Projectos
+                  </a>
+                </li>
+                <li>
+                  <a href="/ReportCompanies" onClick={closeMenu}>
+                    Reportes
+                  </a>
+                </li>
+
+                <li className="dropdown">
+                  <a href="#eventos" onClick={closeMenu}>
+                    Consumos ▾
+                  </a>
+                  <ul className="dropdown-menu">
+                    <li>
+                      <a href="/ConsumoPage" onClick={closeMenu}>
+                        Consumos Actuales
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#eventos-pasados" onClick={closeMenu}>
+                        Eventos pasados
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#crear-evento" onClick={closeMenu}>
+                        Crear evento
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <a href="#contactos" onClick={closeMenu}>
+                    Contactos
+                  </a>
+                </li>
+              </ul>
+            </nav>
+
+            <button
+              className="menu-toggle"
+              onClick={toggleMenu}
+              aria-label="Toggle menu"
+              aria-expanded={isMenuOpen}
+            >
+              <span className={`hamburger ${isMenuOpen ? "active" : ""}`}>
+                <span></span>
+                <span></span>
+                <span></span>
+              </span>
+            </button>
           </div>
-
-          <nav className={`nav ${isMenuOpen ? "nav-open" : ""}`}>
-            <ul className="nav-list">
-              <li>
-                <a href="#servicios" onClick={closeMenu}>
-                  Servicios
-                </a>
-              </li>
-              <li>
-                <a href="#certificaciones" onClick={closeMenu}>
-                  Certificaciones
-                </a>
-              </li>
-              <li>
-                <a href="#eventos" onClick={closeMenu}>
-                  Eventos
-                </a>
-              </li>
-              <li>
-                <a href="#contactos" onClick={closeMenu}>
-                  Contactos
-                </a>
-              </li>
-            </ul>
-          </nav>
-
-          <button
-            className="menu-toggle"
-            onClick={toggleMenu}
-            aria-label="Toggle menu"
-            aria-expanded={isMenuOpen}
-          >
-            <span className={`hamburger ${isMenuOpen ? "active" : ""}`}>
-              <span></span>
-              <span></span>
-              <span></span>
-            </span>
-          </button>
         </div>
-      </div>
-    </header>
+      </header>
+    </>
   );
 };

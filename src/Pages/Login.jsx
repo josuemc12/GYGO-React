@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+
 import { useAuth } from '../AuthContext';
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../API/Auth";
@@ -66,7 +67,8 @@ export default function Login() {
     try {
       const { success, isTwoFactor, tempToken, error } = await loginUser(
         email,
-        password
+        password,
+        login
       );
       if (!success) {
         Swal.fire({
@@ -78,7 +80,7 @@ export default function Login() {
 
         return;
       }
-      login();
+
       if (isTwoFactor) {
         // Redirect to 2FA page
         navigate(`/verify-2fa?tempToken=${encodeURIComponent(tempToken)}`);

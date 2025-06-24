@@ -1,17 +1,16 @@
 import { appsettings } from "../settings/appsettings";
-import { useAuth } from "../AuthContext";
+
 
 
 export  async function verify2FACode(tempToken, code) {
   try {
-    const response = await fetch('http://localhost:5135/api/Auth/verify-2FA', {
+    const response = await fetch(`${appsettings.apiUrl}Auth/verify-2FA`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ tempToken, code }),
     });
-
     const data = await response.json();
 
     if (response.ok) {
@@ -24,10 +23,12 @@ export  async function verify2FACode(tempToken, code) {
   }
 }
 
-export  async function loginUser(email, password) {
+export  async function loginUser(email, password,login) {
   try {
+
     const response = await fetch(`${appsettings.apiUrl}Auth/login`, {
       method: 'POST',
+      credentials: "include",
       headers: {
         'Content-Type': 'application/json',
         credentials: 'include'
@@ -37,7 +38,8 @@ export  async function loginUser(email, password) {
 
     const data = await response.json();
 
-    //login(data.message);
+    console.log(data.rol);
+    login(data.rol);
 
     if (!response.ok) {
       return { success: false, error: data.error };
@@ -86,12 +88,13 @@ export async function registerUser(inviteToken, { email, username, password }) {
 
   // const url = inviteToken ? `/api/register/${inviteToken}` : 'User/Register';
 
-  const url = inviteToken ? `http://localhost:5135/api/Auth/register/${inviteToken}` : 'http://localhost:5135/api/Auth/register';
+  const url = inviteToken ? `User/register/${inviteToken}` : 'User/Register';
 
 
   try {
     const response = await fetch(`${appsettings.apiUrl}${url}`, {
       method: 'POST',
+      credentials: "include",
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, username, password }),
     });

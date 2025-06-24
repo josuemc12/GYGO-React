@@ -30,7 +30,7 @@ import { Verify2FA } from "./Pages/Verify2Fa";
 import { DashboardConsumo } from "./Pages/ConsumoPage";
 import { ChatWindow } from "./Pages/ChatWindow";
 import AdminUserDashboard from "./Pages/AdminUserDashboard";
-import HomePage from "./Pages/HomePage";
+import {HomePage} from "./Pages/HomePage";
 import "../src/App.css";
 
 import Login from "./Pages/Login";
@@ -46,13 +46,13 @@ function App() {
 }
 
 function Layout() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated , role} = useAuth();
   const location = useLocation();
 
   const hideNavbar = ["/Login", "/Verify2FA"].includes(location.pathname);
   console.log("Auth:", isAuthenticated);
   console.log("Path:", location.pathname);
-
+  console.log('Rol actual:', role);
   return (
     <>
       {/* Mostrar PrivateHeader solo si el usuario está autenticado y no está en las rutas ocultas */}
