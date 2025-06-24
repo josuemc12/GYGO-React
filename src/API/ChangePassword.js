@@ -6,7 +6,6 @@ export async function PostChangePassword(UserDTO){
         credentials: "include",
         headers: {
             'Content-Type': 'application/json',
-            //autorizacion bearer / token
         },
         body: JSON.stringify(UserDTO)
     });
