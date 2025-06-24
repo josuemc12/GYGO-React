@@ -14,6 +14,13 @@ import {
 } from "react-router-dom";
 import { DashboardGroupPage } from "./Pages/DashboardGroupPage";
 import { ProjectsPage } from "./Pages/ProjectsPage";
+import { ConsumptionPage } from "./Pages/ConsumptionPage";
+import { MonthlyConsumptionPage } from "./Pages/MonthlyConsumPage";
+import { AddConsumptionPage } from "./Pages/AddConsumptionPage";
+import { MonthlyHistoryPage } from "./Pages/MonthlyHistoryPage";
+import { AddMonthlyConsumPage } from "./Pages/AddMonthlyConsmPage";
+import { UpdateMonthlyConsumPage } from "./Pages/UpdateMonthlyConsumPage";
+import { UpdateConsumptionPage } from "./Pages/UpdateConsumptionPage";
 import { ChangePasswordPage } from "./Pages/ChangePasswordPage";
 import { AddGroupSAPage } from "./Pages/AddGroupSAPage";
 import { ReportCompanies } from "./Pages/ReportCompaniesPage";
@@ -22,13 +29,15 @@ import { SendInvite } from "./Pages/SendInvite";
 import { Verify2FA } from "./Pages/Verify2Fa";
 import { DashboardConsumo } from "./Pages/ConsumoPage";
 import { ChatWindow } from "./Pages/ChatWindow";
-import { HomePage } from "./Pages/HomePage";
+import AdminUserDashboard from "./Pages/AdminUserDashboard";
+import HomePage from "./Pages/HomePage";
 import "../src/App.css";
 
 import Login from "./Pages/Login";
 import "./App.css";
 
 function App() {
+  
   return (
     <BrowserRouter>
       <Layout />
@@ -58,7 +67,6 @@ function Layout() {
         <Route path="/SendInvite" element={<SendInvite />} />
         <Route path="/Verify2FA" element={<Verify2FA />} />
 
-
         {/*Rutas protegidas*/}
         <Route element={<PrivateRoute />}>
           <Route path="/DashboardGroupPage" element={<DashboardGroupPage />} />
@@ -68,8 +76,15 @@ function Layout() {
           <Route path="/ConsumoPage" element={<DashboardConsumo />} />
           <Route path="/Chat" element={<ChatWindow />} />
           <Route path="/ReportCompanies" element={<ReportCompanies />} />
-        </Route>
-        {/*Rutas protegidas*/}
+          <Route path="/AdminUserDashboard" element={<AdminUserDashboard />} />
+          <Route path="/consumption" element={<ConsumptionPage/>} />
+          <Route path="/consumption/monthly/:id" element={<MonthlyConsumptionPage/>} />
+          <Route path="/consumption/edit/:id" element={<UpdateConsumptionPage/>} />
+          <Route path="/consumption/monthly/history/:id" element={<MonthlyHistoryPage/>} />
+          <Route path="/consumption/add" element={<AddConsumptionPage/>} />
+          <Route path="/consumption/monthly/edit/:consumptionId/:monthlyId" element={<UpdateMonthlyConsumPage/>} />
+          <Route path="/consumption/monthly/add/:consumptionId" element={<AddMonthlyConsumPage/>} />
+          </Route>
       </Routes>
     </>
   );

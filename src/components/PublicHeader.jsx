@@ -76,7 +76,6 @@ export const PublicHeader = () => {
               </li>
             </ul>
           </nav>
-
           <button className="menu-toggle" onClick={toggleMenu} aria-label="Toggle menu" aria-expanded={isMenuOpen}>
             <span className={`hamburger ${isMenuOpen ? "active" : ""}`}>
               <span></span>

@@ -4,7 +4,7 @@ import { useAuth } from "../AuthContext";
 
 export  async function verify2FACode(tempToken, code) {
   try {
-    const response = await fetch('/api/auth/verify-2fa', {
+    const response = await fetch('http://localhost:5135/api/Auth/verify-2FA', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -28,9 +28,9 @@ export  async function loginUser(email, password) {
   try {
     const response = await fetch(`${appsettings.apiUrl}Auth/login`, {
       method: 'POST',
-      credentials: "include",
       headers: {
         'Content-Type': 'application/json',
+        credentials: 'include'
       },
       body: JSON.stringify({ email, password }),
     });
@@ -57,31 +57,23 @@ export  async function loginUser(email, password) {
   }
 }
 
-function getCookie(name) {
-  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-  return match ? match[2] : null;
-}
-
 export  async function sendInvite(email) {
-  const adminToken = getCookie('Token');
-
-  if (!adminToken) {
-    return { success: false, error: 'Token de administrador no encontrado.' };
-  }
 
   try {
-    const response = await fetch(`/send-invite/${adminToken}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(email),
+    const response = await fetch(`http://localhost:5135/sendInvite`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+      body: JSON.stringify(email)
     });
 
     if (response.ok) {
       return { success: true };
     }
-
+    
     const data = await response.json();
     return { success: false, error: data };
   } catch (error) {
@@ -91,7 +83,11 @@ export  async function sendInvite(email) {
 
 export async function registerUser(inviteToken, { email, username, password }) {
   
-  const url = inviteToken ? `/api/register/${inviteToken}` : 'User/Register';
+
+  // const url = inviteToken ? `/api/register/${inviteToken}` : 'User/Register';
+
+  const url = inviteToken ? `http://localhost:5135/api/Auth/register/${inviteToken}` : 'http://localhost:5135/api/Auth/register';
+
 
   try {
     const response = await fetch(`${appsettings.apiUrl}${url}`, {
@@ -109,4 +105,25 @@ export async function registerUser(inviteToken, { email, username, password }) {
   } catch {
     return { success: false, error: 'Error al comunicarse con el servidor' };
   }
+}
+
+async function fetchGroupId() {
+    const token = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('token='))
+        ?.split('=')[1];
+
+    if (!token) {
+        console.error('Token not found in cookies');
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://localhost:5135/getGroupId?adminToken=${encodeURIComponent(token)}`);
+        const groupId = await response.json();
+        console.log('Group ID:', groupId);
+        return groupId;
+    } catch (error) {
+        console.error('Error fetching group ID:', error);
+    }
 }
