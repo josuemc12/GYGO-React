@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../API/Auth";
@@ -38,6 +39,7 @@ const Paper = styled("div")(({ theme }) => ({
   boxShadow: theme.shadows[5],
   width: "100%",
 }));
+
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -89,6 +91,7 @@ export default function Login() {
         text: "No se pudo conectar con el servidor, intentá nuevamente más tarde.",
         confirmButtonColor: "#d33",
       });
+
     }
   };
 
