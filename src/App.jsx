@@ -16,6 +16,7 @@ import {Register} from "./Pages/Register"
 import {SendInvite} from "./Pages/SendInvite"
 import {Verify2FA} from "./Pages/Verify2Fa"
 import { ChatWindow } from "./Pages/ChatWindow";
+import AdminUserDashboard from "./Pages/AdminUserDashboard";
 import HomePage from "./Pages/HomePage";
 import "../src/App.css";
 import Login from "./Pages/Login";
@@ -28,14 +29,13 @@ function App() {
   return (
     <BrowserRouter>
       <Layout />
+      <HomePage />
     </BrowserRouter>
   );
 }
 
 function Layout() {
   const location = useLocation();
-
-
   const hideNavbar = ["/Login", "/Verify2FA"].includes(location.pathname);
 
 
@@ -49,6 +49,7 @@ function Layout() {
         <Route path="/SendInvite" element={<SendInvite />} />
         <Route path="/Verify2FA" element={<Verify2FA />} />
         <Route path="/DashboardGroupPage" element={<DashboardGroupPage />} />
+        <Route path="/AdminUserDashboard" element={<AdminUserDashboard />} />
         <Route path="/ProjectsPage" element={<ProjectsPage />} />
         <Route path="/AddGroup" element={<AddGroupSAPage />} />
         <Route path="/consumption" element={<ConsumptionPage/>} />
