@@ -57,14 +57,10 @@ export const getGroupUsers = async () => {
   }
 };
 
-/**
- * Send an invite to a user
- * @param {string} email - Email of the user to invite
- * @returns {Promise<Object>} Response from the server
- */
 export const sendUserInvite = async (email) => {
   try {
 
+    console.log(email);
     const response = await fetch(`${API_BASE_URL}/sendInvite`, {
     method: "POST",
     mode: "cors",
@@ -73,7 +69,7 @@ export const sendUserInvite = async (email) => {
         "Content-Type": "application/json",
         Accept: "application/json"
     },
-    body: JSON.stringify(email)
+    body: JSON.stringify({email})
 });
 
     if (!response.ok) {

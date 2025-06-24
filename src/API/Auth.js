@@ -26,6 +26,7 @@ export  async function loginUser(email, password) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        credentials: 'include'
       },
       body: JSON.stringify({ email, password }),
     });
@@ -50,22 +51,12 @@ export  async function loginUser(email, password) {
   }
 }
 
-function getCookie(name) {
-  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-  return match ? match[2] : null;
-}
-
 export  async function sendInvite(email) {
-  const adminToken = getCookie('Token');
-
-  if (!adminToken) {
-    return { success: false, error: 'Token de administrador no encontrado.' };
-  }
 
   try {
-    const response = await fetch(`/send-invite/${adminToken}`, {
+    const response = await fetch(`http://localhost:5135/sendInvite`, {
         method: 'POST',
-        credentials: 'include', // send cookies
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'

@@ -2,6 +2,8 @@ import { useState, useEffect } from "react"
 import UserTable from "../components/UserAdminTable"
 import InviteModal from "../components/InviteModal"
 import { getGroupUsers, sendUserInvite, removeUserFromGroup, fetchGroupId} from "../API/Admin"
+import '../App.css'
+import "../styles/AdminDashboard.css"
 import { useNavigate } from 'react-router-dom';
 
 const AdminUserDashboard = () => {
@@ -81,8 +83,7 @@ const handleRemoveUser = async (userId) => {
       {/* Dashboard Header */}
       <div className="dashboard-header">
         <div className="header-content">
-          <h1>User Management</h1>
-          <p>Manage users in your group</p>
+          <h1>Group Users</h1>
         </div>
         <button className="btn btn-primary" onClick={() => setInviteModalOpen(true)}>
           + Invite User
