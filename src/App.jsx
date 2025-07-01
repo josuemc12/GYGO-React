@@ -64,6 +64,8 @@ function App() {
 
       </div>
     </BrowserRouter>
+  );
+}
 import { NavBar } from "./components/NavBar";
 
 function App() {
