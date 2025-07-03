@@ -60,7 +60,7 @@ const colors = {
   },
 
   success: {
-    main: "#4CAF50",
+    main: "#2d5631",
     focus: "#67bb6a",
   },
 
