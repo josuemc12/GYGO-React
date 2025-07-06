@@ -4,6 +4,8 @@ import { appsettings } from "../settings/appsettings";
 
 export  async function verify2FACode(tempToken, code) {
   try {
+    
+
     const response = await fetch(`${appsettings.apiUrl}Auth/verify-2FA`, {
       method: 'POST',
       headers: {
@@ -14,6 +16,7 @@ export  async function verify2FACode(tempToken, code) {
     const data = await response.json();
 
     if (response.ok) {
+  
       return { success: true };
     } else {
       return { success: false, error: data.error };
@@ -23,7 +26,7 @@ export  async function verify2FACode(tempToken, code) {
   }
 }
 
-export  async function loginUser(email, password,login) {
+export  async function loginUser(email, password) {
   try {
 
     const response = await fetch(`${appsettings.apiUrl}Auth/login`, {
@@ -39,13 +42,13 @@ export  async function loginUser(email, password,login) {
     const data = await response.json();
 
     console.log(data.rol);
-    login(data.rol);
+
 
     if (!response.ok) {
-      return { success: false, error: data.error || data.message };
+      return { success: false, error: data.error || data.message, rol: data.rol };
     }
 
-    console.log(data);
+  
 
     if (data.message === "2FA required") {
       return {
@@ -58,6 +61,7 @@ export  async function loginUser(email, password,login) {
     return {
       success: true,
       isTwoFactor: false,
+      rol: data.rol,
     };
 
   } catch (error) {

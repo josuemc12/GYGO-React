@@ -44,7 +44,6 @@ import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
 
 // Material Dashboard 2 React routes
-import routes from "routes";
 
 // Material Dashboard 2 React contexts
 import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "context";
@@ -53,7 +52,19 @@ import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "co
 import brandWhite from "assets/images/logo-ct.png";
 import brandDark from "assets/images/logo-ct-dark.png";
 
+
+import { useAuth } from "./context/AuthContext";
+
+import { routes, getRoutes } from "routes";
 export default function App() {
+
+
+  const { role } = useAuth();
+ 
+const filteredRoutes = getRoutes(role);
+
+
+
   const [controller, dispatch] = useMaterialUIController();
   const {
     miniSidenav,
@@ -68,6 +79,13 @@ export default function App() {
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const [rtlCache, setRtlCache] = useState(null);
   const { pathname } = useLocation();
+
+  const hideSidebarRoutes = ["/login", "/register", "/sendinvite", "/verify2fa","/"];
+  const hideSidebar = hideSidebarRoutes.includes(pathname.toLowerCase());
+
+
+  const specialRoutes = ["/Login", "/register", "/sendinvite", "/verify2fa", "/"]; 
+  const isSpecialRoute = specialRoutes.some(route => pathname.toLowerCase().startsWith(route));
 
   // Cache for the rtl
   useMemo(() => {
@@ -109,18 +127,13 @@ export default function App() {
     document.scrollingElement.scrollTop = 0;
   }, [pathname]);
 
-  const getRoutes = (allRoutes) =>
-    allRoutes.map((route) => {
-      if (route.collapse) {
-        return getRoutes(route.collapse);
-      }
-
-      if (route.route) {
-        return <Route exact path={route.route} element={route.component} key={route.key} />;
-      }
-
-      return null;
-    });
+const renderRoutes = (allRoutes) =>
+  allRoutes.map((route) => {
+    if (route.collapse) return renderRoutes(route.collapse);
+    if (route.route)
+      return <Route exact path={route.route} element={route.component} key={route.key} />;
+    return null;
+  });
 
   const configsButton = (
     <MDBox
@@ -150,13 +163,14 @@ export default function App() {
     <CacheProvider value={rtlCache}>
       <ThemeProvider theme={darkMode ? themeDarkRTL : themeRTL}>
         <CssBaseline />
-        {layout === "dashboard" && (
+        
+        {layout === "dashboard" && !hideSidebar && (
           <>
             <Sidenav
               color={sidenavColor}
               brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
               brandName="Material Dashboard 2"
-              routes={routes}
+              routes={filteredRoutes}
               onMouseEnter={handleOnMouseEnter}
               onMouseLeave={handleOnMouseLeave}
             />
@@ -166,21 +180,23 @@ export default function App() {
         )}
         {layout === "vr" && <Configurator />}
         <Routes>
-          {getRoutes(routes)}
-          <Route path="*" element={<Navigate to="/dashboard" />} />
+           {renderRoutes(filteredRoutes)}
+          <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
+
       </ThemeProvider>
     </CacheProvider>
   ) : (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <CssBaseline />
-      {layout === "dashboard" && (
+      
+      {layout === "dashboard" && !hideSidebar && (
         <>
           <Sidenav
             color={sidenavColor}
             brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
-            brandName="Material Dashboard 2"
-            routes={routes}
+            brandName="GYGO"
+            routes={filteredRoutes}
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleOnMouseLeave}
           />
@@ -190,8 +206,8 @@ export default function App() {
       )}
       {layout === "vr" && <Configurator />}
       <Routes>
-        {getRoutes(routes)}
-        <Route path="*" element={<Navigate to="/dashboard" />} />
+         {renderRoutes(filteredRoutes)}
+        <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </ThemeProvider>
   );
