@@ -1,14 +1,14 @@
 import Dashboard from "./Pages/Dashboard";
 import Login from "./Pages/Login";
 import ProjectPage from "./Pages/ProjectsPage";
-import {HomePage} from "./Pages/HomePage";
+import { HomePage } from "./Pages/HomePage";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 
 import Icon from "@mui/material/Icon";
 
 const ProtectedElement = ({ children, allowedRoles }) => {
-  const { role  } = useAuth();
+  const { role } = useAuth();
   console.log("Role desde useAuth:", role);
   if (!role) return <Navigate to="/login" replace />;
   if (allowedRoles && !allowedRoles.includes(role)) {
@@ -18,20 +18,21 @@ const ProtectedElement = ({ children, allowedRoles }) => {
   return children;
 };
 
-
-
-
 export const routes = [
   {
     type: "collapse",
-    name: "Inicio",
-    key: "home",
-    icon: <Icon fontSize="small">home</Icon>,
-    route: "/",
-    component: <HomePage />,
+    name: "Dashboard",
+    key: "dashboard",
+    icon: <Icon fontSize="small">dashboard</Icon>,
+    route: "/dashboard",
+    component: (
+      <ProtectedElement>
+        <Dashboard />
+      </ProtectedElement>
+    ),
+    roles: ["admin", "user", "GA"],
   },
-
-  {
+    {
     type: "collapse",
     name: "Projects",
     key: "projects",
@@ -43,27 +44,16 @@ export const routes = [
       </ProtectedElement>
     ),
     roles: ["GA"],
-     
-
   },
-    {
-    type: "collapse",
-    name: "Dashboard",
-    key: "dashboard",
-    icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/dashboard",
-      component: (
-      <ProtectedElement>
-        <Dashboard />
-      </ProtectedElement>
-    ),
-    roles: ["admin", "user","GA"],
-  },
-  
-    {
+  //Ruta para el login
+  {
     route: "/login",
     component: <Login />,
-  
+  },
+  //Ruta para HomePage
+  {
+    route: "/",
+    component: <HomePage />,
   },
 ];
 

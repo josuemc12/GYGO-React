@@ -86,7 +86,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 
 
-function Dashboard() {
+function ProjectPage() {
 
   //Hook para manejar el JSON de proyectos
   const [projects, setProjects] = useState([]);
@@ -1016,23 +1016,12 @@ function Dashboard() {
       </Modal>
       {/* Fin del Modal para agregar un nuevo proyecto */}
 
-
-
-
-
     </DashboardLayout>
-
-
-
-
-
-
-
 
   );
 }
 
-export default Dashboard;
+export default ProjectPage;
 
 
 
