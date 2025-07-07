@@ -30,7 +30,7 @@ export const routes = [
         <Dashboard />
       </ProtectedElement>
     ),
-    roles: ["admin", "user", "GA"],
+    roles: ["admin", "user", "GA","DEV"],
   },
     {
     type: "collapse",
@@ -43,7 +43,7 @@ export const routes = [
         <ProjectPage />
       </ProtectedElement>
     ),
-    roles: ["GA"],
+    roles: ["GA","DEV"],
   },
   //Ruta para el login
   {
