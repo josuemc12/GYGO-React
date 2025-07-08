@@ -32,16 +32,16 @@ import Configurator from "examples/Configurator";
 
 // Material Dashboard 2 React themes
 import theme from "assets/theme";
-import themeRTL from "assets/theme/theme-rtl";
+
 
 // Material Dashboard 2 React Dark Mode themes
 import themeDark from "assets/theme-dark";
-import themeDarkRTL from "assets/theme-dark/theme-rtl";
+
 
 // RTL plugins
-import rtlPlugin from "stylis-plugin-rtl";
+
 import { CacheProvider } from "@emotion/react";
-import createCache from "@emotion/cache";
+
 
 // Material Dashboard 2 React routes
 
@@ -62,8 +62,6 @@ export default function App() {
   const { role } = useAuth();
  
 const filteredRoutes = getRoutes(role);
-
-
 
   const [controller, dispatch] = useMaterialUIController();
   const {
@@ -87,15 +85,8 @@ const filteredRoutes = getRoutes(role);
   const specialRoutes = ["/Login", "/register", "/sendinvite", "/verify2fa", "/"]; 
   const isSpecialRoute = specialRoutes.some(route => pathname.toLowerCase().startsWith(route));
 
-  // Cache for the rtl
-  useMemo(() => {
-    const cacheRtl = createCache({
-      key: "rtl",
-      stylisPlugins: [rtlPlugin],
-    });
 
-    setRtlCache(cacheRtl);
-  }, []);
+  
 
   // Open sidenav when mouse enter on mini sidenav
   const handleOnMouseEnter = () => {
@@ -159,34 +150,7 @@ const renderRoutes = (allRoutes) =>
     </MDBox>
   );
 
-  return direction === "rtl" ? (
-    <CacheProvider value={rtlCache}>
-      <ThemeProvider theme={darkMode ? themeDarkRTL : themeRTL}>
-        <CssBaseline />
-        
-        {layout === "dashboard" && !hideSidebar && (
-          <>
-            <Sidenav
-              color={sidenavColor}
-              brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
-              brandName="Material Dashboard 2"
-              routes={filteredRoutes}
-              onMouseEnter={handleOnMouseEnter}
-              onMouseLeave={handleOnMouseLeave}
-            />
-            <Configurator />
-            {configsButton}
-          </>
-        )}
-        {layout === "vr" && <Configurator />}
-        <Routes>
-           {renderRoutes(filteredRoutes)}
-          <Route path="*" element={<Navigate to="/login" />} />
-        </Routes>
-
-      </ThemeProvider>
-    </CacheProvider>
-  ) : (
+  return  (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <CssBaseline />
       

@@ -47,11 +47,13 @@ export const routes = [
   },
   //Ruta para el login
   {
+    key: "login", // <-- agrega key única
     route: "/login",
     component: <Login />,
   },
   //Ruta para HomePage
   {
+    key: "home", // <-- agrega key única
     route: "/",
     component: <HomePage />,
   },
