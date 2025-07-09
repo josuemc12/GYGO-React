@@ -62,6 +62,7 @@ export  async function loginUser(email, password) {
       success: true,
       isTwoFactor: false,
       rol: data.rol,
+      id : data.id
     };
 
   } catch (error) {

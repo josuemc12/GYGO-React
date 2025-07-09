@@ -69,7 +69,7 @@ export default function Login() {
     }
 
     try {
-      const { success, isTwoFactor, tempToken, error,rol } = await loginUser(
+      const { success, isTwoFactor, tempToken, error,rol,id } = await loginUser(
         email,
         password,
         
@@ -90,7 +90,7 @@ export default function Login() {
         navigate(`/verify-2fa?tempToken=${encodeURIComponent(tempToken)}`);
       } else {
         console.log("Rol que se va a guardar:", rol);
-        login(rol);
+        login(rol,id);
         // Normal login success — redirect to dashboard or home
         navigate("/dashboard");
       }

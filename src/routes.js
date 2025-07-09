@@ -4,6 +4,7 @@ import ProjectPage from "./Pages/ProjectsPage";
 import { HomePage } from "./Pages/HomePage";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
+import { Messages } from "./Pages/Messages";
 
 import Icon from "@mui/material/Icon";
 
@@ -44,6 +45,19 @@ export const routes = [
       </ProtectedElement>
     ),
     roles: ["GA","DEV"],
+  },
+  {
+    type: "collapse",
+    name: "Messages",
+    key: "Messagrs",
+    icon: <Icon fontSize="small">email</Icon>,
+    route: "/messages",
+    component: (
+      <ProtectedElement>
+        <Messages />
+      </ProtectedElement>
+    ),
+    roles: ["admin", "user", "GA","DEV"],
   },
   //Ruta para el login
   {
