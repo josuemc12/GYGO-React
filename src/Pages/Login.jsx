@@ -35,11 +35,13 @@ const theme = createTheme({
 });
 
 const Paper = styled("div")(({ theme }) => ({
-  padding: "40px",
+   padding: "40px",
   backgroundColor: "white",
   borderRadius: theme.shape.borderRadius,
   boxShadow: theme.shadows[5],
   width: "100%",
+   maxWidth: 400,        
+  margin: "0 auto",
 }));
 
 

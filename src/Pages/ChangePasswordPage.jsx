@@ -3,6 +3,10 @@ import { ChangePasswordForm } from '../components/ChangePasswordForm'
 import { jwtDecode } from 'jwt-decode';
 import { Box, Typography } from '@mui/material';
 
+// Material Dashboard 2 React example components
+import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
+import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import Footer from "examples/Footer";
 
 export const ChangePasswordPage = () => {
 
@@ -33,6 +37,7 @@ export const ChangePasswordPage = () => {
 
   
   return (
+    <DashboardLayout>
     <div className='justify-content-center align-items-center my-4'>
       <Box sx={{ mb: 3 }}>
         <Typography variant='h4' >Cambiar contraseña | {username || "Usuario"}  </Typography>
@@ -40,5 +45,7 @@ export const ChangePasswordPage = () => {
       <hr />
       <ChangePasswordForm></ChangePasswordForm>
     </div>
+    <Footer />
+    </DashboardLayout>
   )
 }
