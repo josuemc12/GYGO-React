@@ -3,6 +3,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ErrorOutline, SaveOutlined, ArrowBack } from "@mui/icons-material";
 import "../styles/consumption.css";
 import { UpdateMonthlyConsumption, getMonthlyConsumptions } from "../API/Consumptions/MonthlyConsum";
+import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
+import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import Footer from "examples/Footer";
 
 export function UpdateMonthlyConsumPage() {
   const { consumptionId, monthlyId } = useParams();
@@ -94,6 +97,7 @@ export function UpdateMonthlyConsumPage() {
   };
 
   return (
+    <DashboardLayout>
     <div className="agregar-consumo-container">
       <div className="agregar-consumo-content">
         <div className="header-section">
@@ -187,5 +191,7 @@ export function UpdateMonthlyConsumPage() {
         </div>
       </div>
     </div>
+    <Footer></Footer>
+    </DashboardLayout>
   );
 } 

@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:5135"
+const API_BASE_URL = "http://localhost:7217"
 
 // Get group ID from cookies
 const getGroupId = async () => {

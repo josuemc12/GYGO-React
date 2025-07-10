@@ -30,7 +30,7 @@ export function AddMonthlyConsumForm({ consumptionId }) {
       try {
         const data = await getConsumptionById(consumptionId);
         console.log(data)
-        setConsumo(data);
+        setConsumo(data[0]);
       } catch (error) {
         console.error("Error cargando el consumo base", error);
       } finally {
@@ -102,7 +102,7 @@ export function AddMonthlyConsumForm({ consumptionId }) {
   const calcularEmisiones = () => {
     if (!consumo || !formData.amount) return 0;
     const valorFactor = consumo.valueEmision / consumo.valueUnit;
-    return (valorFactor * consumo.pcg).toFixed(2);
+    return (valorFactor * consumo.pcgValue * parseFloat(formData.amount)).toFixed(2); 
   };
 
   const handleVolver = () => {

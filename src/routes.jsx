@@ -16,6 +16,16 @@ import Login from "./Pages/Login";
 import  ProjectPage  from "./Pages/ProjectsPage";;
 import {HomePage} from "./Pages/HomePage";
 import { ChangePasswordPage } from "./Pages/ChangePasswordPage";
+import { ConsumptionPage } from "./Pages/ConsumptionPage";
+import { MonthlyConsumptionPage } from "./Pages/MonthlyConsumPage";
+import { AddConsumptionPage } from "./Pages/AddConsumptionPage";
+import { MonthlyHistoryPage } from "./Pages/MonthlyHistoryPage";
+import { AddMonthlyConsumPage } from "./Pages/AddMonthlyConsmPage";
+import { UpdateMonthlyConsumPage } from "./Pages/UpdateMonthlyConsumPage";
+import { UpdateConsumptionPage } from "./Pages/UpdateConsumptionPage";
+import IncidentsHistoryPage from "./Pages/IncidentHistoryPage";
+import { ConfirmIncidentPage } from "./Pages/ConfirmIncidentPage/ConfirmIncidentPage";
+import { ReportsEmissionsPage } from "./Pages/ReportsEmissionsPage";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -31,8 +41,8 @@ const routes = [
   },
     {
     type: "collapse",
-    name: "ProjectsPage",
-    key: "Projects",
+    name: "ChangePassword",
+    key: "ChangePassword",
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/ChangePasswordPage",
     component: <ChangePasswordPage />,
@@ -53,6 +63,87 @@ const routes = [
     route: "/Login",
     component: <Login />,
   },
+  {
+    type: "collapse",
+    name: "Consumption",
+    key: "consumption",
+    icon: <Icon fontSize="small">Consumo</Icon>,
+    route: "/consumption",
+    component: <ConsumptionPage />,
+  },
+  {
+    type: "collapse",
+    name: "Monthly Consumption",
+    key: "monthly-consumption",
+    icon: <Icon fontSize="small">bar_chart</Icon>,
+    route: "/consumption/monthly/:id",
+    component: <MonthlyConsumptionPage />,
+  },
+  {
+    type: "collapse",
+    name: "Edit Consumption",
+    key: "edit-consumption",
+    icon: <Icon fontSize="small">edit</Icon>,
+    route: "/consumption/edit/:id",
+    component: <UpdateConsumptionPage />,
+  },
+  {
+    type: "collapse",
+    name: "Monthly History",
+    key: "monthly-history",
+    icon: <Icon fontSize="small">history</Icon>,
+    route: "/consumption/monthly/history/:id",
+    component: <MonthlyHistoryPage />,
+  },
+  {
+    type: "collapse",
+    name: "Emissions Reports",
+    key: "emissions-reports",
+    icon: <Icon fontSize="small">insert_chart</Icon>,
+    route: "/reportsEmissions",
+    component: <ReportsEmissionsPage />,
+  },
+  {
+    type: "collapse",
+    name: "Add Consumption",
+    key: "add-consumption",
+    icon: <Icon fontSize="small">add</Icon>,
+    route: "/consumption/add",
+    component: <AddConsumptionPage />,
+  },
+  {
+    type: "collapse",
+    name: "Edit Monthly Consumption",
+    key: "edit-monthly-consumption",
+    icon: <Icon fontSize="small">edit_calendar</Icon>,
+    route: "/consumption/monthly/edit/:consumptionId/:monthlyId",
+    component: <UpdateMonthlyConsumPage />,
+  },
+  {
+    type: "collapse",
+    name: "Add Monthly Consumption",
+    key: "add-monthly-consumption",
+    icon: <Icon fontSize="small">add_circle</Icon>,
+    route: "/consumption/monthly/add/:consumptionId",
+    component: <AddMonthlyConsumPage />,
+  },
+  {
+    type: "collapse",
+    name: "Confirm Emission Incident",
+    key: "confirm-incident",
+    icon: <Icon fontSize="small">check_circle</Icon>,
+    route: "/emissions/confirm",
+    component: <ConfirmIncidentPage />,
+  },
+  {
+    type: "collapse",
+    name: "Incidents History",
+    key: "incidents-history",
+    icon: <Icon fontSize="small">list_alt</Icon>,
+    route: "/emissions/incidents",
+    component: <IncidentsHistoryPage />,
+  },
+
 ];
 
 export default routes;
