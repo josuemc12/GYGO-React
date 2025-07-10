@@ -1,6 +1,9 @@
+
 import { useState } from "react";
-import { useParams } from "react-router-dom";
-import { registerUser } from "../API/Auth";
+
+import { useAuth } from '../../AuthContext';
+import { useNavigate } from "react-router-dom";
+import { loginUser } from "../../API/Auth";
 import {
   Button,
   CssBaseline,
@@ -41,72 +44,51 @@ const Paper = styled("div")(({ theme }) => ({
   margin: "0 auto",
 }));
 
-export function Register() {
-  const { inviteToken } = useParams();
-  const [form, setForm] = useState({ email: "", username: "", password: "" });
-  const [message, setMessage] = useState("");
 
+export default function Login() {
+  const { login } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  //Funciona para la contraseña
-  function isPasswordValid(password) {
-    if (password.length < 8) return false;
-    if (!/[A-Z]/.test(password)) return false; 
-    if (!/[a-z]/.test(password)) return false; 
-    if (!/[0-9]/.test(password)) return false; 
-    if (!/[^A-Za-z0-9]/.test(password)) return false; 
-    return true;
-  }
-  //Termina funcion de la contraseña
-
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    if (!form.email || !form.password || !form.username) {
+    if (!email || !password) {
       Swal.fire({
         icon: "warning",
-        title: "No se pudo registrar al usuario",
+        title: "No se pudo iniciar sesión",
         text: "Por favor, completá todos los campos.",
-        confirmButtonColor: "#f8bb86",
-      });
-      return;
-    }
-    //Verifica la contraseña
-    if (!isPasswordValid(form.password)) {
-      Swal.fire({
-        icon: "warning",
-        title: "Problemas con la contraseña",
-        text: "La contraseña debe tener al menos 8 caracteres, mayúscula, minúscula, número y símbolo.",
         confirmButtonColor: "#f8bb86",
       });
       return;
     }
 
     try {
-      const response = await registerUser(inviteToken, form);
-
-      if (response.success) {
-        Swal.fire({
-          icon: "success",
-          title: "Registro exitoso",
-          text: "El usuario ha sido registrado correctamente.",
-          confirmButtonColor: "#2DA14C",
-        }).then(() => {
-          window.location.href = "/DashboardGroupPage";
-        });
-        return;
-      } else {
+      const { success, isTwoFactor, tempToken, error } = await loginUser(
+        email,
+        password,
+        login
+      );
+      if (!success) {
         Swal.fire({
           icon: "error",
-          title: "Error al registrar al usuario",
-          text: "Puede que el correo o nombre de usuario ya esté en uso.",
+          title: "Error al iniciar sesión",
+          text: "Usuario o contraseña incorrectos",
           confirmButtonColor: "#d33",
         });
+
         return;
+      }
+
+      if (isTwoFactor) {
+        // Redirect to 2FA page
+        navigate(`/verify-2fa?tempToken=${encodeURIComponent(tempToken)}`);
+      } else {
+        // Normal login success — redirect to dashboard or home
+        navigate("/DashboardGroupPage");
       }
     } catch (error) {
       Swal.fire({
@@ -115,41 +97,29 @@ export function Register() {
         text: "No se pudo conectar con el servidor, intentá nuevamente más tarde.",
         confirmButtonColor: "#d33",
       });
+
     }
   };
 
   return (
     <div>
-      {/* <h2>Registro {inviteToken ? "por invitación" : "normal"}</h2>
-      <form onSubmit={handleSubmit}>
+      {/* <h2>Login</h2>
+      <form onSubmit={handleLogin}>
         <input
           type="email"
-          name="email"
-          placeholder="Correo electrónico"
-          value={form.email}
-          onChange={handleChange}
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <br />
-        <input
-          type="text"
-          name="username"
-          placeholder="Nombre de usuario"
-          value={form.username}
-          onChange={handleChange}
-          required
-        />
-        <br />
         <input
           type="password"
-          name="password"
-          placeholder="Contraseña"
-          value={form.password}
-          onChange={handleChange}
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <br />
-        <button type="submit">Registrarse</button>
+        <button type="submit">Login</button>
       </form>
       {message && <p>{message}</p>} */}
 
@@ -158,7 +128,7 @@ export function Register() {
         <Box
           sx={{
             backgroundColor: "background.default",
-            minHeight: "88vh",
+            minHeight: "100vh",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -170,48 +140,37 @@ export function Register() {
                 <img
                   src="/src/assets/Logo.png"
                   alt="Logo"
-                  style={{ maxWidth: "120px" }}
+                  style={{ maxWidth: "120px"}}
                 />
               </Box>
 
               <Box textAlign="center" mb={2}>
                 <Typography variant="h4" fontWeight={600} color="primary">
-                  Registro {inviteToken ? "por invitación" : "normal"}
+                  SIGN IN
                 </Typography>
                 <Typography variant="body2" color="textSecondary" mt={1}>
-                  Registrar un usuario
+                  Sign into your account
                 </Typography>
               </Box>
 
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleLogin}>
                 <TextField
                   fullWidth
                   margin="normal"
-                  name="email"
                   label="Correo Eletronico"
                   variant="outlined"
-                  value={form.email}
-                  onChange={handleChange}
-                />
-                <TextField
-                  fullWidth
-                  margin="normal"
-                  label="Nombre de usuario"
-                  name="username"
-                  variant="outlined"
-                  value={form.username}
-                  onChange={handleChange}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
 
                 <TextField
                   fullWidth
                   margin="normal"
                   label="Contraseña"
-                  name="password"
                   variant="outlined"
                   type={showPassword ? "text" : "password"}
-                  value={form.password}
-                  onChange={handleChange}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
@@ -234,7 +193,7 @@ export function Register() {
                   size="large"
                   sx={{ mt: 3, mb: 2, py: 1.5, borderRadius: 2 }}
                 >
-                  Registrar
+                  Sign In
                 </Button>
               </form>
             </Paper>

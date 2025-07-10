@@ -9,7 +9,9 @@ import {
   TrendingUp as TrendingUpIcon
 } from "@mui/icons-material";
 import { getMonthlyHistory } from "../API/Consumptions/MonthlyHistory";
-
+import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
+import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import Footer from "examples/Footer";
 
 
 
@@ -94,6 +96,7 @@ export function MonthlyHistoryPage() {
   };
 
   return (
+    <DashboardLayout>
     <div className="historial-cambios-container">
       <div className="historial-cambios-content">
         <div className="header-section">
@@ -197,5 +200,7 @@ export function MonthlyHistoryPage() {
         </div>
       </div>
     </div>
+    <Footer></Footer>
+    </DashboardLayout>
   );
 }

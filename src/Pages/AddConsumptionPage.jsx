@@ -2,6 +2,9 @@ import { ArrowBackOutlined } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { AddConsumptionForm } from "../components/AddConsumptionForm";
 import "../styles/AddConsumption.css";
+import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
+import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import Footer from "examples/Footer";
 
 export function AddConsumptionPage() {
   const navigate = useNavigate();
@@ -11,6 +14,7 @@ export function AddConsumptionPage() {
   };
 
   return (
+    <DashboardLayout>
     <div className="agregar-consumo-container">
       <div className="agregar-consumo-content">
         {/* Header */}
@@ -31,5 +35,7 @@ export function AddConsumptionPage() {
         <AddConsumptionForm />
       </div>
     </div>
+    <Footer/>
+    </DashboardLayout>
   );
 }
