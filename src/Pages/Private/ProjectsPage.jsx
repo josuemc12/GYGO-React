@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import ProjectTable from "../components/ProjectTable";
-import { CreatePDF } from "../utils/CreatePDF";
+
+import { CreatePDF } from "../../utils/CreatePDF";
 import { jsPDF } from "jspdf";
 import {
   getProjects,
@@ -10,7 +10,7 @@ import {
   AddProject,
   UpdateProject,
   DProject,
-} from "../API/Projects";
+} from "../../API/Projects";
 
 import {
   getTasks,
@@ -18,8 +18,8 @@ import {
   AddTask,
   UpdateTaskt,
   DeleteTask,
-} from "../API/Tasks";
-import { getReductionUnit } from "../API/ReductionUnit";
+} from "../../API/Tasks";
+import { getReductionUnit } from "../../API/ReductionUnit";
 import {
   Grid,
   Box,
@@ -44,7 +44,7 @@ import {
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import "../styles/ProjectsPage.css";
+import "../../styles/ProjectsPage.css";
 import { Try } from "@mui/icons-material";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import Swal from "sweetalert2";
@@ -721,7 +721,6 @@ function ProjectPage() {
                     <MDBox pt={3}>
                       <DataTable
                         table={{ columns, rows }}
-                        canSearch={true}
                         isSorted={false}
                         entriesPerPage={false}
                         showTotalEntries={true}

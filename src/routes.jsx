@@ -11,18 +11,18 @@
 import Icon from "@mui/material/Icon";
 
 //Ruta del login
-import Login from "./Pages/Login";
+import Login from "./Pages/Public/Login";
 //Ruta del inicio de sesion
-import { Register } from "./Pages/Register";
-import {ReportCompanies} from "./Pages/ReportCompaniesPage"
+import { Register } from "./Pages/Public/Register";
+import {ReportCompanies} from "./Pages/Private/ReportCompaniesPage"
 
 import AdminUserDashboard from "./Pages/AdminUserDashboard";
 import AdminEmisionFactor from "./Pages/Admin/AdminEmisionFactor"
 
 
 
-import  ProjectPage  from "./Pages/ProjectsPage";;
-import {HomePage} from "./Pages/HomePage";
+import  ProjectPage  from "./Pages/Private/ProjectsPage";;
+import {HomePage} from "./Pages/Public/HomePage";
 import { ChangePasswordPage } from "./Pages/ChangePasswordPage";
 
 

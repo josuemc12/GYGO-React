@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { getReportCompanies } from "../API/Reports";
-import { GetServices } from "../API/Reports";
-import { ReportCompaniesPDF } from "../utils/ReportCompaniesPDF";
+import { getReportCompanies } from "../../API/Reports";
+import { GetServices } from "../../API/Reports";
+import { ReportCompaniesPDF } from "../../utils/ReportCompaniesPDF";
 import { DataGrid } from "@mui/x-data-grid";
 import dayjs from "dayjs";
 import {
