@@ -7,9 +7,17 @@
 // import SignIn from "layouts/authentication/sign-in";
 // import SignUp from "layouts/authentication/sign-up";
 
+///Iconos
+import Icon from "@mui/material/Icon";
+
 //Ruta del login
 import Login from "./Pages/Login";
+//Ruta del inicio de sesion
+import { Register } from "./Pages/Register";
+import {ReportCompanies} from "./Pages/ReportCompaniesPage"
 
+import AdminUserDashboard from "./Pages/AdminUserDashboard";
+import AdminEmisionFactor from "./Pages/Admin/AdminEmisionFactor"
 
 
 
@@ -27,15 +35,14 @@ import IncidentsHistoryPage from "./Pages/IncidentHistoryPage";
 import { ConfirmIncidentPage } from "./Pages/ConfirmIncidentPage/ConfirmIncidentPage";
 import { ReportsEmissionsPage } from "./Pages/ReportsEmissionsPage";
 
-// @mui icons
-import Icon from "@mui/material/Icon";
+
 
 const routes = [
   {
     type: "collapse",
-    name: "ProjectsPage",
-    key: "Projects",
-    icon: <Icon fontSize="small">dashboard</Icon>,
+    name: "Proyectos",
+    key: "Proyectos",
+    icon: <Icon fontSize="small">table_view</Icon>,
     route: "/ProjectPage",
     component: <ProjectPage />,
   },
@@ -47,6 +54,23 @@ const routes = [
     route: "/ChangePasswordPage",
     component: <ChangePasswordPage />,
   },
+  {
+    name: "Admin Factor Emision",
+    key: "AdminFactorEmision",
+    icon: <Icon fontSize="small">dashboard</Icon>,
+    route: "/AdminEmisionFactor",
+    component: <AdminEmisionFactor />,
+  },
+
+    {
+    type: "collapse",
+    name: "Registro",
+    key: "Registro",
+    icon: <Icon fontSize="small">dashboard</Icon>,
+    route: "/Register",
+    component: <Register />,
+  },
+
   {
     type: "collapse",
     name: "home",

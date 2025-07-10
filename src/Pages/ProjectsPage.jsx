@@ -36,7 +36,7 @@ import {
   InputLabel,
   Tooltip,
   IconButton,
-      Dialog,
+  Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
@@ -53,7 +53,6 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-
 import Card from "@mui/material/Card";
 
 // Material Dashboard 2 React components
@@ -63,14 +62,11 @@ import MDAvatar from "components/MDAvatar";
 import MDButton from "components/MDButton";
 import MDBadge from "components/MDBadge";
 
-
-
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import DataTable from "examples/Tables/DataTable";
-
 
 function ProjectPage() {
   //Hook para manejar el JSON de proyectos
@@ -190,7 +186,7 @@ function ProjectPage() {
   const CloseModal = () => {
     setOpenModal(false);
     setTasks(null);
-     fetchProjects();
+    fetchProjects();
   };
 
   const UpdateStatusTasks = (taskId) => (event) => {
@@ -291,8 +287,8 @@ function ProjectPage() {
             title: "¡Proyecto actualizaxo!",
             text: "El proyecto se ha actualizado correctamente.",
             confirmButtonColor: "#44af69",
-          })
-           fetchProjects();
+          });
+          fetchProjects();
         } else {
           Swal.fire({
             icon: "error",
@@ -300,7 +296,7 @@ function ProjectPage() {
             text: "Por favor, revisá los datos e intentá nuevamente.",
             confirmButtonColor: "#d33",
           });
-           fetchProjects();
+          fetchProjects();
         }
       } else {
         result = await AddProject(projectData);
@@ -311,7 +307,7 @@ function ProjectPage() {
             text: "El proyecto se ha guardado correctamente.",
             confirmButtonColor: "#44af69",
           });
-           fetchProjects();
+          fetchProjects();
         } else {
           Swal.fire({
             icon: "error",
@@ -319,7 +315,7 @@ function ProjectPage() {
             text: "Por favor, revisá los datos e intentá nuevamente.",
             confirmButtonColor: "#d33",
           });
-           fetchProjects();
+          fetchProjects();
         }
       }
     } catch (error) {
@@ -329,7 +325,7 @@ function ProjectPage() {
         text: "Ocurrió un error inesperado. Intentalo más tarde.",
         confirmButtonColor: "#d33",
       });
-       fetchProjects();
+      fetchProjects();
     }
   };
 
@@ -343,7 +339,7 @@ function ProjectPage() {
         text: "El proyecto se ha eliminado correctamente.",
         confirmButtonColor: "#44af69",
       });
-       fetchProjects();
+      fetchProjects();
     } else {
       Swal.fire({
         icon: "error",
@@ -351,7 +347,7 @@ function ProjectPage() {
         text: "Por favor, revisá los datos e intentá nuevamente.",
         confirmButtonColor: "#d33",
       });
-       fetchProjects();
+      fetchProjects();
     }
   };
 
@@ -376,7 +372,7 @@ function ProjectPage() {
           text: "La tarea se agregó correctamente.",
           confirmButtonColor: "#44af69",
         });
-         fetchProjects();
+        fetchProjects();
       } else {
         Swal.fire({
           icon: "error",
@@ -384,7 +380,7 @@ function ProjectPage() {
           text: "Por favor, revisá los datos e intentá nuevamente.",
           confirmButtonColor: "#d33",
         });
-         fetchProjects();
+        fetchProjects();
       }
     } catch (error) {
       Swal.fire({
@@ -421,7 +417,7 @@ function ProjectPage() {
           text: "La tarea se agregó correctamente.",
           confirmButtonColor: "#44af69",
         });
-         fetchProjects();
+        fetchProjects();
       } else {
         Swal.fire({
           icon: "error",
@@ -454,7 +450,7 @@ function ProjectPage() {
         text: "El proyecto se ha eliminado correctamente.",
         confirmButtonColor: "#44af69",
       });
-       fetchProjects();
+      fetchProjects();
     } else {
       Swal.fire({
         icon: "error",
@@ -467,94 +463,116 @@ function ProjectPage() {
     }
   };
 
+  const columns = [
+    { Header: "Nombre", accessor: "nombre", align: "left" },
+    { Header: "Descripción", accessor: "descripcion", align: "left" },
+    {
+      Header: "Unidad Reducción",
+      accessor: "unidadreduccion",
+      align: "center",
+    },
+    { Header: "Cantidad", accessor: "cantidadReduccion", align: "center" },
+    { Header: "Inicio", accessor: "fechaInicio", align: "center" },
+    { Header: "Final", accessor: "fechaFinal", align: "center" },
+    { Header: "Estado", accessor: "estatus", align: "center" },
 
-
- const columns = [
-  { Header: "Nombre", accessor: "nombre", align: "left" },
-  { Header: "Descripción", accessor: "descripcion", align: "left" },
-  { Header: "Unidad Reducción", accessor: "unidadreduccion", align: "center" },
-  { Header: "Cantidad", accessor: "cantidadReduccion", align: "center" },
-  { Header: "Inicio", accessor: "fechaInicio", align: "center" },
-  { Header: "Final", accessor: "fechaFinal", align: "center" },
-  { Header: "Estado", accessor: "estatus", align: "center" },
-
-  { Header: "Acciones", accessor: "action", align: "center" },
+    { Header: "Acciones", accessor: "action", align: "center" },
   ];
 
   const rows = projects.map((project) => ({
-  nombre: (
-    <MDTypography variant="caption" fontWeight="medium">
-      {project.nombre}
-    </MDTypography>
-  ),
-  descripcion: (
-    <MDTypography variant="caption" color="text">
-      {project.descripcion}
-    </MDTypography>
-  ),
-  unidadreduccion: (
-    <MDTypography variant="caption" color="text">
-      {project.unidadreduccion}
-    </MDTypography>
-  ),
-  cantidadReduccion: (
-    <MDTypography variant="caption" color="text">
-      {project.cantidadReduccion}
-    </MDTypography>
-  ),
-  fechaInicio: (
-    <MDTypography variant="caption" color="text">
-      {dayjs(project.fechaInicio).format("DD/MM/YYYY")}
-    </MDTypography>
-  ),
-  fechaFinal: (
-    <MDTypography variant="caption" color="text">
-      {dayjs(project.fechaFinal).format("DD/MM/YYYY")}
-    </MDTypography>
-  ),
+    nombre: (
+      <MDTypography variant="caption" fontWeight="medium">
+        {project.nombre}
+      </MDTypography>
+    ),
+    descripcion: (
+      <MDTypography variant="caption" color="text">
+        {project.descripcion}
+      </MDTypography>
+    ),
+    unidadreduccion: (
+      <MDTypography variant="caption" color="text">
+        {project.unidadreduccion}
+      </MDTypography>
+    ),
+    cantidadReduccion: (
+      <MDTypography variant="caption" color="text">
+        {project.cantidadReduccion}
+      </MDTypography>
+    ),
+    fechaInicio: (
+      <MDTypography variant="caption" color="text">
+        {dayjs(project.fechaInicio).format("DD/MM/YYYY")}
+      </MDTypography>
+    ),
+    fechaFinal: (
+      <MDTypography variant="caption" color="text">
+        {dayjs(project.fechaFinal).format("DD/MM/YYYY")}
+      </MDTypography>
+    ),
     estatus: (
-    <MDTypography variant="caption" color="text">
-      {project.estatus ? "Realizado" : "Pendiente"}
-    </MDTypography>
-  ),
-  action: (
-  <Stack direction="row" spacing={1} justifyContent="center" alignItems="center">
-    <Tooltip title="Ver detalles">
-      <IconButton size="small" onClick={() => VerMas(project.proyectoId)} >
-        <VisibilityIcon fontSize="small" />
-      </IconButton>
-    </Tooltip>
-    <Tooltip title="Editar">
-      <IconButton size="small" color="info" onClick={() => openModalUpdateProject(project)}>
-        <EditIcon fontSize="small" />
-      </IconButton>
-    </Tooltip>
-    <Tooltip title="Eliminar">
-      <IconButton size="small" color="error" onClick={() => DeleteProject(project.proyectoId)}>
-        <DeleteIcon fontSize="small" />
-      </IconButton>
-    </Tooltip>
-  </Stack>
-),
-}));
-
-
-
-
+      <MDTypography variant="caption" color="text">
+        {project.estatus ? "Realizado" : "Pendiente"}
+      </MDTypography>
+    ),
+    action: (
+      <Stack
+        direction="row"
+        spacing={1}
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Tooltip title="Ver detalles">
+          <IconButton size="small" onClick={() => VerMas(project.proyectoId)}>
+            <VisibilityIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Editar">
+          <IconButton
+            size="small"
+            color="info"
+            onClick={() => openModalUpdateProject(project)}
+          >
+            <EditIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Eliminar">
+          <IconButton
+            size="small"
+            color="error"
+            onClick={() => DeleteProject(project.proyectoId)}
+          >
+            <DeleteIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+      </Stack>
+    ),
+  }));
 
   return (
-   <DashboardLayout>
-     
+    <DashboardLayout>
       <MDBox py={3}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <MDBox mb={2}>
-            <MDBox borderRadius="xl" border="1px solid #ccc" p={3} mb={2} bgColor="white">
-              <Grid container alignItems="center" justifyContent="space-between">
+            <MDBox
+              borderRadius="xl"
+              border="1px solid #ccc"
+              p={3}
+              mb={2}
+              bgColor="white"
+            >
+              <Grid
+                container
+                alignItems="center"
+                justifyContent="space-between"
+              >
                 <Grid item>
                   <MDBox display="flex" flexDirection="column">
                     <MDBox display="flex" alignItems="center" gap={1}>
                       <FilterAltOutlinedIcon fontSize="medium" />
-                      <MDTypography variant="h6">Filtros y Acciones</MDTypography>
+                      <MDTypography variant="h6">
+                        Filtros y Acciones
+                      </MDTypography>
                     </MDBox>
                     <MDTypography variant="body2" color="text">
                       Filtra los proyectos por estado y fechas
@@ -562,19 +580,42 @@ function ProjectPage() {
                   </MDBox>
                 </Grid>
                 <Grid item>
-                  <MDButton onClick={(openModalAddProject)}>Nuevo Proyecto</MDButton>
+                  <MDButton onClick={openModalAddProject}>
+                    Nuevo Proyecto
+                  </MDButton>
                 </Grid>
               </Grid>
 
-              <Grid container alignItems="center" justifyContent="space-between" spacing={2} mt={2}>
+              <Grid
+                container
+                alignItems="center"
+                justifyContent="space-between"
+                spacing={2}
+                mt={2}
+              >
                 <Grid item>
                   <Grid container spacing={2}>
                     <Grid item>
                       <MDTypography variant="body2" color="text">
                         Estado
                       </MDTypography>
-                      <FormControl size="small" sx={{ width: 180 }}>
-                        <Select value={filter} onChange={(e) => setFilter(e.target.value)}>
+                      <FormControl size="medium" sx={{ width: 180 }}>
+                        <Select
+                          value={filter}
+                          onChange={(e) => setFilter(e.target.value)}
+                          size="small"
+                          sx={{
+                            width: 180, // igual que el DatePicker
+                            height: 50,
+                            "& .MuiSelect-select": {
+                              padding: "6px 8px", // menor espacio interno
+                              fontSize: 16,
+                            },
+                            "& .MuiOutlinedInput-notchedOutline": {
+                              height: "100%",
+                            },
+                          }}
+                        >
                           <MenuItem value="todos">Todos</MenuItem>
                           <MenuItem value="true">Realizados</MenuItem>
                           <MenuItem value="false">Pendientes</MenuItem>
@@ -586,36 +627,53 @@ function ProjectPage() {
                       <MDTypography variant="body2" color="text">
                         Fecha Inicio
                       </MDTypography>
-          
-
                       <DatePicker
-  value={startDate}
-  onChange={(newValue) => setStartDate(newValue)}
-  renderInput={(params) => (
-    <TextField
-      {...params}
-      size="small"
-      sx={{ width: 180 }}
-    />
-  )}
-/>
+                        value={startDate}
+                        onChange={(newValue) => setStartDate(newValue)}
+                        slotProps={{
+                          textField: {
+                            size: "small",
+                            sx: {
+                              width: 195, // más angosto
+                              height: 36, // más bajo
+                              "& .MuiInputBase-root": {
+                                height: 36, // grosor del input
+                                fontSize: 13, // opcional: fuente más pequeña
+                              },
+                              "& input": {
+                                padding: "6px 8px", // menos espacio interno
+                              },
+                            },
+                          },
+                        }}
+                      />
                     </Grid>
 
                     <Grid item>
                       <MDTypography variant="body2" color="text">
                         Fecha Fin
                       </MDTypography>
-                    <DatePicker
-  value={endDate}
-  onChange={(newValue) => setEndDate(newValue)}
-  renderInput={(params) => (
-    <TextField
-      {...params}
-      size="small"
-      sx={{ width: 180 }}
-    />
-  )}
-/>
+                      <DatePicker
+                        value={endDate}
+                        onChange={(newValue) => setEndDate(newValue)}
+                        slotProps={{
+                          textField: {
+                            size: "small",
+                            sx: {
+                              width: 195, // más angosto
+                              height: 36, // más bajo
+                              "& .MuiInputBase-root": {
+                                height: 36, // grosor del input
+                                fontSize: 8, // opcional: fuente más pequeña
+                              },
+                              "& input": {
+                                padding: "6px 8px",
+                                fontSize: 8 // menos espacio interno
+                              },
+                            },
+                          },
+                        }}
+                      />
                     </Grid>
                   </Grid>
                 </Grid>
@@ -629,7 +687,11 @@ function ProjectPage() {
                       Limpiar fechas
                     </MDButton>
                     {Array.isArray(data) && data.length > 0 && (
-                      <MDButton variant="outlined" onClick={CreatePDFAPI} color="dark">
+                      <MDButton
+                        variant="outlined"
+                        onClick={CreatePDFAPI}
+                        color="dark"
+                      >
                         Descargar PDF
                       </MDButton>
                     )}
@@ -652,16 +714,17 @@ function ProjectPage() {
                       borderRadius="lg"
                       coloredShadow="info"
                     >
-                      <MDTypography variant="h6" color="white">
-                        Proyectos Actuales
+                      <MDTypography variant="h6" color="white" align="left">
+                        Proyectos
                       </MDTypography>
                     </MDBox>
                     <MDBox pt={3}>
                       <DataTable
                         table={{ columns, rows }}
+                        canSearch={true}
                         isSorted={false}
                         entriesPerPage={false}
-                        showTotalEntries={false}
+                        showTotalEntries={true}
                         noEndBorder
                       />
                     </MDBox>
@@ -674,9 +737,7 @@ function ProjectPage() {
         <Footer />
       </MDBox>
 
-
-
- <Modal
+      <Modal
         open={openModal}
         onClose={CloseModal}
         aria-labelledby="modal-modal-title"
@@ -766,7 +827,6 @@ function ProjectPage() {
                       <Typography>Descripción: {task.descripcion}</Typography>
                       <Typography>
                         Estado:{" "}
-                      
                         {taskStatus[task.taskId] ? "Completada" : "Pendiente"}
                       </Typography>
                       <Switch
@@ -814,61 +874,58 @@ function ProjectPage() {
                 </Box>
               ))}
               {/* Parte para agregar una tarea */}
-
-            
             </>
-
           ) : (
             <Typography>No hay tareas para mostrar</Typography>
           )}
-           <Box
-                sx={{
-                  mt: 3,
-                  border: "1px solid #ccc",
-                  borderRadius: 2,
-                  p: 2,
-                  backgroundColor: 'rgba(0,0,0,0)',
-                }}
-              >
-                <Typography variant="subtitle1">Agregar nueva tarea</Typography>
-                <TextField
-                  label="Título"
-                  fullWidth
-                  sx={{ mt: 1 }}
-                  onChange={(e) =>
-                    setTasktData({ ...taskData, titulo: e.target.value })
-                  }
-                />
-                <TextField
-                  label="Descripción"
-                  fullWidth
-                  multiline
-                  rows={2}
-                  sx={{ mt: 1 }}
-                  onChange={(e) =>
-                    setTasktData({ ...taskData, descripcion: e.target.value })
-                  }
-                />
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  gap: 2,
-                  mt: 3,
-                }}
-              >
-                <Button onClick={CloseModal} variant="contained">
-                  Cerrar
-                </Button>
-                <Button variant="contained" onClick={SubmitModalTask}>
-                  Agregar
-                </Button>
-              </Box>
+          <Box
+            sx={{
+              mt: 3,
+              border: "1px solid #ccc",
+              borderRadius: 2,
+              p: 2,
+              backgroundColor: "rgba(0,0,0,0)",
+            }}
+          >
+            <Typography variant="subtitle1">Agregar nueva tarea</Typography>
+            <TextField
+              label="Título"
+              fullWidth
+              sx={{ mt: 1 }}
+              onChange={(e) =>
+                setTasktData({ ...taskData, titulo: e.target.value })
+              }
+            />
+            <TextField
+              label="Descripción"
+              fullWidth
+              multiline
+              rows={2}
+              sx={{ mt: 1 }}
+              onChange={(e) =>
+                setTasktData({ ...taskData, descripcion: e.target.value })
+              }
+            />
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              gap: 2,
+              mt: 3,
+            }}
+          >
+            <Button onClick={CloseModal} variant="contained">
+              Cerrar
+            </Button>
+            <Button variant="contained" onClick={SubmitModalTask}>
+              Agregar
+            </Button>
+          </Box>
         </Box>
       </Modal>
 
- {/* Modal para agregar un nuevo proyecto */}
+      {/* Modal para agregar un nuevo proyecto */}
       <Modal
         open={openModalProjects}
         onClose={CloseModal}
@@ -996,11 +1053,7 @@ function ProjectPage() {
         </Box>
       </Modal>
       {/* Fin del Modal para agregar un nuevo proyecto */}
-
     </DashboardLayout>
-
   );
 }
 export default ProjectPage;
-
-
