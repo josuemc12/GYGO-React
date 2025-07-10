@@ -168,6 +168,6 @@ export function UpdateConsumptionPage() {
       </div>
     </div>
     <Footer></Footer>
-    </DashboardLayout>
+    </DashboardLayout> //probando 
   );
 }
