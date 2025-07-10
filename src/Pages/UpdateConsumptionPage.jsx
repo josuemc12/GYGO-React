@@ -4,6 +4,9 @@ import { UpdateConsumption, getConsumptionById } from "../API/Consumptions/Consu
 import { getFactoresEmision } from "../API/FactorEmision";
 import "../styles/AddConsumption.css";
 import { ArrowBackOutlined, CheckBoxOutlined, ErrorOutline } from "@mui/icons-material";
+import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
+import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import Footer from "examples/Footer";
 
 export function UpdateConsumptionPage() {
   const { id } = useParams();
@@ -88,6 +91,7 @@ export function UpdateConsumptionPage() {
   };
 
   return (
+    <DashboardLayout>
     <div className="agregar-consumo-container">
       <div className="agregar-consumo-content">
         <div className="header-section">
@@ -163,5 +167,7 @@ export function UpdateConsumptionPage() {
         </div>
       </div>
     </div>
+    <Footer></Footer>
+    </DashboardLayout> //probando 
   );
 }

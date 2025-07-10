@@ -3,6 +3,9 @@ import "../styles/consumption.css";
 import { useNavigate } from "react-router-dom";
 import {ConsumptionTable} from "../components/ConsumptionTable";
 import { getConsumptions } from "../API/Consumptions/Consumption";
+import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
+import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import Footer from "examples/Footer";
 
 export function ConsumptionPage() {
   const [consumos, setConsumos] = useState([]);
@@ -31,6 +34,7 @@ const handleAgregarConsumo = () => {
   };
 
   return (
+    <DashboardLayout>
     <div className="consumos-container">
       <div className="consumos-content">
         <div className="header-section">
@@ -73,5 +77,7 @@ const handleAgregarConsumo = () => {
         </div>
       </div>
     </div>
+    <Footer/>
+    </DashboardLayout>
   );
 }

@@ -4,6 +4,9 @@ import { getMonthlyConsumptions } from "../API/Consumptions/MonthlyConsum";
 import { ArrowBackOutlined, CalendarMonthOutlined } from "@mui/icons-material";
 import "../styles/monthlyConsum.css";
 import { MonthlyConsumptionTable } from "../components/MonthlyConsumTable";
+import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
+import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import Footer from "examples/Footer";
 
 const meses = [
   { value: "", label: "Todos los meses" },
@@ -84,6 +87,7 @@ export function MonthlyConsumptionPage() {
   const totales = calcularTotales();
 
   return (
+    <DashboardLayout>
     <div className="consumo-mensual-container">
       <div className="consumo-mensual-content">
         <div className="header-section">
@@ -177,5 +181,7 @@ export function MonthlyConsumptionPage() {
         </div>
       </div>
     </div>
+    <Footer></Footer>
+    </DashboardLayout>
   );
 }
