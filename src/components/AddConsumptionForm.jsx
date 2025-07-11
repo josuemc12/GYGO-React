@@ -88,7 +88,7 @@ export function AddConsumptionForm() {
         </div>
       )}
 
-      <div className="card-header">
+      <div className="card-header mt-3">
         <h2 className="card-title">Información del Consumo</h2>
         <p className="card-description">
           Complete los campos para registrar el nuevo consumo

@@ -93,7 +93,7 @@ export function UpdateConsumptionPage() {
   return (
     <DashboardLayout>
     <div className="agregar-consumo-container">
-      <div className="agregar-consumo-content">
+      <div className="actualizar-consumo-content">
         <div className="header-section">
           <button className="back-button" onClick={() => navigate("/consumption")}> <ArrowBackOutlined /> <span>Volver</span> </button>
           <h1 className="main-title">Editar Consumo</h1>
@@ -109,10 +109,10 @@ export function UpdateConsumptionPage() {
 
         <div className="form-card">
           <div className="card-header">
-            <h2 className="card-title">Información del Consumo</h2>
+            <h2 className="card-title mt-3">Información del Consumo</h2>
           </div>
 
-          <form onSubmit={handleSubmit} className="consumo-form">
+          <form onSubmit={handleSubmit} className="consumo-form p-3">
             <div className="form-group">
               <label className="form-label">Nombre *</label>
               <input

@@ -108,7 +108,7 @@ export function UpdateMonthlyConsumPage() {
         </div>
 
         <div className="form-card">
-          <div className="card-header">
+          <div className="card-header mt-3">
             <h2 className="card-title">Modificar los datos del consumo</h2>
           </div>
 
