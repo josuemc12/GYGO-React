@@ -1,7 +1,21 @@
 import { useState, useEffect } from "react";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { getMonthlyConsumptions } from "../API/Consumptions/MonthlyConsum";
-import { ArrowBackOutlined, CalendarMonthOutlined } from "@mui/icons-material";
+import { ArrowBackOutlined, Add } from "@mui/icons-material";
+import {
+  Grid,
+  Card,
+  MenuItem,
+  FormControl,
+  Select,
+  InputLabel,
+  IconButton,
+  Tooltip,
+  Stack,
+} from "@mui/material";
+import MDBox from "components/MDBox";
+import MDTypography from "components/MDTypography";
+import MDButton from "components/MDButton";
 import "../styles/monthlyConsum.css";
 import { MonthlyConsumptionTable } from "../components/MonthlyConsumTable";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -88,100 +102,154 @@ export function MonthlyConsumptionPage() {
 
   return (
     <DashboardLayout>
-    <div className="consumo-mensual-container">
-      <div className="consumo-mensual-content">
-        <div className="header-section">
-          <button className="back-button" onClick={() => navigate("/consumption")}> <ArrowBackOutlined /> <span>Volver</span> </button>
-          <h1 className="main-title">Consumo Mensual</h1>
-          <p className="subtitle">
-            {consumoInfo ? `Detalle mensual de: ${consumoInfo.name}` : "Detalle de consumos por mes y año"}
-          </p>
-        </div>
+      <MDBox py={3}>
+        <Grid container spacing={3}>
+          <Grid item size={{ xs: 12 }}>
+            <Card sx={{ p: 3 }}>
+              <Grid container alignItems="center" spacing={2}>
+                <Grid item size={{ xs: 12, md: 2 }}>
+                  <MDButton
+                    variant="text"
+                    color="black"
+                    startIcon={<ArrowBackOutlined />}
+                    onClick={() => navigate("/consumption")}
+                    sx={{ minWidth: "100%" }}
+                  >
+                    Volver
+                  </MDButton>
+                </Grid>
+                <Grid item size={{ xs: 12, md: 10 }}>
+                  <MDTypography variant="h4" fontWeight="bold">
+                    Consumo Mensual
+                  </MDTypography>
+                  <MDTypography variant="body2" color="text">
+                    {consumoInfo
+                      ? `Detalle mensual de: ${consumoInfo.name}`
+                      : "Detalle de consumos por mes y año"}
+                  </MDTypography>
+                </Grid>
+              </Grid>
+            </Card>
+          </Grid>
 
-        <div className="stats-grid">
-          <div className="stat-card">
-            <div className="stat-content">
-              <div className="stat-icon total-icon"> <CalendarMonthOutlined /> </div>
-              <div className="stat-info">
-                <p className="stat-label">Total Registros</p>
-                <p className="stat-value">{consumosFiltrados.length}</p>
-              </div>
-            </div>
-          </div>
+          {/* Cuadros de resumen */}
+          {[{
+            label: "Total Registros",
+            value: consumosFiltrados.length,
+          },
+          {
+            label: "Cantidad Total",
+            value: `${totales.cantidad.toFixed(2)} kWh`,
+          },
+          {
+            label: "Emisiones Totales",
+            value: `${totales.emisiones.toFixed(2)} kg`,
+          },
+          {
+            label: "Promedio Mensual",
+            value:
+              consumosFiltrados.length > 0
+                ? `${(totales.emisiones / consumosFiltrados.length).toFixed(2)} kg`
+                : "0 kg",
+          }].map((item, index) => (
+            <Grid item size={{ xs: 12, md: 6, lg: 3 }} key={index}>
+              <Card sx={{ p: 2, borderLeft: "4px solid #376D4F" }}>
+                <MDTypography variant="body2" color="text" fontWeight="bold">
+                  {item.label}
+                </MDTypography>
+                <MDTypography variant="h6">{item.value}</MDTypography>
+              </Card>
+            </Grid>
+          ))}
 
-          <div className="stat-card">
-            <div className="stat-content">
-              <div className="stat-icon quantity-icon">Σ</div>
-              <div className="stat-info">
-                <p className="stat-label">Cantidad Total</p>
-                <p className="stat-value">{totales.cantidad.toFixed(2)} kWh</p>
-              </div>
-            </div>
-          </div>
+          {/* Filtros */}
+          <Grid item size={{ xs: 12 }} sx={{mb: 4}}>
+            <Card sx={{ p: 3 }}>
+              <Grid container spacing={2} alignItems="center">
+                <Grid item size={{ xs: 12, md: 5 }} >
+                  <FormControl fullWidth variant="outlined">
+                    <InputLabel id="mes-label">Mes</InputLabel>
+                    <Select
+                    id="mes-select"
+                    labelId="mes-label"
+                      name="mes"
+                      value={filtros.mes}
+                      label="Mes"
+                      onChange={(e) =>
+                        setFiltros((prev) => ({ ...prev, mes: e.target.value }))
+                      }
+                    >
+                      {meses.map((mes) => (
+                        <MenuItem key={mes.value} value={mes.value}>
+                          {mes.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item size={{ xs: 12, md: 5 }}>
+                  <FormControl fullWidth>
+                    <InputLabel>Año</InputLabel>
+                    <Select
+                      name="año"
+                      value={filtros.año}
+                      label="Año"
+                      onChange={(e) =>
+                        setFiltros((prev) => ({ ...prev, año: e.target.value }))
+                      }
+                    >
+                      {años.map((año) => (
+                        <MenuItem key={año.value} value={año.value}>
+                          {año.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item size={{ xs: 12, md: 2 }}>
+                  <MDButton variant="outlined" onClick={limpiarFiltros} color="secondary">
+                    Limpiar Filtros
+                  </MDButton>
+                </Grid>
+              </Grid>
+            </Card>
+          </Grid>
 
-          <div className="stat-card">
-            <div className="stat-content">
-              <div className="stat-icon emissions-icon">CO₂</div>
-              <div className="stat-info">
-                <p className="stat-label">Emisiones Totales</p>
-                <p className="stat-value">{totales.emisiones.toFixed(2)} kg</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="stat-card">
-            <div className="stat-content">
-              <div className="stat-icon average-icon">⌀</div>
-              <div className="stat-info">
-                <p className="stat-label">Promedio Mensual</p>
-                <p className="stat-value">
-                  {consumosFiltrados.length > 0 ? (totales.emisiones / consumosFiltrados.length).toFixed(2) : 0} kg
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-
-        <div className="filters-card">
-          <div className="filters-header">
-            <h3>Filtros</h3>
-            <button className="clear-filters-button" onClick={limpiarFiltros}>Limpiar Filtros</button>
-          </div>
-          <div className="filters-content">
-            <div className="filter-group">
-              <label htmlFor="mes" className="filter-label">Mes</label>
-              <select id="mes" name="mes" value={filtros.mes} onChange={handleFiltroChange} className="filter-select">
-                {meses.map(mes => <option key={mes.value} value={mes.value}>{mes.label}</option>)}
-              </select>
-            </div>
-            <div className="filter-group">
-              <label htmlFor="año" className="filter-label">Año</label>
-              <select id="año" name="año" value={filtros.año} onChange={handleFiltroChange} className="filter-select">
-                {años.map(año => <option key={año.value} value={año.value}>{año.label}</option>)}
-              </select>
-            </div>
-          </div>
-        </div>
-        <div className="main-card">
-          <div className="card-header">
-            <div className="header-content">
-              <h2 className="card-title">Registro de Consumos</h2>
-              <button className="add-button" onClick={handleAddMonthlyConsumption}>
-                <span>Agregar Consumo Mensual</span>
-              </button>
-            </div>
-          </div>
-
-        <MonthlyConsumptionTable
-          consumos={consumosFiltrados}
-          loading={loading}
-          consumptionId={id}
-        />
-        </div>
-      </div>
-    </div>
-    <Footer></Footer>
+          {/* Tabla */}
+          <Grid item size={{ xs: 12 }} sx={{mb:3}}>
+            <Card>
+              <MDBox
+                mx={2}
+                mt={-3}
+                py={3}
+                px={2}
+                variant="gradient"
+                bgColor="success"
+                borderRadius="lg"
+                coloredShadow="success"
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <MDTypography variant="h6" color="white">
+                  Registros Mensuales
+                </MDTypography>
+                <MDButton variant="contained" onClick={handleAddMonthlyConsumption} color="light">
+                  <Add fontSize="small" sx={{ mr: 1 }} /> Agregar Mensual
+                </MDButton>
+              </MDBox>
+              <MDBox pt={3}>
+                <MonthlyConsumptionTable
+                  consumos={consumosFiltrados}
+                  loading={loading}
+                  consumptionId={id}
+                />
+              </MDBox>
+            </Card>
+          </Grid>
+        </Grid>
+        <Footer />
+      </MDBox>
     </DashboardLayout>
   );
 }
