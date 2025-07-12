@@ -175,6 +175,7 @@ export function MonthlyConsumptionPage() {
                       name="mes"
                       value={filtros.mes}
                       label="Mes"
+                      sx={{height: 40}}
                       onChange={(e) =>
                         setFiltros((prev) => ({ ...prev, mes: e.target.value }))
                       }
@@ -192,6 +193,7 @@ export function MonthlyConsumptionPage() {
                     <InputLabel>Año</InputLabel>
                     <Select
                       name="año"
+                      sx={{height: 40}}
                       value={filtros.año}
                       label="Año"
                       onChange={(e) =>

@@ -134,7 +134,7 @@ export function AddMonthlyConsumForm({ consumptionId }) {
         )}
 
         {/* form card s */}
-        <div className="form-card">
+        <div className="form-card p-4">
           <div className="card-header">
             <h2 className="card-title">Información del Consumo Mensual</h2>
             <p className="card-description">

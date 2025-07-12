@@ -4,6 +4,14 @@ import { appsettings } from "../../settings/appsettings";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
+import {
+  Card,
+  CircularProgress,
+  Grid,
+  Alert,
+} from "@mui/material";
+import MDBox from "components/MDBox";
+import MDTypography from "components/MDTypography";
 
 
 export const ConfirmIncidentPage = () => {
@@ -11,6 +19,7 @@ export const ConfirmIncidentPage = () => {
     const [searchParams] = useSearchParams();
   const [status, setStatus] = useState("Marcando...");
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const incident_id = searchParams.get("id");
   useEffect(()=>{
@@ -28,26 +37,41 @@ export const ConfirmIncidentPage = () => {
             }
         }catch(err){
             setError("Error de red o servidor");
+        }finally{
+          setLoading(false);
         }
-    }
+    };
      if (incident_id) {
       markAsRead();
     } else {
       setError("ID de incidente inválido.");
+      setLoading(false);
     }
   }, [incident_id])
 
   return (
     <DashboardLayout>
-    <div style={{ padding: "2rem", textAlign: "center" }}>
-      <h2>Confirmación de Incidente</h2>
-      {error ? (
-        <p style={{ color: "red" }}>{error}</p>
-      ) : (
-        <p>{status}</p>
-      )}
-    </div>
-    <Footer />
+      <MDBox py={3}>
+        <Grid container justifyContent="center"  sx={{my: 5}}>
+          <Grid item size={{xs:12, md:8, lg:6}}>
+            <Card sx={{ p: 4, textAlign: "center" }}>
+              <MDTypography variant="h5" fontWeight="bold" gutterBottom>
+                Confirmación de Incidente
+              </MDTypography>
+              {loading ? (
+                <MDBox mt={3}>
+                  <CircularProgress />
+                </MDBox>
+              ) : error ? (
+                <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>
+              ) : (
+                <Alert severity="success" sx={{ mt: 2 }}>{status}</Alert>
+              )}
+            </Card>
+          </Grid>
+        </Grid>
+        <Footer />
+      </MDBox>
     </DashboardLayout>
   )
 

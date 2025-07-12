@@ -406,9 +406,6 @@ export const ModernDashboardCards = () => {
                                   {project.description}
                                 </Typography>
                               </Box>
-                              <IconButton size="small" sx={{ ml: 1, color: "#9ca3af" }}>
-                                <MoreVert fontSize="small" />
-                              </IconButton>
                             </Box>
 
                             <Box sx={{ mt: "auto" }}>

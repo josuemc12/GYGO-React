@@ -35,8 +35,9 @@ import IncidentsHistoryPage from "./Pages/IncidentHistoryPage";
 import { ConfirmIncidentPage } from "./Pages/ConfirmIncidentPage/ConfirmIncidentPage";
 import { ReportsEmissionsPage } from "./Pages/ReportsEmissionsPage";
 import { DashboardGroupPage } from "./Pages/DashboardGroupPage";
-
-
+import { UserProfilePage } from "./Pages/UserProfilePage";
+import { GrupoProfilePage } from "./Pages/GroupProfilePage";
+import { AddGroupSAPage } from "./Pages/AddGroupSAPage";
 
 const routes = [
   {
@@ -62,6 +63,7 @@ const routes = [
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/ChangePasswordPage",
     component: <ChangePasswordPage />,
+    hideInSidebar: true,
   },
   {
     name: "Admin Factor Emision",
@@ -111,6 +113,15 @@ const routes = [
     icon: <Icon fontSize="small">bar_chart</Icon>,
     route: "/consumption/monthly/:id",
     component: <MonthlyConsumptionPage />,
+    hideInSidebar: true,
+  },
+  {
+    type: "collapse",
+    name: "Agregar grupo",
+    key: "add-group",
+    icon: <Icon fontSize="small">bar_chart</Icon>,
+    route: "/addGroup",
+    component: <AddGroupSAPage />,
     hideInSidebar: true,
   },
   {
@@ -185,7 +196,22 @@ const routes = [
     component: <IncidentsHistoryPage />,
     hideInSidebar: true,
   },
-
+{
+    type: "collapse",
+    name: "Perfil del Usuario",
+    key: "user-profile",
+    icon: <Icon fontSize="small">list_alt</Icon>,
+    route: "/userProfile",
+    component: <UserProfilePage />
+  },
+{
+    type: "collapse",
+    name: "Perfil del grupo",
+    key: "grup-profile",
+    icon: <Icon fontSize="small">list_alt</Icon>,
+    route: "/groupProfile",
+    component: <GrupoProfilePage />
+  },
 ];
 
 export default routes;
