@@ -8,6 +8,7 @@ import {Box, Card, CardContent, Typography, Button, ButtonGroup, FormControl, In
   Grid, Paper, Divider, Stack } from "@mui/material"
 import { exportChartToPDF } from "../utils/CreateReportPDF";
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+import MDButton from "components/MDButton"
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
@@ -143,8 +144,8 @@ export const ReportsEmissionsPage = () => {
   return (
     <>
     <DashboardLayout>
-      <Box  >
-        <Paper elevation={2} sx={{ p: 3, mb: 3, background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)" }}>
+      <Box sx={{mb:5}}>
+        <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
           <Typography variant="h4" component="h2" sx={{ color: "white", fontWeight: "bold", textAlign: "center" }}>
             Reportes de Emisiones
           </Typography>
@@ -161,6 +162,7 @@ export const ReportsEmissionsPage = () => {
                 size="large"
                 sx={{
                   "& .MuiButton-root": {
+                    color: "#0d1b2a",
                     px: 3,
                     py: 1.5,
                     fontWeight: "medium",
@@ -226,7 +228,7 @@ export const ReportsEmissionsPage = () => {
                   Configuración del Reporte
                 </Typography>
                 <Grid container spacing={3} alignItems="center">
-                  <Grid item xs={12} md={6}>
+                  <Grid item size={{xs:12, md: 6}}>
                     <FormControl fullWidth variant="outlined">
                       <InputLabel id="yearInputLabel">Año</InputLabel>
                       <Select
@@ -236,7 +238,7 @@ export const ReportsEmissionsPage = () => {
                         label="Año"
                         value={formData.year}
                         onChange={handleInputChange}
-                        sx={{ borderRadius: 2, width: "200px;" }}
+                        sx={{ borderRadius: 2, height: 40 }}
                       >
                         <MenuItem value="">Seleccione</MenuItem>
                         {availableYears.map((y) => (
@@ -247,8 +249,8 @@ export const ReportsEmissionsPage = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12} md={6}>
-                    <Button
+                  <Grid item size={{xs:12, md: 6}}>
+                    <MDButton
                       variant="contained"
                       size="large"
                       onClick={handleGenerate}
@@ -257,14 +259,17 @@ export const ReportsEmissionsPage = () => {
                         py: 1.5,
                         borderRadius: 2,
                         fontWeight: "bold",
-                        background: "linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)",
+                        background: "#376D4F",
+                        color: "#ffffff",
                         "&:hover": {
-                          background: "linear-gradient(45deg, #1976D2 30%, #1CB5E0 90%)",
+                         transform: "translateY(-2px)",
+                          boxShadow: 3,
+                          background: "#376D4F"
                         },
                       }}
                     >
                       Generar Reporte
-                    </Button>
+                    </MDButton>
                   </Grid>
                 </Grid>
               </Box>
@@ -278,7 +283,7 @@ export const ReportsEmissionsPage = () => {
                   Rango de Meses
                 </Typography>
                 <Grid container spacing={3} alignItems="center">
-                  <Grid item xs={12} md={3}>
+                  <Grid item size={{xs:12, md: 3}}>
                     <FormControl fullWidth variant="outlined">
                       <InputLabel id="yearInputLabel2">Año</InputLabel>
                       <Select
@@ -288,7 +293,7 @@ export const ReportsEmissionsPage = () => {
                         name="year"
                         value={formData.year}
                         onChange={handleInputChange}
-                        sx={{ borderRadius: 2, width: "200px;" }}
+                        sx={{ borderRadius: 2, height: 40 }}
                       >
                         <MenuItem value="">Seleccione</MenuItem>
                         {availableYears.map((y) => (
@@ -299,7 +304,7 @@ export const ReportsEmissionsPage = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12} md={3}>
+                  <Grid item size={{xs:12, md:3}} >
                     <FormControl fullWidth variant="outlined">
                       <InputLabel id="initialMonthLabel">Mes Inicial</InputLabel>
                       <Select
@@ -309,7 +314,7 @@ export const ReportsEmissionsPage = () => {
                         name="initialMonth"
                         value={formData.initialMonth}
                         onChange={handleInputChange}
-                        sx={{ borderRadius: 2, width: "200px;" }}
+                        sx={{ borderRadius: 2, height: 40 }}
                       >
                         <MenuItem value="">Seleccione</MenuItem>
                         {meses.map((m) => (
@@ -320,7 +325,7 @@ export const ReportsEmissionsPage = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12} md={3}>
+                  <Grid item size={{xs:12, md:3}} >
                     <FormControl fullWidth variant="outlined">
                       <InputLabel id="finalMonthLabel">Mes Final</InputLabel>
                       <Select
@@ -329,7 +334,7 @@ export const ReportsEmissionsPage = () => {
                         label="Mes Final"
                         value={formData.finalMonth}
                         onChange={handleInputChange}
-                        sx={{ borderRadius: 2, width: "200px;" }}
+                        sx={{ borderRadius: 2, height: 40 }}
                       >
                         <MenuItem value="">Seleccione</MenuItem>
                         {meses.map((m) => (
@@ -340,8 +345,8 @@ export const ReportsEmissionsPage = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12} md={3}>
-                    <Button
+                  <Grid item size={{xs:12, md:3}} >
+                    <MDButton
                       variant="contained"
                       size="large"
                       onClick={handleGenerate}
@@ -350,14 +355,17 @@ export const ReportsEmissionsPage = () => {
                         py: 1.5,
                         borderRadius: 2,
                         fontWeight: "bold",
-                        background: "linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)",
+                        background: "#376D4F",
+                        color: "#ffffff",
                         "&:hover": {
-                          background: "linear-gradient(45deg, #1976D2 30%, #1CB5E0 90%)",
+                          transform: "translateY(-2px)",
+                          boxShadow: 3,
+                          background: "#376D4F"
                         },
                       }}
                     >
                       Generar Reporte
-                    </Button>
+                    </MDButton>
                   </Grid>
                 </Grid>
               </Box>
@@ -370,7 +378,7 @@ export const ReportsEmissionsPage = () => {
                   Rango de Años
                 </Typography>
                 <Grid container spacing={3} alignItems="center">
-                  <Grid item xs={12} md={4}>
+                  <Grid item size={{xs:12, md: 4}} >
                     <FormControl fullWidth variant="outlined">
                       <InputLabel id="initialYearLabel">Año Inicial</InputLabel>
                       <Select
@@ -379,7 +387,7 @@ export const ReportsEmissionsPage = () => {
                         label="Año Inicial"
                         value={formData.initialYear}
                         onChange={handleInputChange}
-                        sx={{ borderRadius: 2, width: "200px;" }}
+                        sx={{ borderRadius: 2, height: 40 }}
                       >
                         <MenuItem value="">Seleccione</MenuItem>
                         {availableYears.map((y) => (
@@ -390,7 +398,7 @@ export const ReportsEmissionsPage = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12} md={4}>
+                  <Grid item size={{xs:12, md: 4}} >
                     <FormControl fullWidth variant="outlined">
                       <InputLabel id="finalYearLabel">Año Final</InputLabel>
                       <Select
@@ -399,7 +407,7 @@ export const ReportsEmissionsPage = () => {
                         label="Año Final"
                         value={formData.finalYear}
                         onChange={handleInputChange}
-                        sx={{ borderRadius: 2, width: "200px;" }}
+                        sx={{ borderRadius: 2, height: 40 }}
                       >
                         <MenuItem value="">Seleccione</MenuItem>
                         {availableYears.map((y) => (
@@ -410,8 +418,8 @@ export const ReportsEmissionsPage = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12} md={4}>
-                    <Button
+                  <Grid item size={{xs:12, md: 4}} >
+                    <MDButton
                       variant="contained"
                       size="large"
                       onClick={handleGenerate}
@@ -420,14 +428,17 @@ export const ReportsEmissionsPage = () => {
                         py: 1.5,
                         borderRadius: 2,
                         fontWeight: "bold",
-                        background: "linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)",
+                        background: "#376D4F",
+                        color: "#ffffff",
                         "&:hover": {
-                          background: "linear-gradient(45deg, #1976D2 30%, #1CB5E0 90%)",
+                          transform: "translateY(-2px)",
+                          boxShadow: 3,
+                          background: "#376D4F"
                         },
                       }}
                     >
                       Generar Reporte
-                    </Button>
+                    </MDButton>
                   </Grid>
                 </Grid>
               </Box>

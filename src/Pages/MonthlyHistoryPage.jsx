@@ -2,13 +2,25 @@ import { useState, useEffect } from "react"
 import "../styles/MonthlyHistory.css";
 import { useNavigate, useParams } from "react-router-dom";
 import {
-  ArrowBack as ArrowBackIcon,
-  Person as PersonIcon,
-  Edit as EditIcon,
+  Card,
+  Grid,
+  Avatar,
+  CircularProgress,
+  Alert,
+  Tooltip,
+} from "@mui/material";
+import {
+  ArrowBackOutlined,
   History as HistoryIcon,
-  TrendingUp as TrendingUpIcon
+  Edit as EditIcon,
+  TrendingUp as TrendingUpIcon,
+  Person as PersonIcon,
 } from "@mui/icons-material";
+import MDBox from "components/MDBox";
+import MDTypography from "components/MDTypography";
+import MDButton from "components/MDButton";
 import { getMonthlyHistory } from "../API/Consumptions/MonthlyHistory";
+import DataTable from "examples/Tables/DataTable";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
@@ -34,22 +46,20 @@ export function MonthlyHistoryPage() {
         setLoading(false);
       }
     };
-
     fetchHistorialCambios();
   }, [id]);
 
-  const formatDateTime = (dateString) => {
-    return new Date(dateString).toLocaleString("es-MX", {
+  const formatDateTime = (dateString) =>
+    new Date(dateString).toLocaleString("es-MX", {
       year: "numeric",
       month: "short",
       day: "numeric",
       hour: "2-digit",
       minute: "2-digit",
     });
-  };
 
-  const getTipoCambioIcon = (tipoCambio) => {
-    switch (tipoCambio) {
+  const getTipoCambioIcon = (tipo) => {
+    switch (tipo) {
       case "Creación":
         return <TrendingUpIcon fontSize="small" />;
       case "Update":
@@ -60,29 +70,12 @@ export function MonthlyHistoryPage() {
     }
   };
 
-  const getTipoCambioColor = (tipo) => {
-    switch (tipo) {
-      case "Creación":
-        return "badge-create";
-      case "Update":
-      case "Edición":
-        return "badge-edit";
-      default:
-        return "badge-default";
-    }
-  };
-
   const calcularEstadisticas = () => {
-    const tipos = historialCambios.reduce((acc, cambio) => {
-      acc[cambio.tipo] = (acc[cambio.tipo] || 0) + 1;
+    const tipos = historialCambios.reduce((acc, c) => {
+      acc[c.tipo] = (acc[c.tipo] || 0) + 1;
       return acc;
     }, {});
-
-    const tipoMasComun = Object.keys(tipos).reduce(
-      (a, b) => (tipos[a] > tipos[b] ? a : b),
-      ""
-    );
-
+    const tipoMasComun = Object.keys(tipos).reduce((a, b) => (tipos[a] > tipos[b] ? a : b), "");
     return {
       totalCambios: historialCambios.length,
       tipoMasComun,
@@ -91,116 +84,115 @@ export function MonthlyHistoryPage() {
 
   const estadisticas = calcularEstadisticas();
 
-  const onVolver = () => {
-    navigate(-1);
-  };
+  const columns = [
+    { Header: "Usuario", accessor: "usuario", align: "left" },
+    { Header: "Tipo de Cambio", accessor: "tipo", align: "center" },
+    { Header: "Descripción", accessor: "descripcion", align: "left" },
+    { Header: "Fecha", accessor: "fecha", align: "center" },
+  ];
+
+  const rows = historialCambios.map((c) => ({
+    usuario: (
+      <MDTypography variant="caption" color="text">
+        <PersonIcon fontSize="small" sx={{ mr: 1 }} /> {c.username}
+      </MDTypography>
+    ),
+    tipo: (
+      <MDTypography variant="caption" color="text">
+        {getTipoCambioIcon(c.tipo)} {c.tipo}
+      </MDTypography>
+    ),
+    descripcion: (
+      <MDTypography variant="caption" color="text">
+        {c.cambio}
+      </MDTypography>
+    ),
+    fecha: (
+      <MDTypography variant="caption" color="text">
+        {formatDateTime(c.date)}
+      </MDTypography>
+    ),
+  }));
 
   return (
     <DashboardLayout>
-    <div className="historial-cambios-container">
-      <div className="historial-cambios-content">
-        <div className="header-section">
-          <div className="header-actions">
-            <button className="back-button" onClick={onVolver}>
-              <ArrowBackIcon fontSize="small" />
-              <span>Volver</span>
-            </button>
-          </div>
-          <h1 className="main-title">Historial de Cambios</h1>
-          <p className="subtitle">Registro de cambios para el consumo mensual ID: {id}</p>
-        </div>
+      <MDBox py={3}>
+        <Grid container spacing={3}>
+          <Grid item size={{xs:12}}>
+            <Card sx={{ p: 3 }}>
+              <Grid container alignItems="center" spacing={2}>
+                <Grid item size={{xs: 12, md: 2}}>
+                  <MDButton
+                    variant="text"
+                    color="black"
+                    startIcon={<ArrowBackOutlined />}
+                    onClick={() => navigate(-1)}
+                    sx={{ minWidth: "100%" }}
+                  >
+                    Volver
+                  </MDButton>
+                </Grid>
+                <Grid item size={{xs:12, md:10}}>
+                  <MDTypography variant="h5" fontWeight="bold">
+                    Historial de Cambios
+                  </MDTypography>
+                  <MDTypography variant="body2" color="text">
+                    Registro de cambios para el consumo mensual ID: {id}
+                  </MDTypography>
+                </Grid>
+              </Grid>
+            </Card>
+          </Grid>
 
-        <div className="stats-grid">
-          <div className="stat-card">
-            <div className="stat-content">
-              <div className="stat-icon total-icon">
-                <HistoryIcon />
-              </div>
-              <div className="stat-info">
-                <p className="stat-label">Total Cambios</p>
-                <p className="stat-value">{estadisticas.totalCambios}</p>
-              </div>
-            </div>
-          </div>
+          <Grid item size={{xs:12, md:6}}>
+            <Card sx={{ p: 3 }}>
+              <MDTypography variant="subtitle2" color="text">Total Cambios</MDTypography>
+              <MDTypography variant="h6" fontWeight="bold">
+                {estadisticas.totalCambios}
+              </MDTypography>
+            </Card>
+          </Grid>
 
-          <div className="stat-card">
-            <div className="stat-content">
-              <div className="stat-icon type-icon">
-                {getTipoCambioIcon(estadisticas.tipoMasComun)}
-              </div>
-              <div className="stat-info">
-                <p className="stat-label">Tipo Más Común</p>
-                <p className="stat-value">{estadisticas.tipoMasComun || "N/A"}</p>
-              </div>
-            </div>
-          </div>
-        </div>
+          <Grid item size={{xs:12, md:6}}>
+            <Card sx={{ p: 3 }}>
+              <MDTypography variant="subtitle2" color="text">Tipo Más Común</MDTypography>
+              <MDTypography variant="h6" fontWeight="bold">
+                {getTipoCambioIcon(estadisticas.tipoMasComun)} {estadisticas.tipoMasComun || "N/A"}
+              </MDTypography>
+            </Card>
+          </Grid>
 
-        <div className="main-card">
-          <div className="card-header">
-            <div className="header-content">
-              <h2 className="card-title">Registro de Actividades</h2>
-              <div className="results-info">
-                <span className="total-results">Total: {historialCambios.length} registros</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="card-content">
-            {loading ? (
-              <div className="loading-container">
-                <div className="loading-spinner"></div>
-                <span className="loading-text">Cargando historial de cambios...</span>
-              </div>
-            ) : historialCambios.length === 0 ? (
-              <div className="no-results">
-                <HistoryIcon style={{ fontSize: 48 }} />
-                <h3>No hay historial disponible</h3>
-                <p>No se encontraron registros de cambios para este elemento.</p>
-              </div>
-            ) : (
-              <div className="table-container">
-                <table className="historial-table">
-                  <thead>
-                    <tr>
-                      <th>Usuario</th>
-                      <th>Tipo de Cambio</th>
-                      <th>Descripción del Cambio</th>
-                      <th>Fecha del Cambio</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {historialCambios.map((cambio) => (
-                      <tr key={cambio.logId}>
-                        <td>
-                          <div className="user-info">
-                            <div className="user-avatar">
-                              <PersonIcon fontSize="small" />
-                            </div>
-                            <div className="user-details">
-                              <span className="user-name">{cambio.username}</span>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <div className={`change-type-badge ${getTipoCambioColor(cambio.tipo)}`}>
-                            {getTipoCambioIcon(cambio.tipo)}
-                            <span>{cambio.tipo}</span>
-                          </div>
-                        </td>
-                        <td className="description-cell">{cambio.cambio}</td>
-                        <td className="date-cell">{formatDateTime(cambio.date)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-    <Footer></Footer>
+          <Grid item size={12}>
+            <Card sx={{ p: 3 }}>
+              <MDTypography variant="h6" fontWeight="bold" gutterBottom>
+                Registro de Actividades
+              </MDTypography>
+              {loading ? (
+                <MDBox display="flex" justifyContent="center" alignItems="center" py={5}>
+                  <CircularProgress />
+                </MDBox>
+              ) : historialCambios.length === 0 ? (
+                <MDBox textAlign="center" py={5}>
+                  <HistoryIcon sx={{ fontSize: 48, mb: 1 }} />
+                  <MDTypography variant="h6">No hay historial disponible</MDTypography>
+                  <MDTypography variant="body2" color="text">
+                    No se encontraron registros de cambios para este elemento.
+                  </MDTypography>
+                </MDBox>
+              ) : (
+                <DataTable
+                  table={{ columns, rows }}
+                  isSorted={false}
+                  entriesPerPage={false}
+                  showTotalEntries={true}
+                  noEndBorder
+                />
+              )}
+            </Card>
+          </Grid>
+        </Grid>
+        <Footer />
+      </MDBox>
     </DashboardLayout>
   );
 }

@@ -130,3 +130,18 @@ async function fetchGroupId() {
         console.error('Error fetching group ID:', error);
     }
 }
+
+export async function getCurrentUser(){
+  const response = await fetch(`${appsettings.apiUrl}User/UserProfile`,
+        {
+      method: "GET",
+      credentials: "include",
+    }
+    ); 
+    if(response.ok){
+        const data = await response.json();
+        return data;
+    }else{
+        return [];
+    }
+}

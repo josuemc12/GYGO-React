@@ -1,7 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { ChangePasswordForm } from '../components/ChangePasswordForm'
 import { jwtDecode } from 'jwt-decode';
-import { Box, Typography } from '@mui/material';
+import { Card,
+  Grid,
+  CircularProgress,
+  FormControl,
+  InputAdornment,
+  IconButton,
+  InputLabel,
+  OutlinedInput,
+  Button, } from '@mui/material';
+import MDTypography from "components/MDTypography";
+import MDBox from "components/MDBox";
 
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -38,13 +48,18 @@ export const ChangePasswordPage = () => {
   
   return (
     <DashboardLayout>
-    <div className='justify-content-center align-items-center my-4'>
-      <Box sx={{ mb: 3 }}>
-        <Typography variant='h4' >Cambiar contraseña | {username || "Usuario"}  </Typography>
-      </Box>
-      <hr />
-      <ChangePasswordForm></ChangePasswordForm>
-    </div>
+      <MDBox py={3} mb={4}>
+        <Grid container spacing={3} justifyContent={"center"}>
+          <Grid item size={{xs:12, md:8, lg:6}}>
+            <Card sx={{p: 4}}>
+              <MDTypography variant="h5" fontWeight="bold" gutterBottom>
+                Cambiar contraseña | {username || "Usuario"}
+              </MDTypography>
+              <ChangePasswordForm></ChangePasswordForm>
+            </Card>
+          </Grid>
+        </Grid>
+      </MDBox>
     <Footer />
     </DashboardLayout>
   )

@@ -84,7 +84,8 @@ function Sidenav({ color = "info", brand = "", brandName, routes, ...rest }) {
   }, [dispatch, location]);
 
   // Render all the routes from the routes.js (All the visible items on the Sidenav)
-  const renderRoutes = routes.map(({ type, name, icon, title, noCollapse, key, href, route }) => {
+  const renderRoutes = routes.filter((route) => !route.hideInSidebar) //para no mostrar todos los elemntos en el side
+  .map(({ type, name, icon, title, noCollapse, key, href, route }) => {
     let returnValue;
 
     if (type === "collapse") {
