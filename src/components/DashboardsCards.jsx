@@ -180,6 +180,7 @@ export const ModernDashboardCards = () => {
                   variant="outlined"
                   fullWidth
                   startIcon={<Assessment />}
+                  onClick={() => navigate("/groupProfile")}
                   sx={{
                     py: 1.5,
                     borderRadius: 1.5,
