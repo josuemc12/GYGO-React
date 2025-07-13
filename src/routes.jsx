@@ -38,6 +38,9 @@ import { DashboardGroupPage } from "./Pages/DashboardGroupPage";
 import { UserProfilePage } from "./Pages/UserProfilePage";
 import { GrupoProfilePage } from "./Pages/GroupProfilePage";
 import { AddGroupSAPage } from "./Pages/AddGroupSAPage";
+import SectorsIndexPage from "./Pages/SectorsPage";
+import { UnitsIndexPage } from "./Pages/UnitsIndexPage";
+import { SourcesIndexPage } from "./Pages/SourcesIndexPage";
 
 const routes = [
   {
@@ -132,6 +135,30 @@ const routes = [
     route: "/consumption/edit/:id",
     component: <UpdateConsumptionPage />,
     hideInSidebar: true,
+  },
+  {
+    type: "collapse",
+    name: "Sectores",
+    key: "Sectors",
+    icon: <Icon fontSize="small">Sector</Icon>,
+    route: "/sectores",
+    component: <SectorsIndexPage />,
+  },
+  {
+    type: "collapse",
+    name: "Unidades de reducción",
+    key: "Units",
+    icon: <Icon fontSize="small">Units</Icon>,
+    route: "/unidades",
+    component: <UnitsIndexPage />,
+  },
+  {
+    type: "collapse",
+    name: "Fuentes de Emisión",
+    key: "sources",
+    icon: <Icon fontSize="small">Sources</Icon>,
+    route: "/sources",
+    component: <SourcesIndexPage />,
   },
   {
     type: "collapse",

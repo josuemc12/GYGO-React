@@ -1,6 +1,7 @@
+import { appsettings } from "../settings/appsettings";
 export const getSectors = async () => {
   try {
-    const response = await fetch('http://localhost:5135/api/Sector/Sector', {
+    const response = await fetch(`${appsettings.apiUrl}Sector/Sector`, {
       method: 'GET',
       credentials: 'include', 
       headers: { Accept: 'application/json' }
@@ -18,3 +19,41 @@ export const getSectors = async () => {
     throw error;
   }
 };
+
+export const PostSector = async(sectorDTO) => {
+  const response = await fetch(`${appsettings.apiUrl}Sector/Create`,{
+    method: 'POST',
+    credentials: "include",
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(sectorDTO)
+  });
+
+  if(response.ok){
+    const data = await response.text();
+    return data;
+  }else{
+    const error = await response.text();
+    return error;
+  }
+}
+
+export async function UpdateSector(sectorDTO){
+  const response = await fetch(`${appsettings.apiUrl}Sector/Update`, {
+            method: 'POST',
+            credentials: "include",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(sectorDTO)
+        });
+    
+        if (response.ok) {
+            const data = await response.text();
+            return data;
+        } else {
+            const error = await response.text();
+            throw new Error(error);
+        }
+}

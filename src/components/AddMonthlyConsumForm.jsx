@@ -6,6 +6,19 @@ import {
   CheckBoxOutlined,
   ErrorOutline,
 } from "@mui/icons-material";
+import {
+  Card,
+  Grid,
+  CircularProgress,
+  MenuItem,
+  Select,
+  TextField,
+  Alert,
+} from "@mui/material";
+import Swal from "sweetalert2";
+import MDTypography from "components/MDTypography";
+import MDButton from "components/MDButton";
+
 import "../styles/consumption.css";
 import { getConsumptionById } from "../API/Consumptions/Consumption"; // Deberías tener un fetch para esto
 import { addMonthlyConsumption } from "../API/Consumptions/MonthlyConsum"; // Tu función para agregar
@@ -13,23 +26,16 @@ import { addMonthlyConsumption } from "../API/Consumptions/MonthlyConsum"; // Tu
 export function AddMonthlyConsumForm({ consumptionId }) {
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
-    month: "",
-    year: "",
-    amount: "",
-  });
-
+  const [formData, setFormData] = useState({ month: "", year: "", amount: "" });
   const [consumo, setConsumo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
-  const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
     const fetchConsumo = async () => {
       try {
         const data = await getConsumptionById(consumptionId);
-        console.log(data)
         setConsumo(data[0]);
       } catch (error) {
         console.error("Error cargando el consumo base", error);
@@ -37,33 +43,21 @@ export function AddMonthlyConsumForm({ consumptionId }) {
         setLoading(false);
       }
     };
-
     fetchConsumo();
   }, [consumptionId]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-
-    if (errors[name]) {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: "",
-      }));
-    }
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   const validateForm = () => {
     const newErrors = {};
-
     if (!formData.month) newErrors.month = "Debe ingresar el mes";
     if (!formData.year) newErrors.year = "Debe ingresar el año";
     if (!formData.amount || parseFloat(formData.amount) <= 0)
       newErrors.amount = "La cantidad debe ser mayor a 0";
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -73,7 +67,6 @@ export function AddMonthlyConsumForm({ consumptionId }) {
     if (!validateForm()) return;
 
     setSubmitting(true);
-
     try {
       const newMonthly = {
         month: parseInt(formData.month),
@@ -83,14 +76,13 @@ export function AddMonthlyConsumForm({ consumptionId }) {
       };
 
       await addMonthlyConsumption(newMonthly);
-
-      setShowSuccess(true);
-      setFormData({ month: "", year: "", amount: "" });
-
-      setTimeout(() => {
-        setShowSuccess(false);
-        navigate(`/consumption/monthly/${consumptionId}`);
-      }, 2500);
+      await Swal.fire({
+        icon: "success",
+        title: "¡Consumo mensual agregado exitosamente!",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      navigate(`/consumption/monthly/${consumptionId}`);
     } catch (error) {
       console.error("Error al agregar consumo mensual:", error);
       setErrors({ submit: "No se pudo agregar el consumo mensual" });
@@ -102,154 +94,95 @@ export function AddMonthlyConsumForm({ consumptionId }) {
   const calcularEmisiones = () => {
     if (!consumo || !formData.amount) return 0;
     const valorFactor = consumo.valueEmision / consumo.valueUnit;
-    return (valorFactor * consumo.pcgValue * parseFloat(formData.amount)).toFixed(2); 
-  };
-
-  const handleVolver = () => {
-    navigate(-1);
+    return (valorFactor * consumo.pcgValue * parseFloat(formData.amount)).toFixed(2);
   };
 
   return (
-    <div className="agregar-consumo-container">
-      <div className="agregar-consumo-content">
-        {/* header */}
-        <div className="header-section">
-          <div className="header-actions">
-            <button className="back-button" onClick={handleVolver}>
-              <ArrowBackOutlined />
-              <span>Volver</span>
-            </button>
-          </div>
-          <h1 className="main-title">Agregar Consumo Mensual</h1>
-          <p className="subtitle">
-            Registrar un nuevo consumo mensual asociado al consumo seleccionado
-          </p>
-        </div>
+    <Card sx={{ p: 3 }}>
+      <MDTypography variant="h6" fontWeight="bold" gutterBottom>
+        Información del Consumo Mensual
+      </MDTypography>
+      <MDTypography variant="body2" color="text" mb={2}>
+        Complete los campos requeridos para agregar el consumo mensual
+      </MDTypography>
+      <form onSubmit={handleSubmit}>
+        <Grid container spacing={2}>
+          <Grid size={{xs:12}}>
+            <Select
+              name="month"
+              value={formData.month}
+              onChange={handleChange}
+              displayEmpty
+              sx={{height: 40}}
+              fullWidth
+              error={!!errors.month}
+            >
+              <MenuItem value="">Seleccione un mes</MenuItem>
+              {Array.from({ length: 12 }, (_, i) => (
+                <MenuItem key={i + 1} value={i + 1}>
+                  {new Date(0, i).toLocaleString("es", { month: "long" })}
+                </MenuItem>
+              ))}
+            </Select>
+            {errors.month && (
+              <Alert severity="error" icon={<ErrorOutline />}>
+                {errors.month}
+              </Alert>
+            )}
+          </Grid>
 
-        {showSuccess && (
-          <div className="success-message">
-            <CheckBoxOutlined />
-            <span>¡Consumo mensual agregado!</span>
-          </div>
-        )}
+          <Grid size={{xs:12}}>
+            <TextField
+              label="Año *"
+              name="year"
+              type="number"
+              fullWidth
+              value={formData.year}
+              onChange={handleChange}
+              error={!!errors.year}
+              helperText={errors.year}
+            />
+          </Grid>
 
-        {/* form card s */}
-        <div className="form-card p-4">
-          <div className="card-header">
-            <h2 className="card-title">Información del Consumo Mensual</h2>
-            <p className="card-description">
-              Complete los campos requeridos para agregar el consumo mensual
-            </p>
-          </div>
+          <Grid size={{xs:12}}>
+            <TextField
+              label="Cantidad *"
+              name="amount"
+              type="number"
+              fullWidth
+              value={formData.amount}
+              onChange={handleChange}
+              error={!!errors.amount}
+              helperText={errors.amount}
+            />
+            {formData.amount && consumo && (
+              <MDTypography variant="caption" color="text">
+                Huella estimada: <strong>{calcularEmisiones()} kg CO₂</strong>
+              </MDTypography>
+            )}
+          </Grid>
 
-          <div className="card-content">
-            <form onSubmit={handleSubmit} className="consumo-form">
-              {/* mes */}
-              <div className="form-group">
-                <label htmlFor="month" className="form-label">
-                  Mes *
-                </label>
-                <select
-                  id="month"
-                  name="month"
-                  value={formData.month}
-                  onChange={handleChange}
-                  className={`form-select ${errors.month ? "error" : ""}`}
-                >
-                  <option value="">Seleccione un mes</option>
-                  {Array.from({ length: 12 }, (_, i) => (
-                    <option key={i + 1} value={i + 1}>
-                      {new Date(0, i).toLocaleString("es", { month: "long" })}
-                    </option>
-                  ))}
-                </select>
-                {errors.month && (
-                  <div className="error-message">
-                    <ErrorOutline />
-                    <span>{errors.month}</span>
-                  </div>
-                )}
-              </div>
+          {errors.submit && (
+            <Grid size={{xs:12}}>
+              <Alert severity="error" icon={<ErrorOutline />}>
+                {errors.submit}
+              </Alert>
+            </Grid>
+          )}
 
-              {/*año */}
-              <div className="form-group">
-                <label htmlFor="year" className="form-label">
-                  Año *
-                </label>
-                <input
-                  type="number"
-                  id="year"
-                  name="year"
-                  value={formData.year}
-                  onChange={handleChange}
-                  className={`form-input ${errors.year ? "error" : ""}`}
-                  min="1900"
-                />
-                {errors.year && (
-                  <div className="error-message">
-                    <ErrorOutline />
-                    <span>{errors.year}</span>
-                  </div>
-                )}
-              </div>
-
-              {/* cantidad */}
-              <div className="form-group">
-                <label htmlFor="amount" className="form-label">
-                  Cantidad *
-                </label>
-                <input
-                  type="number"
-                  id="amount"
-                  name="amount"
-                  value={formData.amount}
-                  onChange={handleChange}
-                  className={`form-input ${errors.amount ? "error" : ""}`}
-                  placeholder="0"
-                  min="0"
-                  step="0.01"
-                />
-                {errors.amount && (
-                  <div className="error-message">
-                    <ErrorOutline />
-                    <span>{errors.amount}</span>
-                  </div>
-                )}
-                {formData.amount && consumo && (
-                  <div className="calculation-preview">
-                    <span>Huella estimada: </span>
-                    <strong>{calcularEmisiones()} kg CO₂</strong>
-                  </div>
-                )}
-              </div>
-
-              {/* submit */}
-              {errors.submit && (
-                <div className="error-message submit-error">
-                  <ErrorOutline />
-                  <span>{errors.submit}</span>
-                </div>
-              )}
-
-              <div className="form-actions">
-                <button type="submit" disabled={submitting} className="submit-button">
-                  {submitting ? (
-                    <>
-                      <div className="loading-spinner-small"></div>
-                      <span>Agregando...</span>
-                    </>
-                  ) : (
-                    <>
-                      <AddOutlined />
-                      <span>Agregar Consumo Mensual</span>
-                    </>
-                  )}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
+          <Grid size={{xs:12}}>
+            <MDButton
+              type="submit"
+              variant="gradient"
+              color="success"
+              fullWidth
+              disabled={submitting}
+            >
+              {submitting ? "Agregando..." : "Agregar Consumo Mensual"}
+            </MDButton>
+          </Grid>
+        </Grid>
+      </form>
+    </Card>
   );
 }

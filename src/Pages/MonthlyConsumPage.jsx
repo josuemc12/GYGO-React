@@ -107,7 +107,7 @@ export function MonthlyConsumptionPage() {
           <Grid item size={{ xs: 12 }}>
             <Card sx={{ p: 3 }}>
               <Grid container alignItems="center" spacing={2}>
-                <Grid item size={{ xs: 12, md: 2 }}>
+                <Grid item size={{ xs: 12, md: 1 }}>
                   <MDButton
                     variant="text"
                     color="black"

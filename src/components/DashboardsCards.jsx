@@ -117,7 +117,7 @@ export const ModernDashboardCards = () => {
   return (
     <Grid container spacing={3}>
       {/* Header Card */}
-      <Grid item  size={{xs: 12}}>
+      <Grid size={{xs: 12}}>
         <Card
           sx={{
             background: "#ffffff",
@@ -151,7 +151,7 @@ export const ModernDashboardCards = () => {
             <Divider sx={{ mb: 3 }} />
 
             <Grid container spacing={2}>
-              <Grid item size={{xs: 12, md:4}}>
+              <Grid size={{xs: 12, md:4}}>
                 <Button
                   onClick={handleVerConsumos}
                   variant="contained"
@@ -175,7 +175,7 @@ export const ModernDashboardCards = () => {
                   Ver Consumo
                 </Button>
               </Grid>
-              <Grid item size={{xs:12, md:4}}>
+              <Grid size={{xs:12, md:4}}>
                 <Button
                   variant="outlined"
                   fullWidth
@@ -226,7 +226,7 @@ export const ModernDashboardCards = () => {
       </Grid>
 
       {/* Consumption Summary Card */}
-      <Grid item size={{xs:12, lg:5}}>
+      <Grid size={{xs:12, lg:5}}>
         <Card
           sx={{
             height: 400, // Altura fija
@@ -321,7 +321,7 @@ export const ModernDashboardCards = () => {
       </Grid>
 
       {/* Projects Card */}
-      <Grid item size={{xs:12, lg:7}}>
+      <Grid size={{xs:12, lg:7}}>
         <Card
           sx={{
             height: 400, // Altura fija
@@ -361,7 +361,7 @@ export const ModernDashboardCards = () => {
                     const projectStatus = getProjectStatus(project.fechaInicio, project.fechaFinal)
                     const progress = getProjectProgress(project.fechaInicio, project.fechaFinal)
                     return (
-                      <Grid item xs={12} sm={6} key={project.id}>
+                      <Grid size={{xs:12, sm: 6}} key={project.id}>
                         <Card
                           variant="outlined"
                           sx={{
@@ -517,7 +517,7 @@ export const ModernDashboardCards = () => {
       </Grid>
 
       {/* Reports Card */}
-      <Grid item size={{xs:12}}>
+      <Grid size={{xs:12}}>
         <Card
           sx={{
             background: "#a3b18a",
@@ -528,7 +528,7 @@ export const ModernDashboardCards = () => {
         >
           <CardContent sx={{ p: 3 }}>
             <Grid container alignItems="center" spacing={3}>
-              <Grid item size={{xs:12, md:8}}>
+              <Grid size={{xs:12, md:8}}>
                 <Box display="flex" alignItems="center" mb={2}>
                   <Avatar sx={{ bgcolor: "rgba(255,255,255,0.1)", mr: 2, width: 48, height: 48 }}>
                     <Timeline fontSize="large" />
@@ -543,7 +543,7 @@ export const ModernDashboardCards = () => {
                   </Box>
                 </Box>
               </Grid>
-              <Grid item size={{xs:12, md:4}} textAlign={{ xs: "left", md: "right" }}>
+              <Grid size={{xs:12, md:4}} textAlign={{ xs: "left", md: "right" }}>
                 <Button
                   onClick={handleVerReportes}
                   variant="contained"

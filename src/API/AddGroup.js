@@ -5,9 +5,9 @@ export async function PostAddGroup(newGroup, correogrupo, selectedService) {
   try {
     const response = await fetch(`${appsettings.apiUrl}Group/create`, {
       method: "POST",
+      credentials: "include",
       headers: {
-        "Content-Type": "application/json",
-        //autorizacion bearer / token
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
         nombre: newGroup,

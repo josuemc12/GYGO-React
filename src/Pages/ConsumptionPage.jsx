@@ -5,7 +5,7 @@ import {ConsumptionTable} from "../components/ConsumptionTable";
 import { getConsumptions } from "../API/Consumptions/Consumption";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import {Grid, Card, CardContent, Avatar, Box, Typography} from "@mui/material"
-import {EnergySavingsLeaf} from "@mui/icons-material"
+import {EnergySavingsLeaf, AddOutlined} from "@mui/icons-material"
 import MDBox from "components/MDBox";
 import MDButton from "components/MDButton";
 import MDTypography from "components/MDTypography";
@@ -41,7 +41,7 @@ const handleAgregarConsumo = () => {
   return (
     <DashboardLayout>
       <MDBox py={3}>
-        <Grid container spacing={3}>
+        <Grid container spacing={3} sx={{mb:5}}>
           {/* Header + Botón */}
           <Grid item size={{ xs: 12 }}>
             <Card
@@ -69,7 +69,9 @@ const handleAgregarConsumo = () => {
                     </MDBox>
                   </Grid>
                   <Grid item>
-                    <MDButton onClick={handleAgregarConsumo}>
+                    <MDButton 
+                    startIcon={<AddOutlined />}
+                    onClick={handleAgregarConsumo}>
                       Agregar Consumo
                     </MDButton>
                   </Grid>
@@ -89,7 +91,7 @@ const handleAgregarConsumo = () => {
                 py={3}
                 px={2}
                 variant="gradient"
-                bgColor="info"
+                bgColor="success"
                 borderRadius="lg"
                 coloredShadow="success"
               >

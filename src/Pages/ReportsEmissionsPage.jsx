@@ -8,6 +8,7 @@ import {Box, Card, CardContent, Typography, Button, ButtonGroup, FormControl, In
   Grid, Paper, Divider, Stack } from "@mui/material"
 import { exportChartToPDF } from "../utils/CreateReportPDF";
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+import MDButton from "components/MDButton"
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
@@ -161,7 +162,7 @@ export const ReportsEmissionsPage = () => {
                 size="large"
                 sx={{
                   "& .MuiButton-root": {
-                    color: "darkblue",
+                    color: "#0d1b2a",
                     px: 3,
                     py: 1.5,
                     fontWeight: "medium",
@@ -249,7 +250,7 @@ export const ReportsEmissionsPage = () => {
                     </FormControl>
                   </Grid>
                   <Grid item size={{xs:12, md: 6}}>
-                    <Button
+                    <MDButton
                       variant="contained"
                       size="large"
                       onClick={handleGenerate}
@@ -258,16 +259,17 @@ export const ReportsEmissionsPage = () => {
                         py: 1.5,
                         borderRadius: 2,
                         fontWeight: "bold",
-                        background: "primary",
-                        color: "darkblue",
+                        background: "#376D4F",
+                        color: "#ffffff",
                         "&:hover": {
                          transform: "translateY(-2px)",
                           boxShadow: 3,
+                          background: "#376D4F"
                         },
                       }}
                     >
                       Generar Reporte
-                    </Button>
+                    </MDButton>
                   </Grid>
                 </Grid>
               </Box>
@@ -344,7 +346,7 @@ export const ReportsEmissionsPage = () => {
                     </FormControl>
                   </Grid>
                   <Grid item size={{xs:12, md:3}} >
-                    <Button
+                    <MDButton
                       variant="contained"
                       size="large"
                       onClick={handleGenerate}
@@ -353,16 +355,17 @@ export const ReportsEmissionsPage = () => {
                         py: 1.5,
                         borderRadius: 2,
                         fontWeight: "bold",
-                        background: "primary",
-                        color: "darkblue",
+                        background: "#376D4F",
+                        color: "#ffffff",
                         "&:hover": {
                           transform: "translateY(-2px)",
                           boxShadow: 3,
+                          background: "#376D4F"
                         },
                       }}
                     >
                       Generar Reporte
-                    </Button>
+                    </MDButton>
                   </Grid>
                 </Grid>
               </Box>
@@ -416,7 +419,7 @@ export const ReportsEmissionsPage = () => {
                     </FormControl>
                   </Grid>
                   <Grid item size={{xs:12, md: 4}} >
-                    <Button
+                    <MDButton
                       variant="contained"
                       size="large"
                       onClick={handleGenerate}
@@ -425,16 +428,17 @@ export const ReportsEmissionsPage = () => {
                         py: 1.5,
                         borderRadius: 2,
                         fontWeight: "bold",
-                        background: "primary",
-                        color: "darkblue",
+                        background: "#376D4F",
+                        color: "#ffffff",
                         "&:hover": {
                           transform: "translateY(-2px)",
                           boxShadow: 3,
+                          background: "#376D4F"
                         },
                       }}
                     >
                       Generar Reporte
-                    </Button>
+                    </MDButton>
                   </Grid>
                 </Grid>
               </Box>

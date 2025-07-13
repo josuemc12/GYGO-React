@@ -1,41 +1,65 @@
-import { ArrowBackOutlined } from "@mui/icons-material";
+import {
+  AddOutlined,
+  ErrorOutline,ArrowBackOutlined
+} from "@mui/icons-material";
+import MDBox from "components/MDBox";
+import MDButton from "components/MDButton";
+import MDTypography from "components/MDTypography";
 import { useNavigate } from "react-router-dom";
 import { AddConsumptionForm } from "../components/AddConsumptionForm";
 import "../styles/AddConsumption.css";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
+import {
+  Card,
+  Grid,
+  MenuItem,
+  CircularProgress,
+  TextField,
+  Alert,
+} from "@mui/material";
 
 export function AddConsumptionPage() {
   const navigate = useNavigate();
 
-  const handleVolver = () => {
-    navigate("/consumption");
-  };
+
 
   return (
     <DashboardLayout>
-    <div className="agregar-consumo-container">
-      <div className="agregar-consumo-content">
-        {/* Header */}
-        <div className="header-section">
-          <div className="header-actions">
-            <button className="back-button" onClick={handleVolver}>
-              <ArrowBackOutlined />
-              <span>Volver</span>
-            </button>
-          </div>
-          <h1 className="main-title">Agregar Consumo</h1>
-          <p className="subtitle">
-            Registra un nuevo consumo para calcular su impacto en la huella de carbono
-          </p>
-        </div>
+      <MDBox py={3}>
+        <Grid container spacing={3} sx={{mb:5}}>
+          <Grid item size={{xs:12}}>
+            <Card sx={{ p: 3 }}>
+              <Grid container alignItems="center" spacing={2}>
+                <Grid item size={{xs:12, md: 1}}>
+                  <MDButton
+                    variant="text"
+                    color="black"
+                    startIcon={<ArrowBackOutlined />}
+                    onClick={() => navigate(-1)}
+                    sx={{ minWidth: "100%" }}
+                  >
+                    Volver
+                  </MDButton>
+                </Grid>
+                <Grid item size={{xs:12, md:10}}>
+                  <MDTypography variant="h5" fontWeight="bold" gutterBottom>
+                    Agregar Consumo
+                  </MDTypography>
+                  <MDTypography variant="body2" color="text">
+                    Registra un nuevo consumo para calcular su impacto en la huella de carbono
+                  </MDTypography>
+                </Grid>
+              </Grid>
+            </Card>
+          </Grid>
 
-        {/* Formulario */}
-        <AddConsumptionForm />
-      </div>
-    </div>
-    <Footer/>
+          <Grid item size={{xs:12}}>
+            <AddConsumptionForm />
+          </Grid>
+        </Grid>
+        <Footer />
+      </MDBox>
     </DashboardLayout>
   );
 }
