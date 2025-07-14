@@ -23,5 +23,16 @@ yarn-error.log*
 
 package-lock.json
 yarn.lock
-
 commit.sh
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+localhost.pem
+localhost-key.pem
