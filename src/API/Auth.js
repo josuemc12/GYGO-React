@@ -55,7 +55,7 @@ export  async function loginUser(email, password) {
       };
     }
 
-    return { success: true, isTwoFactor: false,rol: data.rol };
+    return { success: true, isTwoFactor: false,rol: data.rol,id:data.id };
   } catch (err) {
     return { success: false, error: 'Login request failed.' };
   }
