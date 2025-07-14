@@ -51,6 +51,7 @@ export  async function loginUser(email, password) {
         success: true,
         isTwoFactor: true,
         rol: data.rol,
+        id: data.id,
       };
     }
 
