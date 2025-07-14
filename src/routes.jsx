@@ -41,6 +41,7 @@ import { AddGroupSAPage } from "./Pages/AddGroupSAPage";
 import SectorsIndexPage from "./Pages/SectorsPage";
 import { UnitsIndexPage } from "./Pages/UnitsIndexPage";
 import { SourcesIndexPage } from "./Pages/SourcesIndexPage";
+import { Messages} from "./Pages/Messages";
 
 
 const routes = [
@@ -85,6 +86,15 @@ const routes = [
     route: "/Register",
     component: <Register />,
   },
+   {
+    type: "collapse",
+    name: "Mensajes",
+    key: "Mensajes",
+    icon: <Icon fontSize="small">email</Icon>,
+    route: "/Messages",
+    component: <Messages />,
+  },
+
 
   {
     type: "collapse",

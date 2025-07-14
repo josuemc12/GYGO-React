@@ -39,7 +39,7 @@ export  async function loginUser(email, password,login) {
     const data = await response.json();
 
     console.log(data.rol);
-    login(data.rol);
+    login(data.rol,data.id);
 
     if (!response.ok) {
       return { success: false, error: data.error };
