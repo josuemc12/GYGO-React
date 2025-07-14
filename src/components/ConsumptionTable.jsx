@@ -35,7 +35,7 @@ export function ConsumptionTable({ consumos, loading, onVerConsumoMensual, onEdi
         <Tooltip title="Ver Consumo Mensual">
           <IconButton
             size="small"
-            color="info"
+            
             onClick={() => onVerConsumoMensual(consumo)}
           >
             <RemoveRedEyeOutlined fontSize="small" />
@@ -44,7 +44,7 @@ export function ConsumptionTable({ consumos, loading, onVerConsumoMensual, onEdi
         <Tooltip title="Editar Consumo">
           <IconButton
             size="small"
-            color="success"
+            color="info"
             onClick={() => onEditarConsumo(consumo.consumptionId)}
           >
             <EditOutlined fontSize="small" />

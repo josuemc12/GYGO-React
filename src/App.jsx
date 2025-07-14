@@ -43,13 +43,18 @@ import rtlPlugin from "stylis-plugin-rtl";
 import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
 
-// Material Dashboard 2 React routes
-import routes from "./routes";
+//Manejo de roles
+import { useAuth } from "./context/AuthContext";
+
+// Rutas
+import { routes,getRoutes } from "./routes";
 
 // Material Dashboard 2 React contexts
-import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "./context/index";
-
-
+import {
+  useMaterialUIController,
+  setMiniSidenav,
+  setOpenConfigurator,
+} from "./context/index";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -67,16 +72,30 @@ export default function App() {
   const [rtlCache, setRtlCache] = useState(null);
   const { pathname } = useLocation();
 
-
-
-  const hideSidebarRoutes = ["/login", "/register", "/sendinvite", "/verify2fa","/","/homepage"];
+  const hideSidebarRoutes = [
+    "/login",
+    "/registro",
+    "/sendinvite",
+    "/verify2fa",
+    "/",
+    "/homepage",
+  ];
   const hideSidebar = hideSidebarRoutes.includes(pathname.toLowerCase());
 
+  const specialRoutes = [
+    "/Login",
+    "/registro",
+    "/sendinvite",
+    "/verify2fa",
+    "/",
+  ];
+  const isSpecialRoute = specialRoutes.some((route) =>
+    pathname.toLowerCase().startsWith(route)
+  );
 
-  const specialRoutes = ["/Login", "/register", "/sendinvite", "/verify2fa", "/"]; 
-  const isSpecialRoute = specialRoutes.some(route => pathname.toLowerCase().startsWith(route));
+  const { role } = useAuth();
 
-
+  const filteredRoutes = getRoutes(role);
 
   // Cache for the rtl
   useMemo(() => {
@@ -105,7 +124,8 @@ export default function App() {
   };
 
   // Change the openConfigurator state
-  const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
+  const handleConfiguratorOpen = () =>
+    setOpenConfigurator(dispatch, !openConfigurator);
 
   // Setting the dir attribute for the body element
   useEffect(() => {
@@ -118,13 +138,10 @@ export default function App() {
     document.scrollingElement.scrollTop = 0;
   }, [pathname]);
 
-  const getRoutes = (allRoutes) =>
+const renderRoutes = (allRoutes) =>
   allRoutes.flatMap((route) => {
-    if (route.collapse) {
-      return getRoutes(route.collapse);
-    }
-
-    if (route.route) {
+    if (route.collapse) return renderRoutes(route.collapse);
+    if (route.route && route.component)
       return (
         <Route
           exact
@@ -133,11 +150,8 @@ export default function App() {
           key={route.key}
         />
       );
-    }
-
     return [];
   });
-
 
   const configsButton = (
     <MDBox
@@ -157,11 +171,10 @@ export default function App() {
       sx={{ cursor: "pointer" }}
       onClick={handleConfiguratorOpen}
     >
-      <Icon fontSize="small" color="inherit">
-        settings
-      </Icon>
+
     </MDBox>
   );
+
 
   return direction === "rtl" ? (
     <CacheProvider value={rtlCache}>
@@ -171,9 +184,13 @@ export default function App() {
           <>
             <Sidenav
               color={sidenavColor}
-              brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
+              brand={
+                (transparentSidenav && !darkMode) || whiteSidenav
+                  ? brandDark
+                  : brandWhite
+              }
               brandName="Material Dashboard 2"
-              routes={routes}
+              routes={filteredRoutes}
               onMouseEnter={handleOnMouseEnter}
               onMouseLeave={handleOnMouseLeave}
             />
@@ -183,8 +200,8 @@ export default function App() {
         )}
         {layout === "vr" && <Configurator />}
         <Routes>
-          {getRoutes(routes)}
-          <Route path="*" element={<Navigate to="/dashboard" />} />
+          {renderRoutes(filteredRoutes)}
+          <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       </ThemeProvider>
     </CacheProvider>
@@ -195,9 +212,8 @@ export default function App() {
         <>
           <Sidenav
             color={sidenavColor}
-           
             brandName="GYGO"
-            routes={routes}
+            routes={filteredRoutes}
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleOnMouseLeave}
           />
@@ -207,8 +223,8 @@ export default function App() {
       )}
       {layout === "vr" && <Configurator />}
       <Routes>
-        {getRoutes(routes)}
-        <Route path="*" element={<Navigate to="/dashboard" />} />
+        {renderRoutes(filteredRoutes)}
+        <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </ThemeProvider>
   );

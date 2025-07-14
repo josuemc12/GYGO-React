@@ -4,14 +4,14 @@ import Hero from "../../components/Hero";
 import Mission from "../../components/Mission";
 import Footer from "../../components/Footer";
 import "../../styles/HomePage.css";
-import { useAuth } from "../../AuthContext";
+import { useAuth } from "../../context/AuthContext";
 
 export const HomePage = () => {
-  const { logout } = useAuth();
+  const { logoutRol } = useAuth();
 
 
   useEffect(() => {
-    logout();
+    logoutRol();
   }, []);
 
 

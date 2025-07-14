@@ -1,7 +1,7 @@
 
 import { useState } from "react";
-
-import { useAuth } from '../../AuthContext';
+import { useAuth } from "../../context/AuthContext"
+//import { useAuth } from '../../AuthContext';
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../API/Auth";
 import {
@@ -67,10 +67,9 @@ export default function Login() {
     }
 
     try {
-      const { success, isTwoFactor, tempToken, error } = await loginUser(
+      const { success, isTwoFactor, tempToken, error,rol } = await loginUser(
         email,
-        password,
-        login
+        password
       );
       if (!success) {
         Swal.fire({
@@ -87,8 +86,10 @@ export default function Login() {
         // Redirect to 2FA page
         navigate(`/verify-2fa?tempToken=${encodeURIComponent(tempToken)}`);
       } else {
+         console.log("Rol que se va a guardar:", rol);
+        login(rol);
         // Normal login success — redirect to dashboard or home
-        navigate("/DashboardGroupPage");
+        navigate("/Dashboard");
       }
     } catch (error) {
       Swal.fire({
@@ -136,7 +137,7 @@ export default function Login() {
         >
           <Container maxWidth="xs">
             <Paper>
-              <Box textAlign="center" mb={1}>
+              <Box textAlign="center" mb={2}>
                 <img
                   src="/src/assets/Logo.png"
                   alt="Logo"
@@ -144,12 +145,9 @@ export default function Login() {
                 />
               </Box>
 
-              <Box textAlign="center" mb={2}>
+              <Box textAlign="center" mb={5}>
                 <Typography variant="h4" fontWeight={600} color="primary">
-                  SIGN IN
-                </Typography>
-                <Typography variant="body2" color="textSecondary" mt={1}>
-                  Sign into your account
+                  Iniciar Sesión
                 </Typography>
               </Box>
 
@@ -193,7 +191,7 @@ export default function Login() {
                   size="large"
                   sx={{ mt: 3, mb: 2, py: 1.5, borderRadius: 2 }}
                 >
-                  Sign In
+                  Iniciar sesión
                 </Button>
               </form>
             </Paper>

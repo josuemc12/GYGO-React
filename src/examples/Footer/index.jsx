@@ -1,19 +1,3 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-// prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
 
 // @mui material components
@@ -28,12 +12,13 @@ import MDTypography from "components/MDTypography";
 import typography from "assets/theme/base/typography";
 
 function Footer({
-  company = { href: "https://www.creative-tim.com/", name: "Creative Tim" },
+  company = { href: "#", name: "Get Your Green On" },
   links = [
-    { href: "https://www.creative-tim.com/", name: "Creative Tim" },
-    { href: "https://www.creative-tim.com/presentation", name: "About Us" },
-    { href: "https://www.creative-tim.com/blog", name: "Blog" },
-    { href: "https://www.creative-tim.com/license", name: "License" },
+    { href: "/contacto", name: "Contacto" },
+    { href: "https://www.facebook.com/", name: "Facebook" },
+    { href: "https://www.instagram.com/", name: "Instagram" },
+    { href: "https://www.linkedin.com/", name: "LinkedIn" },
+    { href: "https://github.com/", name: "GitHub" },
   ],
 }) {
   const { href, name } = company;
@@ -42,7 +27,7 @@ function Footer({
   const renderLinks = () =>
     links.map((link) => (
       <MDBox key={link.name} component="li" px={2} lineHeight={1}>
-        <Link href={link.href} target="_blank">
+        <Link href={link.href} target="_blank" rel="noopener noreferrer">
           <MDTypography variant="button" fontWeight="regular" color="text">
             {link.name}
           </MDTypography>
@@ -68,19 +53,7 @@ function Footer({
         fontSize={size.sm}
         px={1.5}
       >
-        &copy; {new Date().getFullYear()}, made with
-        <MDBox fontSize={size.md} color="text" mb={-0.5} mx={0.25}>
-          <Icon color="inherit" fontSize="inherit">
-            favorite
-          </Icon>
-        </MDBox>
-        by
-        <Link href={href} target="_blank">
-          <MDTypography variant="button" fontWeight="medium">
-            &nbsp;{name}&nbsp;
-          </MDTypography>
-        </Link>
-        for a better web.
+        &copy; {new Date().getFullYear()} {name}. Todos los derechos reservados.
       </MDBox>
       <MDBox
         component="ul"
@@ -93,7 +66,6 @@ function Footer({
           mt: 3,
           mb: 0,
           p: 0,
-
           [breakpoints.up("lg")]: {
             mt: 0,
           },
@@ -104,8 +76,6 @@ function Footer({
     </MDBox>
   );
 }
-
-
 
 // Typechecking props for the Footer
 Footer.propTypes = {

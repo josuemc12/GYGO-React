@@ -6,6 +6,7 @@ export  async function verify2FACode(tempToken, code) {
   try {
     const response = await fetch(`${appsettings.apiUrl}Auth/verify-2FA`, {
       method: 'POST',
+       credentials: "include",
       headers: {
         'Content-Type': 'application/json',
       },
@@ -23,7 +24,7 @@ export  async function verify2FACode(tempToken, code) {
   }
 }
 
-export  async function loginUser(email, password,login) {
+export  async function loginUser(email, password) {
   try {
 
     const response = await fetch(`${appsettings.apiUrl}Auth/login`, {
@@ -31,7 +32,7 @@ export  async function loginUser(email, password,login) {
       credentials: "include",
       headers: {
         'Content-Type': 'application/json',
-        credentials: 'include'
+        'Accept': 'application/json',
       },
       body: JSON.stringify({ email, password }),
     });
@@ -39,7 +40,7 @@ export  async function loginUser(email, password,login) {
     const data = await response.json();
 
     console.log(data.rol);
-    login(data.rol);
+    
 
     if (!response.ok) {
       return { success: false, error: data.error };
@@ -49,16 +50,18 @@ export  async function loginUser(email, password,login) {
       return {
         success: true,
         isTwoFactor: true,
-        tempToken: data.tempToken,
+        rol: data.rol,
       };
     }
 
-    return { success: true, isTwoFactor: false };
+    return { success: true, isTwoFactor: false,rol: data.rol };
   } catch (err) {
     return { success: false, error: 'Login request failed.' };
   }
 }
 
+
+//Probar
 export  async function sendInvite(email) {
 
   try {
@@ -143,5 +146,20 @@ export async function getCurrentUser(){
         return data;
     }else{
         return [];
-    }
+    }    
 }
+
+export async function logoutSesion() {
+  console.log("api");
+  const response = await fetch(`${appsettings.apiUrl}Auth/logout`, {
+    method: "POST",
+    credentials: "include", // importante para enviar la cookie
+  });
+
+  if (response.ok) {
+    return true; // sesión cerrada correctamente
+  } else {
+    return false;
+  }
+}
+

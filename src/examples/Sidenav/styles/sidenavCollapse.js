@@ -22,13 +22,8 @@ function collapseItem(theme, ownerState) {
   const { pxToRem, rgba, linearGradient } = functions;
 
   return {
-    background: active
-      ? linearGradient(gradients[sidenavColor].main, gradients[sidenavColor].state)
-      : transparent.main,
-    color:
-      (transparentSidenav && !darkMode && !active) || (whiteSidenav && !active)
-        ? dark.main
-        : white.main,
+ background: active ? "#308d21" : transparent.main,
+color: active ? "#fff" : ((transparentSidenav && !darkMode) || whiteSidenav ? "#2d5732" : "#ffffffff"),
     display: "flex",
     alignItems: "center",
     width: "100%",
@@ -53,8 +48,8 @@ function collapseItem(theme, ownerState) {
         if (!active) {
           backgroundValue =
             transparentSidenav && !darkMode
-              ? grey[300]
-              : rgba(whiteSidenav ? grey[400] : white.main, 0.2);
+              ? "#a5d6a7" 
+              : "rgba(48, 141, 33, 0.2)";
         }
 
         return backgroundValue;

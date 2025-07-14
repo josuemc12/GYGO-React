@@ -551,6 +551,7 @@ function ProjectPage() {
 
   return (
     <DashboardLayout>
+      <DashboardNavbar></DashboardNavbar>
       <MDBox py={3}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <MDBox mb={2}>
@@ -580,7 +581,18 @@ function ProjectPage() {
                   </MDBox>
                 </Grid>
                 <Grid item>
-                  <MDButton onClick={openModalAddProject}>
+                  <MDButton
+                  variant="outlined"
+                  sx={{
+                    borderColor: "#4CAF50",
+                    color: "#4CAF50",
+                    "&:hover": {
+                      backgroundColor: "#E8F5E9",
+                      borderColor: "#43A047",
+                      color: "#388E3C",
+                    },
+                  }} 
+                  onClick={openModalAddProject}>
                     Nuevo Proyecto
                   </MDButton>
                 </Grid>
@@ -596,25 +608,16 @@ function ProjectPage() {
                 <Grid item>
                   <Grid container spacing={2}>
                     <Grid item>
-                      <MDTypography variant="body2" color="text">
-                        Estado
-                      </MDTypography>
                       <FormControl size="medium" sx={{ width: 180 }}>
+                         <InputLabel id="Estado-label">Estado</InputLabel>
                         <Select
+                         labelId="Estado-label"
+                            name="estado"
+                            label="Estado"
+                            fullWidth
                           value={filter}
                           onChange={(e) => setFilter(e.target.value)}
-                          size="small"
-                          sx={{
-                            width: 180, // igual que el DatePicker
-                            height: 50,
-                            "& .MuiSelect-select": {
-                              padding: "6px 8px", // menor espacio interno
-                              fontSize: 16,
-                            },
-                            "& .MuiOutlinedInput-notchedOutline": {
-                              height: "100%",
-                            },
-                          }}
+                          sx={{ height: 40 }}
                         >
                           <MenuItem value="todos">Todos</MenuItem>
                           <MenuItem value="true">Realizados</MenuItem>
@@ -624,21 +627,21 @@ function ProjectPage() {
                     </Grid>
 
                     <Grid item>
-                      <MDTypography variant="body2" color="text">
-                        Fecha Inicio
-                      </MDTypography>
+
                       <DatePicker
+                        label="Fecha Inicio"
                         value={startDate}
                         onChange={(newValue) => setStartDate(newValue)}
                         slotProps={{
                           textField: {
                             size: "small",
                             sx: {
-                              width: 195, // más angosto
+                              
+                              width: 180, // más angosto
                               height: 36, // más bajo
                               "& .MuiInputBase-root": {
                                 height: 36, // grosor del input
-                                fontSize: 13, // opcional: fuente más pequeña
+                                 // opcional: fuente más pequeña
                               },
                               "& input": {
                                 padding: "6px 8px", // menos espacio interno
@@ -650,17 +653,16 @@ function ProjectPage() {
                     </Grid>
 
                     <Grid item>
-                      <MDTypography variant="body2" color="text">
-                        Fecha Fin
-                      </MDTypography>
+                 
                       <DatePicker
+                       label="Fecha Fin"
                         value={endDate}
                         onChange={(newValue) => setEndDate(newValue)}
                         slotProps={{
                           textField: {
                             size: "small",
                             sx: {
-                              width: 195, // más angosto
+                              width: 180, // más angosto
                               height: 36, // más bajo
                               "& .MuiInputBase-root": {
                                 height: 36, // grosor del input
@@ -668,7 +670,7 @@ function ProjectPage() {
                               },
                               "& input": {
                                 padding: "6px 8px",
-                                fontSize: 8 // menos espacio interno
+                                fontSize: 13 // menos espacio interno
                               },
                             },
                           },
@@ -680,10 +682,10 @@ function ProjectPage() {
 
                 <Grid item>
                   <MDBox display="flex" gap={1}>
-                    <MDButton onClick={SearchByDate} color="info">
+                    <MDButton onClick={SearchByDate} variant="outlined" color="info">
                       Buscar por fecha
                     </MDButton>
-                    <MDButton onClick={CleanDates} color="secondary">
+                    <MDButton onClick={CleanDates} variant="outlined" color="secondary">
                       Limpiar fechas
                     </MDButton>
                     {Array.isArray(data) && data.length > 0 && (
@@ -710,9 +712,9 @@ function ProjectPage() {
                       py={3}
                       px={2}
                       variant="gradient"
-                      bgColor="info"
+                      bgColor="success"
                       borderRadius="lg"
-                      coloredShadow="info"
+                      coloredShadow="success"
                     >
                       <MDTypography variant="h6" color="white" align="left">
                         Proyectos
@@ -733,7 +735,7 @@ function ProjectPage() {
             </MDBox>
           </MDBox>
         </LocalizationProvider>
-        <Footer />
+      
       </MDBox>
 
       <Modal
@@ -971,7 +973,9 @@ function ProjectPage() {
               <FormControl fullWidth>
                 <InputLabel id="unidad-label">Unidad de Reducción</InputLabel>
                 <Select
+                fullWidth
                   labelId="unidad-label"
+                   sx={{ height: 40 }}
                   value={projectData.unidadreduccion}
                   onChange={(e) =>
                     setProjecttData({
@@ -1001,7 +1005,7 @@ function ProjectPage() {
             </Box>
           </FormControl>
 
-          <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
+          <Box sx={{ display: "flex", gap: 14, mt: 2 }}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 label="Fecha de Inicio"
@@ -1017,7 +1021,22 @@ function ProjectPage() {
                   }));
                 }}
                 inputFormat="DD-MM-YYYY"
-                renderInput={(params) => <TextField fullWidth {...params} />}
+                renderInput={(params) => (
+  <TextField
+    {...params}
+    sx={{
+      width: 130,       // ancho en px
+      "& .MuiInputBase-root": {
+        height: 86,     // alto del campo de entrada
+        fontSize: 13,   // tamaño de texto opcional
+      },
+      "& input": {
+        padding: "6px 8px", // padding interno del input
+      },
+    }}
+  />
+)}
+                
               />
             </LocalizationProvider>
 
@@ -1052,6 +1071,7 @@ function ProjectPage() {
         </Box>
       </Modal>
       {/* Fin del Modal para agregar un nuevo proyecto */}
+        <Footer />
     </DashboardLayout>
   );
 }

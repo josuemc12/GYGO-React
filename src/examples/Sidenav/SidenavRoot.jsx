@@ -38,7 +38,7 @@ export default styled(Drawer)(({ theme, ownerState }) => {
 
   // styles for the sidenav when miniSidenav={false}
   const drawerOpenStyles = () => ({
-    background: backgroundValue,
+    background: "#263238 ",
     transform: "translateX(0)",
     transition: transitions.create("transform", {
       easing: transitions.easing.sharp,
@@ -60,7 +60,7 @@ export default styled(Drawer)(({ theme, ownerState }) => {
 
   // styles for the sidenav when miniSidenav={true}
   const drawerCloseStyles = () => ({
-    background: backgroundValue,
+    background: "#115293 ",
     transform: `translateX(${pxToRem(-320)})`,
     transition: transitions.create("transform", {
       easing: transitions.easing.sharp,
