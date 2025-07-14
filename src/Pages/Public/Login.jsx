@@ -195,6 +195,16 @@ export default function Login() {
                 >
                   Sign In
                 </Button>
+
+                <Button
+                  fullWidth
+                  variant="outlined"
+                  color="primary"
+                  size="large"
+                  sx={{ mb: 2, py: 1.5, borderRadius: 2 }}
+                  onClick={() => navigate("/registro")}>
+                  Crear cuenta
+                </Button>
               </form>
             </Paper>
           </Container>
