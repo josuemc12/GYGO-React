@@ -26,8 +26,10 @@ import MDTypography from "components/MDTypography";
 import MDAvatar from "components/MDAvatar";
 import MDButton from "components/MDButton";
 import MDBadge from "components/MDBadge";
-
-import { Grid, Card, TextField } from "@mui/material";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { Grid, Card, TextField,Stack,Tooltip,IconButton, } from "@mui/material";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 
 const EmissionFactorDashboard = () => {
@@ -214,7 +216,7 @@ const EmissionFactorDashboard = () => {
     ),
     ValorCarbon: (
       <MDTypography variant="caption" color="text">
-        {actor.valueUnit}
+        {factor.valueUnit}
       </MDTypography>
     ),
     Factoremisión: (
@@ -297,8 +299,16 @@ const EmissionFactorDashboard = () => {
 
               <Grid item>
                 <MDButton
-                  variant="gradient"
-                  color="info"
+                  variant="outlined"
+                      sx={{
+                        borderColor: "#4CAF50",
+                        color: "#4CAF50",
+                        "&:hover": {
+                          backgroundColor: "#E8F5E9",
+                          borderColor: "#43A047",
+                          color: "#388E3C",
+                        },
+                      }}
                   onClick={handleCreate}
                 >
                   Crear Nuevo
@@ -330,9 +340,9 @@ const EmissionFactorDashboard = () => {
                     py={3}
                     px={2}
                     variant="gradient"
-                    bgColor="info"
+                    bgColor="success"
                     borderRadius="lg"
-                    coloredShadow="info"
+                    coloredShadow="success"
                   >
                     <MDTypography variant="h6" color="white" align="left">
                       Factores de Emisión

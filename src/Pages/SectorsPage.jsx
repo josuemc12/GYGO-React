@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { AddOutlined, EditOutlined } from "@mui/icons-material";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
+import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
@@ -121,10 +122,11 @@ export default function SectorsIndexPage() {
 
   return (
     <DashboardLayout>
+      <DashboardNavbar></DashboardNavbar>
       <MDBox py={3}>
         <Grid container spacing={3} sx={{ mb: 5 }}>
           {/* Header */}
-          <Grid size={{xs: 12}}>
+          <Grid size={{ xs: 12 }}>
             <Card
               sx={{
                 background: "#ffffff",
@@ -132,6 +134,7 @@ export default function SectorsIndexPage() {
                 borderRadius: 2,
                 border: "1px solid #e5e7eb",
                 boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+                padding: 3,
               }}
             >
               <CardContent>
@@ -142,16 +145,33 @@ export default function SectorsIndexPage() {
                 >
                   <Grid>
                     <MDBox display="flex" flexDirection="column" gap={1}>
-                      <MDTypography variant="h6">Sectores</MDTypography>
-                      <MDTypography variant="body2" color="text">
-                        Gestiona los sectores registrados dentro de la organización
-                      </MDTypography>
+                      <MDBox display="flex" flexDirection="column">
+                        <MDBox display="flex" alignItems="center" gap={1}>
+                          <MDTypography variant="h6">Sectores</MDTypography>
+                        </MDBox>
+                        <MDBox display="flex" alignItems="center" gap={1}>
+                          <MDTypography variant="body2" color="text">
+                            Gestiona los sectores registrados dentro de la
+                            organización
+                          </MDTypography>
+                        </MDBox>
+                      </MDBox>
                     </MDBox>
                   </Grid>
                   <Grid>
                     <MDButton
+                      variant="outlined"
                       onClick={handleAddSectorClick}
                       startIcon={<AddOutlined />}
+                      sx={{
+                        borderColor: "#4CAF50",
+                        color: "#4CAF50",
+                        "&:hover": {
+                          backgroundColor: "#E8F5E9",
+                          borderColor: "#43A047",
+                          color: "#388E3C",
+                        },
+                      }}
                     >
                       Agregar Sector
                     </MDButton>
@@ -162,7 +182,7 @@ export default function SectorsIndexPage() {
           </Grid>
 
           {/* Tabla */}
-          <Grid size={{xs: 12}}>
+          <Grid size={{ xs: 12 }}>
             <Card>
               <MDBox
                 mx={2}
@@ -174,11 +194,21 @@ export default function SectorsIndexPage() {
                 borderRadius="lg"
                 coloredShadow="success"
               >
-                <MDTypography variant="h6" color="white">
+                <MDTypography variant="h6" color="white" align="left">
                   Registro de Sectores
                 </MDTypography>
               </MDBox>
-              <MDBox>
+              <MDBox
+                pt={3}
+                sx={{
+                  p: 4,
+                  textAlign: "center",
+                  minHeight: "100px",
+                  width: "1200px",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
                 <DataTable
                   table={{ columns, rows }}
                   isSorted={false}
@@ -234,4 +264,3 @@ export default function SectorsIndexPage() {
     </DashboardLayout>
   );
 }
-

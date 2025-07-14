@@ -15,6 +15,7 @@ import {
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
+import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import Footer from "examples/Footer";
 import { useNavigate } from "react-router-dom";
@@ -47,6 +48,7 @@ export function UserProfilePage() {
 
   return (
     <DashboardLayout>
+      <DashboardNavbar></DashboardNavbar>
       <MDBox py={3}>
         <Grid container spacing={3}>
           <Grid item size={{xs:12}}>

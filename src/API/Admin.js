@@ -1,3 +1,5 @@
+import { appsettings } from "../settings/appsettings";
+
 const API_BASE_URL = "http://localhost:7217"
 
 // Get group ID from cookies
@@ -35,9 +37,9 @@ const parseJSON = async (response) => {
 
 export const getGroupUsers = async () => {
   try {
-    const groupId = await getGroupId(); // <--- await here
 
-    const response = await fetch(`${API_BASE_URL}/GetGroup/${groupId}`, {
+    const response = await fetch(`${appsettings.apiUrl}Admin/GetGroup`, {
+
       method: "GET",
       mode: "cors",
       credentials: "include", // add this to send cookies
@@ -110,6 +112,8 @@ export const removeUserFromGroup = async (userId) => {
 async function fetchGroupId() {
     try {
 
+
+      
         const response = await fetch(`http://localhost:5135/getGroupId`, {
             method: "GET",
             credentials: "include"

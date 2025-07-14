@@ -12,6 +12,8 @@ import {
 } from "@mui/material";
 import { AddOutlined, EditOutlined } from "@mui/icons-material";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
+
+import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
@@ -19,8 +21,6 @@ import DataTable from "examples/Tables/DataTable";
 import Footer from "examples/Footer";
 import Swal from "sweetalert2";
 import { getUnits, CreateUnits, UpdateUnits } from "../API/unit";
-
-
 
 export function UnitsIndexPage() {
   const [units, setUnits] = useState([]);
@@ -72,20 +72,20 @@ export function UnitsIndexPage() {
         await UpdateUnits({ unidadId: editId, ...unitData });
         setModalOpen(false);
         await Swal.fire({
-                  icon: "success",
-                  title: "Unidad actualizada correctamente",
-                  showConfirmButton: false,
-                  timer: 2000,
-                });
+          icon: "success",
+          title: "Unidad actualizada correctamente",
+          showConfirmButton: false,
+          timer: 2000,
+        });
       } else {
         await CreateUnits(unitData);
         setModalOpen(false);
         await Swal.fire({
-                  icon: "success",
-                  title: "Unidad creada correctamente",
-                  showConfirmButton: false,
-                  timer: 2000,
-                });
+          icon: "success",
+          title: "Unidad creada correctamente",
+          showConfirmButton: false,
+          timer: 2000,
+        });
       }
       await loadUnits();
     } catch (e) {
@@ -128,9 +128,10 @@ export function UnitsIndexPage() {
 
   return (
     <DashboardLayout>
+      <DashboardNavbar></DashboardNavbar>
       <MDBox py={3}>
         <Grid container spacing={3} sx={{ mb: 5 }}>
-          <Grid size={{xs:12}}>
+          <Grid size={{ xs: 12 }}>
             <Card
               sx={{
                 background: "#ffffff",
@@ -138,22 +139,43 @@ export function UnitsIndexPage() {
                 borderRadius: 2,
                 border: "1px solid #e5e7eb",
                 boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+                padding: 3,
               }}
             >
               <CardContent>
-                <Grid container alignItems="center" justifyContent="space-between">
+                <Grid
+                  container
+                  alignItems="center"
+                  justifyContent="space-between"
+                >
                   <Grid>
                     <MDBox display="flex" flexDirection="column" gap={1}>
-                      <MDTypography variant="h6">Unidades</MDTypography>
-                      <MDTypography variant="body2" color="text">
-                        Gestiona las unidades registradas en el sistema
-                      </MDTypography>
+                      <MDBox display="flex" flexDirection="column">
+                        <MDBox display="flex" alignItems="center" gap={1}>
+                          <MDTypography variant="h6">Unidades</MDTypography>
+                        </MDBox>
+                        <MDBox display="flex" alignItems="center" gap={1}>
+                          <MDTypography variant="body2" color="text">
+                            Gestiona las unidades registradas en el sistema
+                          </MDTypography>
+                        </MDBox>
+                      </MDBox>
                     </MDBox>
                   </Grid>
                   <Grid>
                     <MDButton
+                      variant="outlined"
                       onClick={handleAddClick}
                       startIcon={<AddOutlined />}
+                      sx={{
+                        borderColor: "#4CAF50",
+                        color: "#4CAF50",
+                        "&:hover": {
+                          backgroundColor: "#E8F5E9",
+                          borderColor: "#43A047",
+                          color: "#388E3C",
+                        },
+                      }}
                     >
                       Agregar Unidad
                     </MDButton>
@@ -163,7 +185,7 @@ export function UnitsIndexPage() {
             </Card>
           </Grid>
 
-          <Grid size={{xs:12}}>
+          <Grid size={{ xs: 12 }}>
             <Card>
               <MDBox
                 mx={2}
@@ -179,7 +201,16 @@ export function UnitsIndexPage() {
                   Registro de Unidades
                 </MDTypography>
               </MDBox>
-              <MDBox>
+              <MDBox
+              pt={3}
+                     sx={{
+                          p: 4,
+                          textAlign: "center",
+                          minHeight: "100px",
+                          width: "1200px",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}>
                 <DataTable
                   table={{ columns, rows }}
                   isSorted={false}
@@ -216,7 +247,9 @@ export function UnitsIndexPage() {
             fullWidth
             label="Nombre"
             value={unitData.nombre}
-            onChange={(e) => setUnitData({ ...unitData, nombre: e.target.value })}
+            onChange={(e) =>
+              setUnitData({ ...unitData, nombre: e.target.value })
+            }
             error={!!errors.nombre}
             helperText={errors.nombre}
             sx={{ mb: 2 }}
@@ -225,7 +258,9 @@ export function UnitsIndexPage() {
             fullWidth
             label="Diminutivo"
             value={unitData.diminutivo}
-            onChange={(e) => setUnitData({ ...unitData, diminutivo: e.target.value })}
+            onChange={(e) =>
+              setUnitData({ ...unitData, diminutivo: e.target.value })
+            }
             error={!!errors.diminutivo}
             helperText={errors.diminutivo}
             sx={{ mb: 2 }}

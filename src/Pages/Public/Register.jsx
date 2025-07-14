@@ -176,10 +176,7 @@ export function Register() {
 
               <Box textAlign="center" mb={2}>
                 <Typography variant="h4" fontWeight={600} color="primary">
-                  Registro {inviteToken ? "por invitación" : "normal"}
-                </Typography>
-                <Typography variant="body2" color="textSecondary" mt={1}>
-                  Registrar un usuario
+                  Registro {inviteToken ? "por invitación" : ""}
                 </Typography>
               </Box>
 

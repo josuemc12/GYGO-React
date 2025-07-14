@@ -22,6 +22,7 @@ import {
   Menu,
   MenuItem,
   Card,
+  InputLabel,
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import CloseIcon from "@mui/icons-material/Close";
@@ -62,7 +63,6 @@ const modalStyle = {
   borderRadius: 3,
   p: 4,
 };
-
 
 export function ReportCompanies() {
   const [ReportCompaniesData, SetReportCompaniesData] = useState([]);
@@ -149,7 +149,7 @@ export function ReportCompanies() {
     ),
     fechaCreación: (
       <MDTypography variant="caption" color="text">
-         {dayjs(companies.fechaCreación).format("DD/MM/YYYY")}
+        {dayjs(companies.fechaCreación).format("DD/MM/YYYY")}
       </MDTypography>
     ),
 
@@ -176,7 +176,7 @@ export function ReportCompanies() {
         alignItems="center"
       >
         <Tooltip title="Ver detalles">
-          <IconButton size="small" onClick={() => handleOpenModal(companies)}>
+          <IconButton size="small"  sx={{ color: "#6c757d" }} onClick={() => handleOpenModal(companies)}>
             <VisibilityIcon fontSize="small" />
           </IconButton>
         </Tooltip>
@@ -205,8 +205,22 @@ export function ReportCompanies() {
                 </MDBox>
               </Grid>
               <Grid item>
-                <MDButton variant="gradient"
-                  color="info" onClick={CreatePDF}>Descargar Reporte</MDButton>
+                <MDButton
+                  variant="outlined"
+                  
+                  onClick={CreatePDF}
+                  sx={{
+                    borderColor: "#4CAF50",
+                    color: "#4CAF50",
+                    "&:hover": {
+                      backgroundColor: "#E8F5E9",
+                      borderColor: "#43A047",
+                      color: "#388E3C",
+                    },
+                  }}
+                >
+                  Descargar Reporte
+                </MDButton>
               </Grid>
             </Grid>
 
@@ -222,25 +236,16 @@ export function ReportCompanies() {
                   <Grid item>
                     <Grid container spacing={2}>
                       <Grid item>
-                        <MDTypography variant="body2" color="text">
-                          Estado
-                        </MDTypography>
                         <FormControl size="medium" sx={{ width: 180 }}>
+                          <InputLabel id="Estado-label">Estado</InputLabel>
                           <Select
+                            labelId="Estado-label"
+                            name="estado"
+                            label="Estado"
+                            fullWidth
                             value={statusFilter}
                             onChange={(e) => setStatusFilter(e.target.value)}
-                            size="small"
-                            sx={{
-                              width: 180, // igual que el DatePicker
-                              height: 50,
-                              "& .MuiSelect-select": {
-                                padding: "6px 8px", // menor espacio interno
-                                fontSize: 16,
-                              },
-                              "& .MuiOutlinedInput-notchedOutline": {
-                                height: "100%",
-                              },
-                            }}
+                            sx={{ height: 40 }}
                           >
                             <MenuItem value="todos">Todos</MenuItem>
                             <MenuItem value="true">Activos</MenuItem>
@@ -255,25 +260,19 @@ export function ReportCompanies() {
                   <Grid item>
                     <Grid container spacing={2}>
                       <Grid item>
-                        <MDTypography variant="body2" color="text">
-                          Servicios
-                        </MDTypography>
                         <FormControl size="medium" sx={{ width: 180 }}>
+                          <InputLabel id="Servicios-label">
+                            Servicios
+                          </InputLabel>
+
                           <Select
+                            labelId="Servicios-label"
+                            name="Servicios"
+                            label="Servicios"
+                            fullWidth
                             value={serviceFilter}
                             onChange={(e) => setServiceFilter(e.target.value)}
-                            size="small"
-                            sx={{
-                              width: 180, // igual que el DatePicker
-                              height: 50,
-                              "& .MuiSelect-select": {
-                                padding: "6px 8px", // menor espacio interno
-                                fontSize: 16,
-                              },
-                              "& .MuiOutlinedInput-notchedOutline": {
-                                height: "100%",
-                              },
-                            }}
+                            sx={{ height: 40 }}
                           >
                             <MenuItem value="todos">Todos</MenuItem>
                             {ServicesData.map((service) => (
@@ -304,24 +303,24 @@ export function ReportCompanies() {
                     py={3}
                     px={2}
                     variant="gradient"
-                    bgColor="info"
+                    bgColor="success"
                     borderRadius="lg"
-                    coloredShadow="info"
+                    coloredShadow="success"
                   >
                     <MDTypography variant="h6" color="white" align="left">
                       Compañias
                     </MDTypography>
                   </MDBox>
-                  <MDBox pt={3}
-                     sx={{
-                          p: 4,
-                          textAlign: "center",
-                          minHeight: "100px",
-                          width: "1200px",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                  
+                  <MDBox
+                    pt={3}
+                    sx={{
+                      p: 4,
+                      textAlign: "center",
+                      minHeight: "100px",
+                      width: "1200px",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
                   >
                     <DataTable
                       table={{ columns, rows }}
@@ -343,48 +342,53 @@ export function ReportCompanies() {
       {/* Modal para ver los detalles de la empresa */}
 
       <Modal open={openModal} onClose={handleCloseModal}>
-  <Box sx={modalStyle}>
-    {/* Encabezado */}
-    <Grid container justifyContent="space-between" alignItems="center" mb={2}>
-      <Typography variant="h6" fontWeight="bold">
-        Detalles de la Empresa
-      </Typography>
-      <IconButton onClick={handleCloseModal} size="small">
-        <CloseIcon />
-      </IconButton>
-    </Grid>
+        <Box sx={modalStyle}>
+          {/* Encabezado */}
+          <Grid
+            container
+            justifyContent="space-between"
+            alignItems="center"
+            mb={2}
+          >
+            <Typography variant="h6" fontWeight="bold">
+              Detalles de la Empresa
+            </Typography>
+            <IconButton onClick={handleCloseModal} size="small">
+              <CloseIcon />
+            </IconButton>
+          </Grid>
 
-    <Divider sx={{ mb: 2 }} />
+          <Divider sx={{ mb: 2 }} />
 
-    {/* Cuerpo con datos */}
-    <Grid container spacing={2}>
-      {[
-        ["Nombre", selectedCompany?.nombre || "-"],
-        ["Correo", selectedCompany?.correo || "-"],
-        ["Fecha de incorporación", selectedCompany?.fechaCreación || "-"],
-        ["Servicio asociado", selectedCompany?.serviceName || "-"],
-        ["Cantidad de usuarios", selectedCompany?.numberOfUsers || "-"],
-        ["Estado", selectedCompany?.estatus ? "Activo" : "Inactivo"],
-      ].map(([label, value], index) => (
-        <Grid item xs={12} key={index}>
-          <Typography variant="body2" color="text.secondary" gutterBottom>
-            {label}
-          </Typography>
-          <Typography variant="subtitle1" fontWeight="medium">
-            {value}
-          </Typography>
-        </Grid>
-      ))}
-    </Grid>
+          {/* Cuerpo con datos */}
+          <Grid container spacing={2}>
+            {[
+              ["Nombre", selectedCompany?.nombre || "-"],
+              ["Correo", selectedCompany?.correo || "-"],
+              ["Fecha de incorporación", selectedCompany?.fechaCreación || "-"],
+              ["Servicio asociado", selectedCompany?.serviceName || "-"],
+              ["Cantidad de usuarios", selectedCompany?.numberOfUsers || "-"],
+              ["Estado", selectedCompany?.estatus ? "Activo" : "Inactivo"],
+            ].map(([label, value], index) => (
+              <Grid item xs={12} key={index}>
+                <Typography variant="body2" color="text.secondary" gutterBottom>
+                  {label}
+                </Typography>
+                <Typography variant="subtitle1" fontWeight="medium">
+                  {value}
+                </Typography>
+              </Grid>
+            ))}
+          </Grid>
 
-    {/* Botón de cerrar */}
-    <Box display="flex" justifyContent="flex-end" mt={4}>
-      <Button variant="contained" color="info" onClick={handleCloseModal}>
-        Cerrar
-      </Button>
-    </Box>
-  </Box>
-</Modal>
+          {/* Botón de cerrar */}
+          <Box display="flex" justifyContent="flex-end" mt={4}>
+            <Button variant="contained" color="info" onClick={handleCloseModal}>
+              Cerrar
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
 
       {/* Termina Modal para ver los detalles de la empresa */}
     </DashboardLayout>
