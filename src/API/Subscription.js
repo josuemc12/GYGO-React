@@ -53,8 +53,26 @@ export async function subscribeToPlan(planId) {
   }
 }
 
-export async function cancelSubscription(){
+export async function cancelSubscription() {
+  try {
+    const response = await fetch(`${appsettings.apiUrl}Subscription/cancel`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Error ${response.status}: ${errorText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("cancelSubscription error:", error);
+    throw error;
+  }
 }
 
 export async function CacelSubscriptionByAdmin(){
@@ -104,3 +122,4 @@ export async function getSubscriptionByUserId() {
     throw error;
   }
 }
+

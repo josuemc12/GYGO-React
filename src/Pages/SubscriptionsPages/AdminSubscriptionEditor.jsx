@@ -11,20 +11,17 @@ import {
 import DashboardLayout from "@/examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "@/examples/Navbars/DashboardNavbar";
 
-import { getSubscription } from "../../API/Subscription";
+import { getSubscriptionByUserId } from "../../API/Subscription"; // <-- función corregida
 
 export default function AdminSubscriptionEditor() {
   const [subscription, setSubscription] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Cambia aquí por el planId real o pasa como prop
-  const planId = "tu-plan-id";
-
   useEffect(() => {
     const fetchSubscription = async () => {
       try {
-        const data = await getSubscription(planId);
+        const data = await getSubscriptionByUserId(); // <-- ya no usa planId
         setSubscription(data);
       } catch (err) {
         setError(err.message || "Error al cargar la suscripción");
@@ -34,15 +31,13 @@ export default function AdminSubscriptionEditor() {
     };
 
     fetchSubscription();
-  }, [planId]);
+  }, []);
 
   if (loading)
     return (
       <DashboardLayout>
         <DashboardNavbar />
-        <Box
-          sx={{ display: "flex", justifyContent: "center", mt: 5 }}
-        >
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 5 }}>
           <CircularProgress />
         </Box>
       </DashboardLayout>
@@ -111,7 +106,6 @@ export default function AdminSubscriptionEditor() {
                 <strong>Creado en:</strong>{" "}
                 {new Date(subscription.createdAt).toLocaleDateString()}
               </Typography>
-              {/* Aquí puedes agregar más detalles o botones para editar */}
             </CardContent>
           </Card>
         </Grid>
