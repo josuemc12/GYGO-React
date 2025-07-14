@@ -133,7 +133,6 @@ export async function getProjectsbyStatus(status) {
   } else {
     return [];
   }
-  CreatePdf;
 }
 
 //API para obtener los proyectos por fechas
