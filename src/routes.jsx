@@ -1,12 +1,6 @@
-// import Dashboard from "layouts/dashboard";
-// import Tables from "layouts/tables";
-// import Billing from "layouts/billing";
-// import RTL from "layouts/rtl";
-// import Notifications from "layouts/notifications";
-// import Profile from "layouts/profile";
-// import SignIn from "layouts/authentication/sign-in";
-// import SignUp from "layouts/authentication/sign-up";
-
+/// Manejo de los roles
+import { useAuth } from "./context/AuthContext";
+import { Navigate } from "react-router-dom";
 ///Iconos
 import Icon from "@mui/material/Icon";
 
@@ -14,15 +8,13 @@ import Icon from "@mui/material/Icon";
 import Login from "./Pages/Public/Login";
 //Ruta del inicio de sesion
 import { Register } from "./Pages/Public/Register";
-import {ReportCompanies} from "./Pages/Private/ReportCompaniesPage"
+import { ReportCompanies } from "./Pages/Private/ReportCompaniesPage";
 
 import AdminUserDashboard from "./Pages/AdminUserDashboard";
-import AdminEmisionFactor from "./Pages/Admin/AdminEmisionFactor"
+import AdminEmisionFactor from "./Pages/Admin/AdminEmisionFactor";
 
-
-
-import  ProjectPage  from "./Pages/Private/ProjectsPage";
-import {HomePage} from "./Pages/Public/HomePage";
+import ProjectPage from "./Pages/Private/ProjectsPage";
+import { HomePage } from "./Pages/Public/HomePage";
 import { ChangePasswordPage } from "./Pages/ChangePasswordPage";
 import { ConsumptionPage } from "./Pages/ConsumptionPage";
 import { MonthlyConsumptionPage } from "./Pages/MonthlyConsumPage";
@@ -41,75 +33,445 @@ import { AddGroupSAPage } from "./Pages/AddGroupSAPage";
 import SectorsIndexPage from "./Pages/SectorsPage";
 import { UnitsIndexPage } from "./Pages/UnitsIndexPage";
 import { SourcesIndexPage } from "./Pages/SourcesIndexPage";
+import { Messages} from "./Pages/Messages";
+import { DashboardConsumo } from "./Pages/ConsumoPage";
+import  ManagmentUsers  from "./Pages/ManagmentUsers";
 
 
-const routes = [
+
+
+
+const ProtectedElement = ({ children, allowedRoles }) => {
+  const { role } = useAuth();
+  console.log("Role desde useAuth:", role);
+  if (!role) return <Navigate to="/login" replace />;
+  if (allowedRoles && !allowedRoles.includes(role)) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+};
+
+export const routes = [
+  {
+    key: "HomePage",
+    route: "/HomePage",
+    component: <HomePage />,
+  },
+
+  //Ruta de dashboard no visible
   {
     type: "collapse",
     name: "Dashboard",
-    key: "edit-monthly-consumption",
+    key: "Dashboard",
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/dashboard",
-    component: <DashboardGroupPage />,
+    component: (
+      <ProtectedElement>
+        <DashboardGroupPage />
+      </ProtectedElement>
+    ),
+    roles: ["DEV", "GA", "GU", "DEF"],
+    hideInSidebar: true,
   },
+
+  //Ruta de login no visible
+  {
+    type: "collapse",
+    name: "log",
+    key: "log",
+    icon: <Icon fontSize="small">dashboard</Icon>,
+    route: "/Login",
+    key: "log",
+    component: <Login />,
+    hideInSidebar: true,
+  },
+  //Ruta de registro no visible
+  {
+    type: "collapse",
+    name: "Registro",
+    key: "Registro",
+    icon: <Icon fontSize="small">dashboard</Icon>,
+    route: "/Registro",
+    component: <Register />,
+    hideInSidebar: true,
+  },
+   {
+    type: "collapse",
+    name: "Mensajes",
+    key: "Mensajes",
+    icon: <Icon fontSize="small">email</Icon>,
+    route: "/Messages",
+    component: <Messages />,
+  },
+
+
+  //Ruta de proyectos
   {
     type: "collapse",
     name: "Proyectos",
     key: "Proyectos",
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/ProjectPage",
-    component: <ProjectPage />,
-  },
-    {
-    type: "collapse",
-    name: "ChangePassword",
-    key: "ChangePassword",
-    icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/ChangePasswordPage",
-    component: <ChangePasswordPage />,
-    hideInSidebar: true,
-  },
-  {
-    name: "Admin Factor Emision",
-    key: "AdminFactorEmision",
-    icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/AdminEmisionFactor",
-    component: <AdminEmisionFactor />,
+
+    component: (
+      <ProtectedElement>
+        <ProjectPage />
+      </ProtectedElement>
+    ),
+    roles: ["GA", "GU", "DEV"],
   },
 
-    {
-    type: "collapse",
-    name: "Registro",
-    key: "Registro",
-    icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/Register",
-    component: <Register />,
-  },
-
+  //Ruta de proyectos
   {
     type: "collapse",
-    name: "home",
-    key: "home",
-    icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/HomePage",
-    component: <HomePage />,
+    name: "DashboardConsumo",
+    key: "DashboardConsumo",
+    icon: <Icon fontSize="small">table_view</Icon>,
+    route: "/DashboardConsumo",
+
+    component: (
+      <ProtectedElement>
+        <DashboardConsumo />
+      </ProtectedElement>
+    ),
+    roles: ["GA", "GU", "DEV"],
   },
-    {
-    type: "collapse",
-    name: "log",
-    key: "log",
-    icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/Login",
-    component: <Login />,
-  },
+
+
+
+
+  //Ruta de consumo
   {
     type: "collapse",
     name: "Consumption",
     key: "consumption",
     icon: <Icon fontSize="small">Consumo</Icon>,
     route: "/consumption",
-    component: <ConsumptionPage />,
+    component: (
+      <ProtectedElement>
+        <ConsumptionPage />
+      </ProtectedElement>
+    ),
+    roles: ["DEV", "GA", "GU"],
   },
+  {
+    type: "collapse",
+    name: "Monthly Consumption",
+    key: "monthly-consumption",
+    icon: <Icon fontSize="small">bar_chart</Icon>,
+    route: "/consumption/monthly/:id",
+
+    component: (
+      <ProtectedElement>
+        <MonthlyConsumptionPage />
+      </ProtectedElement>
+    ),
+    hideInSidebar: true,
+    roles: ["DEV", "GA", "GU"],
+  },
+
+  {
+    type: "collapse",
+    name: "Edit Monthly Consumption",
+    key: "edit-monthly-consumption",
+    icon: <Icon fontSize="small">edit_calendar</Icon>,
+    route: "/consumption/monthly/edit/:consumptionId/:monthlyId",
+
+    component: (
+      <ProtectedElement>
+        <UpdateMonthlyConsumPage />
+      </ProtectedElement>
+    ),
+    hideInSidebar: true,
+    roles: ["DEV", "GA", "GU"],
+  },
+
+  //Ruta para agregar grupo
+  {
+    type: "collapse",
+    name: "Agregar grupo",
+    key: "add-group",
+    icon: <Icon fontSize="small">bar_chart</Icon>,
+    route: "/addGroup",
+    component: (
+      <ProtectedElement>
+        <AddGroupSAPage />
+      </ProtectedElement>
+    ),
+    roles: ["DEV"],
+  },
+
+  //Ruta de Monthly History
+  {
+    type: "collapse",
+    name: "Monthly History",
+    key: "monthly-history",
+    icon: <Icon fontSize="small">history</Icon>,
+    route: "/consumption/monthly/history/:id",
+
+    component: (
+      <ProtectedElement>
+        <MonthlyHistoryPage />
+      </ProtectedElement>
+    ),
+    hideInSidebar: true,
+    roles: ["GA", "DEV"],
+  },
+
+  //Ruta de reportes
+  {
+    type: "collapse",
+    name: "Reportes",
+    key: "reportes",
+    icon: <Icon fontSize="small">bar_chart</Icon>,
+
+    collapse: [
+      {
+        name: "Emisiones",
+        key: "emissions-reports",
+        icon: <Icon fontSize="small">insert_chart</Icon>,
+        route: "/reportsEmissions",
+
+        component: (
+          <ProtectedElement>
+            <ReportsEmissionsPage />
+          </ProtectedElement>
+        ),
+        roles: ["GA", "DEV"],
+      },
+      {
+        name: "Empresas",
+        key: "companies-reports",
+        icon: <Icon fontSize="small">insert_chart</Icon>,
+        route: "/ReportCompanies",
+
+        component: (
+          <ProtectedElement>
+            <ReportCompanies />
+          </ProtectedElement>
+        ),
+        roles: ["SA", "DEV"],
+      },
+    ],
+    roles: ["DEV", "GA", "GU"],
+  },
+
+  {
+    type: "collapse",
+    name: "Confirm Emission Incident",
+    key: "confirm-incident",
+    icon: <Icon fontSize="small">check_circle</Icon>,
+    route: "/emissions/confirm",
+    component: <ConfirmIncidentPage />,
+
+    component: (
+      <ProtectedElement>
+        <ConfirmIncidentPage />
+      </ProtectedElement>
+    ),
+    roles: ["GA", "GU", "DEV"],
+    hideInSidebar: true,
+  },
+  //Ruta de incidents history
+  {
+    type: "collapse",
+    name: "Incidents History",
+    key: "incidents-history",
+    icon: <Icon fontSize="small">list_alt</Icon>,
+    route: "/emissions/incidents",
+
+    component: (
+      <ProtectedElement>
+        <IncidentsHistoryPage />
+      </ProtectedElement>
+    ),
+    roles: ["GA", "DEV"],
+  },
+
+  //Perfiles
+  {
+    type: "collapse",
+    name: "Perfil del Usuario",
+    key: "user-profile",
+    icon: <Icon fontSize="small">list_alt</Icon>,
+    route: "/userProfile",
+
+    component: (
+      <ProtectedElement>
+        <UserProfilePage />
+      </ProtectedElement>
+    ),
+    roles: ["GA", "DEV", "GU", "SA", "DEF"],
+    hideInSidebar: true,
+  },
+  {
+    type: "collapse",
+    name: "Perfil del grupo",
+    key: "grup-profile",
+    icon: <Icon fontSize="small">list_alt</Icon>,
+    route: "/groupProfile",
+
+    component: (
+      <ProtectedElement>
+        <GrupoProfilePage />
+      </ProtectedElement>
+    ),
+    roles: ["GA", "DEV", "GU", "SA"],
+    hideInSidebar: true,
+  },
+  //Ruta de cambio de contra
+  {
+    type: "collapse",
+    name: "ChangePassword",
+    key: "ChangePassword",
+    icon: <Icon fontSize="small">dashboard</Icon>,
+    route: "/ChangePasswordPage",
+    component: (
+      <ProtectedElement>
+        <ChangePasswordPage />
+      </ProtectedElement>
+    ),
+    roles: ["GA", "DEV", "GU", "SA", "DEF"],
+    hideInSidebar: true,
+  },
+
+  //Ruta Tabla de usuarios
+  {
+    type: "collapse",
+    name: "AdminUserDashboard",
+    key: "AdminUserDashboard",
+    icon: <Icon fontSize="small">dashboard</Icon>,
+    route: "/AdminUserDashboard",
+    component: (
+      <ProtectedElement>
+        <AdminUserDashboard />
+      </ProtectedElement>
+    ),
+    roles: ["GA", "DEV"],
+  },
+  //Gestiones para el Super Administrador
+  {
+    type: "collapse",
+    name: "Gestiones",
+    key: "gestiones",
+    icon: <Icon fontSize="small">assignment</Icon>,
+
+    collapse: [
+      {
+        //Ruta para sectores
+        type: "collapse",
+        name: "Sectores",
+        key: "Sectors",
+        icon: <Icon fontSize="small">place</Icon>,
+        route: "/sectores",
+
+        component: (
+          <ProtectedElement>
+            <SectorsIndexPage />
+          </ProtectedElement>
+        ),
+        roles: ["DEV", "SA"],
+      },
+
+      {
+        //Ruta para unidades de reduccion
+        name: "Unidades de reducción",
+        key: "Units",
+        icon: <Icon fontSize="small">straighten</Icon>,
+        route: "/unidades",
+
+        component: (
+          <ProtectedElement>
+            <UnitsIndexPage />
+          </ProtectedElement>
+        ),
+        roles: ["DEV", "SA"],
+      },
+      //Ruta para fuentes de emisiones
+      {
+        name: "Fuentes de Emisión",
+        key: "sources",
+        icon: <Icon fontSize="small">eco</Icon>,
+        route: "/sources",
+
+        component: (
+          <ProtectedElement>
+            <SourcesIndexPage />
+          </ProtectedElement>
+        ),
+        roles: ["DEV", "SA"],
+      },  
+    ],
+    roles: ["DEV", "SA"],
+  },
+
+
+  {
+     type: "collapse",
+    name: "Admin Factor Emision",
+    key: "AdminFactorEmision",
+    icon: <Icon fontSize="small">dashboard</Icon>,
+    route: "/AdminEmisionFactor",
+
+    component: (
+      <ProtectedElement>
+        <AdminEmisionFactor />
+      </ProtectedElement>
+    ),
+    roles: ["DEV", "GA","SA"],
+  },
+
+
+  {
+     type: "collapse",
+    name: "ManagmentUsers",
+    key: "ManagmentUsers",
+    icon: <Icon fontSize="small">dashboard</Icon>,
+    route: "/ManagmentUsers",
+
+    component: (
+      <ProtectedElement>
+        <ManagmentUsers />
+      </ProtectedElement>
+    ),
+    
+  },
+
+
+
+  //   {
+  //     type: "collapse",
+  //     name: "Add Consumption",
+  //     key: "add-consumption",
+  //     icon: <Icon fontSize="small">add</Icon>,
+  //     route: "/consumption/add",
+  //     component: <AddConsumptionPage />,
+  //     hideInSidebar: true,
+  //   },
+  //   {
+  //     type: "collapse",
+  //     name: "Edit Monthly Consumption",
+  //     key: "edit-monthly-consumption",
+  //     icon: <Icon fontSize="small">edit_calendar</Icon>,
+  //     route: "/consumption/monthly/edit/:consumptionId/:monthlyId",
+  //     component: <UpdateMonthlyConsumPage />,
+  //     hideInSidebar: true,
+  //   },
+  //   {
+  //     type: "collapse",
+  //     name: "Add Monthly Consumption",
+  //     key: "add-monthly-consumption",
+  //     icon: <Icon fontSize="small">add_circle</Icon>,
+  //     route: "/consumption/monthly/add/:consumptionId",
+  //     component: <AddMonthlyConsumPage />,
+  //     hideInSidebar: true,
+  //   },
+
+
+
+  //Ruta del home
+
   {
     type: "collapse",
     name: "Monthly Consumption",
@@ -119,127 +481,30 @@ const routes = [
     component: <MonthlyConsumptionPage />,
     hideInSidebar: true,
   },
-  {
-    type: "collapse",
-    name: "Agregar grupo",
-    key: "add-group",
-    icon: <Icon fontSize="small">bar_chart</Icon>,
-    route: "/addGroup",
-    component: <AddGroupSAPage />,
-    hideInSidebar: true,
-  },
-  {
-    type: "collapse",
-    name: "Edit Consumption",
-    key: "edit-consumption",
-    icon: <Icon fontSize="small">edit</Icon>,
-    route: "/consumption/edit/:id",
-    component: <UpdateConsumptionPage />,
-    hideInSidebar: true,
-  },
-  {
-    type: "collapse",
-    name: "Sectores",
-    key: "Sectors",
-    icon: <Icon fontSize="small">Sector</Icon>,
-    route: "/sectores",
-    component: <SectorsIndexPage />,
-  },
-  {
-    type: "collapse",
-    name: "Unidades de reducción",
-    key: "Units",
-    icon: <Icon fontSize="small">Units</Icon>,
-    route: "/unidades",
-    component: <UnitsIndexPage />,
-  },
-  {
-    type: "collapse",
-    name: "Fuentes de Emisión",
-    key: "sources",
-    icon: <Icon fontSize="small">Sources</Icon>,
-    route: "/sources",
-    component: <SourcesIndexPage />,
-  },
-  {
-    type: "collapse",
-    name: "Monthly History",
-    key: "monthly-history",
-    icon: <Icon fontSize="small">history</Icon>,
-    route: "/consumption/monthly/history/:id",
-    component: <MonthlyHistoryPage />,
-    hideInSidebar: true,
-  },
-  {
-    type: "collapse",
-    name: "Emissions Reports",
-    key: "emissions-reports",
-    icon: <Icon fontSize="small">insert_chart</Icon>,
-    route: "/reportsEmissions",
-    component: <ReportsEmissionsPage />,
-
-  },
-  {
-    type: "collapse",
-    name: "Add Consumption",
-    key: "add-consumption",
-    icon: <Icon fontSize="small">add</Icon>,
-    route: "/consumption/add",
-    component: <AddConsumptionPage />,
-    hideInSidebar: true,
-  },
-  {
-    type: "collapse",
-    name: "Edit Monthly Consumption",
-    key: "edit-monthly-consumption",
-    icon: <Icon fontSize="small">edit_calendar</Icon>,
-    route: "/consumption/monthly/edit/:consumptionId/:monthlyId",
-    component: <UpdateMonthlyConsumPage />,
-    hideInSidebar: true,
-  },
-  {
-    type: "collapse",
-    name: "Add Monthly Consumption",
-    key: "add-monthly-consumption",
-    icon: <Icon fontSize="small">add_circle</Icon>,
-    route: "/consumption/monthly/add/:consumptionId",
-    component: <AddMonthlyConsumPage />,
-    hideInSidebar: true,
-  },
-  {
-    type: "collapse",
-    name: "Confirm Emission Incident",
-    key: "confirm-incident",
-    icon: <Icon fontSize="small">check_circle</Icon>,
-    route: "/emissions/confirm",
-    component: <ConfirmIncidentPage />,
-    hideInSidebar: true,
-  },
-  {
-    type: "collapse",
-    name: "Incidents History",
-    key: "incidents-history",
-    icon: <Icon fontSize="small">list_alt</Icon>,
-    route: "/emissions/incidents",
-    component: <IncidentsHistoryPage />,
-    hideInSidebar: true,
-  },
-{
-    type: "collapse",
-    name: "Perfil del Usuario",
-    key: "user-profile",
-    icon: <Icon fontSize="small">list_alt</Icon>,
-    route: "/userProfile",
-    component: <UserProfilePage />
-  },
-{
-    type: "collapse",
-    name: "Perfil del grupo",
-    key: "grup-profile",
-    icon: <Icon fontSize="small">list_alt</Icon>,
-    route: "/groupProfile",
-    component: <GrupoProfilePage />
-  },
 ];
 
-export default routes;
+export const getRoutes = (role) => {
+  const filterByRole = (routesList) => {
+    return routesList
+      .map((route) => {
+        // Verificamos si este ítem tiene permiso
+        const hasAccess = !route.roles || (role && route.roles.includes(role));
+
+        // Si tiene colapsables (dropdown), los procesamos también
+        if (route.collapse) {
+          const filteredCollapse = filterByRole(route.collapse);
+          if (filteredCollapse.length === 0 && !hasAccess) return null;
+
+          return {
+            ...route,
+            collapse: filteredCollapse,
+          };
+        }
+
+        return hasAccess ? route : null;
+      })
+      .filter(Boolean); // Remueve los nulls
+  };
+
+  return filterByRole(routes);
+};

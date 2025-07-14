@@ -18,19 +18,24 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
+import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+
 import DataTable from "examples/Tables/DataTable";
 import Footer from "examples/Footer";
 import Swal from "sweetalert2";
 import { getSources, CreateSource, UpdateSource } from "../API/Source";
 import { getSectors } from "../API/Sector";
 
-
 export function SourcesIndexPage() {
   const [sources, setSources] = useState([]);
   const [sectors, setSectors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
-  const [sourceData, setSourceData] = useState({ nombre: "", año: "", sector: "" });
+  const [sourceData, setSourceData] = useState({
+    nombre: "",
+    año: "",
+    sector: "",
+  });
   const [errors, setErrors] = useState({});
   const [editMode, setEditMode] = useState(false);
   const [editId, setEditId] = useState(null);
@@ -71,7 +76,11 @@ export function SourcesIndexPage() {
   const handleEditClick = (source) => {
     setEditMode(true);
     setEditId(source.fuenteId);
-    setSourceData({ nombre: source.nombre, año: source.año, sector: source.sector });
+    setSourceData({
+      nombre: source.nombre,
+      año: source.año,
+      sector: source.sector,
+    });
     setModalOpen(true);
     setErrors({});
   };
@@ -86,20 +95,20 @@ export function SourcesIndexPage() {
         await UpdateSource({ fuenteId: editId, ...sourceData });
         setModalOpen(false);
         await Swal.fire({
-                  icon: "success",
-                  title: "Fuente actualizada correctamente",
-                  showConfirmButton: false,
-                  timer: 2000,
-                });
+          icon: "success",
+          title: "Fuente actualizada correctamente",
+          showConfirmButton: false,
+          timer: 2000,
+        });
       } else {
         await CreateSource(sourceData);
         setModalOpen(false);
         await Swal.fire({
-                  icon: "success",
-                  title: "Fuente creada correctamente",
-                  showConfirmButton: false,
-                  timer: 2000,
-                });
+          icon: "success",
+          title: "Fuente creada correctamente",
+          showConfirmButton: false,
+          timer: 2000,
+        });
       }
       await loadSources();
     } catch (e) {
@@ -136,8 +145,8 @@ export function SourcesIndexPage() {
         <Tooltip title="Editar Fuente">
           <IconButton
             size="small"
-            color="success"
             onClick={() => handleEditClick(source)}
+            sx={{ color: "#1976D2" }}
           >
             <EditOutlined fontSize="small" />
           </IconButton>
@@ -148,9 +157,10 @@ export function SourcesIndexPage() {
 
   return (
     <DashboardLayout>
+      <DashboardNavbar></DashboardNavbar>
       <MDBox py={3}>
         <Grid container spacing={3} sx={{ mb: 5 }}>
-          <Grid size={{xs: 12}}>
+          <Grid size={{ xs: 12 }}>
             <Card
               sx={{
                 background: "#ffffff",
@@ -158,22 +168,43 @@ export function SourcesIndexPage() {
                 borderRadius: 2,
                 border: "1px solid #e5e7eb",
                 boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+                padding: 3,
               }}
             >
               <CardContent>
-                <Grid container alignItems="center" justifyContent="space-between">
+                <Grid
+                  container
+                  alignItems="center"
+                  justifyContent="space-between"
+                >
                   <Grid>
                     <MDBox display="flex" flexDirection="column" gap={1}>
-                      <MDTypography variant="h6">Fuentes</MDTypography>
-                      <MDTypography variant="body2" color="text">
-                        Gestiona las fuentes registradas en el sistema
-                      </MDTypography>
+                      <MDBox display="flex" flexDirection="column">
+                        <MDBox display="flex" alignItems="center" gap={1}>
+                          <MDTypography variant="h6">Fuentes</MDTypography>
+                        </MDBox>
+                        <MDBox display="flex" alignItems="center" gap={1}>
+                          <MDTypography variant="body2" color="text">
+                            Gestiona las fuentes registradas en el sistema
+                          </MDTypography>
+                        </MDBox>
+                      </MDBox>
                     </MDBox>
                   </Grid>
                   <Grid>
                     <MDButton
+                      variant="outlined"
                       onClick={handleAddClick}
                       startIcon={<AddOutlined />}
+                      sx={{
+                        borderColor: "#4CAF50",
+                        color: "#4CAF50",
+                        "&:hover": {
+                          backgroundColor: "#E8F5E9",
+                          borderColor: "#43A047",
+                          color: "#388E3C",
+                        },
+                      }}
                     >
                       Agregar Fuente
                     </MDButton>
@@ -183,7 +214,7 @@ export function SourcesIndexPage() {
             </Card>
           </Grid>
 
-          <Grid size={{xs: 12}}>
+          <Grid size={{ xs: 12 }}>
             <Card>
               <MDBox
                 mx={2}
@@ -195,11 +226,21 @@ export function SourcesIndexPage() {
                 borderRadius="lg"
                 coloredShadow="success"
               >
-                <MDTypography variant="h6" color="white">
+                <MDTypography variant="h6" color="white" align="left">
                   Registro de Fuentes
                 </MDTypography>
               </MDBox>
-              <MDBox>
+              <MDBox
+                pt={3}
+                sx={{
+                  p: 4,
+                  textAlign: "center",
+                  minHeight: "100px",
+                  width: "1200px",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
                 <DataTable
                   table={{ columns, rows }}
                   isSorted={false}
@@ -236,7 +277,9 @@ export function SourcesIndexPage() {
             fullWidth
             label="Nombre"
             value={sourceData.nombre}
-            onChange={(e) => setSourceData({ ...sourceData, nombre: e.target.value })}
+            onChange={(e) =>
+              setSourceData({ ...sourceData, nombre: e.target.value })
+            }
             error={!!errors.nombre}
             helperText={errors.nombre}
             sx={{ mb: 2 }}
@@ -246,7 +289,9 @@ export function SourcesIndexPage() {
             label="Año"
             type="number"
             value={sourceData.año}
-            onChange={(e) => setSourceData({ ...sourceData, año: e.target.value })}
+            onChange={(e) =>
+              setSourceData({ ...sourceData, año: e.target.value })
+            }
             error={!!errors.año}
             helperText={errors.año}
             sx={{ mb: 2 }}
@@ -257,7 +302,9 @@ export function SourcesIndexPage() {
             <Select
               fullWidth
               value={sourceData.sector}
-              onChange={(e) => setSourceData({ ...sourceData, sector: e.target.value })}
+              onChange={(e) =>
+                setSourceData({ ...sourceData, sector: e.target.value })
+              }
               displayEmpty
               error={!!errors.sector}
               sx={{ mb: 2, height: 40 }}
