@@ -6,7 +6,7 @@ import MDTypography from "../components/MDTypography";
 import * as signalR from "@microsoft/signalr";
 import DashboardLayout from "../examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "../examples/Navbars/DashboardNavbar";
-import { useAuth } from "../AuthContext";
+import { useAuth } from "../context/AuthContext";
 
 const HUB_URL = "http://localhost:5135/chatHub";
 
