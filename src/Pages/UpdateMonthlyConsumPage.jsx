@@ -15,6 +15,7 @@ import MDButton from "components/MDButton";
 
 import { UpdateMonthlyConsumption, getMonthlyConsumptions } from "../API/Consumptions/MonthlyConsum";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
+import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 
 export function UpdateMonthlyConsumPage() {
@@ -95,6 +96,7 @@ export function UpdateMonthlyConsumPage() {
 
   return (
     <DashboardLayout>
+      <DashboardNavbar></DashboardNavbar>
       <Grid container spacing={3} py={3} sx={{mb: 5}}>
         <Grid size={{xs:12}}>
           <Card sx={{ p: 3 }}>

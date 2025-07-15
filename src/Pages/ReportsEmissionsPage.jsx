@@ -144,6 +144,7 @@ export const ReportsEmissionsPage = () => {
   return (
     <>
     <DashboardLayout>
+      <DashboardNavbar></DashboardNavbar>
       <Box sx={{mb:5}}>
         <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
           <Typography variant="h4" component="h2" sx={{ color: "white", fontWeight: "bold", textAlign: "center" }}>

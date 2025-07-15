@@ -1,5 +1,5 @@
 
-const API_BASE_URL = "http://localhost:5135"
+const API_BASE_URL = "https://localhost:7217"
 
 export const createEmissionFactor = async (emissionFactorData) => {
   console.log("eeeee");

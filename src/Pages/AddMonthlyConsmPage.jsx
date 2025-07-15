@@ -22,6 +22,7 @@ export function AddMonthlyConsumPage() {
   const { consumptionId } = useParams();
   return (
     <DashboardLayout>
+      <DashboardNavbar></DashboardNavbar>
       <MDBox py={3}>
         <Grid container spacing={3} sx={{mb: 5}}>
           <Grid item size={{xs:12}}>

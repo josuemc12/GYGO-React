@@ -4,7 +4,6 @@ import path from 'path'
 import fs from 'fs'
 
 
-
 export default defineConfig({
   plugins: [react()],
   resolve: {
@@ -12,10 +11,10 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
       "components": path.resolve(__dirname, "./src/components"),
       "examples": path.resolve(__dirname, "./src/examples"),
-      "assets": path.resolve(__dirname, "./src/assets"), 
-      "layouts": path.resolve(__dirname, "./src/layouts"), 
-
-
+      "assets": path.resolve(__dirname, "./src/assets"),
+      "layouts": path.resolve(__dirname, "./src/layouts"),
+ 
+ 
     },
   },
   server: {

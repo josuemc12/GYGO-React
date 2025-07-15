@@ -67,7 +67,7 @@ export default function Login() {
     }
 
     try {
-      const { success, isTwoFactor, tempToken, error,rol } = await loginUser(
+      const { success, isTwoFactor, tempToken, error,rol ,id} = await loginUser(
         email,
         password
       );
@@ -87,7 +87,8 @@ export default function Login() {
         navigate(`/verify-2fa?tempToken=${encodeURIComponent(tempToken)}`);
       } else {
          console.log("Rol que se va a guardar:", rol);
-        login(rol);
+         console.log("ID que se va a guardar:", id);
+        login(rol,id);
         // Normal login success — redirect to dashboard or home
         navigate("/Dashboard");
       }
@@ -192,6 +193,16 @@ export default function Login() {
                   sx={{ mt: 3, mb: 2, py: 1.5, borderRadius: 2 }}
                 >
                   Iniciar sesión
+                </Button>
+
+                <Button
+                  fullWidth
+                  variant="outlined"
+                  color="primary"
+                  size="large"
+                  sx={{ mb: 2, py: 1.5, borderRadius: 2 }}
+                  onClick={() => navigate("/registro")}>
+                  Crear cuenta
                 </Button>
               </form>
             </Paper>

@@ -6,6 +6,7 @@ import {
   Divider,
 } from "@mui/material";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
+import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import Footer from "examples/Footer";
@@ -52,6 +53,7 @@ export function GrupoProfilePage() {
 
   return (
     <DashboardLayout>
+      <DashboardNavbar></DashboardNavbar>
       <MDBox py={3}>
         <Grid container spacing={3} sx={{mb:5}}>
           <Grid item size={{xs:12}}>
