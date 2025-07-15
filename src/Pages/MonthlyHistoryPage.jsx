@@ -116,6 +116,7 @@ export function MonthlyHistoryPage() {
 
   return (
     <DashboardLayout>
+      <DashboardNavbar></DashboardNavbar>
       <MDBox py={3}>
         <Grid container spacing={3}>
           <Grid item size={{xs:12}}>

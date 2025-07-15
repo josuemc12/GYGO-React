@@ -49,6 +49,7 @@ export function ConsumptionPage() {
 
   return (
     <DashboardLayout>
+      <DashboardNavbar></DashboardNavbar>
       <MDBox py={3}>
         <Grid container spacing={3} sx={{ mb: 5 }}>
           {/* Header + Botón */}
