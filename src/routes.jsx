@@ -39,8 +39,7 @@ import { SourcesIndexPage } from "./Pages/SourcesIndexPage";
 import { Messages} from "./Pages/Messages";
 import { DashboardConsumo } from "./Pages/ConsumoPage";
 import  ManagmentUsers  from "./Pages/ManagmentUsers";
-
-
+import SubscriptionSwitch from "./Pages/SubscriptionsPages/Subscription"
 
 
 
@@ -140,9 +139,6 @@ export const routes = [
     ),
     roles: ["GA", "GU", "DEV"],
   },
-
-
-
 
   //Ruta de consumo
   {
@@ -460,6 +456,16 @@ export const routes = [
     
   },
 
+   //subscripciones
+  {
+    type: "collapse",
+    name: "Subscription",
+    key: "subscription",
+    icon: <Icon fontSize="small">suscripción</Icon>,
+    route: "/subscription",
+    component: <SubscriptionSwitch />,
+    roles: ["DEV", "SA", "DEF", "GA"],
+  },
 
 
     {
