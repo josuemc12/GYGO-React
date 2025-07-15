@@ -18,10 +18,11 @@
 
 .footer-content {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr); /* 3 columnas */
   gap: 50px;
+  justify-content: center; /* Centra el grid completo */
+  text-align: center;
   margin-bottom: 50px;
-  position: relative;
   z-index: 2;
 }
 

@@ -79,6 +79,7 @@ export default function App() {
     "/verify2fa",
     "/",
     "/homepage",
+    "/certificaciones",
   ];
   const hideSidebar = hideSidebarRoutes.includes(pathname.toLowerCase());
 

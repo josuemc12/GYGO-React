@@ -112,8 +112,6 @@ export const removeUserFromGroup = async (userId) => {
 async function fetchGroupId() {
     try {
 
-
-      
         const response = await fetch(`http://localhost:5135/getGroupId`, {
             method: "GET",
             credentials: "include"

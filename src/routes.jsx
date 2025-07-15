@@ -36,6 +36,8 @@ import { SourcesIndexPage } from "./Pages/SourcesIndexPage";
 import { Messages} from "./Pages/Messages";
 import { DashboardConsumo } from "./Pages/ConsumoPage";
 import  ManagmentUsers  from "./Pages/ManagmentUsers";
+import ServicesPage from "./Pages/ServicesPage";
+import Certificaciones from "./Pages/Public/Certifications";
 
 
 
@@ -58,6 +60,12 @@ export const routes = [
     route: "/HomePage",
     component: <HomePage />,
   },
+  {
+    key: "certifications",
+    route: "/certificaciones",
+    component: <Certificaciones />,
+  },
+
 
   //Ruta de dashboard no visible
   {
@@ -346,6 +354,20 @@ export const routes = [
     component: (
       <ProtectedElement>
         <AdminUserDashboard />
+      </ProtectedElement>
+    ),
+    roles: ["GA", "DEV"],
+  },
+
+  {
+    type: "collapse",
+    name: "Servicios",
+    key: "Services",
+    icon: <Icon fontSize="small">dashboard</Icon>,
+    route: "/Services",
+    component: (
+      <ProtectedElement>
+        <ServicesPage />
       </ProtectedElement>
     ),
     roles: ["GA", "DEV"],
