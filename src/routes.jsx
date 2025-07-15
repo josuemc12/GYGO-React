@@ -10,6 +10,8 @@ import Login from "./Pages/Public/Login";
 //Ruta del inicio de sesion
 import { Register } from "./Pages/Public/Register";
 import { ReportCompanies } from "./Pages/Private/ReportCompaniesPage";
+import { ReportServices } from "./Pages/Private/ReportServices";
+
 
 import AdminUserDashboard from "./Pages/AdminUserDashboard";
 import AdminEmisionFactor from "./Pages/Admin/AdminEmisionFactor";
@@ -254,6 +256,25 @@ export const routes = [
         ),
         roles: ["SA", "DEV"],
       },
+
+  {
+        name: "Servicios",
+        key: "Services-reports",
+        icon: <Icon fontSize="small">insert_chart</Icon>,
+        route: "/ReportServices",
+
+        component: (
+          <ProtectedElement>
+            <ReportServices />
+          </ProtectedElement>
+        ),
+        roles: ["SA", "DEV","GA"],
+      },
+
+
+
+
+      
     ],
     roles: ["DEV", "GA", "GU"],
   },
