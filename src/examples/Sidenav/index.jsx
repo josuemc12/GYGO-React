@@ -196,7 +196,7 @@ const logoutSes = async () => {
         </MDBox>
     <MDBox
   component={NavLink}
-  to="/"
+  to="/dashboard"
   display="flex"
  
   alignItems="center"
