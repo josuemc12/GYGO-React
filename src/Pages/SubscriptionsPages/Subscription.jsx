@@ -15,6 +15,7 @@ import MDButton from "@/components/MDButton";
 
 import { useAuth } from "../../context/AuthContext";
 import { getSubscriptionByUserId } from "../../API/Subscription";
+import WebhookTestButtons from "../../components/WebhooksTestButtons";
 
 export default function SubscriptionSwitch() {
   const { role, userId } = useAuth();
@@ -22,8 +23,9 @@ export default function SubscriptionSwitch() {
   const [modalMessage, setModalMessage] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [hasSubscription, setHasSubscription] = useState(false);
+  const [paypalSubscriptionId, setPaypalSubscriptionId] = useState(null);
 
-  // Mostrar modal en caso de ?status=success o ?status=cancel
+  // Mostrar modal si viene ?status=success o ?status=cancel
   useEffect(() => {
     const status = searchParams.get("status");
     if (status === "success") {
@@ -35,51 +37,42 @@ export default function SubscriptionSwitch() {
     }
   }, [searchParams]);
 
-  
-useEffect(() => {
-  const checkSubscription = async () => {
-    if (role === "DEF" && userId) {
-      try {
-        const subscription = await getSubscriptionByUserId();
-        if (subscription && subscription.status !== "Cancelled") {
-          setHasSubscription(true);
+  // Validar si el usuario tiene una suscripción activa
+  useEffect(() => {
+    const checkSubscription = async () => {
+      if (userId) {
+        try {
+          const subscription = await getSubscriptionByUserId();
+          if (subscription && subscription.status !== "Cancelled") {
+            setHasSubscription(true);
+            setPaypalSubscriptionId(subscription.payPalSubscriptionId);
+          } else {
+            setHasSubscription(false);
+            setPaypalSubscriptionId(null);
+          }
+        } catch (error) {
+          console.warn("No subscription found or error:", error.message);
+          setHasSubscription(false);
+          setPaypalSubscriptionId(null);
         }
-      } catch (error) {
-        console.warn("No subscription found or error:", error.message);
-        setHasSubscription(false);
       }
-    }
-  };
+    };
 
-  checkSubscription();
-}, [role, userId]);
+    checkSubscription();
+  }, [role, userId]);
 
   const handleClose = () => setModalOpen(false);
 
   if (!role) return <p>Loading user role...</p>;
 
   const renderContent = () => {
-    if (role === "DEF" && hasSubscription) {
-      return (
-        <DashboardLayout>
-          <DashboardNavbar />
-          <MDBox pt={6} px={3}>
-            <MDTypography variant="h4" fontWeight="medium">
-              Ya tienes una suscripción activa.
-            </MDTypography>
-          </MDBox>
-        </DashboardLayout>
-      );
-    }
-
     switch (role) {
       case "DEV":
       case "SA":
         return <SuperAdminSubscriptionManager />;
       case "DEF":
-        return <SubscribePrompt />;
       case "GA":
-        return <AdminSubscriptionEditor />;
+        return hasSubscription ? <AdminSubscriptionEditor /> : <SubscribePrompt />;
       default:
         return <p>Access denied</p>;
     }

@@ -10,6 +10,8 @@ import {
 
 import DashboardLayout from "@/examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "@/examples/Navbars/DashboardNavbar";
+import WebhookTestButtons from "../../components/WebhooksTestButtons";
+import CancelSubscriptionButton from "../../components/CancelSubscriptionButton";
 
 import { getSubscriptionByUserId } from "../../API/Subscription"; // <-- función corregida
 
@@ -64,52 +66,61 @@ export default function AdminSubscriptionEditor() {
     );
 
   return (
-    <DashboardLayout>
-      <DashboardNavbar />
-      <Grid container justifyContent="center" mt={3}>
-        <Grid item xs={12} md={8}>
-          <Card>
-            <CardContent>
-              <Typography variant="h5" gutterBottom>
-                Información de la Suscripción
-              </Typography>
+  <DashboardLayout>
+    <DashboardNavbar />
+    <Grid container justifyContent="center" mt={3}>
+      <Grid item xs={12} md={8}>
+        <Card>
+          <CardContent>
+            <Typography variant="h5" gutterBottom>
+              Información de la Suscripción
+            </Typography>
 
-              <Typography>
-                <strong>Plan ID:</strong> {subscription.planId}
-              </Typography>
-              <Typography>
-                <strong>Estado:</strong> {subscription.status}
-              </Typography>
-              <Typography>
-                <strong>Fecha de inicio:</strong>{" "}
-                {new Date(subscription.startDate).toLocaleDateString()}
-              </Typography>
-              <Typography>
-                <strong>Próxima facturación:</strong>{" "}
-                {subscription.nextBillingDate
-                  ? new Date(subscription.nextBillingDate).toLocaleDateString()
-                  : "N/A"}
-              </Typography>
-              <Typography>
-                <strong>Último pago:</strong>{" "}
-                {subscription.lastPaymentDate
-                  ? new Date(subscription.lastPaymentDate).toLocaleDateString()
-                  : "N/A"}
-              </Typography>
-              <Typography>
-                <strong>Cancelado en:</strong>{" "}
-                {subscription.cancelledAt
-                  ? new Date(subscription.cancelledAt).toLocaleDateString()
-                  : "N/A"}
-              </Typography>
-              <Typography>
-                <strong>Creado en:</strong>{" "}
-                {new Date(subscription.createdAt).toLocaleDateString()}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
+            <Typography>
+              <strong>Plan ID:</strong> {subscription.planId}
+            </Typography>
+            <Typography>
+              <strong>Estado:</strong> {subscription.status}
+            </Typography>
+            <Typography>
+              <strong>Fecha de inicio:</strong>{" "}
+              {new Date(subscription.startDate).toLocaleDateString()}
+            </Typography>
+            <Typography>
+              <strong>Próxima facturación:</strong>{" "}
+              {subscription.nextBillingDate
+                ? new Date(subscription.nextBillingDate).toLocaleDateString()
+                : "N/A"}
+            </Typography>
+            <Typography>
+              <strong>Último pago:</strong>{" "}
+              {subscription.lastPaymentDate
+                ? new Date(subscription.lastPaymentDate).toLocaleDateString()
+                : "N/A"}
+            </Typography>
+            <Typography>
+              <strong>Cancelado en:</strong>{" "}
+              {subscription.cancelledAt
+                ? new Date(subscription.cancelledAt).toLocaleDateString()
+                : "N/A"}
+            </Typography>
+            <Typography>
+              <strong>Creado en:</strong>{" "}
+              {new Date(subscription.createdAt).toLocaleDateString()}
+            </Typography>
+            <Box mt={3}>
+              <CancelSubscriptionButton
+                paypalSubscriptionId={subscription.payPalSubscriptionId}
+                onSuccess={() => setSubscription(null)}
+              />
+            </Box>
+          </CardContent>
+        </Card>
       </Grid>
-    </DashboardLayout>
-  );
+    </Grid>
+
+    {/* ✅ Webhook buttons below */}
+    <WebhookTestButtons paypalSubscriptionId={subscription.payPalSubscriptionId} />
+  </DashboardLayout>
+);
 }

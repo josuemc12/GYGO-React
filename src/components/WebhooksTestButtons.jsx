@@ -6,12 +6,13 @@ import MDButton from "@/components/MDButton";
 import MDTypography from "@/components/MDTypography";
 import DashboardLayout from "@/examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "@/examples/Navbars/DashboardNavbar";
+import { appsettings } from "../settings/appsettings";
 
-export default function WebhookTestButtons() {
-  const triggerWebhook = async (type) => {
+export default function WebhookTestButtons({ paypalSubscriptionId }) {
+  const triggerWebhook = async (eventType, paypalSubscriptionId) => {
     try {
       const response = await fetch(
-        `https://localhost:7217/api/Subscription/test-webhook?type=${type}`,
+        `${appsettings.apiUrl}Webhooks/trigger?eventType=${eventType}&paypalSubscriptionId=${paypalSubscriptionId}`,
         {
           method: "POST",
           credentials: "include",
@@ -21,7 +22,7 @@ export default function WebhookTestButtons() {
       if (!response.ok) throw new Error("Webhook failed");
 
       const result = await response.json();
-      alert(`Webhook "${type}" triggered successfully.`);
+      alert(`Webhook "${eventType}" triggered successfully.`);
     } catch (error) {
       console.error(error);
       alert(`Error triggering webhook: ${error.message}`);
@@ -29,8 +30,6 @@ export default function WebhookTestButtons() {
   };
 
   return (
-    <DashboardLayout>
-      <DashboardNavbar />
       <MDBox pt={6} pb={3}>
         <Grid container justifyContent="center">
           <Grid item xs={12} md={8}>
@@ -44,8 +43,9 @@ export default function WebhookTestButtons() {
                   <MDButton
                     variant="gradient"
                     color="error"
-                    onClick={() => triggerWebhook("BILLING.SUBSCRIPTION.CANCELLED")}
+                    onClick={() => triggerWebhook("BILLING.SUBSCRIPTION.CANCELLED", paypalSubscriptionId)}
                     sx={{ m: 1 }}
+                    disabled={!paypalSubscriptionId}
                   >
                     Simular CANCELACIÓN
                   </MDButton>
@@ -53,8 +53,9 @@ export default function WebhookTestButtons() {
                   <MDButton
                     variant="gradient"
                     color="warning"
-                    onClick={() => triggerWebhook("BILLING.SUBSCRIPTION.SUSPENDED")}
+                    onClick={() => triggerWebhook("BILLING.SUBSCRIPTION.SUSPENDED", paypalSubscriptionId)}
                     sx={{ m: 1 }}
+                    disabled={!paypalSubscriptionId}
                   >
                     Simular SUSPENSIÓN
                   </MDButton>
@@ -62,8 +63,9 @@ export default function WebhookTestButtons() {
                   <MDButton
                     variant="gradient"
                     color="success"
-                    onClick={() => triggerWebhook("PAYMENT.SALE.COMPLETED")}
+                    onClick={() => triggerWebhook("PAYMENT.SALE.COMPLETED", paypalSubscriptionId)}
                     sx={{ m: 1 }}
+                    disabled={!paypalSubscriptionId}
                   >
                     Simular PAGO COMPLETADO
                   </MDButton>
@@ -73,6 +75,5 @@ export default function WebhookTestButtons() {
           </Grid>
         </Grid>
       </MDBox>
-    </DashboardLayout>
   );
 }
