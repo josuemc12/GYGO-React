@@ -3,6 +3,7 @@ import { useAuth } from "./context/AuthContext";
 import { Navigate } from "react-router-dom";
 ///Iconos
 import Icon from "@mui/material/Icon";
+import {EnergySavingsLeaf} from "@mui/icons-material"
 
 //Ruta del login
 import Login from "./Pages/Public/Login";
@@ -144,9 +145,9 @@ export const routes = [
   //Ruta de consumo
   {
     type: "collapse",
-    name: "Consumption",
+    name: "Consumo",
     key: "consumption",
-    icon: <Icon fontSize="small">Consumo</Icon>,
+    icon: <EnergySavingsLeaf fontSize="small"></EnergySavingsLeaf>,
     route: "/consumption",
     component: (
       <ProtectedElement>
@@ -157,7 +158,7 @@ export const routes = [
   },
   {
     type: "collapse",
-    name: "Monthly Consumption",
+    name: "Consumo mensual",
     key: "monthly-consumption",
     icon: <Icon fontSize="small">bar_chart</Icon>,
     route: "/consumption/monthly/:id",
@@ -173,7 +174,7 @@ export const routes = [
 
   {
     type: "collapse",
-    name: "Edit Monthly Consumption",
+    name: "Editar consumo mensual",
     key: "edit-monthly-consumption",
     icon: <Icon fontSize="small">edit_calendar</Icon>,
     route: "/consumption/monthly/edit/:consumptionId/:monthlyId",
@@ -205,7 +206,7 @@ export const routes = [
   //Ruta de Monthly History
   {
     type: "collapse",
-    name: "Monthly History",
+    name: "Historial mensual",
     key: "monthly-history",
     icon: <Icon fontSize="small">history</Icon>,
     route: "/consumption/monthly/history/:id",
@@ -276,7 +277,7 @@ export const routes = [
   //Ruta de incidents history
   {
     type: "collapse",
-    name: "Incidents History",
+    name: "Historial de incidentes",
     key: "incidents-history",
     icon: <Icon fontSize="small">list_alt</Icon>,
     route: "/emissions/incidents",
@@ -425,7 +426,7 @@ export const routes = [
 
   {
      type: "collapse",
-    name: "ManagmentUsers",
+    name: "Manejo de usuarios",
     key: "ManagmentUsers",
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/ManagmentUsers",
@@ -440,33 +441,62 @@ export const routes = [
 
 
 
-  //   {
-  //     type: "collapse",
-  //     name: "Add Consumption",
-  //     key: "add-consumption",
-  //     icon: <Icon fontSize="small">add</Icon>,
-  //     route: "/consumption/add",
-  //     component: <AddConsumptionPage />,
-  //     hideInSidebar: true,
-  //   },
-  //   {
-  //     type: "collapse",
-  //     name: "Edit Monthly Consumption",
-  //     key: "edit-monthly-consumption",
-  //     icon: <Icon fontSize="small">edit_calendar</Icon>,
-  //     route: "/consumption/monthly/edit/:consumptionId/:monthlyId",
-  //     component: <UpdateMonthlyConsumPage />,
-  //     hideInSidebar: true,
-  //   },
-  //   {
-  //     type: "collapse",
-  //     name: "Add Monthly Consumption",
-  //     key: "add-monthly-consumption",
-  //     icon: <Icon fontSize="small">add_circle</Icon>,
-  //     route: "/consumption/monthly/add/:consumptionId",
-  //     component: <AddMonthlyConsumPage />,
-  //     hideInSidebar: true,
-  //   },
+    {
+      type: "collapse",
+      name: "Agregar consumo",
+      key: "add-consumption",
+      icon: <Icon fontSize="small">add</Icon>,
+      route: "/consumption/add",
+      component: (
+        <ProtectedElement>
+          <AddConsumptionPage />
+        </ProtectedElement>
+      ),
+      hideInSidebar: true,
+      roles: ["DEV", "GA", "GU"]
+    },
+    {
+      type: "collapse",
+      name: "Actualizar consumo",
+      key: "add-consumption",
+      icon: <Icon fontSize="small">add</Icon>,
+      route: "/consumption/add",
+      component: (
+        <ProtectedElement>
+          <UpdateConsumptionPage />
+        </ProtectedElement>
+      ),
+      hideInSidebar: true,
+      roles: ["DEV", "GA", "GU"]
+    },
+    {
+      type: "collapse",
+      name: "Editar consumo mensual",
+      key: "edit-monthly-consumption",
+      icon: <Icon fontSize="small">edit_calendar</Icon>,
+      route: "/consumption/monthly/edit/:consumptionId/:monthlyId",
+      component: (
+        <ProtectedElement>
+          <UpdateMonthlyConsumPage />
+        </ProtectedElement>
+      ),
+      hideInSidebar: true,
+      roles: ["DEV", "GA", "GU"]
+    },
+    {
+      type: "collapse",
+      name: "Agregar consumo mensual",
+      key: "add-monthly-consumption",
+      icon: <Icon fontSize="small">add_circle</Icon>,
+      route: "/consumption/monthly/add/:consumptionId",
+      component: (
+        <ProtectedElement>
+          <AddMonthlyConsumPage />
+        </ProtectedElement>
+      ), 
+      hideInSidebar: true,
+      roles: ["DEV", "GA", "GU"]
+    },
 
 
 
@@ -474,7 +504,7 @@ export const routes = [
 
   {
     type: "collapse",
-    name: "Monthly Consumption",
+    name: "Consumo mensual",
     key: "monthly-consumption",
     icon: <Icon fontSize="small">bar_chart</Icon>,
     route: "/consumption/monthly/:id",

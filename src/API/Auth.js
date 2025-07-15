@@ -132,7 +132,7 @@ async function fetchGroupId() {
 }
 
 export async function getCurrentUser(){
-  const response = await fetch(`${appsettings.apiUrl}/User/UserProfile`,
+  const response = await fetch(`${appsettings.apiUrl}User/UserProfile`,
         {
       method: "GET",
       credentials: "include",
