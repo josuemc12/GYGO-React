@@ -1,0 +1,366 @@
+import React, { useEffect, useState, useRef } from "react";
+import { Card, List, ListItem, ListItemText, Divider, Grid, TextField, IconButton, Box } from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
+import MDBox from "../components/MDBox";
+import MDTypography from "../components/MDTypography";
+import * as signalR from "@microsoft/signalr";
+import DashboardLayout from "../examples/LayoutContainers/DashboardLayout";
+import DashboardNavbar from "../examples/Navbars/DashboardNavbar";
+import { useAuth } from "../context/AuthContext";
+
+const HUB_URL = "http://localhost:5135/chatHub";
+
+export function Messages() {
+  const [chats, setChats] = useState([]);
+  const [selectedChat, setSelectedChat] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState("");
+  const { userId } = useAuth();
+  const connectionRef = useRef(null);
+  const messagesEndRef = useRef(null);
+  const messagesContainerRef = useRef(null);
+
+  // Función para hacer scroll hacia abajo
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // Función para hacer scroll hacia abajo inmediatamente (sin animación)
+  const scrollToBottomInstant = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "instant" });
+  };
+
+  // Scroll hacia abajo cuando cambian los mensajes
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  // Conexión SignalR
+  useEffect(() => {
+    const connection = new signalR.HubConnectionBuilder()
+      .withUrl(HUB_URL)
+      .withAutomaticReconnect()
+      .build();
+
+    connection.start().then(() => {
+      // Obtener chats del usuario
+      connection.invoke("getChats", userId);
+    });
+
+    // Recibir lista de chats
+    connection.on("ReceiveChats", (userConnections) => {
+      setChats(userConnections);
+      if (userConnections.length > 0 && !selectedChat) {
+        setSelectedChat(userConnections[0]);
+      }
+    });
+
+    // Recibir historial de mensajes
+    connection.on("ReceiveMessages", (messagesHistory) => {
+      setMessages(messagesHistory);
+      // Hacer scroll instantáneo al cargar el historial
+      setTimeout(() => {
+        scrollToBottomInstant();
+      }, 100);
+      set
+    });
+
+    // Recibir mensajes nuevos
+    connection.on("ReceiveSpecificMessage", (username, message) => {
+      // Crear el objeto del mensaje con la estructura correcta
+      const newMessage = {
+        messageText: message.messageText,
+        username: username,
+        timestamp: message.timestamp, // Usar timestamp actual si no viene del backend
+        // Agregar otras propiedades si es necesario
+      };
+
+      setMessages((prev) => [...prev, newMessage]);
+    });
+
+    connectionRef.current = connection;
+
+    return () => {
+      connection.stop();
+    };
+    // eslint-disable-next-line
+  }, []);
+
+  // Unirse a la sala y obtener historial cuando cambia el chat seleccionado
+  useEffect(() => {
+    if (selectedChat && connectionRef.current) {
+      connectionRef.current.invoke("JoinSpecificChatRoom", {
+        Id: selectedChat.id || selectedChat.Id,
+        username: selectedChat.username,
+        Chatroom: selectedChat.chatroom
+      });
+      connectionRef.current.invoke(
+        "OnConnect", {
+        Id: selectedChat.id || selectedChat.Id,
+        username: selectedChat.username,
+        Chatroom: selectedChat.chatroom
+      });
+    }
+  }, [selectedChat, userId]);
+
+  const handleSend = () => {
+    if (input.trim() && connectionRef.current && selectedChat) {
+      connectionRef.current.invoke("SendMessage", input, userId);
+      setInput("");
+    }
+  };
+
+  return (
+    <DashboardLayout>
+      <DashboardNavbar />
+      <MDBox
+        p={2}
+        sx={{
+          height: 'calc(100vh - 120px)', // Ajustar según altura del navbar
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'row',
+          gap: 2,
+          overflow: 'hidden'
+        }}
+      >
+        <Grid container spacing={2} sx={{ height: '100%', width: '100%' }}>
+          {/* Sidebar de chats */}
+          <Box
+            sx={{
+              height: '100%',
+              width: { xs: '30%', sm: '25%', md: '20%', lg: '20%' }, // ancho responsivo
+              minWidth: 200, // para evitar que desaparezca
+              maxWidth: 300,
+              flexShrink: 0,
+            }}
+          >
+            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+              <MDBox p={2} sx={{ borderBottom: '1px solid #eee' }}>
+                <MDTypography variant="h6">
+                  Chats
+                </MDTypography>
+              </MDBox>
+              <Box sx={{ flex: 1, overflow: 'auto' }}>
+                <List sx={{ py: 0 }}>
+                  {chats.map((chat, idx) => (
+                    <ListItem
+                      component="button"
+                      key={chat.chatroom || idx}
+                      selected={
+                        selectedChat &&
+                        (selectedChat.chatroom || selectedChat.Chatroom) ===
+                        (chat.chatroom || chat.Chatroom)
+                      }
+                      onClick={() => setSelectedChat(chat)}
+                      sx={{
+                        cursor: 'pointer',
+                        p: 2,
+                        border: '1px solid #f0f0f0',
+                        borderLeft: selectedChat &&
+                          (selectedChat.chatroom || selectedChat.Chatroom) ===
+                          (chat.chatroom || chat.Chatroom) ? '4px solid #1976d2' : '4px solid transparent',
+                        transition: 'all 0.2s ease-in-out',
+                        '&:hover': {
+                          backgroundColor: '#f8f9fa',
+                          transform: 'translateX(4px)',
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                        },
+                        '&.Mui-selected': {
+                          backgroundColor: '#e3f2fd',
+                          '&:hover': {
+                            backgroundColor: '#e3f2fd',
+                            transform: 'translateX(4px)'
+                          }
+                        }
+                      }}
+                    >
+                      <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                        {/* Avatar circular */}
+                        <Box
+                          sx={{
+                            width: 40,
+                            height: 40,
+                            borderRadius: '50%',
+                            backgroundColor: '#1976d2',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            mr: 2,
+                            color: 'white',
+                            fontSize: '0.9rem',
+                            fontWeight: 'bold'
+                          }}
+                        >
+                          {(chat.username || chat.Username)?.charAt(0)?.toUpperCase()}
+                        </Box>
+
+                        {/* Contenido del chat */}
+                        <Box sx={{ flex: 1, minWidth: 0 }}>
+                          <MDTypography
+                            variant="body1"
+                            sx={{
+                              fontWeight: selectedChat &&
+                                (selectedChat.chatroom || selectedChat.Chatroom) ===
+                                (chat.chatroom || chat.Chatroom) ? 600 : 500,
+                              fontSize: '0.95rem',
+                              mb: 0.5,
+                              color: '#333'
+                            }}
+                          >
+                            {chat.username || chat.Username}
+                          </MDTypography>
+
+                          
+                        </Box>
+
+
+                      </Box>
+                    </ListItem>
+                  ))}
+                </List>
+              </Box>
+            </Card>
+          </Box>
+
+          {/* Chat principal */}
+          <Box sx={{ flex: 1, height: '100%' }}>
+            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+              {/* Header del chat */}
+              <MDBox p={2} sx={{ borderBottom: '1px solid #eee' }}>
+                <MDTypography variant="h6">
+                  {selectedChat
+                    ? selectedChat.username || selectedChat.Username
+                    : "Selecciona un chat"}
+                </MDTypography>
+              </MDBox>
+
+              {/* Área de mensajes */}
+              <MDBox
+                ref={messagesContainerRef}
+                sx={{
+                  flex: 1,
+                  overflowY: 'auto',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  p: 1
+                }}
+              >
+                {messages.length > 0 ? (
+                  <List sx={{ flex: 1, py: 0 }}>
+                    {messages.map((msg, idx) => {
+                      const isCurrentUser = msg.username === selectedChat?.username;
+
+                      return (
+                        <ListItem
+                          key={idx}
+                          sx={{
+                            display: 'flex',
+                            justifyContent: isCurrentUser ? 'flex-start' : 'flex-end',
+                            alignItems: 'flex-start',
+                            mb: 1,
+                            px: 2,
+                            
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              maxWidth: '70%',
+                              backgroundColor: isCurrentUser ? '#f5f5f5' : '#1976d2',
+                              color: isCurrentUser ? 'white' : '#f5f5f5',
+                              borderRadius: 2,
+                              p: 1.5,
+                              position: 'relative'
+                            }}
+                          >
+                            <ListItemText
+                              primary={msg.messageText}
+                              secondary={
+                                <Box
+                                  component="span"
+                                  sx={{
+                                    color: isCurrentUser ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.7)',
+                                    fontSize: '0.75rem'
+                                  }}
+                                >
+                                  {new Date(msg.timestamp).toLocaleTimeString([], {
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                  })}
+                                </Box>
+                              }
+                              sx={{
+                                margin: 0,
+                                '& .MuiListItemText-primary': {
+                                  fontSize: '0.9rem',
+                                  lineHeight: 1.4
+                                }
+                              }}
+                            />
+                          </Box>
+                        </ListItem>
+                      );
+                    })}
+                    {/* Elemento invisible para hacer scroll */}
+                    <div ref={messagesEndRef} />
+                  </List>
+                ) : (
+                  <Box
+                    sx={{
+                      flex: 1,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: 'text.secondary'
+                    }}
+                  >
+                    <MDTypography variant="body2">
+                      No hay mensajes en este chat
+                    </MDTypography>
+                  </Box>
+                )}
+              </MDBox>
+
+              {/* Input para enviar mensaje */}
+              {selectedChat && (
+                <MDBox
+                  p={2}
+                  display="flex"
+                  alignItems="center"
+                  sx={{ borderTop: '1px solid #eee' }}
+                >
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    size="small"
+                    placeholder="Escribe un mensaje..."
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                    sx={{ mr: 1 }}
+                  />
+                  {input === "" && (
+                    <IconButton color="default" disabled>
+                      <SendIcon />
+                    </IconButton>
+                  )}
+                  {input !== "" && (
+                    <IconButton color="primary" onClick={handleSend}>
+                      <SendIcon />
+                    </IconButton>
+                  )
+                  }
+
+
+
+
+
+                </MDBox>
+              )}
+            </Card>
+          </Box>
+        </Grid>
+      </MDBox>
+    </DashboardLayout>
+  );
+}

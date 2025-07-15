@@ -25,7 +25,7 @@ export const ChangePasswordPage = () => {
   useEffect(()=>{
       const fetchUsername = async( ) => {
         try {
-          const response = await fetch("http://localhost:7217/api/User/UserProfile",
+          const response = await fetch("https://localhost:7217/api/User/UserProfile",
             {
               method: "GET",
               credentials: "include"
@@ -48,6 +48,7 @@ export const ChangePasswordPage = () => {
   
   return (
     <DashboardLayout>
+      <DashboardNavbar></DashboardNavbar>
       <MDBox py={3} mb={4}>
         <Grid container spacing={3} justifyContent={"center"}>
           <Grid item size={{xs:12, md:8, lg:6}}>

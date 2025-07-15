@@ -1,10 +1,9 @@
 import { appsettings } from "../settings/appsettings";
 
 
-
 export  async function verify2FACode(tempToken, code) {
   try {
-    const response = await fetch(`${appsettings.apiUrl}Auth/verify-2FA`, {
+    const response = await fetch(`${appsettings.apiUrl}/Auth/verify-2FA`, {
       method: 'POST',
        credentials: "include",
       headers: {
@@ -34,7 +33,7 @@ export  async function loginUser(email, password) {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ email, password}),
     });
 
     const data = await response.json();
@@ -51,10 +50,11 @@ export  async function loginUser(email, password) {
         success: true,
         isTwoFactor: true,
         rol: data.rol,
+        id: data.id,
       };
     }
 
-    return { success: true, isTwoFactor: false,rol: data.rol };
+    return { success: true, isTwoFactor: false,rol: data.rol,id:data.id };
   } catch (err) {
     return { success: false, error: 'Login request failed.' };
   }
@@ -65,7 +65,7 @@ export  async function loginUser(email, password) {
 export  async function sendInvite(email) {
 
   try {
-    const response = await fetch(`http://localhost:5135/sendInvite`, {
+    const response = await fetch(`${appsettings.apiUrl}/sendInvite`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -88,9 +88,6 @@ export  async function sendInvite(email) {
 
 export async function registerUser(inviteToken, { email, username, password }) {
   
-
-  // const url = inviteToken ? `/api/register/${inviteToken}` : 'User/Register';
-
   const url = inviteToken ? `User/register/${inviteToken}` : 'User/Register';
 
 
@@ -125,7 +122,7 @@ async function fetchGroupId() {
     }
 
     try {
-        const response = await fetch(`http://localhost:5135/getGroupId?adminToken=${encodeURIComponent(token)}`);
+        const response = await fetch(`${appsettings.apiUrl}/getGroupId?adminToken=${encodeURIComponent(token)}`);
         const groupId = await response.json();
         console.log('Group ID:', groupId);
         return groupId;

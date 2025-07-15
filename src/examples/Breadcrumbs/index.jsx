@@ -89,12 +89,4 @@ function Breadcrumbs({ icon, title, route, light = false }) {
 }
 
 
-// Typechecking props for the Breadcrumbs
-Breadcrumbs.propTypes = {
-  icon: PropTypes.node.isRequired,
-  title: PropTypes.string.isRequired,
-  route: PropTypes.oneOfType([PropTypes.string, PropTypes.array]).isRequired,
-  light: PropTypes.bool,
-};
-
 export default Breadcrumbs;
