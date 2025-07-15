@@ -4,6 +4,7 @@ import CurrentConsumption from "../components/EmissionsConsumption/CurrentConsum
 import AnnualConsumption from "../components/EmissionsConsumption/AnnualConsumption";
 import ConsumptionHistory from "../components/EmissionsConsumption/ConsumptionHistory";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
+import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 
 function TabPanel({ children, value, index }) {
   return (
@@ -18,6 +19,7 @@ export function DashboardConsumo() {
   return (
     <>
     <DashboardLayout>
+      <DashboardNavbar></DashboardNavbar>
       <Container>
         <Box sx={{ borderBottom: 1, borderColor: "divider", mt: 10 }}>
           <Tabs
