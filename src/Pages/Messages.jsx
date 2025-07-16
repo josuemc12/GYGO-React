@@ -8,7 +8,7 @@ import DashboardLayout from "../examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "../examples/Navbars/DashboardNavbar";
 import { useAuth } from "../context/AuthContext";
 
-const HUB_URL = "http://localhost:5135/chatHub";
+const HUB_URL = "https://localhost:5135/chatHub";
 
 export function Messages() {
   const [chats, setChats] = useState([]);
