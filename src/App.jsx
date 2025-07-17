@@ -76,9 +76,11 @@ export default function App() {
     "/login",
     "/registro",
     "/sendinvite",
-    "/verify2fa",
+    "/verify-2fa",
     "/",
     "/homepage",
+    "/certificaciones",
+    "/Registro/:inviteToken",
   ];
   const hideSidebar = hideSidebarRoutes.includes(pathname.toLowerCase());
 
@@ -86,7 +88,8 @@ export default function App() {
     "/Login",
     "/registro",
     "/sendinvite",
-    "/verify2fa",
+    "/verify-2fa",
+    "/Registro/:inviteToken",
     "/",
   ];
   const isSpecialRoute = specialRoutes.some((route) =>
@@ -201,7 +204,7 @@ const renderRoutes = (allRoutes) =>
         {layout === "vr" && <Configurator />}
         <Routes>
           {renderRoutes(filteredRoutes)}
-          <Route path="*" element={<Navigate to="/login" />} />
+          <Route path="*" element={<Navigate to="/dashboard" />} />
         </Routes>
       </ThemeProvider>
     </CacheProvider>
@@ -224,7 +227,7 @@ const renderRoutes = (allRoutes) =>
       {layout === "vr" && <Configurator />}
       <Routes>
         {renderRoutes(filteredRoutes)}
-        <Route path="*" element={<Navigate to="/login" />} />
+        <Route path="*" element={<Navigate to="/dashboard" />} />
       </Routes>
     </ThemeProvider>
   );

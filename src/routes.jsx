@@ -39,7 +39,10 @@ import { SourcesIndexPage } from "./Pages/SourcesIndexPage";
 import { Messages} from "./Pages/Messages";
 import { DashboardConsumo } from "./Pages/ConsumoPage";
 import  ManagmentUsers  from "./Pages/ManagmentUsers";
+import ServicesPage from "./Pages/ServicesPage";
+import Certificaciones from "./Pages/Public/Certifications";
 import SubscriptionSwitch from "./Pages/SubscriptionsPages/Subscription"
+import { Verify2FA } from "./Pages/Verify2Fa";
 
 
 
@@ -60,6 +63,12 @@ export const routes = [
     route: "/HomePage",
     component: <HomePage />,
   },
+  {
+    key: "certifications",
+    route: "/certificaciones",
+    component: <Certificaciones />,
+  },
+
 
   //Ruta de dashboard no visible
   {
@@ -94,7 +103,7 @@ export const routes = [
     name: "Registro",
     key: "Registro",
     icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/Registro",
+    route: "/Registro/:inviteToken",
     component: <Register />,
     hideInSidebar: true,
   },
@@ -104,7 +113,12 @@ export const routes = [
     key: "Mensajes",
     icon: <Icon fontSize="small">email</Icon>,
     route: "/Messages",
-    component: <Messages />,
+       component: (
+      <ProtectedElement>
+        <Messages />
+      </ProtectedElement>
+    ),
+    hideInSidebar: true,
   },
 
 
@@ -368,6 +382,20 @@ export const routes = [
     ),
     roles: ["GA", "DEV"],
   },
+
+  {
+    type: "collapse",
+    name: "Servicios",
+    key: "Services",
+    icon: <Icon fontSize="small">dashboard</Icon>,
+    route: "/Services",
+    component: (
+      <ProtectedElement>
+        <ServicesPage />
+      </ProtectedElement>
+    ),
+    roles: ["GA", "DEV"],
+  },
   //Gestiones para el Super Administrador
   {
     type: "collapse",
@@ -525,7 +553,28 @@ export const routes = [
       roles: ["DEV", "GA", "GU"]
     },
 
+  {
+      type: "collapse",
+      name: "Segundo Factor",
+      key: "Segundo-Factor",
+      icon: <Icon fontSize="small">add_circle</Icon>,
+      route: "/verify-2fa",
+      component: (
+        <ProtectedElement>
+          <Verify2FA />
+        </ProtectedElement>
+      ), 
+      hideInSidebar: true,
+      
+    },
 
+
+
+
+
+
+
+    
 
   //Ruta del home
 

@@ -83,6 +83,7 @@ export default function Login() {
       }
 
       if (isTwoFactor) {
+        console.log("entro al two facotr");
         // Redirect to 2FA page
         navigate(`/verify-2fa?tempToken=${encodeURIComponent(tempToken)}`);
       } else {
