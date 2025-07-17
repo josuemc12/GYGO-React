@@ -1,6 +1,6 @@
 import { appsettings } from "../settings/appsettings";
 
-const API_BASE_URL = "http://localhost:7217"
+const API_BASE_URL = "http://localhost:7217";
 
 // Get group ID from cookies
 const getGroupId = async () => {
@@ -20,13 +20,13 @@ const getGroupId = async () => {
 
 // shared helper ─ safe JSON parsing
 const parseJSON = async (response) => {
-  const contentType = response.headers.get("content-type") || ""
+  const contentType = response.headers.get("content-type") || "";
   if (contentType.includes("application/json")) {
-    return response.json()
+    return response.json();
   }
   // fallback (plain-text responses, etc.)
-  return response.text()
-}
+  return response.text();
+};
 
 /**
  * Get all users in a group
@@ -34,16 +34,13 @@ const parseJSON = async (response) => {
  * @returns {Promise<Array>} Array of users in the group
  */
 
-
 export const getGroupUsers = async () => {
   try {
-
     const response = await fetch(`${appsettings.apiUrl}Admin/GetGroup`, {
-
       method: "GET",
       mode: "cors",
       credentials: "include", // add this to send cookies
-      headers: { Accept: "application/json" }
+      headers: { Accept: "application/json" },
     });
 
     if (!response.ok) {
@@ -61,30 +58,35 @@ export const getGroupUsers = async () => {
 
 export const sendUserInvite = async (email) => {
   try {
-
     console.log(email);
-    const response = await fetch(`${API_BASE_URL}/sendInvite`, {
-    method: "POST",
-    mode: "cors",
-    credentials: "include",
-    headers: {
+    const response = await fetch(`${appsettings.apiUrl}Admin/sendInvite`, {
+      method: "POST",
+      mode: "cors",
+      credentials: "include",
+      headers: {
         "Content-Type": "application/json",
-        Accept: "application/json"
-    },
-    body: JSON.stringify({email})
-});
+        Accept: "application/json",
+      },
+      body: JSON.stringify(email),
+    });
 
+    const data = await parseJSON(response);
+    console.log(data)
     if (!response.ok) {
-      throw new Error(`Failed to send invite: ${response.statusText}`)
+      console.error(
+        "Detalles del error:",
+        errorData,
+        "Código:",
+        response.status
+      );
     }
 
-    const data = await parseJSON(response)
-    return data
+    return data;
   } catch (error) {
-    console.error("Error sending invite:", error)
-    throw error
+    console.error("Error sending invite:", error);
+    throw error;
   }
-}
+};
 
 export const removeUserFromGroup = async (userId) => {
   try {
@@ -93,38 +95,37 @@ export const removeUserFromGroup = async (userId) => {
       mode: "cors",
       credentials: "include",
       headers: {
-        Accept: "application/json"
-      }
+        Accept: "application/json",
+      },
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to remove user: ${response.statusText}`)
+      throw new Error(`Failed to remove user: ${response.statusText}`);
     }
 
-    const data = await parseJSON(response)
-    return data
+    const data = await parseJSON(response);
+    return data;
   } catch (error) {
-    console.error("Error removing user:", error)
-    throw error
+    console.error("Error removing user:", error);
+    throw error;
+  }
+};
+
+async function fetchGroupId() {
+  try {
+    const response = await fetch(`http://localhost:5135/getGroupId`, {
+      method: "GET",
+      credentials: "include",
+    });
+
+    const groupId = await response.json();
+    const hours = 4;
+    const expires = new Date(Date.now() + hours * 3600 * 1000).toUTCString();
+    document.cookie = `groupId=${groupId}; expires=${expires}; path=/`;
+    return groupId;
+  } catch (error) {
+    console.error("Error fetching group ID:", error);
   }
 }
 
-async function fetchGroupId() {
-    try {
-
-        const response = await fetch(`http://localhost:5135/getGroupId`, {
-            method: "GET",
-            credentials: "include"
-        });
-
-        const groupId = await response.json();
-        const hours = 4;
-        const expires = new Date(Date.now() + hours * 3600 * 1000).toUTCString();
-        document.cookie = `groupId=${groupId}; expires=${expires}; path=/`;
-        return groupId;
-    } catch (error) {
-        console.error('Error fetching group ID:', error);
-    }
-}
-
-export {getGroupId, fetchGroupId}
+export { getGroupId, fetchGroupId };

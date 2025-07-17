@@ -53,12 +53,11 @@ import {
   setOpenConfigurator,
 } from "../../../context/index";
 
-
 import { useAuth } from "../../../context/AuthContext";
 
 function DashboardNavbar({ absolute = false, light = false, isMini = false }) {
-   const { role } = useAuth();
-
+  const [anchorElMail, setAnchorElMail] = useState(null);
+  const { role } = useAuth();
 
   const [navbarType, setNavbarType] = useState();
   const [controller, dispatch] = useMaterialUIController();
@@ -101,6 +100,8 @@ function DashboardNavbar({ absolute = false, light = false, isMini = false }) {
     return () => window.removeEventListener("scroll", handleTransparentNavbar);
   }, [dispatch, fixedNavbar]);
 
+  const handleOpenMailMenu = (event) => setAnchorElMail(event.currentTarget);
+  const handleCloseMailMenu = () => setAnchorElMail(null);
   const handleMiniSidenav = () => setMiniSidenav(dispatch, !miniSidenav);
   const handleConfiguratorOpen = () =>
     setOpenConfigurator(dispatch, !openConfigurator);
@@ -149,6 +150,34 @@ function DashboardNavbar({ absolute = false, light = false, isMini = false }) {
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
             <MDBox color={light ? "white" : "inherit"}>
+              <IconButton
+                sx={navbarIconButton}
+                size="small"
+                disableRipple
+                onClick={handleOpenMailMenu}
+              >
+                <Icon sx={iconsStyle}>mail</Icon>
+              </IconButton>
+
+              <Menu
+                anchorEl={anchorElMail}
+                open={Boolean(anchorElMail)}
+                onClose={handleCloseMailMenu}
+                anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+                transformOrigin={{ vertical: "top", horizontal: "left" }}
+              >
+                <Link
+                  to="/Messages"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  <NotificationItem
+                    icon={<Icon>chat</Icon>}
+                    title="Mensajes"
+                    onClick={handleCloseMailMenu}
+                  />
+                </Link>
+              </Menu>
+
               <IconButton
                 sx={navbarIconButton}
                 size="small"
