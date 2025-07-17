@@ -125,26 +125,12 @@ export function ReportServices() {
                 <MDBox display="flex" flexDirection="column">
                   <MDBox display="flex" alignItems="center" gap={1}>
                     <FilterAltOutlinedIcon fontSize="medium" />
-                    <MDTypography variant="h6">Filtros y Acciones</MDTypography>
+                    <MDTypography variant="h6">Reportes</MDTypography>
                   </MDBox>
                 </MDBox>
               </Grid>
               <Grid item>
-                <MDButton
-                  variant="outlined"
-                
-                  sx={{
-                    borderColor: "#4CAF50",
-                    color: "#4CAF50",
-                    "&:hover": {
-                      backgroundColor: "#E8F5E9",
-                      borderColor: "#43A047",
-                      color: "#388E3C",
-                    },
-                  }}
-                >
-                  Descargar Reporte
-                </MDButton>
+
               </Grid>
             </Grid>
 
@@ -159,57 +145,14 @@ export function ReportServices() {
                 <Grid container spacing={2}>
                   <Grid item>
                     <Grid container spacing={2}>
-                      <Grid item>
-                        <FormControl size="medium" sx={{ width: 180 }}>
-                          <InputLabel id="Estado-label">Estado</InputLabel>
-                          <Select
-                            labelId="Estado-label"
-                            name="estado"
-                            label="Estado"
-                            fullWidth
-                            value={statusFilter}
-                            onChange={(e) => setStatusFilter(e.target.value)}
-                            sx={{ height: 40 }}
-                          >
-                            <MenuItem value="todos">Todos</MenuItem>
-                            <MenuItem value="true">Activos</MenuItem>
-                            <MenuItem value="false">Inactivos</MenuItem>
-                          </Select>
-                        </FormControl>
-                      </Grid>
+                 
                     </Grid>
                   </Grid>
 
                   {/* Filtrar por servicios */}
                   <Grid item>
                     <Grid container spacing={2}>
-                      <Grid item>
-                        <FormControl size="medium" sx={{ width: 180 }}>
-                          <InputLabel id="Servicios-label">
-                            Servicios
-                          </InputLabel>
-
-                          <Select
-                            labelId="Servicios-label"
-                            name="Servicios"
-                            label="Servicios"
-                            fullWidth
-                            value={serviceFilter}
-                            onChange={(e) => setServiceFilter(e.target.value)}
-                            sx={{ height: 40 }}
-                          >
-                            <MenuItem value="todos">Todos</MenuItem>
-                            {ServicesData.map((service) => (
-                              <MenuItem
-                                key={service.serviceId}
-                                value={service.serviceId}
-                              >
-                                {service.serviceName}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                      </Grid>
+                    
                     </Grid>
                   </Grid>
                 </Grid>
