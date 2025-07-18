@@ -541,7 +541,7 @@ export const routes = [
       name: "Actualizar consumo",
       key: "add-consumption",
       icon: <Icon fontSize="small">add</Icon>,
-      route: "/consumption/add",
+      route: "/consumption/edit/:id",
       component: (
         <ProtectedElement>
           <UpdateConsumptionPage />
