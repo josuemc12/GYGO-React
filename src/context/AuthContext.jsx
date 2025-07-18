@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from "react";
+import { refreshLogin } from "../API/Auth"; 
 
 const AuthContext = createContext();
 
@@ -13,37 +14,17 @@ export const AuthProvider = ({ children }) => {
     setUserId(id);
     localStorage.setItem("userRole", newRole);
     localStorage.setItem("userId", id);
-    
-  const [userId, setUserId] = useState(() => {
-      return localStorage.getItem("userId") || null;
-    });
-
-  const [userGroup, setUserGroup] = useState(() => {
-    return localStorage.getItem("userGroup") || null;
-  });
-  
-
-  const login = (newRole,id,group) => {
-    console.log("Guardando rol en contexto:", newRole); // <-- Debug
-    setRole(newRole);
-    setUserId(id);
-    setUserGroup(group);
-
-    localStorage.setItem("userRole", newRole); // Guarda rol
-    localStorage.setItem("userId", id); // Guarda userId
-    localStorage.setItem("userGroup", group); // Guarda userGroup
   };
 
   const logoutRol = () => {
     setRole(null);
     setUserId(null);
-    setUserGroup(null);
     localStorage.removeItem("userRole");
     localStorage.removeItem("userId");
-    localStorage.removeItem("userGroup");
   };
 
   const refreshUserData = async () => {
+  try {
     const data = await refreshLogin();
     if (data?.user?.role && data?.user?.id) {
       setRole(data.user.role);
@@ -53,13 +34,14 @@ export const AuthProvider = ({ children }) => {
     } else {
       console.error("No se pudo refrescar el usuario:", data);
     }
-  };
-
+  } catch (error) {
+    console.error("Error al refrescar el login:", error);
+  }
+};
   const markUserAsPaid = () => {
     setHasPaidGroupAdminAccess(true);
   };
-
-  // Nueva función para actualizar el rol directamente
+  
   const updateRole = (newRole) => {
     setRole(newRole);
     localStorage.setItem("userRole", newRole);
@@ -75,10 +57,9 @@ export const AuthProvider = ({ children }) => {
         logoutRol,
         refreshUserData,
         markUserAsPaid,
-        updateRole, // agregamos la función acá
+        updateRole,
       }}
     >
-    <AuthContext.Provider value={{ role, userId, userGroup,login, logoutRol }}>
       {children}
     </AuthContext.Provider>
   );
