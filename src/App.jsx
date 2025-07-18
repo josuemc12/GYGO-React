@@ -81,6 +81,9 @@ export default function App() {
     "/homepage",
     "/certificaciones",
     "/Registro/:inviteToken",
+    "/servicios",
+    "/nosotros",
+    "/contactos",
   ];
   const hideSidebar = hideSidebarRoutes.includes(pathname.toLowerCase());
 
