@@ -80,6 +80,9 @@ export default function App() {
     "/",
     "/homepage",
     "/certificaciones",
+    "/servicios",
+    "/nosotros",
+    "/contactos",
   ];
   const hideSidebar = hideSidebarRoutes.includes(pathname.toLowerCase());
 

@@ -21,6 +21,7 @@ import {
 import { Visibility, VisibilityOff, Email } from "@mui/icons-material";
 import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
 import Swal from "sweetalert2";
+import { PublicHeader } from "../../components/PublicHeader";
 
 const theme = createTheme({
   palette: {
