@@ -5,8 +5,12 @@ import {
   getGroupUsers,
   sendUserInvite,
   removeUserFromGroup,
-  fetchGroupId,
+  fetchGroupId
 } from "../API/Admin";
+import {
+  getDeleteUsers,
+  getCountUserDelete
+} from "../API/DeleteLogs";
 import "../App.css";
 import "../styles/AdminDashboard.css";
 import { useNavigate } from "react-router-dom";
@@ -55,12 +59,22 @@ const AdminUserDashboard = () => {
   const [inviteLoading, setInviteLoading] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-
+  const [showHistory, setShowHistory] = useState(false);
+  const [historyRows, setHistoryRows] = useState([]);
   //var GROUP_ID = fetchGroupId();
 
-  useEffect(() => {
+useEffect(() => {
+  fetchUsersEmail();
+}, []); // Solo se ejecuta una vez al montar
+
+useEffect(() => {
+  if (showHistory) {
+    fetchDeleteLogs();
+  } else {
     fetchUsers();
-  }, []);
+  }
+}, [showHistory]);
+
 
   const fetchUsers = async () => {
     try {
@@ -76,6 +90,20 @@ const AdminUserDashboard = () => {
       setLoading(false);
     }
   };
+
+  const fetchUsersEmail = async () => {
+    try {
+
+      const userData = await getCountUserDelete();
+
+    } catch (err) {
+      setError("Failed to load users. Please try again.");
+      console.error("Error fetching users:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   const handleInviteUser = async (email) => {
     try {
@@ -168,6 +196,29 @@ const AdminUserDashboard = () => {
     ),
   }));
 
+
+const historyDeleteUsers = [
+  { Header: "Usuario Eliminado", accessor: "userName", align: "left" },
+  { Header: "Email", accessor: "email", align: "left" },
+  { Header: "Fecha Eliminado", accessor: "deletedAt", align: "center" },
+  { Header: "Admin", accessor: "deletedByAdminName", align: "left" },
+];
+
+const fetchDeleteLogs = async () => {
+  try {
+    const logs = await getDeleteUsers(); // tu API aquí
+    const rows = logs.map((log) => ({
+      userName: log.userName,
+      email: log.email,
+      deletedAt: new Date(log.deletedAt).toLocaleDateString(),
+      deletedByAdminName: log.deletedByAdminName || "N/A",
+    }));
+    setHistoryRows(rows);
+  } catch (error) {
+    console.error("Error loading delete history", error);
+  }
+};
+
   return (
     <DashboardLayout>
       <DashboardNavbar></DashboardNavbar>
@@ -194,18 +245,56 @@ const AdminUserDashboard = () => {
               </Grid>
 
               <Grid item>
+                  <MDButton
+                  variant="outlined"
+                  sx={{
+                    mr: 2,
+                     borderColor: "#4CAF50",
+                    color: "#4CAF50",
+                    "&:hover": {
+                      backgroundColor: "#E8F5E9",
+                      borderColor: "#43A047",
+                      color: "#388E3C",
+                    },
+                  }}
+                  onClick={() => setShowHistory(false)}
+                >
+                  Usuarios
+                </MDButton>
+
+
                 <MDButton
                   variant="outlined"
-                   sx={{
-                        borderColor: "#4CAF50",
-                        color: "#4CAF50",
-                        "&:hover": {
-                          backgroundColor: "#E8F5E9",
-                          borderColor: "#43A047",
-                          color: "#388E3C",
-                        },
-                      }}
-                  onClick={() => setInviteModalOpen(true)}
+                  sx={{
+                    mr: 2,
+                    borderColor: "#e41414ff",
+                    color: "#e41414ff",
+                    "&:hover": {
+                      backgroundColor: "#f5e8e8ff",
+                      borderColor: "#d41313ff",
+                      color: "#ac2020ff",
+                    },
+                  }}
+                  onClick={() => setShowHistory(true)}
+                >
+                  Historial
+                </MDButton>
+
+                <MDButton
+                  variant="outlined"
+                  sx={{
+                    borderColor: "#4CAF50",
+                    color: "#4CAF50",
+                    "&:hover": {
+                      backgroundColor: "#E8F5E9",
+                      borderColor: "#43A047",
+                      color: "#388E3C",
+                    },
+                  }}
+                  onClick={() => {
+                    setShowHistory(false);
+                    setInviteModalOpen(true);
+                  }}
                 >
                   + Invite User
                 </MDButton>
@@ -247,8 +336,8 @@ const AdminUserDashboard = () => {
                     coloredShadow="success"
                   >
                     <MDTypography variant="h6" color="white" align="left">
-                      Factores de Emisión
-                    </MDTypography>
+            {showHistory ? "Historial de Eliminaciones" : "Usuarios"}
+          </MDTypography>
                   </MDBox>
                   <MDBox
                     pt={3}
@@ -261,20 +350,32 @@ const AdminUserDashboard = () => {
                       justifyContent: "center",
                     }}
                   >
-                    <DataTable
-                      table={{ columns, rows }}
-                      isSorted={false}
-                      entriesPerPage={false}
-                      showTotalEntries={true}
-                      noEndBorder
-                    />
+                      {showHistory ? (
+            // 🔁 AQUI VA LA TABLA DE HISTORIAL
+            <DataTable
+              table={{ columns: historyDeleteUsers, rows: historyRows }}
+              isSorted={false}
+              entriesPerPage={false}
+              showTotalEntries={true}
+              noEndBorder
+            />
+          ) : (
+           
+            <DataTable
+              table={{ columns, rows }}
+              isSorted={false}
+              entriesPerPage={false}
+              showTotalEntries={true}
+              noEndBorder
+            />
+          )}
                   </MDBox>
                 </Card>
               </Grid>
             </Grid>
           </MDBox>
         </MDBox>
-        
+
         <InviteModal
           isOpen={inviteModalOpen}
           onClose={() => setInviteModalOpen(false)}
