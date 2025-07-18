@@ -6,12 +6,15 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [role, setRole] = useState(() => localStorage.getItem("userRole"));
   const [userId, setUserId] = useState(() => localStorage.getItem("userId") || null);
+  const [userGroup, setUserGroup] = useState(() => localStorage.getItem("userGroup") || null);
   const [hasPaidGroupAdminAccess, setHasPaidGroupAdminAccess] = useState(false);
 
-  const login = (newRole, id) => {
+  const login = (newRole, id,grupo) => {
     console.log("Guardando rol en contexto:", newRole);
     setRole(newRole);
     setUserId(id);
+    setUserGroupId(grupo);
+    localStorage.setItem("userGroup", grupo);
     localStorage.setItem("userRole", newRole);
     localStorage.setItem("userId", id);
   };
@@ -19,7 +22,9 @@ export const AuthProvider = ({ children }) => {
   const logoutRol = () => {
     setRole(null);
     setUserId(null);
+    setUserGroupId(null);
     localStorage.removeItem("userRole");
+    localStorage.removeItem("userGroup");
     localStorage.removeItem("userId");
   };
 
@@ -53,6 +58,7 @@ export const AuthProvider = ({ children }) => {
         role,
         userId,
         hasPaidGroupAdminAccess,
+        userGroup,
         login,
         logoutRol,
         refreshUserData,
