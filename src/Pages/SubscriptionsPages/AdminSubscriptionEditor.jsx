@@ -13,7 +13,7 @@ import DashboardNavbar from "@/examples/Navbars/DashboardNavbar";
 import WebhookTestButtons from "../../components/WebhooksTestButtons";
 import CancelSubscriptionButton from "../../components/CancelSubscriptionButton";
 
-import { getSubscriptionByUserId } from "../../API/Subscription"; // <-- función corregida
+import { getSubscriptionByUserId } from "../../API/Subscription"; 
 
 export default function AdminSubscriptionEditor() {
   const [subscription, setSubscription] = useState(null);
@@ -23,7 +23,7 @@ export default function AdminSubscriptionEditor() {
   useEffect(() => {
     const fetchSubscription = async () => {
       try {
-        const data = await getSubscriptionByUserId(); // <-- ya no usa planId
+        const data = await getSubscriptionByUserId(); 
         setSubscription(data);
       } catch (err) {
         setError(err.message || "Error al cargar la suscripción");
@@ -110,16 +110,18 @@ export default function AdminSubscriptionEditor() {
             </Typography>
             <Box mt={3}>
               <CancelSubscriptionButton
-                paypalSubscriptionId={subscription.payPalSubscriptionId}
-                onSuccess={() => setSubscription(null)}
+                userId={subscription.userId}
+                subscriptionId={subscription.payPalSubscriptionId}
+                onSuccess={() => {
+                  console.log("Cancelación exitosa");
+                  window.location.reload();
+                }}
               />
             </Box>
           </CardContent>
         </Card>
       </Grid>
     </Grid>
-
-    {/* ✅ Webhook buttons below */}
     <WebhookTestButtons paypalSubscriptionId={subscription.payPalSubscriptionId} />
   </DashboardLayout>
 );

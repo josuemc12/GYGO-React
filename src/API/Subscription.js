@@ -53,9 +53,11 @@ export async function subscribeToPlan(planId) {
   }
 }
 
-export async function cancelSubscription() {
+export async function cancelSubscription(userId, planId, reason) {
   try {
-    const response = await fetch(`${appsettings.apiUrl}Subscription/cancel`, {
+    const url = `${appsettings.apiUrl}Subscription/cancel?userId=${encodeURIComponent(userId)}&planId=${encodeURIComponent(planId)}&reason=${encodeURIComponent(reason)}`;
+
+    const response = await fetch(url, {
       method: "POST",
       credentials: "include",
       headers: {
