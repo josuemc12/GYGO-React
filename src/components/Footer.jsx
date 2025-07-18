@@ -12,14 +12,12 @@ const Footer = () => {
                 <a href="#auditoria">Auditoría Ambiental</a>
               </li>
               <li>
-                <a href="#consultoria">Consultoría</a>
+                <a href="#consultoria">Sobre Nosotros</a>
               </li>
               <li>
-                <a href="#capacitacion">Capacitación</a>
+                <a href="#capacitacion">Paquetes</a>
               </li>
-              <li>
-                <a href="#implementacion">Implementación</a>
-              </li>
+              
             </ul>
           </div>
 
@@ -27,37 +25,21 @@ const Footer = () => {
             <h4>Certificaciones</h4>
             <ul>
               <li>
-                <a href="#iso14001">ISO 14001</a>
+                <a href="#iso14001">Certificaciones disponibles</a>
               </li>
               <li>
-                <a href="#iso45001">ISO 45001</a>
+                <a href="https://www.ict.go.cr/es/sostenibilidad/bandera-azul.html">Bandera Azul</a>
               </li>
               <li>
-                <a href="#iso9001">ISO 9001</a>
+                <a href="https://cambioclimatico.minae.go.cr/programa-pais-carbono-neutralidad/">Carbono Neutral</a>
               </li>
               <li>
-                <a href="#leed">LEED</a>
+                <a href="https://www.esencialcostarica.com/quienes-somos/">Esencial Costa Rica</a>
               </li>
             </ul>
           </div>
 
-          <div className="footer-column">
-            <h4>Recursos</h4>
-            <ul>
-              <li>
-                <a href="#blog">Blog</a>
-              </li>
-              <li>
-                <a href="#casos">Casos de Éxito</a>
-              </li>
-              <li>
-                <a href="#descargas">Descargas</a>
-              </li>
-              <li>
-                <a href="#webinars">Webinars</a>
-              </li>
-            </ul>
-          </div>
+         
 
           <div className="footer-column">
             <h4>Contacto</h4>
@@ -79,23 +61,7 @@ const Footer = () => {
         </div>
 
         <div className="footer-bottom">
-          <div className="social-links">
-            <a href="#facebook" className="social-link">
-              f
-            </a>
-            <a href="#twitter" className="social-link">
-              t
-            </a>
-            <a href="#linkedin" className="social-link">
-              in
-            </a>
-            <a href="#instagram" className="social-link">
-              ig
-            </a>
-            <a href="#youtube" className="social-link">
-              yt
-            </a>
-          </div>
+          
           <div className="footer-logo">
             <span>Green On</span>
           </div>

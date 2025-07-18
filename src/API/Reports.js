@@ -33,3 +33,26 @@ export async function GetServices() {
     return [];
   }
 }
+
+
+
+export async function GetReportsGroupsByService() {
+  const response = await fetch(`${appsettings.apiUrl}Reports/ServicesGroupByService`);
+  if (response.ok) {
+    const data = await response.json();
+    return data;
+  } else {
+    return [];
+  }
+}
+
+
+export async function GetReportsGroupsDetails() {
+  const response = await fetch(`${appsettings.apiUrl}Reports/GetGropusDetails`);
+  if (response.ok) {
+    const data = await response.json();
+    return data;
+  } else {
+    return [];
+  }
+}

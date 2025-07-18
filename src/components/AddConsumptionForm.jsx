@@ -1,23 +1,34 @@
 import { useEffect, useState } from "react";
+
+import {
+  Card,
+  Grid,
+  MenuItem,
+  CircularProgress,
+  TextField,
+  Select,
+  Alert
+} from "@mui/material";
 import {
   AddOutlined,
-  CheckBoxOutlined,
   ErrorOutline,
 } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
+import MDButton from "components/MDButton";
+import MDInput from "components/MDInput";
+import MDTypography from "components/MDTypography";
 import { getFactoresEmision } from "../API/FactorEmision";
 import { addConsumption } from "../API/Consumptions/Consumption";
+import Swal from "sweetalert2";
+
 
 export function AddConsumptionForm() {
-  const [formData, setFormData] = useState({
-    name: "",
-    factorEmisionId: "",
-  });
-
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({ name: "", factorEmisionId: "" });
   const [factoresEmision, setFactoresEmision] = useState([]);
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
     const fetchFactores = async () => {
@@ -35,10 +46,7 @@ export function AddConsumptionForm() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
@@ -47,9 +55,7 @@ export function AddConsumptionForm() {
   const validateForm = () => {
     const newErrors = {};
     if (!formData.name.trim()) newErrors.name = "El nombre es requerido";
-    if (!formData.factorEmisionId)
-      newErrors.factorEmisionId = "Seleccione un factor";
-
+    if (!formData.factorEmisionId) newErrors.factorEmisionId = "Seleccione un factor";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -64,13 +70,15 @@ export function AddConsumptionForm() {
         name: formData.name,
         factorEmisionId: parseInt(formData.factorEmisionId),
       };
+      await addConsumption(consumo);
 
-      await addConsumption(consumo); 
-
-      setShowSuccess(true);
-      setFormData({ name: "", factorEmisionId: "" });
-
-      setTimeout(() => setShowSuccess(false), 3000);
+      await Swal.fire({
+        icon: "success",
+        title: "¡Consumo agregado exitosamente!",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      navigate("/consumption");
     } catch (err) {
       console.error("Error al guardar:", err);
       setErrors({ submit: "Error al guardar. Intente de nuevo." });
@@ -80,96 +88,72 @@ export function AddConsumptionForm() {
   };
 
   return (
-    <div className="form-card">
-      {showSuccess && (
-        <div className="success-message">
-          <CheckBoxOutlined />
-          <span>¡Consumo agregado exitosamente!</span>
-        </div>
-      )}
-
-      <div className="card-header">
-        <h2 className="card-title">Información del Consumo</h2>
-        <p className="card-description">
-          Complete los campos para registrar el nuevo consumo
-        </p>
-      </div>
-
-      <div className="card-content">
-        <form onSubmit={handleSubmit} className="consumo-form">
-          {/* nombre */}
-          <div className="form-group">
-            <label className="form-label">Nombre *</label>
-            <input
+    <Card sx={{ p: 3 }}>
+      <MDTypography variant="h6" fontWeight="bold" gutterBottom>
+        Información del Consumo
+      </MDTypography>
+      <MDTypography variant="body2" color="text" mb={2}>
+        Complete los campos para registrar el nuevo consumo
+      </MDTypography>
+      <form onSubmit={handleSubmit}>
+        <Grid container spacing={2}>
+          <Grid item size={{xs:12}}>
+            <TextField
+              label="Nombre *"
               name="name"
-              type="text"
+              fullWidth
               value={formData.name}
               onChange={handleChange}
-              placeholder="Ej: Consumo de gasolina"
-              className={`form-input ${errors.name ? "error" : ""}`}
+              error={!!errors.name}
+              helperText={errors.name}
             />
-            {errors.name && (
-              <div className="error-message">
-                <ErrorOutline />
-                <span>{errors.name}</span>
-              </div>
-            )}
-          </div>
+          </Grid>
 
-          {/* factor de emision */}
-          <div className="form-group">
-            <label className="form-label">Factor de Emisión *</label>
+          <Grid size={{xs:12}}>
             {loading ? (
-              <span>Cargando factores...</span>
+              <CircularProgress size={24} />
             ) : (
-              <select
+              <Select
+              sx={{height: 40}}
                 name="factorEmisionId"
+                label="Factor de Emisión *"
+                fullWidth
                 value={formData.factorEmisionId}
                 onChange={handleChange}
-                className={`form-select ${errors.factorEmisionId ? "error" : ""}`}
+                error={!!errors.factorEmisionId}
+                helperText={errors.factorEmisionId}
               >
-                <option value="">Seleccione un factor</option>
+                <MenuItem value="">Seleccione un factor</MenuItem>
                 {factoresEmision.map((f) => (
-                  <option key={f.id} value={f.id}>
+                  <MenuItem key={f.id} value={f.id}>
                     {f.name} ({f.unitCarbono})
-                  </option>
+                  </MenuItem>
                 ))}
-              </select>
+              </Select>
             )}
-            {errors.factorEmisionId && (
-              <div className="error-message">
-                <ErrorOutline />
-                <span>{errors.factorEmisionId}</span>
-              </div>
-            )}
-          </div>
+          </Grid>
 
-          {/* error global */}
           {errors.submit && (
-            <div className="error-message submit-error">
-              <ErrorOutline />
-              <span>{errors.submit}</span>
-            </div>
+            <Grid item size={{xs:12}}>
+              <Alert severity="error" icon={<ErrorOutline />}>
+                {errors.submit}
+              </Alert>
+            </Grid>
           )}
 
-          {/* submit */}
-          <div className="form-actions">
-            <button type="submit" className="submit-button" disabled={submitting}>
-              {submitting ? (
-                <>
-                  <div className="loading-spinner-small"></div>
-                  <span>Agregando...</span>
-                </>
-              ) : (
-                <>
-                  <AddOutlined />
-                  <span>Agregar Consumo</span>
-                </>
-              )}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+          <Grid item size={{xs:12}}>
+            <MDButton
+              type="submit"
+              variant="gradient"
+              color="success"
+              fullWidth
+              disabled={submitting}
+            >
+              {submitting ? "Agregando..." : "Agregar Consumo"}
+            </MDButton>
+          </Grid>
+        </Grid>
+      </form>
+    </Card>
   );
 }

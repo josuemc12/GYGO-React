@@ -14,7 +14,6 @@
 .historial-cambios-container {
   min-height: 100vh;
   padding: 24px;
-  background-color: var(--color-cream);
 }
 
 .historial-cambios-content {

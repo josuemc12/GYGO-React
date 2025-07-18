@@ -3,6 +3,8 @@ import { AppBar, Tabs, Tab, Container, Box } from "@mui/material";
 import CurrentConsumption from "../components/EmissionsConsumption/CurrentConsumption";
 import AnnualConsumption from "../components/EmissionsConsumption/AnnualConsumption";
 import ConsumptionHistory from "../components/EmissionsConsumption/ConsumptionHistory";
+import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
+import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 
 function TabPanel({ children, value, index }) {
   return (
@@ -16,6 +18,8 @@ export function DashboardConsumo() {
   const [tabIndex, setTabIndex] = useState(0);
   return (
     <>
+    <DashboardLayout>
+      <DashboardNavbar></DashboardNavbar>
       <Container>
         <Box sx={{ borderBottom: 1, borderColor: "divider", mt: 10 }}>
           <Tabs
@@ -48,6 +52,7 @@ export function DashboardConsumo() {
           <ConsumptionHistory />
         </TabPanel>
       </Container>
+      </DashboardLayout>
     </>
   );
 }

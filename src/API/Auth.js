@@ -1,20 +1,26 @@
 import { appsettings } from "../settings/appsettings";
 
 
-
 export  async function verify2FACode(tempToken, code) {
+  console.log(tempToken);
+  console.log(code);
+
   try {
     const response = await fetch(`${appsettings.apiUrl}Auth/verify-2FA`, {
       method: 'POST',
+      credentials: "include",
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({ tempToken, code }),
     });
     const data = await response.json();
 
+    console.log(data);
+
     if (response.ok) {
-      return { success: true };
+     
+      return { success: true,rol:data.rol };
     } else {
       return { success: false, error: data.error };
     }
@@ -23,7 +29,7 @@ export  async function verify2FACode(tempToken, code) {
   }
 }
 
-export  async function loginUser(email, password,login) {
+export  async function loginUser(email, password) {
   try {
 
     const response = await fetch(`${appsettings.apiUrl}Auth/login`, {
@@ -31,38 +37,43 @@ export  async function loginUser(email, password,login) {
       credentials: "include",
       headers: {
         'Content-Type': 'application/json',
-        credentials: 'include'
+        'Accept': 'application/json',
       },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ email, password}),
     });
 
     const data = await response.json();
 
-    console.log(data.rol);
-    login(data.rol);
+    
+    
 
     if (!response.ok) {
+      console.error("Detalles del error:", errorData, "Código:", response.status);
       return { success: false, error: data.error };
     }
 
-    if (data.isTwoFactor) {
+    if (data.message === "2FA required") {
       return {
         success: true,
         isTwoFactor: true,
         tempToken: data.tempToken,
+        rol: data.rol,
+        id: data.id,
       };
     }
 
-    return { success: true, isTwoFactor: false };
+    return { success: true, isTwoFactor: false,rol: data.rol,id:data.id };
   } catch (err) {
     return { success: false, error: 'Login request failed.' };
   }
 }
 
+
+//Probar
 export  async function sendInvite(email) {
 
   try {
-    const response = await fetch(`http://localhost:5135/sendInvite`, {
+    const response = await fetch(`${appsettings.apiUrl}Admin/sendInvite`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -85,9 +96,6 @@ export  async function sendInvite(email) {
 
 export async function registerUser(inviteToken, { email, username, password }) {
   
-
-  // const url = inviteToken ? `/api/register/${inviteToken}` : 'User/Register';
-
   const url = inviteToken ? `User/register/${inviteToken}` : 'User/Register';
 
 
@@ -122,7 +130,7 @@ async function fetchGroupId() {
     }
 
     try {
-        const response = await fetch(`http://localhost:5135/getGroupId?adminToken=${encodeURIComponent(token)}`);
+        const response = await fetch(`${appsettings.apiUrl}/getGroupId?adminToken=${encodeURIComponent(token)}`);
         const groupId = await response.json();
         console.log('Group ID:', groupId);
         return groupId;
@@ -130,3 +138,33 @@ async function fetchGroupId() {
         console.error('Error fetching group ID:', error);
     }
 }
+
+export async function getCurrentUser(){
+  const response = await fetch(`${appsettings.apiUrl}User/UserProfile`,
+        {
+      method: "GET",
+      credentials: "include",
+    }
+    ); 
+    if(response.ok){
+        const data = await response.json();
+        return data;
+    }else{
+        return [];
+    }    
+}
+
+export async function logoutSesion() {
+  console.log("api");
+  const response = await fetch(`${appsettings.apiUrl}Auth/logout`, {
+    method: "POST",
+    credentials: "include", 
+  });
+
+  if (response.ok) {
+    return true; 
+  } else {
+    return false;
+  }
+}
+

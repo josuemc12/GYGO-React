@@ -1,8 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import { ChangePasswordForm } from '../components/ChangePasswordForm'
 import { jwtDecode } from 'jwt-decode';
-import { Box, Typography } from '@mui/material';
+import { Card,
+  Grid,
+  CircularProgress,
+  FormControl,
+  InputAdornment,
+  IconButton,
+  InputLabel,
+  OutlinedInput,
+  Button, } from '@mui/material';
+import MDTypography from "components/MDTypography";
+import MDBox from "components/MDBox";
 
+// Material Dashboard 2 React example components
+import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
+import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import Footer from "examples/Footer";
 
 export const ChangePasswordPage = () => {
 
@@ -11,7 +25,7 @@ export const ChangePasswordPage = () => {
   useEffect(()=>{
       const fetchUsername = async( ) => {
         try {
-          const response = await fetch("http://localhost:7217/api/User/UserProfile",
+          const response = await fetch("https://localhost:7217/api/User/UserProfile",
             {
               method: "GET",
               credentials: "include"
@@ -33,12 +47,21 @@ export const ChangePasswordPage = () => {
 
   
   return (
-    <div className='justify-content-center align-items-center my-4'>
-      <Box sx={{ mb: 3 }}>
-        <Typography variant='h4' >Cambiar contraseña | {username || "Usuario"}  </Typography>
-      </Box>
-      <hr />
-      <ChangePasswordForm></ChangePasswordForm>
-    </div>
+    <DashboardLayout>
+      <DashboardNavbar></DashboardNavbar>
+      <MDBox py={3} mb={4}>
+        <Grid container spacing={3} justifyContent={"center"}>
+          <Grid item size={{xs:12, md:8, lg:6}}>
+            <Card sx={{p: 4}}>
+              <MDTypography variant="h5" fontWeight="bold" gutterBottom>
+                Cambiar contraseña | {username || "Usuario"}
+              </MDTypography>
+              <ChangePasswordForm></ChangePasswordForm>
+            </Card>
+          </Grid>
+        </Grid>
+      </MDBox>
+    <Footer />
+    </DashboardLayout>
   )
 }

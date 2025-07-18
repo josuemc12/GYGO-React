@@ -92,41 +92,11 @@ export const AddGroupForm = () => {
 
   return (
     <>
-      <Box component="form" onSubmit={handleSubmit} sx={{ mb: 2 }}>
-        <Grid container spacing={3}>
-          <Grid size={12}>
-            <TextField
-              id="outlined-basic"
-              sx={{ width: "50%" }}
-              label="Nombre del Grupo"
-              variant="outlined"
-              value={nombreGrupo}
-              onChange={(e) => setNombreGrupo(e.target.value)}
-              required
-            ></TextField>
-          </Grid>
-          <Grid size={12}>
-            <Button
-              type="submit"
-              sx={{ width: "50%" }}
-              variant="contained"
-              endIcon={<SendIcon />}
-              disabled={loading}
-            >
-              {loading ? (
-                <CircularProgress size={24} color="inherit" />
-              ) : (
-                "Registrar"
-              )}
-            </Button>
-          </Grid>
-        </Grid>
-      </Box>
 
       <Container maxWidth="sm" sx={{ mt: 8 }}>
-        <Paper elevation={3} sx={{ p: 4 }}>
-          <Typography variant="h4" align="center" gutterBottom>
-            Crear nuevo grupo
+        <Paper elevation={3} sx={{ p: 4, mb: 5 }}>
+          <Typography variant="h4" align="center" gutterBottom sx={{ mb: 5 }}>
+            Complete los campos correspondientes
           </Typography>
           <Box component="form" onSubmit={handleSubmit}>
             <TextField
@@ -154,6 +124,7 @@ export const AddGroupForm = () => {
                 label="Servicio"
                 value={selectedService}
                 onChange={(e) => setSelectedService(e.target.value)}
+                sx={{height: 40}}
               >
                 {servicesData.map((service) => (
                   <MenuItem key={service.serviceId} value={service.serviceId}>
@@ -165,7 +136,12 @@ export const AddGroupForm = () => {
             <Button
               type="submit"
               fullWidth
-              sx={{ mt: 3, backgroundColor: "#1976d2" }}
+              sx={{
+                mt: 3, backgroundColor: "#415d43", color: "ButtonFace", 
+                "&:hover": {
+                  backgroundColor: "#89b889", // mismo color o uno similar
+                },
+              }}
               variant="contained"
               endIcon={<SendIcon />}
               disabled={loading}

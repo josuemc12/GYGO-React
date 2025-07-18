@@ -1,19 +1,28 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ErrorOutline, SaveOutlined, ArrowBack } from "@mui/icons-material";
-import "../styles/consumption.css";
+import {
+  Card,
+  Grid,
+  TextField,
+  MenuItem,
+  CircularProgress,
+  Alert,
+} from "@mui/material";
+import Swal from "sweetalert2";
+import MDTypography from "components/MDTypography";
+import MDButton from "components/MDButton";
+
 import { UpdateMonthlyConsumption, getMonthlyConsumptions } from "../API/Consumptions/MonthlyConsum";
+import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
+import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import Footer from "examples/Footer";
 
 export function UpdateMonthlyConsumPage() {
   const { consumptionId, monthlyId } = useParams();
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
-    month: "",
-    year: "",
-    amount: "",
-  });
-
+  const [formData, setFormData] = useState({ month: "", year: "", amount: "" });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -50,17 +59,9 @@ export function UpdateMonthlyConsumPage() {
 
   const validateForm = () => {
     const newErrors = {};
-
-    if (!formData.month || formData.month < 1 || formData.month > 12) {
-      newErrors.month = "Mes inválido (1-12)";
-    }
-    if (!formData.year || formData.year < 2000 || formData.year > 2100) {
-      newErrors.year = "Año inválido";
-    }
-    if (!formData.amount || Number.parseFloat(formData.amount) <= 0) {
-      newErrors.amount = "Cantidad debe ser mayor a 0";
-    }
-
+    if (!formData.month || formData.month < 1 || formData.month > 12) newErrors.month = "Mes inválido (1-12)";
+    if (!formData.year || formData.year < 2000 || formData.year > 2100) newErrors.year = "Año inválido";
+    if (!formData.amount || parseFloat(formData.amount) <= 0) newErrors.amount = "Cantidad debe ser mayor a 0";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -69,17 +70,21 @@ export function UpdateMonthlyConsumPage() {
     e.preventDefault();
     if (!validateForm()) return;
     setSubmitting(true);
-
     try {
       const dto = {
         monthlyConsumptionId: Number(monthlyId),
         consumptionId: Number(consumptionId),
         month: Number(formData.month),
         year: Number(formData.year),
-        amount: Number.parseFloat(formData.amount),
+        amount: parseFloat(formData.amount),
       };
-
       await UpdateMonthlyConsumption(dto);
+      await Swal.fire({
+        icon: "success",
+        title: "Consumo mensual actualizado",
+        timer: 2000,
+        showConfirmButton: false,
+      });
       navigate(`/consumption/monthly/${consumptionId}`);
     } catch (error) {
       console.error("Error al actualizar consumo mensual:", error);
@@ -89,103 +94,102 @@ export function UpdateMonthlyConsumPage() {
     }
   };
 
-  const onVolver = () => {
-    navigate(-1);
-  };
-
   return (
-    <div className="agregar-consumo-container">
-      <div className="agregar-consumo-content">
-        <div className="header-section">
-          <button className="back-button" onClick={onVolver}>
-            <ArrowBack /> Volver
-          </button>
-          <h1 className="main-title">Editar Consumo Mensual</h1>
-        </div>
+    <DashboardLayout>
+      <DashboardNavbar></DashboardNavbar>
+      <Grid container spacing={3} py={3} sx={{mb: 5}}>
+        <Grid size={{xs:12}}>
+          <Card sx={{ p: 3 }}>
+            <Grid container alignItems="center" spacing={2}>
+              <Grid size={{xs:12, md: 1}}>
+                <MDButton variant="text" color="black" startIcon={<ArrowBack />} onClick={() => navigate(-1)}>
+                  Volver
+                </MDButton>
+              </Grid>
+              <Grid size={{xs:12, md: 10}}>
+                <MDTypography variant="h5" fontWeight="bold" gutterBottom>
+                  Editar Consumo Mensual
+                </MDTypography>
+                <MDTypography variant="body2" color="text">
+                  Modifique los datos del consumo mensual registrado
+                </MDTypography>
+              </Grid>
+            </Grid>
+          </Card>
+        </Grid>
 
-        <div className="form-card">
-          <div className="card-header">
-            <h2 className="card-title">Modificar los datos del consumo</h2>
-          </div>
-
-          <div className="card-content">
+        <Grid size={{xs:12}}>
+          <Card sx={{ p: 3 }}>
             {loading ? (
-              <p>Cargando datos...</p>
+              <CircularProgress />
             ) : (
-              <form onSubmit={handleSubmit} className="consumo-form">
-                <div className="form-group">
-                  <label htmlFor="month">Mes *</label>
-                  <input
-                    type="number"
-                    name="month"
-                    id="month"
-                    value={formData.month}
-                    onChange={handleInputChange}
-                    className={`form-input ${errors.month ? "error" : ""}`}
-                    min="1"
-                    max="12"
-                  />
-                  {errors.month && (
-                    <div className="error-message">
-                      <ErrorOutline /> <span>{errors.month}</span>
-                    </div>
+              <form onSubmit={handleSubmit}>
+                <Grid container spacing={2}>
+                  <Grid size={{xs:12, md: 4}}>
+                    <TextField
+                      label="Mes *"
+                      type="number"
+                      name="month"
+                      value={formData.month}
+                      onChange={handleInputChange}
+                      fullWidth
+                      error={!!errors.month}
+                      helperText={errors.month}
+                    />
+                  </Grid>
+                  <Grid size={{xs:12, md: 4}}>
+                    <TextField
+                      label="Año *"
+                      type="number"
+                      name="year"
+                      value={formData.year}
+                      onChange={handleInputChange}
+                      fullWidth
+                      error={!!errors.year}
+                      helperText={errors.year}
+                    />
+                  </Grid>
+                  <Grid size={{xs:12, md: 4}}>
+                    <TextField
+                      label="Cantidad *"
+                      type="number"
+                      name="amount"
+                      value={formData.amount}
+                      onChange={handleInputChange}
+                      fullWidth
+                      error={!!errors.amount}
+                      helperText={errors.amount}
+                      inputProps={{ min: 0, step: 0.01 }}
+                    />
+                  </Grid>
+
+                  {errors.submit && (
+                    <Grid size={{xs:12}}>
+                      <Alert severity="error" icon={<ErrorOutline />}>
+                        {errors.submit}
+                      </Alert>
+                    </Grid>
                   )}
-                </div>
 
-                <div className="form-group">
-                  <label htmlFor="year">Año *</label>
-                  <input
-                    type="number"
-                    name="year"
-                    id="year"
-                    value={formData.year}
-                    onChange={handleInputChange}
-                    className={`form-input ${errors.year ? "error" : ""}`}
-                    min="2000"
-                    max="2100"
-                  />
-                  {errors.year && (
-                    <div className="error-message">
-                      <ErrorOutline /> <span>{errors.year}</span>
-                    </div>
-                  )}
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="amount">Cantidad *</label>
-                  <input
-                    type="number"
-                    name="amount"
-                    id="amount"
-                    value={formData.amount}
-                    onChange={handleInputChange}
-                    className={`form-input ${errors.amount ? "error" : ""}`}
-                    min="0"
-                    step="0.01"
-                  />
-                  {errors.amount && (
-                    <div className="error-message">
-                      <ErrorOutline /> <span>{errors.amount}</span>
-                    </div>
-                  )}
-                </div>
-
-                {errors.submit && (
-                  <div className="error-message submit-error">
-                    <ErrorOutline /> <span>{errors.submit}</span>
-                  </div>
-                )}
-
-                <div className="form-actions">
-                  <button type="submit" disabled={submitting} className="submit-button">
-                    {submitting ? "Actualizando..." : (<><SaveOutlined /> Guardar Cambios</>)}
-                  </button>
-                </div>
+                  <Grid size={{xs:12}}>
+                    <MDButton
+                      type="submit"
+                      variant="gradient"
+                      color="info"
+                      fullWidth
+                      disabled={submitting}
+                      startIcon={<SaveOutlined />}
+                    >
+                      {submitting ? "Guardando..." : "Guardar Cambios"}
+                    </MDButton>
+                  </Grid>
+                </Grid>
               </form>
             )}
-          </div>
-        </div>
-      </div>
-    </div>
+          </Card>
+        </Grid>
+      </Grid>
+      <Footer />
+    </DashboardLayout>
   );
-} 
+}

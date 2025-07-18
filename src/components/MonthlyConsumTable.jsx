@@ -1,15 +1,33 @@
 // MonthlyConsumptionTable.jsx
 import { EditOutlined, HistoryOutlined } from "@mui/icons-material";
-import "../styles/monthlyConsum.css";
 import { useNavigate } from "react-router-dom";
+import MDTypography from "components/MDTypography";
+import MDButton from "components/MDButton";
+import DataTable from "examples/Tables/DataTable";
+import { IconButton, Tooltip, Stack } from "@mui/material";
 
 const getNombreMes = (numeroMes) => {
-  const meses = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+  const meses = [
+    "",
+    "Enero",
+    "Febrero",
+    "Marzo",
+    "Abril",
+    "Mayo",
+    "Junio",
+    "Julio",
+    "Agosto",
+    "Septiembre",
+    "Octubre",
+    "Noviembre",
+    "Diciembre",
+  ];
   return meses[numeroMes] || numeroMes;
 };
 
 export function MonthlyConsumptionTable({ consumos, loading, consumptionId }) {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+
   const handleEditarConsumo = (monthlyId) => {
     navigate(`/consumption/monthly/edit/${consumptionId}/${monthlyId}`);
   };
@@ -37,39 +55,66 @@ export function MonthlyConsumptionTable({ consumos, loading, consumptionId }) {
     );
   }
 
+  const columns = [
+    { Header: "Mes", accessor: "mes", align: "center" },
+    { Header: "Año", accessor: "año", align: "center" },
+    { Header: "Cantidad", accessor: "cantidad", align: "center" },
+    { Header: "Emisiones", accessor: "emisiones", align: "center" },
+    { Header: "Acciones", accessor: "acciones", align: "center" },
+  ];
+
+  const rows = consumos.map((consumo) => ({
+    mes: (
+      <MDTypography variant="caption" color="text">
+        {getNombreMes(consumo.month)}
+      </MDTypography>
+    ),
+    año: (
+      <MDTypography variant="caption" color="text">
+        {consumo.year}
+      </MDTypography>
+    ),
+    cantidad: (
+      <MDTypography variant="caption" color="text">
+        {consumo.amount.toLocaleString()} kWh
+      </MDTypography>
+    ),
+    emisiones: (
+      <MDTypography variant="caption" color="text">
+        {consumo.emissions.toFixed(2)} kg CO₂
+      </MDTypography>
+    ),
+    acciones: (
+      <Stack direction="row" spacing={1} justifyContent="center">
+        <Tooltip title="Editar">
+          <IconButton
+            size="small"
+            color="info"
+            onClick={() => handleEditarConsumo(consumo.monthlyConsumptionId)}
+          >
+            <EditOutlined fontSize="small" />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Ver historial">
+          <IconButton
+            size="small"
+            color="secondary"
+            onClick={() => handleVerHistorial(consumo.monthlyConsumptionId)}
+          >
+            <HistoryOutlined fontSize="small" />
+          </IconButton>
+        </Tooltip>
+      </Stack>
+    ),
+  }));
+
   return (
-    <div className="table-container">
-      <table className="consumos-mensuales-table">
-        <thead>
-          <tr>
-            <th>Mes</th>
-            <th>Año</th>
-            <th>Cantidad</th>
-            <th>Emisiones</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {consumos.map((consumo) => (
-            <tr key={consumo.monthlyConsumptionId} className="table-row">
-              <td>{getNombreMes(consumo.month)}</td>
-              <td>{consumo.year}</td>
-              <td>{consumo.amount.toLocaleString()} kWh</td>
-              <td>{consumo.emissions.toFixed(2)} kg CO₂</td>
-              <td>
-                <div className="actions-container">
-                  <button className="action-button edit-button" onClick={() => handleEditarConsumo(consumo.monthlyConsumptionId)}>
-                    <EditOutlined /> <span>Editar</span>
-                  </button>
-                  <button className="action-button history-button" onClick={() => handleVerHistorial(consumo.monthlyConsumptionId)}>
-                    <HistoryOutlined /> <span>Ver Historial</span>
-                  </button>
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <DataTable
+      table={{ columns, rows }}
+      isSorted={false}
+      entriesPerPage={false}
+      showTotalEntries={false}
+      noEndBorder
+    />
   );
 }
