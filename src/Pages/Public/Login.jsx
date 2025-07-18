@@ -67,7 +67,7 @@ export default function Login() {
     }
 
     try {
-      const { success, isTwoFactor, tempToken, error,rol ,id} = await loginUser(
+      const { success, isTwoFactor, tempToken, error,rol ,id,groupId} = await loginUser(
         email,
         password
       );
@@ -88,7 +88,7 @@ export default function Login() {
       } else {
          console.log("Rol que se va a guardar:", rol);
          console.log("ID que se va a guardar:", id);
-        login(rol,id);
+        login(rol,id,groupId); // Save role and userId in context
         // Normal login success — redirect to dashboard or home
         navigate("/Dashboard");
       }
