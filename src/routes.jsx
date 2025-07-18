@@ -368,34 +368,8 @@ export const routes = [
     hideInSidebar: true,
   },
 
-  //Ruta Tabla de usuarios
-  {
-    type: "collapse",
-    name: "AdminUserDashboard",
-    key: "AdminUserDashboard",
-    icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/AdminUserDashboard",
-    component: (
-      <ProtectedElement>
-        <AdminUserDashboard />
-      </ProtectedElement>
-    ),
-    roles: ["GA", "DEV"],
-  },
 
-  {
-    type: "collapse",
-    name: "Servicios",
-    key: "Services",
-    icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/Services",
-    component: (
-      <ProtectedElement>
-        <ServicesPage />
-      </ProtectedElement>
-    ),
-    roles: ["GA", "DEV"],
-  },
+
   //Gestiones para el Super Administrador
   {
     type: "collapse",
@@ -447,15 +421,26 @@ export const routes = [
           </ProtectedElement>
         ),
         roles: ["DEV", "SA"],
-      },  
-    ],
-    roles: ["DEV", "SA"],
+      }, 
+      ///gESTIONES DEL ADMIN DE GRUPO
+      
+        {
+   
+    name: "Servicios",
+    key: "Services",
+    icon: <Icon fontSize="small">dashboard</Icon>,
+    route: "/Services",
+    component: (
+      <ProtectedElement>
+        <ServicesPage />
+      </ProtectedElement>
+    ),
+    roles: ["GA", "DEV"],
   },
 
-
   {
-     type: "collapse",
-    name: "Admin Factor Emision",
+   
+    name: "Factor Emision",
     key: "AdminFactorEmision",
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/AdminEmisionFactor",
@@ -467,6 +452,29 @@ export const routes = [
     ),
     roles: ["DEV", "GA","SA"],
   },
+
+  //Ruta Tabla de usuarios
+  {
+    type: "collapse",
+    name: "AdminUserDashboard",
+    key: "AdminUserDashboard",
+    icon: <Icon fontSize="small">dashboard</Icon>,
+    route: "/AdminUserDashboard",
+    component: (
+      <ProtectedElement>
+        <AdminUserDashboard />
+      </ProtectedElement>
+    ),
+    roles: ["GA", "DEV"],
+  },
+
+
+    ],
+    roles: ["DEV", "SA","GA"],
+  },
+
+
+
 
 
   {
@@ -560,9 +568,9 @@ export const routes = [
       icon: <Icon fontSize="small">add_circle</Icon>,
       route: "/verify-2fa",
       component: (
-        <ProtectedElement>
+       
           <Verify2FA />
-        </ProtectedElement>
+   
       ), 
       hideInSidebar: true,
       
