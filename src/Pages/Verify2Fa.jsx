@@ -1,17 +1,14 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 import { verify2FACode } from "../API/Auth";
-import {
-  Box,
-  Container,
-  Typography,
-  TextField,
-  Button,
-  Paper,
-} from "@mui/material";
+import { useAuth } from "../context/AuthContext"
+import { Box, Container, Paper, Typography, TextField, Button } from "@mui/material";
 import Swal from "sweetalert2";
 
 export function Verify2FA() {
+  const { login } = useAuth();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const tempToken = searchParams.get("tempToken");
   const [code, setCode] = useState("");
@@ -21,15 +18,22 @@ export function Verify2FA() {
     e.preventDefault();
 
     try {
-      const { success, error } = await verify2FACode(tempToken, code);
+      const { success, rol, error } = await verify2FACode(tempToken, code);
 
       if (success) {
+        login(rol);
         Swal.fire({
           icon: "success",
           title: "¡Código verificado!",
           text: "Has ingresado correctamente.",
           confirmButtonColor: "#2DA14C",
+          timer: 1500,
+          showConfirmButton: false,
         });
+
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 1600); // pequeño margen por si tarda en cerrarse el Swal
       } else {
         Swal.fire({
           icon: "error",
@@ -49,71 +53,69 @@ export function Verify2FA() {
   };
 
   return (
-    <div>
-      {/* <h2>Enter 2FA Code</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Enter code"
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-          required
-        />
-        <button type="submit">Verify</button>
-      </form>
-      {message && <p>{message}</p>} */}
-
-      <Box
+    <Box
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        bgcolor: "#f5f5f5",
+        p: 2,
+      }}
+    >
+      <Paper
+        elevation={6}
         sx={{
-          minHeight: "70vh",
+          width: 520,
+          height: 320,
+          p: 3,
+          borderRadius: 3,
           display: "flex",
-          alignItems: "center",
+          flexDirection: "column",
           justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          bgcolor: "#fff",
         }}
       >
-        <Container maxWidth="xs">
-          <Paper
-            elevation={5}
-            sx={{
-              p: 4,
-              borderRadius: 3,
-              textAlign: "center",
-              backgroundColor: "#fff",
-            }}
-          >
-            <Typography variant="h5" fontWeight={600} mb={2}>
-              Autenticación en dos pasos
-            </Typography>
+        <Typography variant="h5" fontWeight={600} mb={2}>
+          Autenticación en dos pasos
+        </Typography>
 
-            <Typography variant="body2" color="text.secondary" mb={3}>
-              Introduzca el código enviado a su correo o aplicación de
-              autenticación.
-            </Typography>
+        <Typography variant="body2" color="text.secondary" mb={3}>
+          Introduzca el código enviado a su correo.
+        </Typography>
 
-            <form onSubmit={handleSubmit}>
-              <TextField
-                fullWidth
-                label="Código de verificación"
-                variant="outlined"
-                margin="normal"
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-                required
-              />
+        <form onSubmit={handleSubmit} style={{ width: "100%" }}>
+          <TextField
+            fullWidth
+            label="Código de verificación"
+            variant="outlined"
+            margin="normal"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            required
+            inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+          />
 
-              <Button
-                type="submit"
-                variant="contained"
-                fullWidth
-                size="large"
-                 sx={{ mt: 2, backgroundColor: '#2DA14C', '&:hover': { backgroundColor: '#259b42' } }}
-              >
-                Verificar
-              </Button>
-            </form>
-          </Paper>
-        </Container>
-      </Box>
-    </div>
+          <Button
+  type="submit"
+  variant="contained"
+  fullWidth
+  size="large"
+  sx={{
+    mt: 2,
+    backgroundColor: "#2DA14C", // verde
+    color: "#fff",               // letras blancas
+    "&:hover": {
+      backgroundColor: "#1fcc4bff", // verde más oscuro al hacer hover
+    },
+  }}
+>
+  Verificar
+</Button>
+        </form>
+      </Paper>
+    </Box>
   );
-}
+};

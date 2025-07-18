@@ -50,10 +50,31 @@ export function ConsumptionPage() {
   return (
     <DashboardLayout>
       <DashboardNavbar></DashboardNavbar>
+
+      
+      <Grid container spacing={2} mb={2} mt={3}>
+        <Grid item size={{xs:12, md:3}}>
+          <Card>
+            <CardContent>
+              <Typography variant="h6">Total Consumo</Typography>
+              <Typography variant="h4"> kWh</Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item size={{xs:12, md:3}}>
+          <Card>
+            <CardContent>
+              <Typography variant="h6">Total Emisiones</Typography>
+              <Typography variant="h4">kg CO₂</Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+
       <MDBox py={3}>
         <Grid container spacing={3} sx={{ mb: 5 }}>
           {/* Header + Botón */}
-          <Grid item size={{ xs: 12 }}>
+          <Grid size={{ xs: 12 }}>
             <Card
               sx={{
                 background: "#ffffff",
@@ -70,14 +91,14 @@ export function ConsumptionPage() {
                   alignItems="center"
                   justifyContent="space-between"
                 >
-                  <Grid item>
+                  <Grid>
                     <MDBox display="flex" flexDirection="column" gap={1}>
                       <MDBox display="flex" flexDirection="column">
                         <MDBox display="flex" alignItems="center" gap={1}>
                           <MDTypography variant="h6">Consumos</MDTypography>
                         </MDBox>
                         <MDBox display="flex" alignItems="center" gap={1}>
-                          <MDTypography variant="body2" color="text">
+                          <MDTypography variant="body2" color="#495057">
                             Gestiona y monitorea todos los consumos de tu
                             empresa para calcular tu huella de carbono.
                           </MDTypography>

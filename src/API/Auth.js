@@ -2,19 +2,25 @@ import { appsettings } from "../settings/appsettings";
 
 
 export  async function verify2FACode(tempToken, code) {
+  console.log(tempToken);
+  console.log(code);
+
   try {
-    const response = await fetch(`${appsettings.apiUrl}/Auth/verify-2FA`, {
+    const response = await fetch(`${appsettings.apiUrl}Auth/verify-2FA`, {
       method: 'POST',
-       credentials: "include",
+      credentials: "include",
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({ tempToken, code }),
     });
     const data = await response.json();
 
+    console.log(data);
+
     if (response.ok) {
-      return { success: true };
+     
+      return { success: true,rol:data.rol };
     } else {
       return { success: false, error: data.error };
     }
@@ -38,17 +44,19 @@ export  async function loginUser(email, password) {
 
     const data = await response.json();
 
-    console.log(data.rol);
+    
     
 
     if (!response.ok) {
+      console.error("Detalles del error:", errorData, "Código:", response.status);
       return { success: false, error: data.error };
     }
 
-    if (data.isTwoFactor) {
+    if (data.message === "2FA required") {
       return {
         success: true,
         isTwoFactor: true,
+        tempToken: data.tempToken,
         rol: data.rol,
         id: data.id,
         groupId: data.grupo ,
@@ -66,7 +74,7 @@ export  async function loginUser(email, password) {
 export  async function sendInvite(email) {
 
   try {
-    const response = await fetch(`${appsettings.apiUrl}/sendInvite`, {
+    const response = await fetch(`${appsettings.apiUrl}Admin/sendInvite`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -151,11 +159,11 @@ export async function logoutSesion() {
   console.log("api");
   const response = await fetch(`${appsettings.apiUrl}Auth/logout`, {
     method: "POST",
-    credentials: "include", // importante para enviar la cookie
+    credentials: "include", 
   });
 
   if (response.ok) {
-    return true; // sesión cerrada correctamente
+    return true; 
   } else {
     return false;
   }
