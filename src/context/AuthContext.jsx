@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
     console.log("Guardando rol en contexto:", newRole);
     setRole(newRole);
     setUserId(id);
-    setUserGroupId(grupo);
+    setUserGroup(grupo);
     localStorage.setItem("userGroup", grupo);
     localStorage.setItem("userRole", newRole);
     localStorage.setItem("userId", id);
