@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
   const logoutRol = () => {
     setRole(null);
     setUserId(null);
-    setUserGroupId(null);
+    setUserGroup(null);
     localStorage.removeItem("userRole");
     localStorage.removeItem("userGroup");
     localStorage.removeItem("userId");
