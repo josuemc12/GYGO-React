@@ -10,22 +10,34 @@ import MDTypography from "components/MDTypography";
 import { Card, Grid, CardContent } from "@mui/material";
 import { useAuth } from "../context/AuthContext";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+
 export const DashboardGroupPage = () => {
+
   const { role } = useAuth();
   const [username, setUsername] = useState(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
+  
+    useEffect(() => {
+    const init = async () => {
+      if (document.cookie.includes("authToken")) {
+        const refreshed = await refreshLogin();
+        if (!refreshed) {
+          console.warn("Fallo el refresco de sesión");
+        }
+      }
+
       const response = await fetch(`${appsettings.apiUrl}User/UserProfile`, {
         method: "GET",
         credentials: "include",
       });
+
       if (response.ok) {
         const data = await response.json();
         setUsername(data.username);
       }
     };
-    fetchData();
+
+    init();
   }, []);
 
   return (

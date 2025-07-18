@@ -2,17 +2,17 @@ import { useState } from "react";
 import MDButton from "@/components/MDButton";
 import { appsettings } from "../settings/appsettings";
 
-export default function CancelSubscriptionButton({ userId, planId, onSuccess }) {
+export default function CancelSubscriptionButton({ subscriptionId, onSuccess }) {
   const [loading, setLoading] = useState(false);
-  const [open, setOpen] = useState(false);
 
   const handleCancel = async () => {
     setLoading(true);
     try {
+      console.log("subscriptionId:", subscriptionId);
       const url = new URL(`${appsettings.apiUrl}Subscription/cancel`);
-      url.searchParams.append("userId", userId);
-      url.searchParams.append("planId", planId);
+      url.searchParams.append("subscriptionId", subscriptionId);
       url.searchParams.append("reason", "User requested cancellation");
+      console.log("Request URL:", url.toString());
 
       const response = await fetch(url.toString(), {
         method: "POST",
@@ -22,7 +22,10 @@ export default function CancelSubscriptionButton({ userId, planId, onSuccess }) 
         },
       });
 
-      if (!response.ok) throw new Error("No se pudo cancelar la suscripción.");
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Error ${response.status}: ${errorText}`);
+      }
 
       alert("Suscripción cancelada exitosamente.");
       if (onSuccess) onSuccess();

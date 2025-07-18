@@ -169,3 +169,27 @@ export async function logoutSesion() {
   }
 }
 
+export async function refreshLogin() {
+    try {
+        const response = await fetch(`${appsettings.apiUrl}auth/refresh-login`, {
+            method: "POST",
+            credentials: "include", 
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            console.error("Failed to refresh login:", data);
+            return null;
+        }
+
+        console.log("Refreshed login successfully:", data);
+        return data;
+    } catch (error) {
+        console.error("Error calling refresh-login:", error);
+        return null;
+    }
+}

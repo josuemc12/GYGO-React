@@ -49,12 +49,17 @@ import {ContactUs} from "./Pages/Public/ContactUs";
 
 
 
-const ProtectedElement = ({ children, allowedRoles }) => {
-  const { role } = useAuth();
-  console.log("Role desde useAuth:", role);
+const ProtectedElement = ({ children, allowedRoles, requiresPayment = false }) => {
+  const { role, hasPaidGroupAdminAccess } = useAuth();
+
   if (!role) return <Navigate to="/login" replace />;
+
   if (allowedRoles && !allowedRoles.includes(role)) {
     return <Navigate to="/login" replace />;
+  }
+
+  if (requiresPayment && role === "GA" && !hasPaidGroupAdminAccess) {
+    return <Navigate to="/dashboard" replace />;
   }
 
   return children;
@@ -230,7 +235,7 @@ export const routes = [
         <AddGroupSAPage />
       </ProtectedElement>
     ),
-    roles: ["DEV"],
+    roles: ["DEV", "SA", "GA"],
   },
 
   //Ruta de Monthly History
