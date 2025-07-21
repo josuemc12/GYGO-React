@@ -494,7 +494,7 @@ function ProjectPage() {
     ),
     unidadreduccion: (
       <MDTypography variant="caption" color="text">
-        {project.unidadreduccion}
+        {project.unidadNombre}
       </MDTypography>
     ),
     cantidadReduccion: (

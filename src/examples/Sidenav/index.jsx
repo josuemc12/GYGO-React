@@ -73,6 +73,7 @@ const logoutSes = async () => {
   console.log("entro al log");
   const logout = await logoutSesion();
   if(logout){
+    logoutRol();
     navigate("/HomePage");
   }
    

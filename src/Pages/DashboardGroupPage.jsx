@@ -86,7 +86,7 @@ export const DashboardGroupPage = () => {
                 </CardContent>
               </Card>
             </Grid>
-            {role && role !== "DEF" ? (
+            {role && role !== "DEF"  ? (
               <ModernDashboardCards />
             ) : (
               <Card

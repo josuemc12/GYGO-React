@@ -5,15 +5,13 @@ import {
   getGroupUsers,
   sendUserInvite,
   removeUserFromGroup,
-  fetchGroupId
+  fetchGroupId,
 } from "../API/Admin";
-import {
-  getDeleteUsers,
-  getCountUserDelete
-} from "../API/DeleteLogs";
+import { getDeleteUsers, getCountUserDelete } from "../API/DeleteLogs";
 import "../App.css";
 import "../styles/AdminDashboard.css";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -52,7 +50,7 @@ import {
   Card,
 } from "@mui/material";
 
-import { refreshLogin } from "../API/Auth"; 
+import { refreshLogin } from "../API/Auth";
 
 const AdminUserDashboard = () => {
   const [users, setUsers] = useState([]);
@@ -65,18 +63,17 @@ const AdminUserDashboard = () => {
   const [historyRows, setHistoryRows] = useState([]);
   //var GROUP_ID = fetchGroupId();
 
-useEffect(() => {
-  fetchUsersEmail();
-}, []); // Solo se ejecuta una vez al montar
+  useEffect(() => {
+    fetchUsersEmail();
+  }, []); // Solo se ejecuta una vez al montar
 
-useEffect(() => {
-  if (showHistory) {
-    fetchDeleteLogs();
-  } else {
-    fetchUsers();
-  }
-}, [showHistory]);
-
+  useEffect(() => {
+    if (showHistory) {
+      fetchDeleteLogs();
+    } else {
+      fetchUsers();
+    }
+  }, [showHistory]);
 
   const fetchUsers = async () => {
     try {
@@ -95,9 +92,7 @@ useEffect(() => {
 
   const fetchUsersEmail = async () => {
     try {
-
       const userData = await getCountUserDelete();
-
     } catch (err) {
       setError("Failed to load users. Please try again.");
       console.error("Error fetching users:", err);
@@ -106,7 +101,6 @@ useEffect(() => {
     }
   };
 
-
   const handleInviteUser = async (email) => {
     try {
       setInviteLoading(true);
@@ -114,12 +108,17 @@ useEffect(() => {
 
       await sendUserInvite(email);
 
-      setSuccessMessage(`Invitation sent to ${email} successfully!`);
+      // Mostrar mensaje de éxito con SweetAlert
+      Swal.fire({
+        icon: "success",
+        title: "Invitation Sent",
+        text: `Invitation sent to ${email} successfully!`,
+        timer: 3000,
+        showConfirmButton: false,
+      });
       setInviteModalOpen(false);
 
       fetchUsers();
-
-      setTimeout(() => setSuccessMessage(""), 3000);
     } catch (err) {
       setError(err.message || "Failed to send invitation. Please try again.");
       console.error("Error sending invite:", err);
@@ -135,13 +134,23 @@ useEffect(() => {
       await removeUserFromGroup(userId);
 
       setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
-
-      setSuccessMessage("User removed successfully!");
-
-      setTimeout(() => setSuccessMessage(""), 3000);
+      Swal.fire({
+        icon: "success",
+        title: "Usuario eliminado",
+        text: "¡El usuario fue eliminado exitosamente!",
+        timer: 3000,
+        showConfirmButton: false,
+      });
     } catch (err) {
-      setError("Failed to remove user. Please try again.");
-      console.error("Error removing user:", err);
+     
+
+      Swal.fire({
+        icon: "error",
+        title: "Error al eliminar usuario",
+        text: "No se pudo eliminar el usuario. Por favor, inténtalo de nuevo.",
+        timer: 3000,
+        showConfirmButton: false,
+      });
 
       fetchUsers();
     }
@@ -189,7 +198,7 @@ useEffect(() => {
           <IconButton
             size="small"
             color="error"
-            onClick={() => handleRemoveClick(user.id, user.name)}
+            onClick={() => handleRemoveUser(user.id, user.name)}
           >
             <DeleteIcon fontSize="small" />
           </IconButton>
@@ -198,28 +207,27 @@ useEffect(() => {
     ),
   }));
 
+  const historyDeleteUsers = [
+    { Header: "Usuario Eliminado", accessor: "userName", align: "left" },
+    { Header: "Correo", accessor: "email", align: "left" },
+    { Header: "Fecha Eliminado", accessor: "deletedAt", align: "center" },
+    { Header: "Administrador", accessor: "deletedByAdminName", align: "left" },
+  ];
 
-const historyDeleteUsers = [
-  { Header: "Usuario Eliminado", accessor: "userName", align: "left" },
-  { Header: "Email", accessor: "email", align: "left" },
-  { Header: "Fecha Eliminado", accessor: "deletedAt", align: "center" },
-  { Header: "Admin", accessor: "deletedByAdminName", align: "left" },
-];
-
-const fetchDeleteLogs = async () => {
-  try {
-    const logs = await getDeleteUsers(); // tu API aquí
-    const rows = logs.map((log) => ({
-      userName: log.userName,
-      email: log.email,
-      deletedAt: new Date(log.deletedAt).toLocaleDateString(),
-      deletedByAdminName: log.deletedByAdminName || "N/A",
-    }));
-    setHistoryRows(rows);
-  } catch (error) {
-    console.error("Error loading delete history", error);
-  }
-};
+  const fetchDeleteLogs = async () => {
+    try {
+      const logs = await getDeleteUsers(); // tu API aquí
+      const rows = logs.map((log) => ({
+        userName: log.userName,
+        email: log.email,
+        deletedAt: new Date(log.deletedAt).toLocaleDateString(),
+        deletedByAdminName: log.deletedByAdminName || "N/A",
+      }));
+      setHistoryRows(rows);
+    } catch (error) {
+      console.error("Error loading delete history", error);
+    }
+  };
 
   return (
     <DashboardLayout>
@@ -247,11 +255,11 @@ const fetchDeleteLogs = async () => {
               </Grid>
 
               <Grid item>
-                  <MDButton
+                <MDButton
                   variant="outlined"
                   sx={{
                     mr: 2,
-                     borderColor: "#4CAF50",
+                    borderColor: "#4CAF50",
                     color: "#4CAF50",
                     "&:hover": {
                       backgroundColor: "#E8F5E9",
@@ -263,7 +271,6 @@ const fetchDeleteLogs = async () => {
                 >
                   Usuarios
                 </MDButton>
-
 
                 <MDButton
                   variant="outlined"
@@ -298,7 +305,7 @@ const fetchDeleteLogs = async () => {
                     setInviteModalOpen(true);
                   }}
                 >
-                  + Invite User
+                  + Invitar
                 </MDButton>
               </Grid>
             </Grid>
@@ -306,19 +313,19 @@ const fetchDeleteLogs = async () => {
             <div className="stats-grid" style={{ marginTop: "3rem" }}>
               <div className="stat-card">
                 <div className="stat-value">{users.length}</div>
-                <div className="stat-label">Total Users</div>
+                <div className="stat-label">Usuarios Totales</div>
               </div>
               <div className="stat-card">
                 <div className="stat-value">
                   {users.filter((user) => user.status === "active").length}
                 </div>
-                <div className="stat-label">Active Users</div>
+                <div className="stat-label">Usuarios Activos</div>
               </div>
               <div className="stat-card">
                 <div className="stat-value">
                   {users.filter((user) => user.status === "pending").length}
                 </div>
-                <div className="stat-label">Pending Invites</div>
+                <div className="stat-label">Invitaciones Pendientes</div>
               </div>
             </div>
           </MDBox>
@@ -338,8 +345,8 @@ const fetchDeleteLogs = async () => {
                     coloredShadow="success"
                   >
                     <MDTypography variant="h6" color="white" align="left">
-            {showHistory ? "Historial de Eliminaciones" : "Usuarios"}
-          </MDTypography>
+                      {showHistory ? "Historial de Eliminaciones" : "Usuarios"}
+                    </MDTypography>
                   </MDBox>
                   <MDBox
                     pt={3}
@@ -352,25 +359,27 @@ const fetchDeleteLogs = async () => {
                       justifyContent: "center",
                     }}
                   >
-                      {showHistory ? (
-            // 🔁 AQUI VA LA TABLA DE HISTORIAL
-            <DataTable
-              table={{ columns: historyDeleteUsers, rows: historyRows }}
-              isSorted={false}
-              entriesPerPage={false}
-              showTotalEntries={true}
-              noEndBorder
-            />
-          ) : (
-           
-            <DataTable
-              table={{ columns, rows }}
-              isSorted={false}
-              entriesPerPage={false}
-              showTotalEntries={true}
-              noEndBorder
-            />
-          )}
+                    {showHistory ? (
+                      // 🔁 AQUI VA LA TABLA DE HISTORIAL
+                      <DataTable
+                        table={{
+                          columns: historyDeleteUsers,
+                          rows: historyRows,
+                        }}
+                        isSorted={false}
+                        entriesPerPage={false}
+                        showTotalEntries={true}
+                        noEndBorder
+                      />
+                    ) : (
+                      <DataTable
+                        table={{ columns, rows }}
+                        isSorted={false}
+                        entriesPerPage={false}
+                        showTotalEntries={true}
+                        noEndBorder
+                      />
+                    )}
                   </MDBox>
                 </Card>
               </Grid>

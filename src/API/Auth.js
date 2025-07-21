@@ -96,7 +96,7 @@ export  async function sendInvite(email) {
 }
 
 export async function registerUser(inviteToken, { email, username, password }) {
-  
+   console.log(inviteToken);
   const url = inviteToken ? `User/register/${inviteToken}` : 'User/Register';
 
 
