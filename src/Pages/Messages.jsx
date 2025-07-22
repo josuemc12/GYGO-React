@@ -38,7 +38,6 @@ export function Messages() {
   const [availableUsers, setAvailableUsers] = useState([]);
   const [isLoadingUsers, setIsLoadingUsers] = useState(false);
   const { userId } = useAuth();
-  const {userGroup} =  useAuth();
   const connectionRef = useRef(null);
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
@@ -154,7 +153,7 @@ export function Messages() {
     if (connectionRef.current) {
       // Asumiendo que tienes un groupId, ajusta según tu lógica
       
-      connectionRef.current.invoke("GetUsersByGroup", userGroup);
+      connectionRef.current.invoke("GetUsersByGroup");
     }
   };
 
