@@ -81,10 +81,7 @@ export function MonthlyConsumptionPage() {
     setConsumosFiltrados(datosFiltrados);
   }, [filtros, consumosMensuales]);
 
-  const handleFiltroChange = (e) => {
-    const { name, value } = e.target;
-    setFiltros((prev) => ({ ...prev, [name]: value }));
-  };
+
 
   const limpiarFiltros = () => setFiltros({ mes: "", año: "" });
 

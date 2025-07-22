@@ -74,30 +74,47 @@ export default function App() {
 
   const hideSidebarRoutes = [
     "/login",
-    "/registro",
+  
     "/sendinvite",
     "/verify-2fa",
     "/",
     "/homepage",
     "/certificaciones",
-    "/Registro/:inviteToken",
+    "/registro",
+    "/registro/:inviteToken",
     "/servicios",
     "/nosotros",
     "/contactos",
   ];
-  const hideSidebar = hideSidebarRoutes.includes(pathname.toLowerCase());
+ const matchRoute = (route, path) => {
+  // Convertir rutas con params ":param" a regex
+  const pattern = "^" + route.replace(/:\w+/g, "[^/]+") + "$";
+  const regex = new RegExp(pattern, "i");
+  return regex.test(path);
+};
+
+const hideSidebar = hideSidebarRoutes.some((route) => {
+  if (route.includes(":")) {
+    return matchRoute(route, pathname.toLowerCase());
+  }
+  return route.toLowerCase() === pathname.toLowerCase();
+});
 
   const specialRoutes = [
     "/Login",
-    "/registro",
+    "registro",
+   "/registro/:inviteToken",
     "/sendinvite",
     "/verify-2fa",
-    "/Registro/:inviteToken",
+   
     "/",
   ];
-  const isSpecialRoute = specialRoutes.some((route) =>
-    pathname.toLowerCase().startsWith(route)
-  );
+ const isSpecialRoute = specialRoutes.some((route) => {
+  if (route.includes(":")) {
+    return matchRoute(route, pathname.toLowerCase());
+  }
+  return pathname.toLowerCase().startsWith(route.toLowerCase());
+});
 
   const { role } = useAuth();
 
@@ -201,7 +218,7 @@ const renderRoutes = (allRoutes) =>
       {layout === "vr" && <Configurator />}
       <Routes>
         {renderRoutes(filteredRoutes)}
-        <Route path="*" element={<Navigate to="/HomePage" />} />
+        <Route path="*" element={<Navigate to="/dashboard" />} />
       </Routes>
     </ThemeProvider>
   );

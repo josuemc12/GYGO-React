@@ -16,6 +16,7 @@ import Swal from "sweetalert2";
 import { PostChangePassword } from "../API/ChangePassword";
 import MDTypography from "components/MDTypography";
 import MDBox from "components/MDBox";
+import MDButton from "components/MDButton";
 
 export const ChangePasswordForm = () => {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -62,7 +63,7 @@ export const ChangePasswordForm = () => {
         return;
       }
     
-
+      console.log(result);
       if (result.success) {
         Swal.fire({
           icon: "success",
@@ -77,7 +78,7 @@ export const ChangePasswordForm = () => {
           Swal.fire({
           icon: "error",
           title: "Error al cambiar la contraseña",
-          text: result.error?.error || "Ocurrió un error inesperado",
+          text: result.error.message,
           confirmButtonColor: "#d33",
         });
         return;
@@ -155,18 +156,25 @@ export const ChangePasswordForm = () => {
                   />
                 </FormControl>
 
-                <Button
+                <MDButton
                   type="submit"
                   variant="contained"
-                  color="green"                  
+                  
                   disabled={loading}
+                     sx={{
+                    backgroundColor: "#4CAF50",
+                    color: "#ffff",
+                    "&:hover": {
+                      backgroundColor: "#388E3C",
+                    },
+                  }} 
                 >
                   {loading ? (
                     <CircularProgress size={24} color="inherit" />
                   ) : (
                     "Actualizar Contraseña"
                   )}
-                </Button>
+                </MDButton>
               </MDBox>
     </>
 

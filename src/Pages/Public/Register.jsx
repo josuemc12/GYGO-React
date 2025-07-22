@@ -42,10 +42,11 @@ const Paper = styled("div")(({ theme }) => ({
 }));
 
 export function Register() {
+ 
   const { inviteToken } = useParams();
   const [form, setForm] = useState({ email: "", username: "", password: "" });
   const [message, setMessage] = useState("");
-
+ console.log(inviteToken);
   const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
@@ -87,6 +88,8 @@ export function Register() {
     }
 
     try {
+
+      console.log(inviteToken);
       const response = await registerUser(inviteToken, form);
 
       if (response.success) {
@@ -96,7 +99,7 @@ export function Register() {
           text: "El usuario ha sido registrado correctamente.",
           confirmButtonColor: "#2DA14C",
         }).then(() => {
-          window.location.href = "/DashboardGroupPage";
+          window.location.href = "/login";
         });
         return;
       } else {

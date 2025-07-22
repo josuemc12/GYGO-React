@@ -36,21 +36,33 @@ import {
 // Material Dashboard 2 React context
 import { useMaterialUIController } from "../../context/index";
 
-function SidenavCollapse({ icon, name, active = false, ...rest }) {
+function SidenavCollapse({ icon, name, active, noCollapse, sx, rightIcon, onClick, ...rest }) {
   const [controller] = useMaterialUIController();
   const { miniSidenav, transparentSidenav, whiteSidenav, darkMode, sidenavColor } = controller;
 
   return (
-    <ListItem component="li">
+    <ListItem
+      component="li"
+      onClick={onClick}
+      sx={(theme) => ({
+        cursor: "pointer",
+        pl: sx?.pl || 0, // padding-left para indentación de subitems
+      })}
+    >
       <MDBox
         {...rest}
         sx={(theme) =>
-          collapseItem(theme, {
+          Object.assign({}, collapseItem(theme, {
             active,
             transparentSidenav,
             whiteSidenav,
             darkMode,
             sidenavColor,
+          }), {
+            display: "flex",
+            alignItems: "center",
+            width: "100%",
+            paddingLeft: 0, // para evitar conflicto con padding-left en ListItem
           })
         }
       >
@@ -77,17 +89,24 @@ function SidenavCollapse({ icon, name, active = false, ...rest }) {
             })
           }
         />
+
+        {rightIcon && (
+          <MDBox ml="auto" display="flex" alignItems="center">
+            {rightIcon}
+          </MDBox>
+        )}
       </MDBox>
     </ListItem>
   );
 }
-
 
 // Typechecking props for the SidenavCollapse
 SidenavCollapse.propTypes = {
   icon: PropTypes.node.isRequired,
   name: PropTypes.string.isRequired,
   active: PropTypes.bool,
+  rightIcon: PropTypes.node,
+  onClick: PropTypes.func,
 };
 
 export default SidenavCollapse;

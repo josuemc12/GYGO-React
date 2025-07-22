@@ -3,31 +3,67 @@ import { GetIncidentsHistory } from "../API/IncidentsHistory";
 import {
   Grid,
   Card,
-  CardContent
+  CardContent,
+  FormControl, InputLabel, Select, MenuItem
 } from "@mui/material";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import MDBox from "components/MDBox";
+import MDButton from "components/MDButton";
 import MDTypography from "components/MDTypography";
 import Footer from "examples/Footer";
 import DataTable from "examples/Tables/DataTable";
 
+const meses = [
+  { value: "", label: "Todos los meses" },
+  { value: 1, label: "Enero" },
+  { value: 2, label: "Febrero" },
+  { value: 3, label: "Marzo" },
+  { value: 4, label: "Abril" },
+  { value: 5, label: "Mayo" },
+  { value: 6, label: "Junio" },
+  { value: 7, label: "Julio" },
+  { value: 8, label: "Agosto" },
+  { value: 9, label: "Septiembre" },
+  { value: 10, label: "Octubre" },
+  { value: 11, label: "Noviembre" },
+  { value: 12, label: "Diciembre" },
+];
+
+const años = [
+  { value: "", label: "Todos los años" },
+  { value: 2025, label: "2025" },
+  { value: 2024, label: "2024" },
+  { value: 2023, label: "2023" },
+];
+
 const IncidentsHistoryPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [incidents, setIncidents] = useState([]);
+  const [filtros, setFiltros] = useState({ mes: "", año: "" });
+  const [filteredIncidents, setFilteredIncidents] = useState([]);
 
   const getIncidents = async () => {
     setIsLoading(true);
     try {
       const response = await GetIncidentsHistory();
-      const transformed = response.map((i) => ({
-        id: i.id,
-        fecha: new Date(i.detectedAt).toLocaleDateString(),
-        promedio: `${i.expectedAverage.toFixed(2)} kg CO₂`,
-        reales: `${i.realEmissions.toFixed(2)} kg CO₂`,
-        leido: i.isRead ? "✔️" : "❌",
-      }));
+      const transformed = response.map((i) => {
+
+        const fecha = new Date(i.detectedAt);
+        const month = fecha.getMonth() + 1;
+        const year = fecha.getFullYear();
+
+        return {
+          id: i.id,
+          fecha: fecha.toLocaleDateString(),
+          promedio: `${i.expectedAverage.toFixed(2)} kg CO₂`,
+          reales: `${i.realEmissions.toFixed(2)} kg CO₂`,
+          leido: i.isRead ? "✔️" : "❌",
+          month,
+          year
+        }
+      });
       setIncidents(transformed);
     } catch (err) {
       console.log("Error al cargar incidentes: ", err);
@@ -36,9 +72,27 @@ const IncidentsHistoryPage = () => {
     }
   };
 
+
   useEffect(() => {
     getIncidents();
   }, []);
+
+  useEffect(() => {
+  setFilteredIncidents(incidents);
+}, [incidents]);
+
+
+
+  useEffect(() => {
+    let datosFiltrados = [...incidents];
+    if (filtros.mes !== "") {
+      datosFiltrados = datosFiltrados.filter(i => i.month === Number(filtros.mes));
+    }
+    if (filtros.año !== "") {
+      datosFiltrados = datosFiltrados.filter(i => i.year === Number(filtros.año));
+    }
+    setFilteredIncidents(datosFiltrados);
+  }, [filtros, incidents]);
 
   const columns = [
     { Header: "Fecha", accessor: "fecha", align: "left" },
@@ -47,19 +101,19 @@ const IncidentsHistoryPage = () => {
     { Header: "Leído", accessor: "leido", align: "center" },
   ];
 
-  const rows = incidents.map((i) => ({
+  const rows = filteredIncidents.map((i) => ({
     fecha: (
       <MDTypography variant="caption" fontWeight="medium">
         {i.fecha}
       </MDTypography>
     ),
     promedio: (
-      <MDTypography variant="caption" color="text" sx={{color: "#495057"}}>
+      <MDTypography variant="caption" color="text" sx={{ color: "#495057" }}>
         {i.promedio}
       </MDTypography>
     ),
     reales: (
-      <MDTypography variant="caption" color="text" sx={{color: "#495057"}}>
+      <MDTypography variant="caption" color="text" sx={{ color: "#495057" }}>
         {i.reales}
       </MDTypography>
     ),
@@ -72,10 +126,72 @@ const IncidentsHistoryPage = () => {
 
   return (
     <DashboardLayout>
-        <DashboardNavbar></DashboardNavbar>
+      <DashboardNavbar></DashboardNavbar>
       <MDBox py={3}>
         <Grid container spacing={3} sx={{ mb: 5 }}>
-          <Grid size={{xs:12}}>
+          <Grid item size={{ xs: 12 }} sx={{ mb: 2 }}>
+            <Card sx={{ p: 3 }}>
+              <Grid container spacing={2} alignItems="center">
+                {/* Mes */}
+                <Grid item size={{ xs: 12, md: 5 }}>
+                  <FormControl fullWidth variant="outlined">
+                    <InputLabel id="mes-label">Mes</InputLabel>
+                    <Select
+                      id="mes-select"
+                      labelId="mes-label"
+                      name="mes"
+                      value={filtros.mes}
+                      label="Mes"
+                      sx={{ height: 40 }}
+                      onChange={(e) =>
+                        setFiltros((prev) => ({ ...prev, mes: e.target.value }))
+                      }
+                    >
+                      {meses.map((mes) => (
+                        <MenuItem key={mes.value} value={mes.value}>
+                          {mes.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                {/* Año */}
+                <Grid item size={{ xs: 12, md: 5 }}>
+                  <FormControl fullWidth>
+                    <InputLabel>Año</InputLabel>
+                    <Select
+                      name="año"
+                      sx={{ height: 40 }}
+                      value={filtros.año}
+                      label="Año"
+                      onChange={(e) =>
+                        setFiltros((prev) => ({ ...prev, año: e.target.value }))
+                      }
+                    >
+                      {años.map((año) => (
+                        <MenuItem key={año.value} value={año.value}>
+                          {año.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                <Grid item size={{ xs: 12, md: 2 }}>
+                  <MDButton
+                    variant="outlined"
+                    onClick={() => setFiltros({ mes: "", año: "" })}
+                    color="secondary"
+                  >
+                    Limpiar Filtros
+                  </MDButton>
+                </Grid>
+              </Grid>
+            </Card>
+          </Grid>
+
+          <Grid size={{ xs: 12 }}>
             <Card
               sx={{
                 background: "#ffffff",
@@ -95,13 +211,13 @@ const IncidentsHistoryPage = () => {
                       </MDTypography>
                     </MDBox>
                   </Grid>
-                  
+
                 </Grid>
               </CardContent>
             </Card>
           </Grid>
 
-          <Grid size={{xs:12}}>
+          <Grid size={{ xs: 12 }}>
             <Card>
               <MDBox
                 mx={2}
