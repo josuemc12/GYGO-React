@@ -14,6 +14,7 @@ import MDButton from "components/MDButton";
 import MDTypography from "components/MDTypography";
 import Footer from "examples/Footer";
 import DataTable from "examples/Tables/DataTable";
+import { GetYearsByGroup } from "../API/Consumptions/MonthlyConsum";
 
 const meses = [
   { value: "", label: "Todos los meses" },
@@ -31,16 +32,12 @@ const meses = [
   { value: 12, label: "Diciembre" },
 ];
 
-const años = [
-  { value: "", label: "Todos los años" },
-  { value: 2025, label: "2025" },
-  { value: 2024, label: "2024" },
-  { value: 2023, label: "2023" },
-];
 
 const IncidentsHistoryPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [incidents, setIncidents] = useState([]);
+  const [availableYears, setAvailableYears] = useState([]);
+  const [loadingYears, setLoadingYears] = useState(true);
   const [filtros, setFiltros] = useState({ mes: "", año: "" });
   const [filteredIncidents, setFilteredIncidents] = useState([]);
 
@@ -76,6 +73,17 @@ const IncidentsHistoryPage = () => {
   useEffect(() => {
     getIncidents();
   }, []);
+
+useEffect(() => {
+    const fetchYears = async () => {
+      setLoadingYears(true);
+      const result = await GetYearsByGroup();
+      setAvailableYears(result);
+      setLoadingYears(false);
+    };
+    fetchYears()
+  }, [])
+
 
   useEffect(() => {
   setFilteredIncidents(incidents);
@@ -169,11 +177,12 @@ const IncidentsHistoryPage = () => {
                         setFiltros((prev) => ({ ...prev, año: e.target.value }))
                       }
                     >
-                      {años.map((año) => (
-                        <MenuItem key={año.value} value={año.value}>
-                          {año.label}
-                        </MenuItem>
-                      ))}
+                      <MenuItem value="">Seleccione</MenuItem>
+                        {availableYears.map((y) => (
+                          <MenuItem key={y.yearlyConsumptionId} value={y.year}>
+                            {y.year}
+                          </MenuItem>
+                        ))}
                     </Select>
                   </FormControl>
                 </Grid>
