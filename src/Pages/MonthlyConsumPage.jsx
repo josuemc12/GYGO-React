@@ -18,6 +18,7 @@ import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 import "../styles/monthlyConsum.css";
 import { MonthlyConsumptionTable } from "../components/MonthlyConsumTable";
+import { GetYearsByGroup } from "../API/Consumptions/MonthlyConsum";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
@@ -38,12 +39,6 @@ const meses = [
   { value: 12, label: "Diciembre" },
 ];
 
-const años = [
-  { value: "", label: "Todos los años" },
-  { value: 2025, label: "2025" },
-  { value: 2024, label: "2024" },
-  { value: 2023, label: "2023" },
-];
 
 export function MonthlyConsumptionPage() {
   const location = useLocation();
@@ -55,6 +50,8 @@ export function MonthlyConsumptionPage() {
   const [consumosFiltrados, setConsumosFiltrados] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filtros, setFiltros] = useState({ mes: "", año: "" });
+  const [availableYears, setAvailableYears] = useState([]);
+  const [loadingYears, setLoadingYears] = useState(true);
 
    const handleAddMonthlyConsumption = () => {
     navigate(`/consumption/monthly/add/${id}`);
@@ -71,6 +68,16 @@ export function MonthlyConsumptionPage() {
   }, [id]);
 
   useEffect(() => {
+      const fetchYears = async () => {
+        setLoadingYears(true);
+        const result = await GetYearsByGroup();
+        setAvailableYears(result);
+        setLoadingYears(false);
+      };
+      fetchYears()
+    }, [])
+
+  useEffect(() => {
     let datosFiltrados = [...consumosMensuales];
     if (filtros.mes !== "") {
       datosFiltrados = datosFiltrados.filter(c => c.month === Number(filtros.mes));
@@ -81,10 +88,7 @@ export function MonthlyConsumptionPage() {
     setConsumosFiltrados(datosFiltrados);
   }, [filtros, consumosMensuales]);
 
-  const handleFiltroChange = (e) => {
-    const { name, value } = e.target;
-    setFiltros((prev) => ({ ...prev, [name]: value }));
-  };
+
 
   const limpiarFiltros = () => setFiltros({ mes: "", año: "" });
 
@@ -201,11 +205,12 @@ export function MonthlyConsumptionPage() {
                         setFiltros((prev) => ({ ...prev, año: e.target.value }))
                       }
                     >
-                      {años.map((año) => (
-                        <MenuItem key={año.value} value={año.value}>
-                          {año.label}
-                        </MenuItem>
-                      ))}
+                      <MenuItem value="">Seleccione</MenuItem>
+                        {availableYears.map((y) => (
+                          <MenuItem key={y.yearlyConsumptionId} value={y.year}>
+                            {y.year}
+                          </MenuItem>
+                        ))}
                     </Select>
                   </FormControl>
                 </Grid>

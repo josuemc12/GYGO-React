@@ -90,7 +90,8 @@ export default function Login() {
       } else {
          console.log("Rol que se va a guardar:", rol);
          console.log("ID que se va a guardar:", id);
-        login(rol,id,groupId); // Save role and userId in context
+         login(rol); // Save role and userId in context
+
         // Normal login success — redirect to dashboard or home
         navigate("/Dashboard");
       }

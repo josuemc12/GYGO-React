@@ -150,34 +150,37 @@ function DashboardNavbar({ absolute = false, light = false, isMini = false }) {
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
             <MDBox color={light ? "white" : "inherit"}>
-              <IconButton
-                sx={navbarIconButton}
-                size="small"
-                disableRipple
-                onClick={handleOpenMailMenu}
-              >
-                <Icon sx={iconsStyle}>mail</Icon>
-              </IconButton>
+              {allowedRolesForGroup.includes(role) && (
+                <>
+                  <IconButton
+                    sx={navbarIconButton}
+                    size="small"
+                    disableRipple
+                    onClick={handleOpenMailMenu}
+                  >
+                    <Icon sx={iconsStyle}>mail</Icon>
+                  </IconButton>
 
-              <Menu
-                anchorEl={anchorElMail}
-                open={Boolean(anchorElMail)}
-                onClose={handleCloseMailMenu}
-                anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-                transformOrigin={{ vertical: "top", horizontal: "left" }}
-              >
-                <Link
-                  to="/Messages"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  <NotificationItem
-                    icon={<Icon>chat</Icon>}
-                    title="Mensajes"
-                    onClick={handleCloseMailMenu}
-                  />
-                </Link>
-              </Menu>
-
+                  <Menu
+                    anchorEl={anchorElMail}
+                    open={Boolean(anchorElMail)}
+                    onClose={handleCloseMailMenu}
+                    anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+                    transformOrigin={{ vertical: "top", horizontal: "left" }}
+                  >
+                    <Link
+                      to="/Messages"
+                      style={{ textDecoration: "none", color: "inherit" }}
+                    >
+                      <NotificationItem
+                        icon={<Icon>chat</Icon>}
+                        title="Mensajes"
+                        onClick={handleCloseMailMenu}
+                      />
+                    </Link>
+                  </Menu>
+                </>
+              )}
               <IconButton
                 sx={navbarIconButton}
                 size="small"
@@ -210,6 +213,17 @@ function DashboardNavbar({ absolute = false, light = false, isMini = false }) {
                     onClick={handleCloseMenu}
                   />
                 </Link>
+  <Link
+                  to="/subscription"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  <NotificationItem
+                    icon={<Icon>receipt_long</Icon>}
+                    title="Suscripción"
+                    onClick={handleCloseMenu}
+                  />
+                </Link>
+
                 {allowedRolesForGroup.includes(role) && (
                   <Link
                     to="/groupProfile"

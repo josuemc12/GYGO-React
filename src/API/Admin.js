@@ -90,21 +90,23 @@ export const sendUserInvite = async (email) => {
 
 export const removeUserFromGroup = async (userId) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/removeFromGroup/${userId}`, {
+    console.log(userId);
+    const response = await fetch(`${appsettings.apiUrl}Admin/removeFromGroup/${userId}`, 
+      {
       method: "PUT",
-      mode: "cors",
       credentials: "include",
-      headers: {
-        Accept: "application/json",
+            headers: {
+        Accept: "text/plain", // El backend devuelve texto
       },
+
     });
 
     if (!response.ok) {
       throw new Error(`Failed to remove user: ${response.statusText}`);
     }
 
-    const data = await parseJSON(response);
-    return data;
+    const resultText = await response.text(); 
+    return resultText;
   } catch (error) {
     console.error("Error removing user:", error);
     throw error;

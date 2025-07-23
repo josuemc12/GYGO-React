@@ -5,27 +5,26 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [role, setRole] = useState(() => localStorage.getItem("userRole"));
-  const [userId, setUserId] = useState(() => localStorage.getItem("userId") || null);
-  const [userGroup, setUserGroup] = useState(() => localStorage.getItem("userGroup") || null);
-  const [hasPaidGroupAdminAccess, setHasPaidGroupAdminAccess] = useState(false);
+  // const [userId, setUserId] = useState(() => localStorage.getItem("userId") || null);
+  // const [userGroup, setUserGroupId] = useState(() => localStorage.getItem("userGroup") || null);
+  // const [hasPaidGroupAdminAccess, setHasPaidGroupAdminAccess] = useState(false);
 
-  const login = (newRole, id,grupo) => {
-    console.log("Guardando rol en contexto:", newRole);
+  const login = (newRole) => {
     setRole(newRole);
-    setUserId(id);
-    setUserGroup(grupo);
-    localStorage.setItem("userGroup", grupo);
+    // setUserId(id);
+    // setUserGroupId(grupo);
+    // localStorage.setItem("userGroup", grupo);
     localStorage.setItem("userRole", newRole);
-    localStorage.setItem("userId", id);
+    // localStorage.setItem("userId", id);
   };
 
   const logoutRol = () => {
     setRole(null);
-    setUserId(null);
-    setUserGroup(null);
+    // setUserId(null);
+    // setUserGroupId(null);
     localStorage.removeItem("userRole");
-    localStorage.removeItem("userGroup");
-    localStorage.removeItem("userId");
+    // localStorage.removeItem("userGroup");
+    // localStorage.removeItem("userId");
   };
 
   const refreshUserData = async () => {
@@ -56,14 +55,14 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         role,
-        userId,
-        hasPaidGroupAdminAccess,
-        userGroup,
+        // userId,
+        // hasPaidGroupAdminAccess,
+        // userGroup,
         login,
         logoutRol,
-        refreshUserData,
-        markUserAsPaid,
-        updateRole,
+        // refreshUserData,
+        // markUserAsPaid,
+        // updateRole,
       }}
     >
       {children}
