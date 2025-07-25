@@ -121,7 +121,7 @@ export const routes = [
         <DashboardGroupPage />
       </ProtectedElement>
     ),
-    roles: ["DEV", "GA", "GU", "DEF"],
+    roles: ["DEV", "GA", "GU", "DEF", "SA"],
     hideInSidebar: true,
   },
 
