@@ -3,10 +3,11 @@ import React, { useState, useEffect } from "react";
 
 import {
   getUsers,
-  getUsersbyRol
+  getUsersbyRol,
+  sendDefaultUserInvite
 } from "../API/ManagmentUsers";
 
-
+import InviteModal from "../components/InviteModal";
 
 import {
   Grid,
@@ -74,8 +75,10 @@ function ManagmentUsers() {
 
   const [projectId, setProjectId] = useState(null);
   const [reductionUnit, setReductionUnit] = useState(null);
+    const [error, setError] = useState("");
   const [editTaskId, setEditTaskId] = useState(null);
-
+const [inviteModalOpen, setInviteModalOpen] = useState(false);
+const [inviteLoading, setInviteLoading] = useState(false);
  
   const fetchUsers = async () => {
     try {
@@ -94,6 +97,39 @@ function ManagmentUsers() {
       console.error(err);
     }
   };
+
+  const handleInviteUser = async (email) => {
+      try {
+        setInviteLoading(true);
+        setError("");
+  
+        await sendDefaultUserInvite(email);
+  
+        // Mostrar mensaje de éxito con SweetAlert
+        Swal.fire({
+          icon: "success",
+          title: "Invitación Enviada",
+          text: `Invitación enviada exitosamente a ${email}`,
+          timer: 3000,
+          showConfirmButton: false,
+        });
+        setInviteModalOpen(false);
+  
+        fetchUsers();
+      } catch (err) {
+        Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: err.message || "No se pudo enviar la invitación. Intenta nuevamente.",
+      confirmButtonText: "Cerrar",
+      customClass: {
+    container: 'swal-top'
+  }
+    });
+      } finally {
+        setInviteLoading(false);
+      }
+    };
 
   useEffect(() => { 
       fetchUsers();
@@ -204,6 +240,7 @@ function ManagmentUsers() {
                 </Grid>
                 <Grid item>
                   <MDButton
+                  onClick={() => {setInviteModalOpen(true)}}
                   variant="outlined"
                   sx={{
                     borderColor: "#4CAF50",
@@ -301,7 +338,12 @@ function ManagmentUsers() {
       
       </MDBox>
 
-  
+  <InviteModal
+          isOpen={inviteModalOpen}
+          onClose={() => setInviteModalOpen(false)}
+          onInvite={handleInviteUser}
+          loading={inviteLoading}
+        />
         <Footer />
     </DashboardLayout>
   );

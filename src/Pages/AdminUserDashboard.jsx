@@ -111,8 +111,8 @@ const AdminUserDashboard = () => {
       // Mostrar mensaje de éxito con SweetAlert
       Swal.fire({
         icon: "success",
-        title: "Invitation Sent",
-        text: `Invitation sent to ${email} successfully!`,
+        title: "invitación enviada",
+        text: `Invitación enviada exitosamente a ${email}`,
         timer: 3000,
         showConfirmButton: false,
       });
