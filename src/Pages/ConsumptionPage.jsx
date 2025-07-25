@@ -113,28 +113,6 @@ export function ConsumptionPage() {
                   </Grid>
                 </Grid>
               </CardContent>
-
-                    <Grid container spacing={2} mb={2}>
-        <Grid item xs={12} md={3}>
-          <Card sx={{ p: 2, borderLeft: "4px solid #376D4F" }}>
-            <CardContent>
-              <Typography variant="h6">Total Consumo</Typography>
-              <Typography variant="h4">0 kWh</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} md={3}>
-          <Card sx={{ p: 2, borderLeft: "4px solid #376D4F" }}>
-            <CardContent>
-              <Typography variant="h6">Total Emisiones</Typography>
-              <Typography variant="h4"> 0 kg CO₂</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-
-
-
             </Card>
 
             

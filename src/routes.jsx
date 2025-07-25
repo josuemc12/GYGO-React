@@ -93,20 +93,20 @@ export const routes = [
 
   },
 
-    {
-     type: "collapse",
-    name: "Manejo de usuarios",
-    key: "ManagmentUsers",
-    icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/ManagmentUsers",
+  //   {
+  //    type: "collapse",
+  //   name: "Manejo de usuarios",
+  //   key: "ManagmentUsers",
+  //   icon: <Icon fontSize="small">dashboard</Icon>,
+  //   route: "/ManagmentUsers",
 
-    component: (
-      <ProtectedElement>
-        <ManagmentUsers />
-      </ProtectedElement>
-    ),
+  //   component: (
+  //     <ProtectedElement>
+  //       <ManagmentUsers />
+  //     </ProtectedElement>
+  //   ),
     
-  },
+  // },
 
 
   //Ruta de dashboard no visible
@@ -170,24 +170,6 @@ export const routes = [
     roles: ["GA", "GU", "DEV","SA"],
   },
 
-
-  
-
-  //Ruta de DashboardConsumo
-  {
-    type: "collapse",
-    name: "DashboardConsumo",
-    key: "DashboardConsumo",
-    icon: <Icon fontSize="small">table_view</Icon>,
-    route: "/DashboardConsumo",
-
-    component: (
-      <ProtectedElement>
-        <DashboardConsumo />
-      </ProtectedElement>
-    ),
-    roles: ["GA", "GU", "DEV"],
-  },
 
   //Ruta de consumo
   {
@@ -630,7 +612,7 @@ export const routes = [
             <ReportServices />
           </ProtectedElement>
         ),
-        roles: ["SA", "DEV","GA"],
+        roles: ["SA", "DEV"],
       },
 
 

@@ -74,6 +74,7 @@ const EmissionFactorModal = ({ isOpen,
 
   const handleInputChange = (e) => {
   const { name, value, type } = e.target;
+  
   setFormData((prev) => ({
     ...prev,
     [name]:
@@ -275,6 +276,8 @@ const EmissionFactorModal = ({ isOpen,
               <MDTypography variant="caption" fontWeight="medium" mb={1}>
                 PCG (Greenhouse Gas)
               </MDTypography>
+             
+
               <select
                 name="pcgId"
                 value={formData.pcgId}
@@ -292,8 +295,9 @@ const EmissionFactorModal = ({ isOpen,
               >
                 <option value={0}>Selecciona el PCG...</option>
                 {pcgs.map((pcg) => (
+                  
                   <option key={pcg.id} value={pcg.id}>
-                    {pcg.name}
+                     {pcg.name ? pcg.name : `Sin nombre (ID: ${pcg.id})`}
                   </option>
                 ))}
               </select>
