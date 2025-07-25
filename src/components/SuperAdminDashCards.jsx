@@ -184,7 +184,7 @@ export const SuperAdminDashCards = () => {
                         border: "1px solid #e5e7eb",
                     }}
                 >
-                    <CardContent sx={{ p: 3 }}>
+                    <CardContent sx={{ p: 3, height: "100%", display: "flex", flexDirection: "column" }}>
                         <Box display="flex" alignItems="center" mb={3}>
                             <Avatar sx={{ bgcolor: "#376D4F", mr: 2, width: 40, height: 40 }}>
                                 <Assessment />
@@ -193,7 +193,22 @@ export const SuperAdminDashCards = () => {
                                 Métricas Globales
                             </Typography>
                         </Box>
-                        <Box sx={{ flexGrow: 1 }}>
+                        <Box sx={{
+                            flexGrow: 1, overflowY: "auto", pr: 3, 
+                            "&::-webkit-scrollbar": {
+                                width: "5px", 
+                            },
+                            "&::-webkit-scrollbar-track": {
+                                backgroundColor: "transparent", 
+                            },
+                            "&::-webkit-scrollbar-thumb": {
+                                backgroundColor: "#cbd5e1",
+                                borderRadius: "4px",
+                            },
+                            "&::-webkit-scrollbar-thumb:hover": {
+                                backgroundColor: "#94a3b8",
+                            },
+                        }}>
                             {[
                                 { label: "Grupos", value: totalGroups },
                                 { label: "Usuarios", value: totalUsers },
