@@ -46,8 +46,7 @@ import { Verify2FA } from "./Pages/Verify2Fa";
 import { ServicesHomePage } from "./Pages/Public/ServicesPage";
 import { AboutUs } from "./Pages/Public/AboutUs";   
 import {ContactUs} from "./Pages/Public/ContactUs";
-
-
+import {ChangePassword} from "./Pages/Public/ChangePassword";
 
 const ProtectedElement = ({ children, allowedRoles, requiresPayment = false }) => {
   const { role, hasPaidGroupAdminAccess } = useAuth();
@@ -317,6 +316,16 @@ export const routes = [
     hideInSidebar: true,
   },
 
+
+    //Ruta de cambio de contra publico
+  {
+    type: "collapse",
+    name: "ChangePasswordPublic",
+    key: "ChangePasswordPublic",
+    route: "/ChangePassword",
+    component: <ChangePassword />,
+    hideInSidebar: true,
+  },
 
 
   //Gestiones para el Super Administrador

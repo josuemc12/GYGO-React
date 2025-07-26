@@ -85,6 +85,7 @@ export default function App() {
     "/servicios",
     "/nosotros",
     "/contactos",
+    "/ChangePassword",
   ];
  const matchRoute = (route, path) => {
   // Convertir rutas con params ":param" a regex
@@ -106,7 +107,7 @@ const hideSidebar = hideSidebarRoutes.some((route) => {
    "/registro/:inviteToken",
     "/sendinvite",
     "/verify-2fa",
-   
+   "/ChangePassword",
     "/",
   ];
  const isSpecialRoute = specialRoutes.some((route) => {

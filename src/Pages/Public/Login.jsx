@@ -186,7 +186,7 @@ export default function Login() {
                   color="primary"
                   align="right"
                   sx={{ mb: 2, cursor: "pointer", textDecoration: "underline" }}
-                  onClick={() => navigate("/ChangePasswordPage")}
+                  onClick={() => navigate("/ChangePassword")}
                 >
                   ¿Olvidaste tu contraseña?
                 </Typography>
