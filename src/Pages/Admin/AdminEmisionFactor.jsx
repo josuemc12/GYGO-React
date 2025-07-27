@@ -59,7 +59,7 @@ const EmissionFactorDashboard = () => {
         setLoading(false);
       }
     };
-
+    console.log(emissionFactors)
     fetchEmissionFactors();
   }, []);
 
@@ -73,7 +73,6 @@ const EmissionFactorDashboard = () => {
           getSources(),
           getAllPCGs(),
         ]);
-
         const units = unitsRaw.map((u) => ({ id: u.unidadId, name: u.nombre }));
         const sectors = sectorsRaw.map((s) => ({
           id: s.sectorId,
@@ -83,7 +82,7 @@ const EmissionFactorDashboard = () => {
           id: s.fuenteId,
           name: s.nombre,
         }));
-        const pcgs = pcgsRaw.map((p) => ({ id: p.pcgId, name: p.nombre }));
+        const pcgs = pcgsRaw.map((p) => ({ id: p.pcgId, name: p.gei }));
 
         setMeasurementUnits(units);
         setSectors(sectors);
@@ -131,9 +130,20 @@ const EmissionFactorDashboard = () => {
   };
 
   const handleEdit = (factor) => {
-    setEditingFactor(factor);
-    setIsModalOpen(true);
-  };
+  setEditingFactor({
+    id: factor.id,
+    name: factor.name,
+    valueUnit: factor.valueUnit,
+    valueEmision: factor.valueEmision,
+    valueFactor: factor.valueFactor,
+    unitId: factor.unit,              
+    unitCarbonId: factor.unitCarbono,
+    pcgId: factor.pcg,
+    sectorId: factor.sector,
+    sourceId: factor.source,
+  });
+  setIsModalOpen(true);
+};
 
   const handleModalClose = () => {
     setIsModalOpen(false);
@@ -199,79 +209,66 @@ const EmissionFactorDashboard = () => {
   ];
 
   const rows = filteredFactors.map((factor) => ({
-    nombre: (
-      <MDTypography variant="caption" fontWeight="medium">
-        {factor.name}
-      </MDTypography>
-    ),
-    UnidadPrimaria: (
-      <MDTypography variant="caption" color="text">
-        {factor.unit}
-      </MDTypography>
-    ),
-    ValorUnitario: (
-      <MDTypography variant="caption" color="text">
-        {factor.unitCarbono}
-      </MDTypography>
-    ),
-    ValorCarbon: (
-      <MDTypography variant="caption" color="text">
-        {factor.valueUnit}
-      </MDTypography>
-    ),
-    Factoremisión: (
-      <MDTypography variant="caption" color="text">
-        {factor.valueEmision}
-      </MDTypography>
-    ),
-    PCG: (
-      <MDTypography variant="caption" color="text">
-        {factor.valueUnit / factor.valueEmision}
-      </MDTypography>
-    ),
-    Sector: (
-      <MDTypography variant="caption" color="text">
-        {factor.pcgNombre}
-      </MDTypography>
-    ),
-    Fuente: (
-      <MDTypography variant="caption" color="text">
-        {getSectorName(factor.sector)}
-      </MDTypography>
-    ),
-    estatus: (
-      <MDTypography variant="caption" color="text">
-        {getSectorName(factor.source)}
-      </MDTypography>
-    ),
-    Acciones: (
-      <Stack
-        direction="row"
-        spacing={1}
-        justifyContent="center"
-        alignItems="center"
-      >
-        <Tooltip title="Editar">
-          <IconButton
-            size="small"
-            color="info"
-            onClick={() => handleEdit(factor)}
-          >
-            <EditIcon fontSize="small" />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Eliminar">
-          <IconButton
-            size="small"
-            color="error"
-            onClick={() => handleDelete(factor)}
-          >
-            <DeleteIcon fontSize="small" />
-          </IconButton>
-        </Tooltip>
-      </Stack>
-    ),
-  }));
+  nombre: (
+    <MDTypography variant="caption" fontWeight="medium">
+      {factor.name}
+    </MDTypography>
+  ),
+  UnidadPrimaria: (
+    <MDTypography variant="caption" color="text">
+      {factor.unit}
+    </MDTypography>
+  ),
+  UnidaddeCarbono: (
+    <MDTypography variant="caption" color="text">
+      {factor.unitCarbono}
+    </MDTypography>
+  ),
+  ValorUnitario: (
+    <MDTypography variant="caption" color="text">
+      {factor.valueUnit}
+    </MDTypography>
+  ),
+  ValorCarbon: (
+    <MDTypography variant="caption" color="text">
+      {factor.valueEmision}
+    </MDTypography>
+  ),
+  Factoremisión: (
+    <MDTypography variant="caption" color="text">
+      {factor.valueFactor}
+    </MDTypography>
+  ),
+  PCG: (
+    <MDTypography variant="caption" color="text">
+      {getPcgName(factor.pcg)}
+    </MDTypography>
+  ),
+  Sector: (
+    <MDTypography variant="caption" color="text">
+      {getSectorName(factor.sector)}
+    </MDTypography>
+  ),
+  Fuente: (
+    <MDTypography variant="caption" color="text">
+      {getSourceName(factor.source)}
+    </MDTypography>
+  ),
+  Acciones: (
+    <Stack direction="row" spacing={1} justifyContent="center" alignItems="center">
+      <Tooltip title="Editar">
+        <IconButton size="small" color="info" onClick={() => handleEdit(factor)}>
+          <EditIcon fontSize="small" />
+        </IconButton>
+      </Tooltip>
+      <Tooltip title="Eliminar">
+        <IconButton size="small" color="error" onClick={() => handleDelete(factor)}>
+          <DeleteIcon fontSize="small" />
+        </IconButton>
+      </Tooltip>
+    </Stack>
+  ),
+}));
 
   return (
     <DashboardLayout>

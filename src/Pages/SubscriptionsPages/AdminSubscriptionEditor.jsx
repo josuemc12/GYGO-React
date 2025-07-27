@@ -12,15 +12,17 @@ import DashboardLayout from "@/examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "@/examples/Navbars/DashboardNavbar";
 import WebhookTestButtons from "../../components/WebhooksTestButtons";
 import CancelSubscriptionButton from "../../components/CancelSubscriptionButton";
-
 import { getSubscriptionByUserId } from "../../API/Subscription"; 
 
-export default function AdminSubscriptionEditor() {
-  const [subscription, setSubscription] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+import "./../../styles/Subscription.css";
 
-  useEffect(() => {
+
+export default function AdminSubscriptionEditor() {
+  const [subscription, setSubscription] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+useEffect(() => {
     const fetchSubscription = async () => {
       try {
         const data = await getSubscriptionByUserId(); 
@@ -35,94 +37,133 @@ export default function AdminSubscriptionEditor() {
     fetchSubscription();
   }, []);
 
-  if (loading)
-    return (
-      <DashboardLayout>
-        <DashboardNavbar />
-        <Box sx={{ display: "flex", justifyContent: "center", mt: 5 }}>
-          <CircularProgress />
-        </Box>
-      </DashboardLayout>
-    );
+  const formatDate = (dateString) => {
+    if (!dateString) return "N/A"
+    return new Date(dateString).toLocaleDateString("es-ES", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    })
+  }
 
-  if (error)
+  const getStatusClass = (status) => {
+    switch (status?.toLowerCase()) {
+      case "active":
+      case "activa":
+        return "active"
+      case "cancelled":
+      case "cancelada":
+        return "cancelled"
+      default:
+        return "pending"
+    }
+  }
+  if (loading) {
     return (
-      <DashboardLayout>
-        <DashboardNavbar />
-        <Typography color="error" align="center" mt={5}>
-          {error}
-        </Typography>
-      </DashboardLayout>
-    );
+      <div className="subscription-details-container">
+        <div className="subscription-details-wrapper">
+          <div className="subscription-details-card">
+            <div className="loading-container">
+              <div className="loading-spinner"></div>
+              <p className="loading-text">Cargando información de suscripción...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
-  if (!subscription)
+  if (error) {
     return (
-      <DashboardLayout>
-        <DashboardNavbar />
-        <Typography align="center" mt={5}>
-          No hay datos de suscripción.
-        </Typography>
-      </DashboardLayout>
-    );
+      <div className="subscription-details-container">
+        <div className="subscription-details-wrapper">
+          <div className="subscription-details-card">
+            <div className="error-message">{error}</div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (!subscription) {
+    return (
+      <div className="subscription-details-container">
+        <div className="subscription-details-wrapper">
+          <div className="subscription-details-card">
+            <div className="no-subscription-message">No hay datos de suscripción.</div>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
-  <DashboardLayout>
-    <DashboardNavbar />
-    <Grid container justifyContent="center" mt={3}>
-      <Grid item xs={12} md={8}>
-        <Card>
-          <CardContent>
-            <Typography variant="h5" gutterBottom>
-              Información de la Suscripción
-            </Typography>
+    <div className="subscription-details-container">
+      <div className="subscription-details-wrapper">
+        <div className="subscription-details-card">
+          <div className="subscription-details-header">
+            <h1 className="subscription-details-title">Información de la Suscripción</h1>
+          </div>
 
-            <Typography>
-              <strong>Plan ID:</strong> {subscription.planId}
-            </Typography>
-            <Typography>
-              <strong>Estado:</strong> {subscription.status}
-            </Typography>
-            <Typography>
-              <strong>Fecha de inicio:</strong>{" "}
-              {new Date(subscription.startDate).toLocaleDateString()}
-            </Typography>
-            <Typography>
-              <strong>Próxima facturación:</strong>{" "}
-              {subscription.nextBillingDate
-                ? new Date(subscription.nextBillingDate).toLocaleDateString()
-                : "N/A"}
-            </Typography>
-            <Typography>
-              <strong>Último pago:</strong>{" "}
-              {subscription.lastPaymentDate
-                ? new Date(subscription.lastPaymentDate).toLocaleDateString()
-                : "N/A"}
-            </Typography>
-            <Typography>
-              <strong>Cancelado en:</strong>{" "}
-              {subscription.cancelledAt
-                ? new Date(subscription.cancelledAt).toLocaleDateString()
-                : "N/A"}
-            </Typography>
-            <Typography>
-              <strong>Creado en:</strong>{" "}
-              {new Date(subscription.createdAt).toLocaleDateString()}
-            </Typography>
-            <Box mt={3}>
-              <CancelSubscriptionButton
-                userId={subscription.userId}
-                subscriptionId={subscription.payPalSubscriptionId}
-                onSuccess={() => {
-                  console.log("Cancelación exitosa");
-                  window.location.reload();
-                }}
-              />
-            </Box>
-          </CardContent>
-        </Card>
-      </Grid>
-    </Grid>
-    <WebhookTestButtons paypalSubscriptionId={subscription.payPalSubscriptionId} />
-  </DashboardLayout>
-);
+          <div className="subscription-info-grid">
+            <div className="subscription-info-item plan-id-highlight">
+              <p className="subscription-info-label">Plan</p>
+              <p className="subscription-info-value">{subscription.payPalSubscriptionId}</p>
+            </div>
+
+            <div className="subscription-info-item">
+              <p className="subscription-info-label">Estado</p>
+              <div className={`subscription-status ${getStatusClass(subscription.status)}`}>{subscription.status}</div>
+            </div>
+
+            <div className="subscription-info-item">
+              <p className="subscription-info-label">Fecha de inicio</p>
+              <p className="subscription-info-value date-value">{formatDate(subscription.startDate)}</p>
+            </div>
+
+            <div className="subscription-info-item">
+              <p className="subscription-info-label">Próxima facturación</p>
+              <p className={`subscription-info-value date-value ${!subscription.nextBillingDate ? "na-value" : ""}`}>
+                {formatDate(subscription.nextBillingDate)}
+              </p>
+            </div>
+
+            <div className="subscription-info-item">
+              <p className="subscription-info-label">Último pago</p>
+              <p className={`subscription-info-value date-value ${!subscription.lastPaymentDate ? "na-value" : ""}`}>
+                {formatDate(subscription.lastPaymentDate)}
+              </p>
+            </div>
+
+            <div className="subscription-info-item">
+              <p className="subscription-info-label">Cancelado en</p>
+              <p className={`subscription-info-value date-value ${!subscription.cancelledAt ? "na-value" : ""}`}>
+                {formatDate(subscription.cancelledAt)}
+              </p>
+            </div>
+          </div>
+
+          <div className="subscription-info-item">
+            <p className="subscription-info-label">Creado en</p>
+            <p className="subscription-info-value date-value">{formatDate(subscription.createdAt)}</p>
+          </div>
+
+          <div className="subscription-actions">
+            <CancelSubscriptionButton
+              userId={subscription.userId}
+              subscriptionId={subscription.payPalSubscriptionId}
+              onSuccess={() => {
+                console.log("Cancelación exitosa")
+                window.location.reload()
+              }}
+            />
+          </div>
+        </div>
+
+        <div className="webhook-section">
+          <WebhookTestButtons paypalSubscriptionId={subscription.payPalSubscriptionId} />
+        </div>
+      </div>
+    </div>
+  )
 }

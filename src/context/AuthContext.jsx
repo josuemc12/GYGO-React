@@ -5,26 +5,26 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [role, setRole] = useState(() => localStorage.getItem("userRole"));
-  // const [userId, setUserId] = useState(() => localStorage.getItem("userId") || null);
-  // const [userGroup, setUserGroupId] = useState(() => localStorage.getItem("userGroup") || null);
-  // const [hasPaidGroupAdminAccess, setHasPaidGroupAdminAccess] = useState(false);
+  const [userId, setUserId] = useState(() => localStorage.getItem("userId") || null);
+  const [userGroup, setUserGroup] = useState(() => localStorage.getItem("userGroup") || null);
+  const [hasPaidGroupAdminAccess, setHasPaidGroupAdminAccess] = useState(false);
 
-  const login = (newRole) => {
+  const login = (newRole, id, grupo) => {
     setRole(newRole);
-    // setUserId(id);
-    // setUserGroupId(grupo);
-    // localStorage.setItem("userGroup", grupo);
+    setUserId(id);
+    setUserGroup(grupo);
+    localStorage.setItem("userGroup", grupo);
     localStorage.setItem("userRole", newRole);
-    // localStorage.setItem("userId", id);
+    localStorage.setItem("userId", id);
   };
 
   const logoutRol = () => {
     setRole(null);
-    // setUserId(null);
-    // setUserGroupId(null);
+    setUserId(null);
+    setUserGroup(null);
     localStorage.removeItem("userRole");
-    // localStorage.removeItem("userGroup");
-    // localStorage.removeItem("userId");
+    localStorage.removeItem("userGroup");
+    localStorage.removeItem("userId");
   };
 
   const refreshUserData = async () => {
@@ -33,8 +33,10 @@ export const AuthProvider = ({ children }) => {
     if (data?.user?.role && data?.user?.id) {
       setRole(data.user.role);
       setUserId(data.user.id);
+      setUserGroup(data.user.groupId); 
       localStorage.setItem("userRole", data.user.role);
       localStorage.setItem("userId", data.user.id);
+      localStorage.setItem("userGroup", data.user.groupId);
     } else {
       console.error("No se pudo refrescar el usuario:", data);
     }
@@ -55,14 +57,14 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         role,
-        // userId,
-        // hasPaidGroupAdminAccess,
-        // userGroup,
+        userId,
+        hasPaidGroupAdminAccess,
+        userGroup,
         login,
         logoutRol,
-        // refreshUserData,
-        // markUserAsPaid,
-        // updateRole,
+        refreshUserData,
+        markUserAsPaid,
+        updateRole,
       }}
     >
       {children}
@@ -70,4 +72,10 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+};

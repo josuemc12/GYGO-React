@@ -440,12 +440,6 @@ export const routes = [
     roles: ["DEV", "SA","GA"],
   },
 
-
-
-
-
-
-
    //subscripciones
   {
     type: "collapse",
@@ -457,7 +451,6 @@ export const routes = [
     roles: ["DEV", "SA", "DEF", "GA"],
      hideInSidebar: true,
   },
-
 
     {
       type: "collapse",
