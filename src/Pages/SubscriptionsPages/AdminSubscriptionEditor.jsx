@@ -13,6 +13,7 @@ import DashboardNavbar from "@/examples/Navbars/DashboardNavbar";
 import WebhookTestButtons from "../../components/WebhooksTestButtons";
 import CancelSubscriptionButton from "../../components/CancelSubscriptionButton";
 import { getSubscriptionByUserId } from "../../API/Subscription"; 
+import PaymentHistoryTable from "../../components/PaymentHistoryTable";
 
 import "./../../styles/Subscription.css";
 
@@ -159,7 +160,9 @@ useEffect(() => {
             />
           </div>
         </div>
-
+        <div className="Historial">
+              <PaymentHistoryTable/>
+        </div>
         <div className="webhook-section">
           <WebhookTestButtons paypalSubscriptionId={subscription.payPalSubscriptionId} />
         </div>
