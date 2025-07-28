@@ -1,10 +1,6 @@
 import { jsPDF } from "jspdf";
 
 export function CreatePDF(datos) {
- 
-  console.log("-------------------------");
-  console.log(datos);
-
  const proyectosMap = new Map();
 
   datos.forEach(item => {
@@ -185,5 +181,5 @@ export function CreatePDF(datos) {
   });
 
 
-  doc.save("Proyecots.pdf");
+  doc.save("Proyectos.pdf");
 }

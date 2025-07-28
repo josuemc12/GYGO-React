@@ -85,6 +85,12 @@ export function MonthlyConsumptionPage() {
     if (filtros.año !== "") {
       datosFiltrados = datosFiltrados.filter(c => c.year === Number(filtros.año));
     }
+
+    datosFiltrados.sort((a, b) => {
+      if(b.year !== a.year) return b.year - a.year;
+      return b.month - a.month
+    });
+
     setConsumosFiltrados(datosFiltrados);
   }, [filtros, consumosMensuales]);
 

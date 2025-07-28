@@ -1,6 +1,5 @@
-
 import { useState } from "react";
-import { useAuth } from "../../context/AuthContext"
+import { useAuth } from "../../context/AuthContext";
 //import { useAuth } from '../../AuthContext';
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../API/Auth";
@@ -36,15 +35,14 @@ const theme = createTheme({
 });
 
 const Paper = styled("div")(({ theme }) => ({
-   padding: "40px",
+  padding: "40px",
   backgroundColor: "white",
   borderRadius: theme.shape.borderRadius,
   boxShadow: theme.shadows[5],
   width: "100%",
-   maxWidth: 400,        
+  maxWidth: 400,
   margin: "0 auto",
 }));
-
 
 export default function Login() {
   const { login } = useAuth();
@@ -68,10 +66,8 @@ export default function Login() {
     }
 
     try {
-      const { success, isTwoFactor, tempToken, error,rol ,id,groupId} = await loginUser(
-        email,
-        password
-      );
+      const { success, isTwoFactor, tempToken, error, rol, id, groupId } =
+        await loginUser(email, password);
       if (!success) {
         Swal.fire({
           icon: "error",
@@ -88,9 +84,9 @@ export default function Login() {
         // Redirect to 2FA page
         navigate(`/verify-2fa?tempToken=${encodeURIComponent(tempToken)}`);
       } else {
-         console.log("Rol que se va a guardar:", rol);
-         console.log("ID que se va a guardar:", id);
-         login(rol); // Save role and userId in context
+        console.log("Rol que se va a guardar:", rol);
+        console.log("ID que se va a guardar:", id);
+        login(rol); // Save role and userId in context
 
         // Normal login success — redirect to dashboard or home
         navigate("/Dashboard");
@@ -102,7 +98,6 @@ export default function Login() {
         text: "No se pudo conectar con el servidor, intentá nuevamente más tarde.",
         confirmButtonColor: "#d33",
       });
-
     }
   };
 
@@ -145,7 +140,7 @@ export default function Login() {
                 <img
                   src="/src/assets/Logo.png"
                   alt="Logo"
-                  style={{ maxWidth: "120px"}}
+                  style={{ maxWidth: "120px" }}
                 />
               </Box>
 
@@ -186,7 +181,15 @@ export default function Login() {
                     ),
                   }}
                 />
-
+                <Typography
+                  variant="body2"
+                  color="primary"
+                  align="right"
+                  sx={{ mb: 2, cursor: "pointer", textDecoration: "underline" }}
+                  onClick={() => navigate("/ChangePassword")}
+                >
+                  ¿Olvidaste tu contraseña?
+                </Typography>
                 <Button
                   type="submit"
                   fullWidth
@@ -204,7 +207,8 @@ export default function Login() {
                   color="primary"
                   size="large"
                   sx={{ mb: 2, py: 1.5, borderRadius: 2 }}
-                  onClick={() => navigate("/registro")}>
+                  onClick={() => navigate("/registro")}
+                >
                   Crear cuenta
                 </Button>
               </form>

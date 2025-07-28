@@ -10,6 +10,7 @@ import MDTypography from "components/MDTypography";
 import { Card, Grid, CardContent } from "@mui/material";
 import { useAuth } from "../context/AuthContext";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import { SuperAdminDashCards } from "../components/SuperAdminDashCards";
 
 export const DashboardGroupPage = () => {
 
@@ -40,6 +41,46 @@ export const DashboardGroupPage = () => {
     init();
   }, []);
 
+  const renderDashboardContent = () => {
+    if (role === "GA") {
+      return <ModernDashboardCards />;
+    }
+    if (role === "SA") {
+      return <SuperAdminDashCards />; 
+    }
+    return (
+      <Card
+                sx={{
+                  background: "#fffefc",
+                  borderRadius: 2,
+                  border: "1px solid #facc15",
+                  boxShadow: "0 2px 6px rgba(0, 0, 0, 0.04)",
+                  mt: 4,
+                }}
+              >
+                <CardContent sx={{ py: 4, px: 5 }}>
+                  <MDBox textAlign="center">
+                    <BadgeIcon sx={{ fontSize: 60, color: "#facc15", mb: 2 }} />
+                    <MDTypography variant="h5" sx={{ mb: 1, fontWeight: 700 }}>
+                      Aún no tienes un rol asignado
+                    </MDTypography>
+                    <MDTypography
+                      variant="body1"
+                      sx={{ color: "#6b7280", mb: 3 }}
+                    >
+                      Para acceder a las funcionalidades del sistema, es
+                      necesario que un administrador te asigne un rol.
+                    </MDTypography>
+                    <MDTypography variant="body2" sx={{ color: "#9ca3af" }}>
+                      Si crees que esto es un error, intenta cerrar sesión y
+                      volver a ingresar, o contacta a soporte.
+                    </MDTypography>
+                  </MDBox>
+                </CardContent>
+              </Card>
+    )
+  }
+
   return (
     <>
       <DashboardLayout>
@@ -51,7 +92,7 @@ export const DashboardGroupPage = () => {
           }}
         >
           <MDBox sx={{ maxWidth: 1200, mx: "auto" }}>
-            <Grid item size={12} sx={{ mb: 3 }}>
+            <Grid size={12} sx={{ mb: 3 }}>
               <Card
                 sx={{
                   background: "#ffffff",
@@ -86,39 +127,7 @@ export const DashboardGroupPage = () => {
                 </CardContent>
               </Card>
             </Grid>
-            {role && role !== "DEF"  ? (
-              <ModernDashboardCards />
-            ) : (
-              <Card
-                sx={{
-                  background: "#fffefc",
-                  borderRadius: 2,
-                  border: "1px solid #facc15",
-                  boxShadow: "0 2px 6px rgba(0, 0, 0, 0.04)",
-                  mt: 4,
-                }}
-              >
-                <CardContent sx={{ py: 4, px: 5 }}>
-                  <MDBox textAlign="center">
-                    <BadgeIcon sx={{ fontSize: 60, color: "#facc15", mb: 2 }} />
-                    <MDTypography variant="h5" sx={{ mb: 1, fontWeight: 700 }}>
-                      Aún no tienes un rol asignado
-                    </MDTypography>
-                    <MDTypography
-                      variant="body1"
-                      sx={{ color: "#6b7280", mb: 3 }}
-                    >
-                      Para acceder a las funcionalidades del sistema, es
-                      necesario que un administrador te asigne un rol.
-                    </MDTypography>
-                    <MDTypography variant="body2" sx={{ color: "#9ca3af" }}>
-                      Si crees que esto es un error, intenta cerrar sesión y
-                      volver a ingresar, o contacta a soporte.
-                    </MDTypography>
-                  </MDBox>
-                </CardContent>
-              </Card>
-            )}
+            {renderDashboardContent()}
           </MDBox>
         </MDBox>
         <Footer />

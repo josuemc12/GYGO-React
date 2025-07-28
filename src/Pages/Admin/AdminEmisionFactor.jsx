@@ -89,6 +89,7 @@ const EmissionFactorDashboard = () => {
         setSectors(sectors);
         setSources(sources);
         setPcgs(pcgs);
+        console.log(pcgs);
       } catch (err) {
         console.error(err);
         setError("Failed to load reference data");

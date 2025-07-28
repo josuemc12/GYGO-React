@@ -46,8 +46,7 @@ import { Verify2FA } from "./Pages/Verify2Fa";
 import { ServicesHomePage } from "./Pages/Public/ServicesPage";
 import { AboutUs } from "./Pages/Public/AboutUs";   
 import {ContactUs} from "./Pages/Public/ContactUs";
-
-
+import {ChangePassword} from "./Pages/Public/ChangePassword";
 
 const ProtectedElement = ({ children, allowedRoles, requiresPayment = false }) => {
   const { role, hasPaidGroupAdminAccess } = useAuth();
@@ -93,20 +92,20 @@ export const routes = [
 
   },
 
-    {
-     type: "collapse",
-    name: "Manejo de usuarios",
-    key: "ManagmentUsers",
-    icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/ManagmentUsers",
+  //   {
+  //    type: "collapse",
+  //   name: "Manejo de usuarios",
+  //   key: "ManagmentUsers",
+  //   icon: <Icon fontSize="small">dashboard</Icon>,
+  //   route: "/ManagmentUsers",
 
-    component: (
-      <ProtectedElement>
-        <ManagmentUsers />
-      </ProtectedElement>
-    ),
+  //   component: (
+  //     <ProtectedElement>
+  //       <ManagmentUsers />
+  //     </ProtectedElement>
+  //   ),
     
-  },
+  // },
 
 
   //Ruta de dashboard no visible
@@ -121,7 +120,7 @@ export const routes = [
         <DashboardGroupPage />
       </ProtectedElement>
     ),
-    roles: ["DEV", "GA", "GU", "DEF"],
+    roles: ["DEV", "GA", "GU", "DEF", "SA"],
     hideInSidebar: true,
   },
 
@@ -170,24 +169,6 @@ export const routes = [
     roles: ["GA", "GU", "DEV","SA"],
   },
 
-
-  
-
-  //Ruta de DashboardConsumo
-  {
-    type: "collapse",
-    name: "DashboardConsumo",
-    key: "DashboardConsumo",
-    icon: <Icon fontSize="small">table_view</Icon>,
-    route: "/DashboardConsumo",
-
-    component: (
-      <ProtectedElement>
-        <DashboardConsumo />
-      </ProtectedElement>
-    ),
-    roles: ["GA", "GU", "DEV"],
-  },
 
   //Ruta de consumo
   {
@@ -335,6 +316,16 @@ export const routes = [
     hideInSidebar: true,
   },
 
+
+    //Ruta de cambio de contra publico
+  {
+    type: "collapse",
+    name: "ChangePasswordPublic",
+    key: "ChangePasswordPublic",
+    route: "/ChangePassword",
+    component: <ChangePassword />,
+    hideInSidebar: true,
+  },
 
 
   //Gestiones para el Super Administrador
@@ -630,7 +621,7 @@ export const routes = [
             <ReportServices />
           </ProtectedElement>
         ),
-        roles: ["SA", "DEV","GA"],
+        roles: ["SA", "DEV"],
       },
 
 
