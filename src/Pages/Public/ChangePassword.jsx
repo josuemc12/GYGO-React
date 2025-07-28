@@ -14,10 +14,7 @@ import {
   InputAdornment,
   IconButton,
   FormControl,
-    CircularProgress,
-  
-  
-  
+  CircularProgress,
   InputLabel,
   OutlinedInput,
 } from "@mui/material";
@@ -29,7 +26,6 @@ import { PostChangePassword } from "../../API/ChangePassword";
 import MDTypography from "components/MDTypography";
 import MDBox from "components/MDBox";
 import MDButton from "components/MDButton";
-
 
 const theme = createTheme({
   palette: {
@@ -53,9 +49,8 @@ const Paper = styled("div")(({ theme }) => ({
   margin: "0 auto",
 }));
 
-
 export const ChangePassword = () => {
-     const [email, setEmail] = useState("");
+  const [email, setEmail] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -125,135 +120,131 @@ export const ChangePassword = () => {
 
   return (
     <>
-
       <ThemeProvider theme={theme}>
-  <CssBaseline />
-  <Box
-    component="form"
-                onSubmit={handleSubmit}
+        <CssBaseline />
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          sx={{
+            backgroundColor: "background.default",
+            minHeight: "100vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            px: 2,
+          }}
+        >
+          <Container maxWidth="xs">
+            <Paper sx={{ p: 4 }}>
+              <Box textAlign="center" mb={2}>
+                <img
+                  src="/src/assets/Logo.png"
+                  alt="Logo"
+                  style={{ maxWidth: "120px" }}
+                />
+              </Box>
 
+              <Box textAlign="center" mb={5}>
+                <Typography variant="h4" fontWeight={600} color="primary">
+                  Cambiar Contraseña
+                </Typography>
+              </Box>
+              <FormControl variant="outlined" fullWidth sx={{ mb: 3 }}>
+                <InputLabel
+                  htmlFor="outlined-email"
+                  sx={{ fontSize: "1.1rem", mb: 3 }}
+                >
+                  Correo Electrónico
+                </InputLabel>
+                <OutlinedInput
+                  onChange={(e) => setEmail(e.target.value)}
+                  id="outlined-email"
+                  type="email"
+                  required
+                  label="Correo Electrónico"
+                  sx={{ fontSize: "1.1rem" }}
+                />
+              </FormControl>
 
-    sx={{
-      backgroundColor: "background.default",
-      minHeight: "100vh",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      px: 2,
-    }}
-  >
-    <Container maxWidth="xs">
-      <Paper sx={{ p: 4 }}>
-        <Box textAlign="center" mb={2}>
-          <img
-            src="/src/assets/Logo.png"
-            alt="Logo"
-            style={{ maxWidth: "120px" }}
-          />
+              <FormControl variant="outlined" fullWidth sx={{ mb: 3 }}>
+                <InputLabel htmlFor="outlined-adornment-password">
+                  Contraseña Actual
+                </InputLabel>
+                <OutlinedInput
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  required
+                  id="outlined-adornment-password"
+                  type={showPassword ? "text" : "password"}
+                  // debo comentar esto
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label={
+                          showPassword
+                            ? "Ocultar la contraseña"
+                            : "Mostrar la contraseña"
+                        }
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        onMouseUp={handleMouseUpPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  } // hasta aqui
+                  label="Contraseña actual"
+                />
+              </FormControl>
+
+              <FormControl variant="outlined" fullWidth sx={{ mb: 3 }}>
+                <InputLabel htmlFor="outlined-adornment-password2">
+                  Nueva Contraseña
+                </InputLabel>
+                <OutlinedInput
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  required
+                  id="outlined-adornment-password2"
+                  type={showPassword ? "text" : "password"}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label={
+                          showPassword
+                            ? "Ocultar la contraseña"
+                            : "Mostrar la contraseña"
+                        }
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        onMouseUp={handleMouseUpPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  label="Nueva Contraseña"
+                />
+              </FormControl>
+
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                size="large"
+                disabled={loading}
+                sx={{ mt: 3, py: 1.5, borderRadius: 2 }}
+              >
+                {loading ? (
+                  <CircularProgress size={26} color="inherit" />
+                ) : (
+                  "Actualizar Contraseña"
+                )}
+              </Button>
+            </Paper>
+          </Container>
         </Box>
-
-        <Box textAlign="center" mb={5}>
-          <Typography variant="h4" fontWeight={600} color="primary">
-            Cambiar Contraseña
-          </Typography>
-        </Box>
-          <FormControl variant="outlined" fullWidth>
-            <InputLabel htmlFor="outlined-email" sx={{ fontSize: "1.1rem" }}>
-              Correo Electrónico
-            </InputLabel>
-            <OutlinedInput
-             onChange={(e) => setEmail(e.target.value)}
-              id="outlined-email"
-              type="email"
-              required
-              label="Correo Electrónico"
-              sx={{ fontSize: "1.1rem" }}
-            />
-          </FormControl>
-      
-
-            <FormControl variant="outlined" fullWidth>
-                  <InputLabel htmlFor="outlined-adornment-password">
-                    Contraseña Actual
-                  </InputLabel>
-                  <OutlinedInput
-                    onChange={(e) => setCurrentPassword(e.target.value)}
-                    required
-                    id="outlined-adornment-password"
-                    type={showPassword ? "text" : "password"}
-                    // debo comentar esto
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label={
-                            showPassword ? "Ocultar la contraseña" : "Mostrar la contraseña"
-                          }
-                          onClick={handleClickShowPassword}
-                          onMouseDown={handleMouseDownPassword}
-                          onMouseUp={handleMouseUpPassword}
-                          edge="end"
-                        >
-                          {showPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                      </InputAdornment>
-                    } // hasta aqui
-                    label="Contraseña actual"
-                  />
-                </FormControl>
-
-
-
-
-
-          <FormControl variant="outlined" fullWidth>
-                            <InputLabel htmlFor="outlined-adornment-password2">
-                              Nueva Contraseña
-                            </InputLabel>
-                            <OutlinedInput
-                              onChange={(e) => setNewPassword(e.target.value)}
-                              required
-                              id="outlined-adornment-password2"
-                              type={showPassword ? "text" : "password"}
-                              endAdornment={
-                                <InputAdornment position="end">
-                                  <IconButton
-                                    aria-label={
-                                      showPassword ? "Ocultar la contraseña" : "Mostrar la contraseña"
-                                    }
-                                    onClick={handleClickShowPassword}
-                                    onMouseDown={handleMouseDownPassword}
-                                    onMouseUp={handleMouseUpPassword}
-                                    edge="end"
-                                  >
-                                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                                  </IconButton>
-                                </InputAdornment>
-                              }
-                              label="Nueva Contraseña"
-                            />
-                          </FormControl>
-
-          <Button
-            type="submit"
-           
-            variant="contained"
-            color="primary"
-            size="large"
-            disabled={loading}
-            sx={{ mt: 3, py: 1.5, borderRadius: 2 }}
-          >
-            {loading ? (
-              <CircularProgress size={26} color="inherit" />
-            ) : (
-              "Actualizar Contraseña"
-            )}
-          </Button>
-       
-      </Paper>
-    </Container>
-  </Box>
-</ThemeProvider>
-   
+      </ThemeProvider>
     </>
   );
 };
