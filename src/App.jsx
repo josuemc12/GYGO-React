@@ -28,7 +28,7 @@ import MDBox from "components/MDBox";
 
 // Material Dashboard 2 React example components
 import Sidenav from "examples/Sidenav";
-import Configurator from "examples/Configurator";
+
 
 // Material Dashboard 2 React themes
 import theme from "assets/theme";
@@ -177,27 +177,6 @@ const renderRoutes = (allRoutes) =>
     return [];
   });
 
-  const configsButton = (
-    <MDBox
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      width="3.25rem"
-      height="3.25rem"
-      bgColor="white"
-      shadow="sm"
-      borderRadius="50%"
-      position="fixed"
-      right="2rem"
-      bottom="2rem"
-      zIndex={99}
-      color="dark"
-      sx={{ cursor: "pointer" }}
-      onClick={handleConfiguratorOpen}
-    >
-
-    </MDBox>
-  );
 
 
   return  (
@@ -212,8 +191,7 @@ const renderRoutes = (allRoutes) =>
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleOnMouseLeave}
           />
-          <Configurator />
-          {configsButton}
+
         </>
       )}
       {layout === "vr" && <Configurator />}
