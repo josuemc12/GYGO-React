@@ -7,7 +7,7 @@ export const AuthProvider = ({ children }) => {
   const [role, setRole] = useState(() => localStorage.getItem("userRole"));
   // const [userId, setUserId] = useState(() => localStorage.getItem("userId") || null);
   // const [userGroup, setUserGroupId] = useState(() => localStorage.getItem("userGroup") || null);
-  // const [hasPaidGroupAdminAccess, setHasPaidGroupAdminAccess] = useState(false);
+  const [hasPaidGroupAdminAccess, setHasPaidGroupAdminAccess] = useState(false);
 
   const login = (newRole) => {
     setRole(newRole);
@@ -56,13 +56,13 @@ export const AuthProvider = ({ children }) => {
       value={{
         role,
         // userId,
-        // hasPaidGroupAdminAccess,
+         hasPaidGroupAdminAccess,
         // userGroup,
         login,
         logoutRol,
-        // refreshUserData,
-        // markUserAsPaid,
-        // updateRole,
+        refreshUserData,
+         markUserAsPaid,
+        updateRole,
       }}
     >
       {children}
