@@ -197,7 +197,7 @@ const renderRoutes = (allRoutes) =>
       {layout === "vr" && <Configurator />}
       <Routes>
         {renderRoutes(filteredRoutes)}
-        <Route path="*" element={<Navigate to="/dashboard" />} />
+        <Route path="*" element={<Navigate to="/homepage" />} />
       </Routes>
     </ThemeProvider>
   );
