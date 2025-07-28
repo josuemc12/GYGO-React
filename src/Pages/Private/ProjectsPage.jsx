@@ -286,7 +286,7 @@ function ProjectPage() {
         if (result) {
           Swal.fire({
             icon: "success",
-            title: "¡Proyecto actualizaxo!",
+            title: "¡Proyecto actualizado!",
             text: "El proyecto se ha actualizado correctamente.",
             confirmButtonColor: "#44af69",
           });
@@ -413,9 +413,10 @@ function ProjectPage() {
       const result = await UpdateTaskt(taskData);
 
       if (result) {
+        setEditTaskId(null);
         Swal.fire({
           icon: "success",
-          title: "¡Tarea actaulizada!",
+          title: "¡Tarea actualizada!",
           text: "La tarea se agregó correctamente.",
           confirmButtonColor: "#44af69",
         });
@@ -494,7 +495,7 @@ function ProjectPage() {
     ),
     unidadreduccion: (
       <MDTypography variant="caption" color="text">
-        {project.unidadreduccion}
+        {project.unidadNombre}
       </MDTypography>
     ),
     cantidadReduccion: (
@@ -584,17 +585,18 @@ function ProjectPage() {
                 </Grid>
                 <Grid item>
                   <MDButton
-                  variant="outlined"
-                  sx={{
-                    borderColor: "#4CAF50",
-                    color: "#4CAF50",
-                    "&:hover": {
-                      backgroundColor: "#E8F5E9",
-                      borderColor: "#43A047",
-                      color: "#388E3C",
-                    },
-                  }} 
-                  onClick={openModalAddProject}>
+                    variant="outlined"
+                    sx={{
+                      borderColor: "#4CAF50",
+                      color: "#4CAF50",
+                      "&:hover": {
+                        backgroundColor: "#E8F5E9",
+                        borderColor: "#43A047",
+                        color: "#388E3C",
+                      },
+                    }}
+                    onClick={openModalAddProject}
+                  >
                     Nuevo Proyecto
                   </MDButton>
                 </Grid>
@@ -611,12 +613,12 @@ function ProjectPage() {
                   <Grid container spacing={2}>
                     <Grid item>
                       <FormControl size="medium" sx={{ width: 180 }}>
-                         <InputLabel id="Estado-label">Estado</InputLabel>
+                        <InputLabel id="Estado-label">Estado</InputLabel>
                         <Select
-                         labelId="Estado-label"
-                            name="estado"
-                            label="Estado"
-                            fullWidth
+                          labelId="Estado-label"
+                          name="estado"
+                          label="Estado"
+                          fullWidth
                           value={filter}
                           onChange={(e) => setFilter(e.target.value)}
                           sx={{ height: 40 }}
@@ -629,7 +631,6 @@ function ProjectPage() {
                     </Grid>
 
                     <Grid item>
-
                       <DatePicker
                         label="Fecha Inicio"
                         value={startDate}
@@ -638,12 +639,11 @@ function ProjectPage() {
                           textField: {
                             size: "small",
                             sx: {
-                              
                               width: 180, // más angosto
                               height: 36, // más bajo
                               "& .MuiInputBase-root": {
                                 height: 36, // grosor del input
-                                 // opcional: fuente más pequeña
+                                // opcional: fuente más pequeña
                               },
                               "& input": {
                                 padding: "6px 8px", // menos espacio interno
@@ -655,9 +655,8 @@ function ProjectPage() {
                     </Grid>
 
                     <Grid item>
-                 
                       <DatePicker
-                       label="Fecha Fin"
+                        label="Fecha Fin"
                         value={endDate}
                         onChange={(newValue) => setEndDate(newValue)}
                         slotProps={{
@@ -672,7 +671,7 @@ function ProjectPage() {
                               },
                               "& input": {
                                 padding: "6px 8px",
-                                fontSize: 13 // menos espacio interno
+                                fontSize: 13, // menos espacio interno
                               },
                             },
                           },
@@ -684,10 +683,18 @@ function ProjectPage() {
 
                 <Grid item>
                   <MDBox display="flex" gap={1}>
-                    <MDButton onClick={SearchByDate} variant="outlined" color="info">
+                    <MDButton
+                      onClick={SearchByDate}
+                      variant="outlined"
+                      color="info"
+                    >
                       Buscar por fecha
                     </MDButton>
-                    <MDButton onClick={CleanDates} variant="outlined" color="secondary">
+                    <MDButton
+                      onClick={CleanDates}
+                      variant="outlined"
+                      color="secondary"
+                    >
                       Limpiar fechas
                     </MDButton>
                     {Array.isArray(data) && data.length > 0 && (
@@ -723,13 +730,29 @@ function ProjectPage() {
                       </MDTypography>
                     </MDBox>
                     <MDBox pt={3}>
-                      <DataTable
-                        table={{ columns, rows }}
-                        isSorted={false}
-                        entriesPerPage={false}
-                        showTotalEntries={true}
-                        noEndBorder
-                      />
+                      {rows.length > 0 ? (
+                        <DataTable
+                          table={{ columns, rows }}
+                          isSorted={false}
+                          entriesPerPage={false}
+                          showTotalEntries={true}
+                          noEndBorder
+                        />
+                      ) : (
+                        <MDBox
+                          minWidth="75rem" // ajustá este valor según la altura de tu tabla con datos
+                          alignItems="center"
+                          justifyContent="center"
+                        >
+                          <MDTypography
+                            color="text"
+                            align="center"
+                            variant="body2"
+                          >
+                            No hay proyectos disponibles.
+                          </MDTypography>
+                        </MDBox>
+                      )}
                     </MDBox>
                   </Card>
                 </Grid>
@@ -737,7 +760,6 @@ function ProjectPage() {
             </MDBox>
           </MDBox>
         </LocalizationProvider>
-      
       </MDBox>
 
       <Modal
@@ -814,12 +836,18 @@ function ProjectPage() {
                           gap: 1,
                         }}
                       >
-                        <Button onClick={() => setEditTaskId(null)}>
+                        <MDButton 
+                          variant="outlined"
+                          color="error"
+                        onClick={() => setEditTaskId(null)}>
                           Cancelar
-                        </Button>
-                        <Button onClick={() => UpTask()} variant="contained">
+                        </MDButton>
+                        <MDButton 
+                         variant="outlined"
+                          color="info"
+                        onClick={() => UpTask()} >
                           Guardar
-                        </Button>
+                        </MDButton>
                       </Box>
                     </>
                   ) : (
@@ -846,7 +874,19 @@ function ProjectPage() {
                           mt: 1,
                         }}
                       >
-                        <Button
+                        <MDButton
+                          variant="outlined"
+                          color="error"
+                          size="small"
+                          onClick={() => {
+                            DTask(task.taskId);
+                          }}
+                        >
+                          Eliminar
+                        </MDButton>
+
+                        <MDButton
+                          color="info"
                           variant="outlined"
                           size="small"
                           onClick={() => {
@@ -860,17 +900,7 @@ function ProjectPage() {
                           }}
                         >
                           Editar
-                        </Button>
-                        <Button
-                          variant="outlined"
-                          color="error"
-                          size="small"
-                          onClick={() => {
-                            DTask(task.taskId);
-                          }}
-                        >
-                          Eliminar
-                        </Button>
+                        </MDButton>
                       </Box>
                     </>
                   )}
@@ -918,12 +948,16 @@ function ProjectPage() {
               mt: 3,
             }}
           >
-            <Button onClick={CloseModal} variant="contained">
+            <MDButton variant="outlined" color="error" onClick={CloseModal}>
               Cerrar
-            </Button>
-            <Button variant="contained" onClick={SubmitModalTask}>
+            </MDButton>
+            <MDButton
+              color="success"
+              variant="contained"
+              onClick={SubmitModalTask}
+            >
               Agregar
-            </Button>
+            </MDButton>
           </Box>
         </Box>
       </Modal>
@@ -975,9 +1009,9 @@ function ProjectPage() {
               <FormControl fullWidth>
                 <InputLabel id="unidad-label">Unidad de Reducción</InputLabel>
                 <Select
-                fullWidth
+                  fullWidth
                   labelId="unidad-label"
-                   sx={{ height: 40 }}
+                  sx={{ height: 40 }}
                   value={projectData.unidadreduccion}
                   onChange={(e) =>
                     setProjecttData({
@@ -1024,21 +1058,20 @@ function ProjectPage() {
                 }}
                 inputFormat="DD-MM-YYYY"
                 renderInput={(params) => (
-  <TextField
-    {...params}
-    sx={{
-      width: 130,       // ancho en px
-      "& .MuiInputBase-root": {
-        height: 86,     // alto del campo de entrada
-        fontSize: 13,   // tamaño de texto opcional
-      },
-      "& input": {
-        padding: "6px 8px", // padding interno del input
-      },
-    }}
-  />
-)}
-                
+                  <TextField
+                    {...params}
+                    sx={{
+                      width: 130, // ancho en px
+                      "& .MuiInputBase-root": {
+                        height: 86, // alto del campo de entrada
+                        fontSize: 13, // tamaño de texto opcional
+                      },
+                      "& input": {
+                        padding: "6px 8px", // padding interno del input
+                      },
+                    }}
+                  />
+                )}
               />
             </LocalizationProvider>
 
@@ -1063,17 +1096,27 @@ function ProjectPage() {
           </Box>
 
           <Box sx={{ mt: 3, textAlign: "right" }}>
-            <Button onClick={close} sx={{ mr: 1 }}>
+            <MDButton
+              variant="outlined"
+              color="error"
+              onClick={close}
+              sx={{ mr: 1 }}
+            >
               Cancelar
-            </Button>
-            <Button onClick={SubmitModalEdicion} variant="contained">
+            </MDButton>
+            <MDButton
+              variant="gradient"
+              color="success"
+              onClick={SubmitModalEdicion}
+            >
               {modoEdicion ? "Editar" : "Agregar"}
-            </Button>
+            </MDButton>
           </Box>
         </Box>
       </Modal>
       {/* Fin del Modal para agregar un nuevo proyecto */}
-        <Footer />
+
+      <Footer />
     </DashboardLayout>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { TextField, Grid, Box, Card } from "@mui/material";
+import { TextField, Grid, Box, Card, IconButton } from "@mui/material";
 import DashboardLayout from "../examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "../examples/Navbars/DashboardNavbar";
 import MDBox from "../components/MDBox";
@@ -7,53 +7,90 @@ import MDTypography from "../components/MDTypography";
 import DataTable from "../examples/Tables/DataTable";
 import { GetServices } from "../API/Reports";
 import { useAuth } from "../context/AuthContext";
+import CancelIcon from "@mui/icons-material/Cancel";
+import SuperAdminCancelModal from "../components/SuperAdminCancelModal";
+import {cancelAdminSubscription} from "../API/Subscription"
 
 export default function ServicesPage() {
     const [services, setServices] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [tableRows, setTableRows] = useState([]);
-    const { userId } = useAuth();
+    const [modalOpen, setModalOpen] = useState(false);
+    const [selectedGroup, setSelectedGroup] = useState(null);
+    const { userId, role } = useAuth();
 
     useEffect(() => {
         const fetchServices = async () => {
             const data = await GetServices();
-
-            // Flatten services into rows
             const flattenedRows = data.flatMap((service) =>
                 service.grupos.map((grupo) => ({
                     serviceName: service.serviceName,
                     serviceId: service.serviceId,
                     groupName: grupo.nombre,
                     groupId: grupo.grupoId,
+                    actions: grupo.grupoId
                 }))
             );
-
             setServices(flattenedRows);
             setTableRows(flattenedRows);
         };
-
         fetchServices();
+        console.log(toString(role));
     }, []);
 
-    useEffect(() => {
-        if (searchTerm) {
-            const filtered = services.filter((row) =>
-                row.serviceName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                row.groupName.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-            setTableRows(filtered);
-        } else {
-            setTableRows(services);
-        }
-    }, [searchTerm, services]);
-
-    // Define columns for the DataTable
+    // Update columns to include actions
     const columns = [
         { Header: "Servicio", accessor: "serviceName" },
-
         { Header: "Grupo", accessor: "groupName" },
-        ,
+        {
+            Header: "Acciones",
+            accessor: "actions",
+            Cell: ({ value }) => (
+                role === "SA" && ( // Only show for super admin
+                    <IconButton 
+                        color="error" 
+                        onClick={() => {
+                            setSelectedGroup(value);
+                            setModalOpen(true);
+                            
+                        }}
+                        size="small"
+                    >
+                        <CancelIcon fontSize="small" />
+                        <MDTypography variant="caption" ml={1}>
+                            Cancelar
+                        </MDTypography>
+                    </IconButton>
+                )
+            ),
+            align: "center"
+        }
     ];
+
+    const handleCancelConfirm = async (groupId, reason) => {
+        try {
+
+            await cancelAdminSubscription(groupId, reason);
+
+            const data = await GetServices();
+            const flattenedRows = data.flatMap((service) =>
+            service.grupos.map((grupo) => ({
+                serviceName: service.serviceName,
+                serviceId: service.serviceId,
+                groupName: grupo.nombre,
+                groupId: grupo.grupoId,
+                actions: grupo.grupoId
+            }))
+            );
+            setServices(flattenedRows);
+            setTableRows(flattenedRows);
+            
+            return true;
+        } catch (error) {
+            console.error("Error al cancelar:", error);
+            throw error;
+        }
+        };
 
     return (
         <DashboardLayout>
@@ -112,6 +149,12 @@ export default function ServicesPage() {
                     </Grid>
                 </MDBox>
             </MDBox>
+            <SuperAdminCancelModal
+                open={modalOpen}
+                onClose={() => setModalOpen(false)}
+                onConfirm={handleCancelConfirm}
+                groupId={selectedGroup}
+            />
         </DashboardLayout>
     );
 }

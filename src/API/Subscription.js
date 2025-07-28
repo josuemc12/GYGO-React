@@ -125,3 +125,63 @@ export async function getSubscriptionByUserId() {
   }
 }
 
+export async function fetchPaymentHistory() {
+  try {
+    const response = await fetch(`${appsettings.apiUrl}History/PaymentHistory`, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      let errorData;
+      try {
+        errorData = await response.json();
+      } catch (jsonError) {
+        errorData = await response.text();
+      }
+      
+      throw new Error(
+        errorData.message || 
+        errorData.error || 
+        (typeof errorData === 'string' ? errorData : `HTTP error! status: ${response.status}`)
+      );
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("fetchPaymentHistory error:", error);
+    throw new Error(error.message || "Failed to load payment history");
+  }
+}
+
+export async function cancelAdminSubscription(groupId, reason) {
+  try {
+    console.log("Llamando a API con:", { groupId, reason }); // <-- Añade esto
+    
+    const response = await fetch(`${appsettings.apiUrl}Subscription/cancel-admin/${groupId}`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json", // Asegúrate que este header esté presente
+      },
+      body: JSON.stringify(reason) // Envía solo el string
+    });
+
+    console.log("Respuesta recibida:", response.status); // <-- Añade esto
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Error en respuesta:", errorText); // <-- Añade esto
+      throw new Error(errorText);
+    }
+
+    return await response.text();
+  } catch (error) {
+    console.error("Error en fetch:", error); // <-- Añade esto
+    throw error;
+  }
+}
+

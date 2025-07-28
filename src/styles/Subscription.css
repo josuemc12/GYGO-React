@@ -1,0 +1,604 @@
+:root {
+  --color-brown: #7d4f50;
+  --color-white: #ffffff;
+  --color-cream: #f7f7f2;
+  --color-green: #376d4f;
+  --color-gray: #b1b2b5;
+  --color-black: #0c0c0c;
+  --color-red: #b3261e;
+  --color-light-gray: #e8e9ea;
+}
+
+.subscribe-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--color-cream) 0%, var(--color-white) 100%);
+  padding: 2rem 1rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.subscribe-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.subscribe-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--color-black);
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.subscribe-subtitle {
+  font-size: 1.125rem;
+  color: var(--color-gray);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.subscribe-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  justify-items: center;
+}
+
+/* Handle different numbers of plans */
+.subscribe-grid[data-plan-count="1"] {
+  grid-template-columns: minmax(320px, 400px);
+}
+
+.subscribe-grid[data-plan-count="2"] {
+  grid-template-columns: repeat(2, minmax(320px, 400px));
+}
+
+.subscribe-grid[data-plan-count="3"] {
+  grid-template-columns: repeat(auto-fit, minmax(320px, 380px));
+}
+
+.subscribe-card {
+  background: var(--color-white);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+  width: 100%;
+  max-width: 400px;
+}
+
+.subscribe-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border-color: var(--color-light-gray);
+}
+
+.subscribe-card.popular {
+  border-color: var(--color-green);
+  transform: scale(1.05);
+}
+
+.subscribe-card.popular:hover {
+  transform: scale(1.05) translateY(-4px);
+}
+
+.popular-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-green);
+  color: var(--color-white);
+  padding: 0.5rem 1.5rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.plan-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.plan-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-black);
+  margin-bottom: 0.5rem;
+}
+
+.plan-description {
+  color: var(--color-gray);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.plan-pricing {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.plan-price {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--color-brown);
+  line-height: 1;
+}
+
+.plan-period {
+  font-size: 1rem;
+  color: var(--color-gray);
+  margin-left: 0.25rem;
+}
+
+.plan-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem 0;
+  flex-grow: 1;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 0;
+  color: var(--color-black);
+  border-bottom: 1px solid var(--color-light-gray);
+}
+
+.feature-item:last-child {
+  border-bottom: none;
+}
+
+.feature-icon {
+  width: 20px;
+  height: 20px;
+  color: var(--color-green);
+  margin-right: 0.75rem;
+  flex-shrink: 0;
+}
+
+.subscribe-button {
+  width: 100%;
+  background: var(--color-green);
+  color: var(--color-white);
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.subscribe-button:hover {
+  background: #2d5a3f;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(55, 109, 79, 0.4);
+}
+
+.subscribe-button:active {
+  transform: translateY(0);
+}
+
+.subscribe-button:disabled {
+  background: var(--color-gray);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.subscribe-footer {
+  text-align: center;
+  margin-top: 3rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.footer-text {
+  color: var(--color-gray);
+  font-size: 0.875rem;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.no-plans-message {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem;
+  color: var(--color-gray);
+  font-size: 1.125rem;
+}
+.subscription-details-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--color-cream) 0%, var(--color-white) 100%);
+  padding: 2rem 1rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.subscription-details-wrapper {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.subscription-details-card {
+  background: var(--color-white);
+  border-radius: 16px;
+  padding: 2.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 2px solid transparent;
+  margin-bottom: 2rem;
+}
+
+.subscription-details-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid var(--color-green);
+}
+
+.subscription-details-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-green);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.subscription-info-grid {
+  display: grid;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.subscription-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: var(--color-cream);
+  border-radius: 8px;
+  border-left: 4px solid var(--color-green);
+}
+
+.subscription-info-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-gray);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.subscription-info-value {
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: var(--color-black);
+  margin: 0;
+}
+
+.subscription-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: fit-content;
+}
+
+.subscription-status.active {
+  background: rgba(55, 109, 79, 0.1);
+  color: var(--color-green);
+  border: 1px solid var(--color-green);
+}
+
+.subscription-status.cancelled {
+  background: rgba(179, 38, 30, 0.1);
+  color: var(--color-red);
+  border: 1px solid var(--color-red);
+}
+
+.subscription-status.pending {
+  background: rgba(125, 79, 80, 0.1);
+  color: var(--color-brown);
+  border: 1px solid var(--color-brown);
+}
+
+.subscription-actions {
+  padding-top: 1.5rem;
+  border-top: 2px solid var(--color-green);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  gap: 1rem;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--color-light-gray);
+  border-top: 3px solid var(--color-green);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading-text {
+  color: var(--color-green);
+  font-size: 1rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.error-message {
+  text-align: center;
+  color: var(--color-red);
+  font-size: 1.125rem;
+  padding: 2rem;
+  background: rgba(179, 38, 30, 0.1);
+  border-radius: 8px;
+  border: 1px solid var(--color-red);
+}
+
+.no-subscription-message {
+  text-align: center;
+  color: var(--color-gray);
+  font-size: 1.125rem;
+  padding: 2rem;
+  background: var(--color-cream);
+  border-radius: 8px;
+  border: 1px solid var(--color-light-gray);
+}
+
+.webhook-section {
+  margin-top: 2rem;
+}
+
+.webhook-test-section {
+  background: var(--color-white);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 2px solid var(--color-green);
+}
+
+.webhook-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-green);
+  margin: 0 0 1.5rem 0;
+  text-align: center;
+}
+
+.webhook-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.webhook-btn {
+  background: var(--color-brown);
+  color: var(--color-white);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.webhook-btn:hover {
+  background: #8d5a5b;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(125, 79, 80, 0.4);
+}
+
+.cancel-subscription-btn {
+  background: var(--color-red);
+  color: var(--color-white);
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: 100%;
+}
+
+.cancel-subscription-btn:hover {
+  background: #9e2b24;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(179, 38, 30, 0.4);
+}
+
+/* Plan ID specific styling - NOW USING GREEN AS HIGHLIGHT */
+.plan-id-highlight {
+  background: linear-gradient(135deg, var(--color-green), #2d5a3f);
+  color: var(--color-white);
+  border-left: 4px solid var(--color-white);
+  box-shadow: 0 4px 12px rgba(55, 109, 79, 0.2);
+}
+
+.plan-id-highlight .subscription-info-label {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.plan-id-highlight .subscription-info-value {
+  color: var(--color-white);
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+/* Date formatting */
+.date-value {
+  font-family: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
+  font-size: 1rem;
+  color: var(--color-green);
+  font-weight: 600;
+}
+
+/* Not available styling */
+.na-value {
+  color: var(--color-gray);
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* Enhanced green accents throughout */
+.subscription-info-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(55, 109, 79, 0.1);
+  border-left-color: var(--color-green);
+  border-left-width: 6px;
+  transition: all 0.2s ease;
+}
+
+.subscription-details-card:hover {
+  border-color: var(--color-green);
+  box-shadow: 0 8px 25px -5px rgba(55, 109, 79, 0.1), 0 10px 10px -5px rgba(55, 109, 79, 0.04);
+  transition: all 0.3s ease;
+}
+
+/* Responsive Design */
+@media (min-width: 768px) {
+  .subscription-info-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .subscription-actions {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .cancel-subscription-btn {
+    width: auto;
+    min-width: 200px;
+  }
+
+  .webhook-buttons {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .subscription-details-container {
+    padding: 1rem 0.5rem;
+  }
+
+  .subscription-details-card {
+    padding: 1.5rem;
+  }
+
+  .subscription-details-title {
+    font-size: 1.5rem;
+  }
+
+  .subscription-info-item {
+    padding: 0.75rem;
+  }
+
+  .webhook-buttons {
+    flex-direction: column;
+  }
+
+  .webhook-btn {
+    width: 100%;
+  }
+}
+
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .subscribe-title {
+    font-size: 2rem;
+  }
+
+  .subscribe-card.popular {
+    transform: none;
+  }
+
+  .subscribe-card.popular:hover {
+    transform: translateY(-4px);
+  }
+
+  .subscribe-grid,
+  .subscribe-grid[data-plan-count="1"],
+  .subscribe-grid[data-plan-count="2"],
+  .subscribe-grid[data-plan-count="3"] {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .plan-price {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .subscribe-container {
+    padding: 1rem 0.5rem;
+  }
+
+  .subscribe-card {
+    padding: 1.5rem;
+  }
+
+  .subscribe-title {
+    font-size: 1.75rem;
+  }
+
+  .plan-price {
+    font-size: 2rem;
+  }
+}
+
+/* Handle many plans (4+) */
+@media (min-width: 1400px) {
+  .subscribe-grid {
+    max-width: 1400px;
+  }
+}
+

@@ -46,8 +46,7 @@ import { Verify2FA } from "./Pages/Verify2Fa";
 import { ServicesHomePage } from "./Pages/Public/ServicesPage";
 import { AboutUs } from "./Pages/Public/AboutUs";   
 import {ContactUs} from "./Pages/Public/ContactUs";
-
-
+import {ChangePassword} from "./Pages/Public/ChangePassword";
 
 const ProtectedElement = ({ children, allowedRoles, requiresPayment = false }) => {
   const { role, hasPaidGroupAdminAccess } = useAuth();
@@ -93,6 +92,22 @@ export const routes = [
 
   },
 
+  //   {
+  //    type: "collapse",
+  //   name: "Manejo de usuarios",
+  //   key: "ManagmentUsers",
+  //   icon: <Icon fontSize="small">dashboard</Icon>,
+  //   route: "/ManagmentUsers",
+
+  //   component: (
+  //     <ProtectedElement>
+  //       <ManagmentUsers />
+  //     </ProtectedElement>
+  //   ),
+    
+  // },
+
+
   //Ruta de dashboard no visible
   {
     type: "collapse",
@@ -105,7 +120,7 @@ export const routes = [
         <DashboardGroupPage />
       </ProtectedElement>
     ),
-    roles: ["DEV", "GA", "GU", "DEF"],
+    roles: ["DEV", "GA", "GU", "DEF", "SA"],
     hideInSidebar: true,
   },
 
@@ -126,10 +141,19 @@ export const routes = [
     name: "Registro",
     key: "Registro",
     icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/Registro/:inviteToken",
+    route: "/registro/:inviteToken",
     component: <Register />,
     hideInSidebar: true,
   },
+  {
+  type: "collapse",
+  name: "Registro sin token",
+  key: "RegistroSinToken",
+  icon: <Icon fontSize="small">dashboard</Icon>,
+  route: "/registro",
+  component: <Register />,
+  hideInSidebar: true,
+},
    {
     type: "collapse",
     name: "Mensajes",
@@ -142,40 +166,9 @@ export const routes = [
       </ProtectedElement>
     ),
     hideInSidebar: true,
+    roles: ["GA", "GU", "DEV","SA"],
   },
 
-
-  //Ruta de proyectos
-  {
-    type: "collapse",
-    name: "Proyectos",
-    key: "Proyectos",
-    icon: <Icon fontSize="small">table_view</Icon>,
-    route: "/ProjectPage",
-
-    component: (
-      <ProtectedElement>
-        <ProjectPage />
-      </ProtectedElement>
-    ),
-    roles: ["GA", "GU", "DEV"],
-  },
-
-  //Ruta de proyectos
-  {
-    type: "collapse",
-    name: "DashboardConsumo",
-    key: "DashboardConsumo",
-    icon: <Icon fontSize="small">table_view</Icon>,
-    route: "/DashboardConsumo",
-
-    component: (
-      <ProtectedElement>
-        <DashboardConsumo />
-      </ProtectedElement>
-    ),
-    roles: ["GA", "GU", "DEV"],
-  },
 
   //Ruta de consumo
   {
@@ -236,6 +229,7 @@ export const routes = [
       </ProtectedElement>
     ),
     roles: ["DEV", "SA", "GA"],
+    hideInSidebar: true,
   },
 
   //Ruta de Monthly History
@@ -255,62 +249,7 @@ export const routes = [
     roles: ["GA", "DEV"],
   },
 
-  //Ruta de reportes
-  {
-    type: "collapse",
-    name: "Reportes",
-    key: "reportes",
-    icon: <Icon fontSize="small">bar_chart</Icon>,
 
-    collapse: [
-      {
-        name: "Emisiones",
-        key: "emissions-reports",
-        icon: <Icon fontSize="small">insert_chart</Icon>,
-        route: "/reportsEmissions",
-
-        component: (
-          <ProtectedElement>
-            <ReportsEmissionsPage />
-          </ProtectedElement>
-        ),
-        roles: ["GA", "DEV"],
-      },
-      {
-        name: "Empresas",
-        key: "companies-reports",
-        icon: <Icon fontSize="small">insert_chart</Icon>,
-        route: "/ReportCompanies",
-
-        component: (
-          <ProtectedElement>
-            <ReportCompanies />
-          </ProtectedElement>
-        ),
-        roles: ["SA", "DEV"],
-      },
-
-  {
-        name: "Servicios",
-        key: "Services-reports",
-        icon: <Icon fontSize="small">insert_chart</Icon>,
-        route: "/ReportServices",
-
-        component: (
-          <ProtectedElement>
-            <ReportServices />
-          </ProtectedElement>
-        ),
-        roles: ["SA", "DEV","GA"],
-      },
-
-
-
-
-      
-    ],
-    roles: ["DEV", "GA", "GU"],
-  },
 
   {
     type: "collapse",
@@ -328,21 +267,7 @@ export const routes = [
     roles: ["GA", "GU", "DEV"],
     hideInSidebar: true,
   },
-  //Ruta de incidents history
-  {
-    type: "collapse",
-    name: "Historial de incidentes",
-    key: "incidents-history",
-    icon: <Icon fontSize="small">list_alt</Icon>,
-    route: "/emissions/incidents",
-
-    component: (
-      <ProtectedElement>
-        <IncidentsHistoryPage />
-      </ProtectedElement>
-    ),
-    roles: ["GA", "DEV"],
-  },
+ 
 
   //Perfiles
   {
@@ -372,7 +297,7 @@ export const routes = [
         <GrupoProfilePage />
       </ProtectedElement>
     ),
-    roles: ["GA", "DEV", "GU", "SA"],
+    roles: ["GA", "DEV", "SA"],
     hideInSidebar: true,
   },
   //Ruta de cambio de contra
@@ -391,6 +316,16 @@ export const routes = [
     hideInSidebar: true,
   },
 
+
+    //Ruta de cambio de contra publico
+  {
+    type: "collapse",
+    name: "ChangePasswordPublic",
+    key: "ChangePasswordPublic",
+    route: "/ChangePassword",
+    component: <ChangePassword />,
+    hideInSidebar: true,
+  },
 
 
   //Gestiones para el Super Administrador
@@ -458,7 +393,7 @@ export const routes = [
         <ServicesPage />
       </ProtectedElement>
     ),
-    roles: ["GA", "DEV"],
+    roles: ["SA", "DEV"],
   },
 
   {
@@ -479,7 +414,7 @@ export const routes = [
   //Ruta Tabla de usuarios
   {
     type: "collapse",
-    name: "AdminUserDashboard",
+    name: "Usuarios",
     key: "AdminUserDashboard",
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/AdminUserDashboard",
@@ -496,36 +431,17 @@ export const routes = [
     roles: ["DEV", "SA","GA"],
   },
 
-
-
-
-
-  {
-     type: "collapse",
-    name: "Manejo de usuarios",
-    key: "ManagmentUsers",
-    icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/ManagmentUsers",
-
-    component: (
-      <ProtectedElement>
-        <ManagmentUsers />
-      </ProtectedElement>
-    ),
-    
-  },
-
    //subscripciones
   {
     type: "collapse",
-    name: "Subscription",
+    name: "Suscripción",
     key: "subscription",
-    icon: <Icon fontSize="small">suscripción</Icon>,
+    icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/subscription",
     component: <SubscriptionSwitch />,
     roles: ["DEV", "SA", "DEF", "GA"],
+     hideInSidebar: true,
   },
-
 
     {
       type: "collapse",
@@ -603,7 +519,21 @@ export const routes = [
 
 
 
+ //Ruta de incidents history
+  {
+    type: "collapse",
+    name: "Historial de incidentes",
+    key: "incidents-history",
+    icon: <Icon fontSize="small">list_alt</Icon>,
+    route: "/emissions/incidents",
 
+    component: (
+      <ProtectedElement>
+        <IncidentsHistoryPage />
+      </ProtectedElement>
+    ),
+    roles: ["GA", "DEV"],
+  },
 
     
 
@@ -618,6 +548,84 @@ export const routes = [
     component: <MonthlyConsumptionPage />,
     hideInSidebar: true,
   },
+
+
+//Ruta de proyectos
+  {
+    type: "collapse",
+    name: "Proyectos",
+    key: "Proyectos",
+    icon: <Icon fontSize="small">table_view</Icon>,
+    route: "/ProjectPage",
+
+    component: (
+      <ProtectedElement>
+        <ProjectPage />
+      </ProtectedElement>
+    ),
+    roles: ["GA", "GU", "DEV"],
+  },
+
+
+
+  //Ruta de reportes
+  {
+    type: "collapse",
+    name: "Reportes",
+    key: "reportes",
+    icon: <Icon fontSize="small">bar_chart</Icon>,
+
+    collapse: [
+      {
+        name: "Emisiones",
+        key: "emissions-reports",
+        icon: <Icon fontSize="small">insert_chart</Icon>,
+        route: "/reportsEmissions",
+
+        component: (
+          <ProtectedElement>
+            <ReportsEmissionsPage />
+          </ProtectedElement>
+        ),
+        roles: ["GA", "DEV"],
+      },
+      {
+        name: "Empresas",
+        key: "companies-reports",
+        icon: <Icon fontSize="small">insert_chart</Icon>,
+        route: "/ReportCompanies",
+
+        component: (
+          <ProtectedElement>
+            <ReportCompanies />
+          </ProtectedElement>
+        ),
+        roles: ["SA", "DEV"],
+      },
+
+  {
+        name: "Servicios",
+        key: "Services-reports",
+        icon: <Icon fontSize="small">insert_chart</Icon>,
+        route: "/ReportServices",
+
+        component: (
+          <ProtectedElement>
+            <ReportServices />
+          </ProtectedElement>
+        ),
+        roles: ["SA", "DEV"],
+      },
+
+
+
+
+      
+    ],
+    roles: ["DEV", "GA", "GU"],
+  },
+
+
 ];
 
 export const getRoutes = (role) => {

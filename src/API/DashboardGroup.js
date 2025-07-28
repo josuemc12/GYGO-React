@@ -14,3 +14,18 @@ export async function getDashboardGroup(){
         return [];
     }
 }
+
+export async function getSuperAdminDashboard() {
+    const response = await fetch(`${appsettings.apiUrl}SuperAdmin/Dashboard`,
+        {
+      method: "GET",
+      credentials: "include",
+    }
+    ); //7217 puerto
+    if(response.ok){
+        const data = await response.json();
+        return data;
+    }else{
+        return [];
+    }
+}

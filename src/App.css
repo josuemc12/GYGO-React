@@ -3,6 +3,9 @@
 }
 
 
+.swal-top {
+  z-index: 2000 !important; 
+}
 
 
 /*Color para los links del menu */
