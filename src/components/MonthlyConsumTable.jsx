@@ -113,8 +113,9 @@ export function MonthlyConsumptionTable({ consumos, loading, consumptionId }) {
       table={{ columns, rows }}
       isSorted={false}
       entriesPerPage={false}
-      showTotalEntries={false}
+      showTotalEntries={true}
       noEndBorder
+      loading={loading}
     />
   );
 }

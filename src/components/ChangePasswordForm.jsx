@@ -63,12 +63,12 @@ export const ChangePasswordForm = () => {
         return;
       }
     
-      console.log(result);
+     
       if (result.success) {
         Swal.fire({
           icon: "success",
-          title: "Registro exitoso",
-          text: "El usuario ha sido registrado correctamente.",
+          title: "Cambio de contraseña exitoso",
+          text: "El cambio de contraseña se cambiocorrectamente.",
           confirmButtonColor: "#2DA14C",
         }).then(() => {
           window.location.href = "/DashboardGroupPage";

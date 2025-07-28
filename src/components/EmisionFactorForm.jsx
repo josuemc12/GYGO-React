@@ -252,7 +252,6 @@ useEffect(() => {
               : "N/A"}
           </MDTypography>
         </MDBox>
-
         <MDBox mb={2}>
           <MDTypography variant="caption" fontWeight="medium" mb={1}>
             PCG (Greenhouse Gas)
@@ -287,7 +286,6 @@ useEffect(() => {
             ))}
           </select>
         </MDBox>
-
         <MDBox display="flex" gap={2} flexWrap="wrap" mb={3}>
           <MDBox flex={1} minWidth="45%">
             <MDTypography variant="caption" fontWeight="medium" mb={1}>

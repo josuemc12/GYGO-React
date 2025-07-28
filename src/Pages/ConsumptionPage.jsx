@@ -51,25 +51,12 @@ export function ConsumptionPage() {
     <DashboardLayout>
       <DashboardNavbar></DashboardNavbar>
 
-      
-      <Grid container spacing={2} mb={2} mt={3}>
-        <Grid item size={{xs:12, md:3}}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6">Total Consumo</Typography>
-              <Typography variant="h4"> kWh</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item size={{xs:12, md:3}}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6">Total Emisiones</Typography>
-              <Typography variant="h4">kg CO₂</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+
+
+
+
+
+
 
       <MDBox py={3}>
         <Grid container spacing={3} sx={{ mb: 5 }}>
@@ -127,6 +114,8 @@ export function ConsumptionPage() {
                 </Grid>
               </CardContent>
             </Card>
+
+            
           </Grid>
 
           {/* Tabla de Consumos */}
