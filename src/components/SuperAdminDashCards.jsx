@@ -256,7 +256,7 @@ export const SuperAdminDashCards = () => {
                                 </Typography>
                             </Box>
                             <Chip
-                                label={`${recentGroups.length} grupo${recentGroups.length !== 1 ? "s" : ""}`}
+                                label={`${recentGroups?.length ?? 0} grupo${(recentGroups?.length ?? 0) !== 1 ? "s" : ""}`}
                                 sx={{ bgcolor: "#f3f4f6", color: "#374151", fontWeight: "500" }}
                                 variant="outlined"
                             />
