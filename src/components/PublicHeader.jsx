@@ -403,7 +403,7 @@ export const PublicHeader = () => {
                 {/* Botón Log In en desktop */}
                 {!isMobile && (
                   <button className="login-btn" onClick={handleLoginClick}>
-                    Log In
+                    Iniciar Sesión
                   </button>
                 )}
                 
