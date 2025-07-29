@@ -66,7 +66,7 @@ export default function Login() {
     }
 
     try {
-      const { success, isTwoFactor, tempToken, error, rol, id, groupId } =
+      const { success, isTwoFactor, tempToken, error, rol, id } =
         await loginUser(email, password);
       if (!success) {
         Swal.fire({
@@ -86,7 +86,7 @@ export default function Login() {
       } else {
         console.log("Rol que se va a guardar:", rol);
         console.log("ID que se va a guardar:", id);
-        login(rol); // Save role and userId in context
+        login(rol,id); // Save role and userId in context
 
         // Normal login success — redirect to dashboard or home
         navigate("/Dashboard");
