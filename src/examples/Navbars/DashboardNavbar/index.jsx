@@ -124,7 +124,7 @@ function DashboardNavbar({ absolute = false, light = false, isMini = false }) {
     },
   });
 
-  const allowedRolesForGroup = ["GA", "DEV", "GU", "SA"];
+  const allowedRolesForGroup = ["GA", "DEV", "GU"];
 
   return (
     <AppBar

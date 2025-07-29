@@ -92,20 +92,21 @@ export const routes = [
 
   },
 
-  //   {
-  //    type: "collapse",
-  //   name: "Manejo de usuarios",
-  //   key: "ManagmentUsers",
-  //   icon: <Icon fontSize="small">dashboard</Icon>,
-  //   route: "/ManagmentUsers",
+    {
+     type: "collapse",
+    name: "Manejo de usuarios",
+    key: "ManagmentUsers",
+    icon: <Icon fontSize="small">dashboard</Icon>,
+    route: "/ManagmentUsers",
 
-  //   component: (
-  //     <ProtectedElement>
-  //       <ManagmentUsers />
-  //     </ProtectedElement>
-  //   ),
+    component: (
+      <ProtectedElement>
+        <ManagmentUsers />
+      </ProtectedElement>
+    ),
+    roles: ["DEV", "SA"],
     
-  // },
+  },
 
 
   //Ruta de dashboard no visible
