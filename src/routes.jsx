@@ -386,7 +386,7 @@ export const routes = [
    
     name: "Servicios",
     key: "Services",
-    icon: <Icon fontSize="small">dashboard</Icon>,
+    icon: <Icon fontSize="small">business</Icon>,
     route: "/Services",
     component: (
       <ProtectedElement>
@@ -400,7 +400,7 @@ export const routes = [
    
     name: "Factor Emision",
     key: "AdminFactorEmision",
-    icon: <Icon fontSize="small">dashboard</Icon>,
+    icon: <Icon fontSize="small">eco</Icon>,
     route: "/AdminEmisionFactor",
 
     component: (
@@ -408,7 +408,7 @@ export const routes = [
         <AdminEmisionFactor />
       </ProtectedElement>
     ),
-    roles: ["DEV", "GA","SA"],
+    roles: ["DEV","SA"],
   },
 
   //Ruta Tabla de usuarios

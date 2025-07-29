@@ -186,6 +186,7 @@ export function ReportCompanies() {
 
   return (
     <DashboardLayout>
+    <DashboardNavbar></DashboardNavbar>
       <MDBox py={3}>
         <MDBox mb={2}>
           <MDBox

@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import Footer from "examples/Footer";
 import DataTable from "examples/Tables/DataTable";
+import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 
 import EmissionFactorModal from "../../components/EmisionFactorForm";
 
@@ -269,6 +270,7 @@ const EmissionFactorDashboard = () => {
 
   return (
     <DashboardLayout>
+       <DashboardNavbar></DashboardNavbar>
       <MDBox py={3}>
         <MDBox mb={2}>
           <MDBox
