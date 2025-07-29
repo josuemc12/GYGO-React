@@ -298,7 +298,7 @@ export const routes = [
         <GrupoProfilePage />
       </ProtectedElement>
     ),
-    roles: ["GA", "DEV", "SA"],
+    roles: ["GA", "DEV", "SA", "GU"],
     hideInSidebar: true,
   },
   //Ruta de cambio de contra
@@ -623,7 +623,7 @@ export const routes = [
 
       
     ],
-    roles: ["DEV", "GA", "GU"],
+    roles: ["DEV", "GA"],
   },
 
 
