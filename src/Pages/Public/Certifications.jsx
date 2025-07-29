@@ -77,6 +77,9 @@ const StyledCard = styled(Card)(({ theme }) => ({
   overflow: "hidden",
   transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
   animation: `${fadeInUp} 0.6s ease-out`,
+  height: "100%", // Asegura que todas las cards tengan la misma altura
+  display: "flex",
+  flexDirection: "column",
 
   "&::before": {
     content: '""',
@@ -147,13 +150,19 @@ const CardTitle = styled(Typography)(({ theme }) => ({
 const ImageContainer = styled(Box)(({ theme }) => ({
   display: "flex",
   justifyContent: "center",
+  alignItems: "center", // Centra verticalmente la imagen
   marginBottom: theme.spacing(3),
   position: "relative",
+  height: 200, // Altura fija para el contenedor
+  width: "100%",
+  flex: 1, // Permite que el contenedor se expanda
 
   "& img": {
-    width: 300,
-    height: "100%",
-    objectFit: "cover",
+    maxWidth: 250, // Ancho máximo
+    maxHeight: 180, // Altura máxima
+    width: "auto", // Mantiene la proporción
+    height: "auto", // Mantiene la proporción
+    objectFit: "contain", // Asegura que la imagen completa sea visible
     borderRadius: 15,
     transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
     boxShadow: "0 8px 25px rgba(0,0,0,0.15)",
@@ -162,11 +171,11 @@ const ImageContainer = styled(Box)(({ theme }) => ({
   "&::after": {
     content: '""',
     position: "absolute",
-    top: 0,
+    top: "50%",
     left: "50%",
-    transform: "translateX(-50%)",
-    width: 300,
-    height: 200,
+    transform: "translate(-50%, -50%)",
+    width: 250,
+    height: 180,
     borderRadius: 15,
     background: "linear-gradient(45deg, rgba(33,150,243,0.1), rgba(76,175,80,0.1))",
     opacity: 0,
@@ -180,7 +189,8 @@ const ImageContainer = styled(Box)(({ theme }) => ({
 }))
 
 const StyledButton = styled(Button)(({ theme }) => ({
-  marginTop: theme.spacing(3),
+  marginTop: "auto", // Empuja el botón hacia abajo
+  marginBottom: theme.spacing(2),
   borderRadius: 25,
   padding: "12px 30px",
   background: "linear-gradient(45deg, #2196F3 30%, #4CAF50 90%)",
@@ -284,7 +294,7 @@ export default function Certificaciones() {
       <AnimatedContainer  maxWidth="lg"
   sx={{
     mt: 4,
-    mb: 4,
+    mb: 12,
     position: "relative",
     zIndex: 1,
     display: "flex",
