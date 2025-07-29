@@ -63,12 +63,12 @@ export const ChangePasswordForm = () => {
         return;
       }
     
-     
+     console.log(result)
       if (result.success) {
         Swal.fire({
           icon: "success",
           title: "Cambio de contraseña exitoso",
-          text: "El cambio de contraseña se cambiocorrectamente.",
+          text: "El cambio de contraseña se cambio correctamente.",
           confirmButtonColor: "#2DA14C",
         }).then(() => {
           window.location.href = "/DashboardGroupPage";
@@ -78,7 +78,7 @@ export const ChangePasswordForm = () => {
           Swal.fire({
           icon: "error",
           title: "Error al cambiar la contraseña",
-          text: result.error.message,
+          text: "La nueva contraseña no cumple con los requisitos mínimos establecidos.",
           confirmButtonColor: "#d33",
         });
         return;
