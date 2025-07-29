@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import Footer from "examples/Footer";
 import DataTable from "examples/Tables/DataTable";
+import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 
 import EmissionFactorModal from "../../components/EmisionFactorForm";
 
@@ -82,6 +83,7 @@ const EmissionFactorDashboard = () => {
           id: s.fuenteId,
           name: s.nombre,
         }));
+        
         const pcgs = pcgsRaw.map((p) => ({ id: p.pcgId, name: p.gei }));
 
         setMeasurementUnits(units);
@@ -139,11 +141,12 @@ const EmissionFactorDashboard = () => {
     valueFactor: factor.valueFactor,
     unitId: factor.unit,              
     unitCarbonId: factor.unitCarbono,
-    pcgId: factor.pcg,
+    pcgId: factor.pcgNombre,
     sectorId: factor.sector,
     sourceId: factor.source,
   });
   setIsModalOpen(true);
+  console.log(factor)
 };
 
   const handleModalClose = () => {
@@ -204,7 +207,6 @@ const EmissionFactorDashboard = () => {
     { Header: "Valor del Carbon", accessor: "ValorCarbon", align: "center" },
     { Header: "Factor de emisión", accessor: "Factoremisión", align: "center" },
     { Header: "PCG", accessor: "PCG", align: "center" },
-    { Header: "Sector", accessor: "Sector", align: "center" },
     { Header: "Fuente", accessor: "Fuente", align: "center" },
     { Header: "Acciones", accessor: "Acciones", align: "center" },
   ];
@@ -242,17 +244,12 @@ const EmissionFactorDashboard = () => {
   ),
   PCG: (
     <MDTypography variant="caption" color="text">
-      {getPcgName(factor.pcg)}
-    </MDTypography>
-  ),
-  Sector: (
-    <MDTypography variant="caption" color="text">
-      {getSectorName(factor.sector)}
+      {factor.pcgNombre}
     </MDTypography>
   ),
   Fuente: (
     <MDTypography variant="caption" color="text">
-      {getSourceName(factor.source)}
+      {factor.source}
     </MDTypography>
   ),
   Acciones: (
@@ -273,6 +270,7 @@ const EmissionFactorDashboard = () => {
 
   return (
     <DashboardLayout>
+       <DashboardNavbar></DashboardNavbar>
       <MDBox py={3}>
         <MDBox mb={2}>
           <MDBox

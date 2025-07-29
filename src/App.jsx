@@ -29,7 +29,6 @@ import MDBox from "components/MDBox";
 // Material Dashboard 2 React example components
 import Sidenav from "examples/Sidenav";
 
-
 // Material Dashboard 2 React themes
 import theme from "assets/theme";
 import themeRTL from "assets/theme/theme-rtl";
@@ -47,7 +46,7 @@ import createCache from "@emotion/cache";
 import { useAuth } from "./context/AuthContext";
 
 // Rutas
-import { routes,getRoutes } from "./routes";
+import { routes, getRoutes } from "./routes";
 
 // Material Dashboard 2 React contexts
 import {
@@ -74,7 +73,7 @@ export default function App() {
 
   const hideSidebarRoutes = [
     "/login",
-  
+    "/addGroup",
     "/sendinvite",
     "/verify-2fa",
     "/",
@@ -87,35 +86,36 @@ export default function App() {
     "/contactos",
     "/ChangePassword",
   ];
- const matchRoute = (route, path) => {
-  // Convertir rutas con params ":param" a regex
-  const pattern = "^" + route.replace(/:\w+/g, "[^/]+") + "$";
-  const regex = new RegExp(pattern, "i");
-  return regex.test(path);
-};
+  const matchRoute = (route, path) => {
+    // Convertir rutas con params ":param" a regex
+    const pattern = "^" + route.replace(/:\w+/g, "[^/]+") + "$";
+    const regex = new RegExp(pattern, "i");
+    return regex.test(path);
+  };
 
-const hideSidebar = hideSidebarRoutes.some((route) => {
-  if (route.includes(":")) {
-    return matchRoute(route, pathname.toLowerCase());
-  }
-  return route.toLowerCase() === pathname.toLowerCase();
-});
+  const hideSidebar = hideSidebarRoutes.some((route) => {
+    if (route.includes(":")) {
+      return matchRoute(route, pathname.toLowerCase());
+    }
+    return route.toLowerCase() === pathname.toLowerCase();
+  });
 
   const specialRoutes = [
     "/Login",
     "registro",
-   "/registro/:inviteToken",
+    "/registro/:inviteToken",
     "/sendinvite",
     "/verify-2fa",
-   "/ChangePassword",
+    "/ChangePassword",
     "/",
+    "/addGroup",
   ];
- const isSpecialRoute = specialRoutes.some((route) => {
-  if (route.includes(":")) {
-    return matchRoute(route, pathname.toLowerCase());
-  }
-  return pathname.toLowerCase().startsWith(route.toLowerCase());
-});
+  const isSpecialRoute = specialRoutes.some((route) => {
+    if (route.includes(":")) {
+      return matchRoute(route, pathname.toLowerCase());
+    }
+    return pathname.toLowerCase().startsWith(route.toLowerCase());
+  });
 
   const { role } = useAuth();
 
@@ -162,24 +162,22 @@ const hideSidebar = hideSidebarRoutes.some((route) => {
     document.scrollingElement.scrollTop = 0;
   }, [pathname]);
 
-const renderRoutes = (allRoutes) =>
-  allRoutes.flatMap((route) => {
-    if (route.collapse) return renderRoutes(route.collapse);
-    if (route.route && route.component)
-      return (
-        <Route
-          exact
-          path={route.route}
-          element={route.component}
-          key={route.key}
-        />
-      );
-    return [];
-  });
+  const renderRoutes = (allRoutes) =>
+    allRoutes.flatMap((route) => {
+      if (route.collapse) return renderRoutes(route.collapse);
+      if (route.route && route.component)
+        return (
+          <Route
+            exact
+            path={route.route}
+            element={route.component}
+            key={route.key}
+          />
+        );
+      return [];
+    });
 
-
-
-  return  (
+  return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <CssBaseline />
       {layout === "dashboard" && !hideSidebar && (
@@ -191,7 +189,6 @@ const renderRoutes = (allRoutes) =>
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleOnMouseLeave}
           />
-
         </>
       )}
       {layout === "vr" && <Configurator />}

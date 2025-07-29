@@ -29,8 +29,10 @@ export const AuthProvider = ({ children }) => {
     if (data?.user?.role && data?.user?.id) {
       setRole(data.user.role);
       setUserId(data.user.id);
+      setUserGroup(data.user.groupId); 
       localStorage.setItem("userRole", data.user.role);
       localStorage.setItem("userId", data.user.id);
+      localStorage.setItem("userGroup", data.user.groupId);
     } else {
       console.error("No se pudo refrescar el usuario:", data);
     }

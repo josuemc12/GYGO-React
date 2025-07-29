@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import DashboardLayout from "@/examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "@/examples/Navbars/DashboardNavbar";
+import Footer from "examples/Footer";
 import { getAllPlans, subscribeToPlan } from "../../API/Subscription";
 import { useAuth } from "../../context/AuthContext";
 import "./../../styles/Subscription.css";
@@ -44,6 +45,8 @@ export default function SubscribePrompt() {
   };
 
   return (
+    <DashboardLayout>
+          <DashboardNavbar />
     <div className="subscribe-container">
       <div className="subscribe-header">
         <h1 className="subscribe-title">Elige un plan para suscribirte</h1>
@@ -95,5 +98,7 @@ export default function SubscribePrompt() {
         <p className="footer-text">Todos los planes incluyen garantía de 30 días. Cancela en cualquier momento.</p>
       </div>
     </div>
+     <Footer />  
+     </DashboardLayout>
   )
 }
