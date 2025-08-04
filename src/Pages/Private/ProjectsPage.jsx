@@ -209,7 +209,19 @@ function ProjectPage() {
 
   const CreatePDFAPI = async () => {
     try {
-      const projectsPDF = await getProjectsPDF();
+      console.log(startDate)
+      console.log(endDate)
+
+        const formattedStart = encodeURIComponent(
+          dayjs(startDate).format("DD/MM/YYYY")
+        );
+        const formattedEnd = encodeURIComponent(
+          dayjs(endDate).format("DD/MM/YYYY")
+        );
+
+      console.log(formattedStart)
+      console.log(formattedEnd)
+      const projectsPDF = await getProjectsPDF(formattedStart, formattedEnd);
       console.log(projectsPDF);
       CreatePDF(projectsPDF);
     } catch (error) {

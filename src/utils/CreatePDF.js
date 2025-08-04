@@ -29,7 +29,7 @@ export function CreatePDF(datos) {
 
   // Convertimos el Map a array
   const proyectos = Array.from(proyectosMap.values());
-
+  const year = new Date().getFullYear();
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
@@ -60,8 +60,8 @@ export function CreatePDF(datos) {
   doc.setFontSize(12);
   doc.setTextColor(0, 0, 0);
   doc.setFont("helvetica", "normal");
-  doc.text("Nombre de la empresa", 20, pageHeight * 0.65);
-  doc.text("Proyectos", 20, pageHeight * 0.65 + 6);
+  doc.text(proyectos[0].grupoNombre, 20, pageHeight * 0.65);
+  doc.text(`AÑO ${year}`, 20, pageHeight * 0.65 + 6);
   doc.text("Preparado por:", 20, pageHeight - 40);
   doc.text("Preparado para:", pageWidth - 60, pageHeight - 40);
 
@@ -96,26 +96,6 @@ export function CreatePDF(datos) {
         yy = 20;
       }
     }
-
-    // Grupo
-    doc.setFontSize(14);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(...labelColor);
-    doc.text("Grupo", leftMargin, yy);
-
-    doc.setFontSize(12);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(0, 0, 0);
-    yy += 8;
-    doc.text(data.grupoNombre || "-", leftMargin, yy);
-
-    yy += 12;
-    checkPageBreak(10);
-    doc.setDrawColor(200);
-    doc.setLineWidth(0.5);
-    doc.line(leftMargin, yy, pageWidth - 20, yy);
-
-    yy += 10;
 
     // Proyecto
     doc.setFontSize(14);

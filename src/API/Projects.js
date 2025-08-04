@@ -153,8 +153,8 @@ export async function getProjectsByDates(startDate, endDate) {
 }
 
 //API para obtener los proyectos y tareas para el pdf
-export async function getProjectsPDF() {
-  const response = await fetch(`${appsettings.apiUrl}Projects/CreatePdf`, {
+export async function getProjectsPDF(startDate, endDate) {
+  const response = await fetch(`${appsettings.apiUrl}Projects/CreatePdf?Start_date=${startDate}&End_date=${endDate}`, {
     method: "GET",
     credentials: "include",
   });
