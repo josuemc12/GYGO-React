@@ -42,7 +42,7 @@ export const DashboardGroupPage = () => {
   }, []);
 
   const renderDashboardContent = () => {
-    if (role === "GA") {
+    if (role === "GA" || role == "GU") {
       return <ModernDashboardCards />;
     }
     if (role === "SA") {

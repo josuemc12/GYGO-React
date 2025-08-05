@@ -92,20 +92,21 @@ export const routes = [
 
   },
 
-  //   {
-  //    type: "collapse",
-  //   name: "Manejo de usuarios",
-  //   key: "ManagmentUsers",
-  //   icon: <Icon fontSize="small">dashboard</Icon>,
-  //   route: "/ManagmentUsers",
+    {
+     type: "collapse",
+    name: "Manejo de usuarios",
+    key: "ManagmentUsers",
+    icon: <Icon fontSize="small">dashboard</Icon>,
+    route: "/ManagmentUsers",
 
-  //   component: (
-  //     <ProtectedElement>
-  //       <ManagmentUsers />
-  //     </ProtectedElement>
-  //   ),
+    component: (
+      <ProtectedElement>
+        <ManagmentUsers />
+      </ProtectedElement>
+    ),
+    roles: ["DEV", "SA"],
     
-  // },
+  },
 
 
   //Ruta de dashboard no visible
@@ -297,7 +298,7 @@ export const routes = [
         <GrupoProfilePage />
       </ProtectedElement>
     ),
-    roles: ["GA", "DEV", "SA"],
+    roles: ["GA", "DEV", "SA", "GU"],
     hideInSidebar: true,
   },
   //Ruta de cambio de contra
@@ -386,7 +387,7 @@ export const routes = [
    
     name: "Servicios",
     key: "Services",
-    icon: <Icon fontSize="small">dashboard</Icon>,
+    icon: <Icon fontSize="small">business</Icon>,
     route: "/Services",
     component: (
       <ProtectedElement>
@@ -400,7 +401,7 @@ export const routes = [
    
     name: "Factor Emision",
     key: "AdminFactorEmision",
-    icon: <Icon fontSize="small">dashboard</Icon>,
+    icon: <Icon fontSize="small">eco</Icon>,
     route: "/AdminEmisionFactor",
 
     component: (
@@ -408,7 +409,7 @@ export const routes = [
         <AdminEmisionFactor />
       </ProtectedElement>
     ),
-    roles: ["DEV", "GA","SA"],
+    roles: ["DEV","SA"],
   },
 
   //Ruta Tabla de usuarios
@@ -622,7 +623,7 @@ export const routes = [
 
       
     ],
-    roles: ["DEV", "GA", "GU"],
+    roles: ["DEV", "GA"],
   },
 
 
