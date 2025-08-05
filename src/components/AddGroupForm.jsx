@@ -12,6 +12,7 @@ import {
   Box,
   Paper,
   CircularProgress,
+  Avatar,
 } from "@mui/material";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
@@ -19,6 +20,7 @@ import SendIcon from "@mui/icons-material/Send";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { PostAddGroup } from "../API/AddGroup";
 import { GetServices } from "../API/Services";
+import MDButton from "components/MDButton";
 
 export const AddGroupForm = () => {
   const [nombreGrupo, setNombreGrupo] = useState("");
@@ -26,6 +28,9 @@ export const AddGroupForm = () => {
   const [selectedService, setSelectedService] = useState("");
   const [servicesData, setServicesData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [imageFile, setImageFile] = useState("");
+  const [preview, setPreview] = useState(null); // para vista previa de la imagen
+
   const navigate = useNavigate();
 
   //Fetch para los servicios
@@ -42,6 +47,18 @@ export const AddGroupForm = () => {
     fetchServices();
   }, []);
 
+  
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setImageFile(file);
+    if (file) {
+      const objectUrl = URL.createObjectURL(file);
+      setPreview(objectUrl);
+    } else {
+      setPreview(null);
+    }
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
@@ -56,11 +73,20 @@ export const AddGroupForm = () => {
         });
         return;
       }
-
+      if (!imageFile) {
+        Swal.fire({
+          icon: "warning",
+          title: "No se pudo registrar la empresa",
+          text: "Por favor, ingrese el logo de la empresa",
+          confirmButtonColor: "#f8bb86",
+        });
+        return;
+      }
       const result = await PostAddGroup(
         nombreGrupo,
         correogrupo,
-        selectedService
+        selectedService,
+        imageFile
       );
       setLoading(false);
 
@@ -92,10 +118,9 @@ export const AddGroupForm = () => {
 
   return (
     <>
-
-      <Container maxWidth="sm" sx={{ mt: 8 }}>
+      <Container maxWidth="sm" sx={{ mt: 1 }}>
         <Paper elevation={3} sx={{ p: 4, mb: 5 }}>
-          <Typography variant="h4" align="center" gutterBottom sx={{ mb: 5 }}>
+          <Typography variant="h4" align="center" gutterBottom sx={{ mb: 1 }}>
             Complete los campos correspondientes
           </Typography>
           <Box component="form" onSubmit={handleSubmit}>
@@ -124,7 +149,7 @@ export const AddGroupForm = () => {
                 label="Servicio"
                 value={selectedService}
                 onChange={(e) => setSelectedService(e.target.value)}
-                sx={{height: 40}}
+                sx={{ height: 40 }}
               >
                 {servicesData.map((service) => (
                   <MenuItem key={service.serviceId} value={service.serviceId}>
@@ -133,13 +158,76 @@ export const AddGroupForm = () => {
                 ))}
               </Select>
             </FormControl>
-            <Button
+
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center", // centra horizontal
+                alignItems: "center", // centra vertical
+                height: "100%", // que tome todo el alto disponible
+                width: "100%", // todo el ancho disponible
+              }}
+            >
+              <Box
+                onClick={() => document.getElementById("upload-input").click()}
+                sx={{
+                  mt: 4,
+                  width: 280,
+                  height: 160,
+                  border: "2px dashed #30c622ff",
+                  borderRadius: 2,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  position: "relative",
+                  overflow: "hidden",
+                  bgcolor: preview ? "transparent" : "background.default",
+                  "&:hover": {
+                    borderColor: "#0e910eff",
+                    bgcolor: "action.hover",
+                  },
+                }}
+              >
+                {preview ? (
+                  <img
+                    src={preview}
+                    alt="Logo preview"
+                    style={{
+                      width: "95%",
+                      height: "95%",
+                      objectFit: "contain",
+                    }}
+                  />
+                ) : (
+                  <Typography
+                    color="text.secondary"
+                    textAlign="center"
+                    sx={{ px: 2 }}
+                  >
+                    Haz clic aquí o arrastra y suelta para subir el logo
+                  </Typography>
+                )}
+                <input
+                  id="upload-input"
+                  type="file"
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  onChange={handleImageChange}
+                />
+              </Box>
+            </Box>
+
+            <MDButton
               type="submit"
               fullWidth
+              color="success"
               sx={{
-                mt: 3, backgroundColor: "#415d43", color: "ButtonFace", 
+                mt: 3,
+               
+              
                 "&:hover": {
-                  backgroundColor: "#89b889", // mismo color o uno similar
+                  backgroundColor: "#0e910eff", // mismo color o uno similar
                 },
               }}
               variant="contained"
@@ -151,7 +239,7 @@ export const AddGroupForm = () => {
               ) : (
                 "Registrar"
               )}
-            </Button>
+            </MDButton>
           </Box>
         </Paper>
       </Container>

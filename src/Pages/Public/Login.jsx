@@ -84,10 +84,7 @@ export default function Login() {
         // Redirect to 2FA page
         navigate(`/verify-2fa?tempToken=${encodeURIComponent(tempToken)}`);
       } else {
-        console.log("Rol que se va a guardar:", rol);
-        console.log("ID que se va a guardar:", id);
-        login(rol,id); // Save role and userId in context
-
+        login(rol,id);
         // Normal login success — redirect to dashboard or home
         navigate("/Dashboard");
       }

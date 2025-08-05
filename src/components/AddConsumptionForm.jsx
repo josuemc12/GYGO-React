@@ -133,6 +133,8 @@ export function AddConsumptionForm() {
             )}
           </Grid>
 
+          
+
           {errors.submit && (
             <Grid item size={{xs:12}}>
               <Alert severity="error" icon={<ErrorOutline />}>
