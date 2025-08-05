@@ -5,7 +5,6 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import Footer from "examples/Footer";
 import DataTable from "examples/Tables/DataTable";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-
 import EmissionFactorModal from "../../components/EmisionFactorForm";
 
 import {
@@ -74,10 +73,11 @@ const EmissionFactorDashboard = () => {
           getSources(),
           getAllPCGs(),
         ]);
-        const units = unitsRaw.map((u) => ({ id: u.unidadId, name: u.nombre }));
+        const units = unitsRaw.map((u) => ({ id: u.unidadId, name: u.nombre, diminutivo: u.diminutivo }));
         const sectors = sectorsRaw.map((s) => ({
           id: s.sectorId,
           name: s.nombre,
+          diminutivo: s.diminutivo
         }));
         const sources = sourcesRaw.map((s) => ({
           id: s.fuenteId,
@@ -139,14 +139,14 @@ const EmissionFactorDashboard = () => {
     valueUnit: factor.valueUnit,
     valueEmision: factor.valueEmision,
     valueFactor: factor.valueFactor,
-    unitId: factor.unit,              
-    unitCarbonId: factor.unitCarbono,
-    pcgId: factor.pcgNombre,
-    sectorId: factor.sector,
-    sourceId: factor.source,
+    unit: factor.unit,              // Diminutivo (ej: "L")
+    unitCarbono: factor.unitCarbono, // Diminutivo (ej: "t CO2")
+    pcgNombre: factor.pcgNombre,    // Nombre del PCG (ej: "CO2")
+    sector: factor.sector,          // ID del sector
+    source: factor.source           
   });
   setIsModalOpen(true);
-  console.log(factor)
+  console.log("Editing factor prepared:", factor);
 };
 
   const handleModalClose = () => {
@@ -173,27 +173,32 @@ const EmissionFactorDashboard = () => {
     }
   };
 
-  const handleModalSubmit = async (data) => {
-    try {
-      if (editingFactor) {
-        const success = await updateEmissionFactor(data);
-        if (success) {
-          setEmissionFactors((prev) =>
-            prev.map((f) => (f.id === editingFactor.id ? { ...f, ...data } : f))
-          );
-        }
-      } else {
-        const success = await createEmissionFactor(data);
-        if (success) {
-          setEmissionFactors((prev) => [...prev, data]);
-        }
-      }
-
-      setIsModalOpen(false);
-    } catch (error) {
-      console.error("Error saving emission factor:", error);
+  const handleModalSubmit = async (formData) => {
+  try {
+    let success;
+    
+    if (editingFactor) {
+      success = await updateEmissionFactor(formData);
+    } else {
+      success = await createEmissionFactor(formData); 
     }
-  };
+
+    if (success) {
+      if (editingFactor) {
+        setEmissionFactors(prev => 
+          prev.map(f => f.id === editingFactor.id ? formData : f)
+        );
+      } else {
+        setEmissionFactors(prev => [...prev, formData]);
+      }
+      setIsModalOpen(false);
+    }
+
+     window.location.reload();
+  } catch (error) {
+    console.error("Error al guardar:", error);
+  }
+};
 
   const columns = [
     { Header: "Nombre", accessor: "nombre", align: "left" },
