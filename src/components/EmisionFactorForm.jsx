@@ -20,18 +20,17 @@ const EmissionFactorModal = ({ isOpen,
   onSubmit,
   editingFactor,
   measurementUnits,
-  sectors,
   sources,
   pcgs}) => {
     
 const initialFormData = {
   id: 0,
-  Name: "",
-  Unit: 0,
-  UnitCarbon: 0,
-  UnitValue: 0,
-  CarbonValue: 0,
-  PCGId: 0,
+  name: "", 
+  unit: 0,  
+  unitCarbon: 0, 
+  unitValue: 0, 
+  carbonValue: 0, 
+  pcgId: 0, 
   sourceId: 0,
   sectoId: 0,
 };
@@ -39,56 +38,102 @@ const initialFormData = {
   const [formData, setFormData] = useState(initialFormData);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const emissionFactor = formData.carbonValue !== 0 ? formData.unitValue / formData.carbonValue : 0
+  const emissionFactor = formData.factorValue !== 0 ? (formData.unitValue / formData.carbonValue).toFixed(4) : 0; 
 
 useEffect(() => {
   if (isOpen) {
     if (editingFactor) {
       
-      const unitId = measurementUnits.find(u => u.name === editingFactor.unit)?.id || 0;
-      const unitCarbonId = measurementUnits.find(u => u.name === editingFactor.unitCarbono)?.id || 0;
+      console.log("Editing factor received:", editingFactor);
+
+      const unitId = measurementUnits.find(u => u.diminutivo === editingFactor.unit)?.id || 0;
+      const unitCarbonId = measurementUnits.find(u => u.diminutivo === editingFactor.unitCarbono)?.id || 0;
       const sourceId = sources.find(s => s.name === editingFactor.source)?.id || 0;
+      const pcgId = pcgs.find(p => p.name === editingFactor.pcgNombre)?.id || 0;
+      const sectorId = editingFactor.sector || 0;
 
       setFormData({
         id: editingFactor.id || 0,
-        Name: editingFactor.name || "",
-        Unit: unitId,
-        UnitCarbon: unitCarbonId,
-        UnitValue: editingFactor.valueUnit || 0,
-        CarbonValue: editingFactor.valueEmision || 0,
-        PCGId: editingFactor.pcg || 0,
+        name: editingFactor.name || "", 
+        unit: unitId, 
+        unitCarbon: unitCarbonId, 
+        unitValue: editingFactor.valueUnit || 0, 
+        carbonValue: editingFactor.carbonValue || editingFactor.valueEmision || 0,
+        pcgId: pcgId,
         sourceId: sourceId,
-        sectoId: editingFactor.sector || 0,
+        sectoId: sectorId,
+        factorValue: emissionFactor
       });
+
     } else {
       setFormData(initialFormData);
     }
   }
-}, [isOpen, editingFactor, measurementUnits, sources]);
+}, [isOpen, editingFactor, measurementUnits, sources, pcgs]);
 
   const handleInputChange = (e) => {
   const { name, value } = e.target;
-  const numericFields = ["Unit", "UnitCarbon", "UnitValue", "CarbonValue", "PCGId", "sourceId", "sectoId"];
+  const numericFields = ["unit", "unitCarbon", "unitValue", "carbonValue", "pcgId", "sourceId", "sectoId"];
+  
   setFormData((prev) => ({
     ...prev,
-    [name]: numericFields.includes(name) ? Number(value) : value,
+    [name]: numericFields.includes(name) ? 
+      (value === "" ? 0 : Number(value)) : // Manejo de campo vacío
+      value
   }));
 };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setIsSubmitting(true)
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsSubmitting(true);
 
-    try {
-      console.log(formData);
-      await onSubmit(formData);
-      onClose();
-    } catch (error) {
-      console.error("Error submitting form:", error)
-    } finally {
-      setIsSubmitting(false)
+  try {
+    // 1. Validar que onSubmit existe
+    if (typeof onSubmit !== 'function') {
+      throw new Error('La función onSubmit no está disponible');
     }
+
+    // 2. Crear payload con validación de números
+    const payload = {
+      ...formData,
+      carbonValue: validateNumber(formData.carbonValue),
+      unitValue: validateNumber(formData.unitValue),
+      unit: validateNumber(formData.unit),
+      unitCarbon: validateNumber(formData.unitCarbon),
+      pcgId: validateNumber(formData.pcgId),
+      sourceId: validateNumber(formData.sourceId),
+      sectoId: validateNumber(formData.sectoId)
+    };
+
+    console.log('Datos enviados desde el modal:', JSON.stringify(payload, null, 2));
+
+    // 3. Llamar a la función del padre
+    await onSubmit(payload);
+
+    // 4. Cerrar el modal solo si todo sale bien
+    onClose();
+
+  } catch (error) {
+    console.error('Error en el envío del formulario:', {
+      error: error.message,
+      stack: error.stack,
+      formData: formData
+    });
+    
+    // Mostrar error al usuario (puedes usar tu sistema de notificaciones)
+    alert(`Error al guardar: ${error.message}`);
+    
+  } finally {
+    setIsSubmitting(false);
   }
+};
+
+// Función auxiliar para validar números (añadir al componente)
+const validateNumber = (value) => {
+  if (value === null || value === undefined || value === '') return 0;
+  const num = Number(value);
+  return isNaN(num) ? 0 : num;
+};
 
   
   const handleCloseModal = () => {
@@ -132,8 +177,8 @@ useEffect(() => {
           <MDInput
             fullWidth
             label="Nombre"
-            name="Name"
-            value={formData.Name}
+            name="name"
+            value={formData.name}
             onChange={handleInputChange}
             required
             placeholder="Ingresar el nombre del Factor de emisión"
@@ -147,8 +192,8 @@ useEffect(() => {
               Unidad de medida primaria
             </MDTypography>
             <select
-              name="Unit"
-              value={formData.Unit}
+              name="unit"
+              value={formData.unit}
               onChange={handleInputChange}
               required
               style={{
@@ -175,8 +220,8 @@ useEffect(() => {
               Unidad de medida del carbono
             </MDTypography>
             <select
-              name="UnitCarbon"
-              value={formData.UnitCarbon}
+              name="unitCarbon"
+              value={formData.unitCarbon}
               onChange={handleInputChange}
               required
               style={{
@@ -205,8 +250,8 @@ useEffect(() => {
               fullWidth
               type="number"
               label="Valor unitario"
-              name="UnitValue"
-              value={formData.UnitValue}
+              name="unitValue"
+              value={formData.unitValue}
               onChange={handleInputChange}
               step="0.01"
               required
@@ -220,8 +265,8 @@ useEffect(() => {
               fullWidth
               type="number"
               label="Valor de emisión"
-              name="CarbonValue"
-              value={formData.CarbonValue}
+              name="carbonValue"
+              value={formData.carbonValue}
               onChange={handleInputChange}
               step="0.01"
               required
@@ -247,8 +292,8 @@ useEffect(() => {
               userSelect: "none",
             }}
           >
-            {formData.CarbonValue !== 0 
-              ? (formData.UnitValue / formData.CarbonValue).toFixed(4)
+            {formData.valueFactor !== 0 
+              ? (formData.unitValue / formData.carbonValue).toFixed(4)
               : "N/A"}
           </MDTypography>
         </MDBox>
@@ -258,7 +303,7 @@ useEffect(() => {
           </MDTypography>
           <select
             name="PCGId"
-            value={formData.PCGId}
+            value={formData.pcgId}
             onChange={handleInputChange}
             required
             style={{
@@ -286,35 +331,6 @@ useEffect(() => {
             ))}
           </select>
         </MDBox>
-        <MDBox display="flex" gap={2} flexWrap="wrap" mb={3}>
-          <MDBox flex={1} minWidth="45%">
-            <MDTypography variant="caption" fontWeight="medium" mb={1}>
-              Sector
-            </MDTypography>
-            <select
-              name="sectoId"
-              value={formData.sectoId}
-              onChange={handleInputChange}
-              required
-              style={{
-                width: "100%",
-                padding: "10px",
-                borderRadius: 8,
-                border: "1.5px solid #e0e3e7",
-                backgroundColor: "#f8f9fa",
-                fontSize: "1rem",
-                color: "#344767",
-              }}
-            >
-              <option value={0}>Selecciona el sector...</option>
-              {sectors.map((sector) => (
-                <option key={sector.id} value={sector.id}>
-                  {sector.name}
-                </option>
-              ))}
-            </select>
-          </MDBox>
-
           <MDBox flex={1} minWidth="45%">
             <MDTypography variant="caption" fontWeight="medium" mb={1}>
               Fuente
@@ -342,8 +358,6 @@ useEffect(() => {
               ))}
             </select>
           </MDBox>
-        </MDBox>
-
         {/* Footer Buttons */}
         <MDBox display="flex" justifyContent="flex-end" gap={2}>
           <MDButton
