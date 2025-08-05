@@ -223,6 +223,7 @@ export const routes = [
     key: "add-group",
     icon: <Icon fontSize="small">bar_chart</Icon>,
     route: "/addGroup",
+    
     component: (
       <ProtectedElement>
         <AddGroupSAPage />

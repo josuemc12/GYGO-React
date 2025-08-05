@@ -73,7 +73,7 @@ export default function App() {
 
   const hideSidebarRoutes = [
     "/login",
-    "/addGroup",
+    
     "/sendinvite",
     "/verify-2fa",
     "/",
@@ -85,6 +85,7 @@ export default function App() {
     "/nosotros",
     "/contactos",
     "/ChangePassword",
+    "/addGroup",
   ];
   const matchRoute = (route, path) => {
     // Convertir rutas con params ":param" a regex
@@ -109,6 +110,7 @@ export default function App() {
     "/ChangePassword",
     "/",
     "/addGroup",
+    
   ];
   const isSpecialRoute = specialRoutes.some((route) => {
     if (route.includes(":")) {

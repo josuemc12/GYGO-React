@@ -1,14 +1,16 @@
 import { jsPDF } from "jspdf";
+import logo from "../assets/logoPdf.png";
 
-export function CreatePDF(datos) {
- const proyectosMap = new Map();
+export async function CreatePDF(datos) {
+  const proyectosMap = new Map();
 
-  datos.forEach(item => {
+  datos.forEach((item) => {
     if (!proyectosMap.has(item.proyectoId)) {
       // Creamos el proyecto con la estructura base y un array vacío de tareas
       proyectosMap.set(item.proyectoId, {
         proyectoId: item.proyectoId,
         grupoNombre: item.grupoNombre,
+        logoUrl: item.logoUrl,
         projectNombre: item.projectNombre,
         projectDescripcion: item.projectDescripcion,
         projectUnidadNombre: item.projectUnidadNombre,
@@ -27,6 +29,19 @@ export function CreatePDF(datos) {
     });
   });
 
+  async function getBase64FromUrl(url) {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("No se pudo cargar la imagen");
+    const blob = await response.blob();
+
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  }
+
   // Convertimos el Map a array
   const proyectos = Array.from(proyectosMap.values());
   const year = new Date().getFullYear();
@@ -37,7 +52,15 @@ export function CreatePDF(datos) {
 
   // Portada (igual que antes)
   doc.setFillColor(56, 71, 69);
-  doc.roundedRect(0, 0, pageWidth, pageHeight * 0.6, borderRadius, borderRadius, "F");
+  doc.roundedRect(
+    0,
+    0,
+    pageWidth,
+    pageHeight * 0.6,
+    borderRadius,
+    borderRadius,
+    "F"
+  );
 
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(50);
@@ -66,9 +89,25 @@ export function CreatePDF(datos) {
   doc.text("Preparado para:", pageWidth - 60, pageHeight - 40);
 
   doc.setFontSize(10);
-  doc.text("GET YOUR GREEN ON", 20, pageHeight - 30);
-  doc.text("Avoc Sel.", 20, pageHeight - 25);
-  doc.text("LOGO DE LA EMPRESA", pageWidth - 70, pageHeight - 30);
+  //doc.text("GET YOUR GREEN ON", 20, pageHeight - 30);
+  //doc.text("Avoc Sel.", 20, pageHeight - 25);
+  const logoBase64 = await getBase64FromUrl(logo);
+  doc.addImage(logoBase64, "PNG", 20, pageHeight - 25);
+  console.log(logoBase64);
+
+  // Inserta logo de la empresa en portada
+  if (proyectos[0].logoUrl) {
+    try {
+      const logoBase64 = await getBase64FromUrl(
+        "https://localhost:7217/" + proyectos[0].logoUrl
+      );
+      doc.addImage(logoBase64, "PNG", pageWidth - 70, pageHeight - 30);
+    } catch (error) {
+      console.warn("No se pudo cargar el logo en la portada:", error);
+    }
+  }
+
+  //doc.text("LOGO DE LA EMPRESA", pageWidth - 70, pageHeight - 30);
 
   // Ahora iteramos proyectos agrupados
   proyectos.forEach((data, index) => {
@@ -111,14 +150,14 @@ export function CreatePDF(datos) {
     const proyectoInfo = [
       `Nombre: ${data.projectNombre || "-"}`,
       `Descripción: ${data.projectDescripcion || "-"}`,
-       `Unidad de reduccion: ${data.projectUnidadNombre || "-"}`,
+      `Unidad de reduccion: ${data.projectUnidadNombre || "-"}`,
       `Cantidad de reducción: ${data.projectCantidadReduccion || "-"} ${data.projectUnidadNombre || ""}`,
       `Estado: ${data.projectEstatus ? "Realizado" : "Pendiente"}`,
       `Fecha de inicio: ${data.fechaInicio || "-"}`,
-      `Fecha final: ${data.fechaFinal || "-"}`
+      `Fecha final: ${data.fechaFinal || "-"}`,
     ];
 
-    proyectoInfo.forEach(line => {
+    proyectoInfo.forEach((line) => {
       checkPageBreak(lineHeight);
       doc.text(line, leftMargin, yy);
       yy += lineHeight;
@@ -150,16 +189,23 @@ export function CreatePDF(datos) {
         yy += lineHeight;
         doc.text(`Nombre: ${task.taskNombre || "-"}`, leftMargin + 10, yy);
         yy += lineHeight;
-        doc.text(`Descripción: ${task.taskDescripcion || "-"}`, leftMargin + 10, yy);
+        doc.text(
+          `Descripción: ${task.taskDescripcion || "-"}`,
+          leftMargin + 10,
+          yy
+        );
         yy += lineHeight;
-        doc.text(`Estado: ${task.taskEstatus ? "Realizado" : "Pendiente"}`, leftMargin + 10, yy);
+        doc.text(
+          `Estado: ${task.taskEstatus ? "Realizado" : "Pendiente"}`,
+          leftMargin + 10,
+          yy
+        );
         yy += lineHeight + 4;
       });
     } else {
       doc.text("No hay tareas disponibles", leftMargin, yy);
     }
   });
-
 
   doc.save("Proyectos.pdf");
 }

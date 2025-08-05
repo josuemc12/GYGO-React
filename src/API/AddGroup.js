@@ -1,19 +1,22 @@
 import { appsettings } from "../settings/appsettings";
 
 
-export async function PostAddGroup(newGroup, correogrupo, selectedService) {
+export async function PostAddGroup(newGroup, correogrupo, selectedService,image) {
   try {
+
+    
+    const formData = new FormData();
+    formData.append("nombre", newGroup);
+    formData.append("correo", correogrupo);
+    formData.append("idService", selectedService);
+    formData.append("Logo", image);
+
+
+
     const response = await fetch(`${appsettings.apiUrl}Group/create`, {
       method: "POST",
       credentials: "include",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        nombre: newGroup,
-        correo: correogrupo,
-        idService: selectedService,
-      }),
+      body: formData,
     });
 
   if (response.ok) {
