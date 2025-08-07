@@ -29,7 +29,19 @@ import MDBadge from "components/MDBadge";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Grid, Card, TextField,Stack,Tooltip,IconButton, } from "@mui/material";
+import {
+  Grid,
+  Card,
+  TextField,
+  Stack,
+  Tooltip,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+} from "@mui/material";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 
 const EmissionFactorDashboard = () => {
@@ -59,7 +71,7 @@ const EmissionFactorDashboard = () => {
         setLoading(false);
       }
     };
-    console.log(emissionFactors)
+    console.log(emissionFactors);
     fetchEmissionFactors();
   }, []);
 
@@ -73,17 +85,21 @@ const EmissionFactorDashboard = () => {
           getSources(),
           getAllPCGs(),
         ]);
-        const units = unitsRaw.map((u) => ({ id: u.unidadId, name: u.nombre, diminutivo: u.diminutivo }));
+        const units = unitsRaw.map((u) => ({
+          id: u.unidadId,
+          name: u.nombre,
+          diminutivo: u.diminutivo,
+        }));
         const sectors = sectorsRaw.map((s) => ({
           id: s.sectorId,
           name: s.nombre,
-          diminutivo: s.diminutivo
+          diminutivo: s.diminutivo,
         }));
         const sources = sourcesRaw.map((s) => ({
           id: s.fuenteId,
           name: s.nombre,
         }));
-        
+
         const pcgs = pcgsRaw.map((p) => ({ id: p.pcgId, name: p.gei }));
 
         setMeasurementUnits(units);
@@ -133,21 +149,21 @@ const EmissionFactorDashboard = () => {
   };
 
   const handleEdit = (factor) => {
-  setEditingFactor({
-    id: factor.id,
-    name: factor.name,
-    valueUnit: factor.valueUnit,
-    valueEmision: factor.valueEmision,
-    valueFactor: factor.valueFactor,
-    unit: factor.unit,              // Diminutivo (ej: "L")
-    unitCarbono: factor.unitCarbono, // Diminutivo (ej: "t CO2")
-    pcgNombre: factor.pcgNombre,    // Nombre del PCG (ej: "CO2")
-    sector: factor.sector,          // ID del sector
-    source: factor.source           
-  });
-  setIsModalOpen(true);
-  console.log("Editing factor prepared:", factor);
-};
+    setEditingFactor({
+      id: factor.id,
+      name: factor.name,
+      valueUnit: factor.valueUnit,
+      valueEmision: factor.valueEmision,
+      valueFactor: factor.valueFactor,
+      unit: factor.unit, // Diminutivo (ej: "L")
+      unitCarbono: factor.unitCarbono, // Diminutivo (ej: "t CO2")
+      pcgNombre: factor.pcgNombre, // Nombre del PCG (ej: "CO2")
+      sector: factor.sector, // ID del sector
+      source: factor.source,
+    });
+    setIsModalOpen(true);
+    console.log("Editing factor prepared:", factor);
+  };
 
   const handleModalClose = () => {
     setIsModalOpen(false);
@@ -174,31 +190,31 @@ const EmissionFactorDashboard = () => {
   };
 
   const handleModalSubmit = async (formData) => {
-  try {
-    let success;
-    
-    if (editingFactor) {
-      success = await updateEmissionFactor(formData);
-    } else {
-      success = await createEmissionFactor(formData); 
-    }
+    try {
+      let success;
 
-    if (success) {
       if (editingFactor) {
-        setEmissionFactors(prev => 
-          prev.map(f => f.id === editingFactor.id ? formData : f)
-        );
+        success = await updateEmissionFactor(formData);
       } else {
-        setEmissionFactors(prev => [...prev, formData]);
+        success = await createEmissionFactor(formData);
       }
-      setIsModalOpen(false);
-    }
 
-     window.location.reload();
-  } catch (error) {
-    console.error("Error al guardar:", error);
-  }
-};
+      if (success) {
+        if (editingFactor) {
+          setEmissionFactors((prev) =>
+            prev.map((f) => (f.id === editingFactor.id ? formData : f))
+          );
+        } else {
+          setEmissionFactors((prev) => [...prev, formData]);
+        }
+        setIsModalOpen(false);
+      }
+
+      window.location.reload();
+    } catch (error) {
+      console.error("Error al guardar:", error);
+    }
+  };
 
   const columns = [
     { Header: "Nombre", accessor: "nombre", align: "left" },
@@ -217,65 +233,78 @@ const EmissionFactorDashboard = () => {
   ];
 
   const rows = filteredFactors.map((factor) => ({
-  nombre: (
-    <MDTypography variant="caption" fontWeight="medium">
-      {factor.name}
-    </MDTypography>
-  ),
-  UnidadPrimaria: (
-    <MDTypography variant="caption" color="text">
-      {factor.unit}
-    </MDTypography>
-  ),
-  UnidaddeCarbono: (
-    <MDTypography variant="caption" color="text">
-      {factor.unitCarbono}
-    </MDTypography>
-  ),
-  ValorUnitario: (
-    <MDTypography variant="caption" color="text">
-      {factor.valueUnit}
-    </MDTypography>
-  ),
-  ValorCarbon: (
-    <MDTypography variant="caption" color="text">
-      {factor.valueEmision}
-    </MDTypography>
-  ),
-  Factoremisión: (
-    <MDTypography variant="caption" color="text">
-      {factor.valueFactor}
-    </MDTypography>
-  ),
-  PCG: (
-    <MDTypography variant="caption" color="text">
-      {factor.pcgNombre}
-    </MDTypography>
-  ),
-  Fuente: (
-    <MDTypography variant="caption" color="text">
-      {factor.source}
-    </MDTypography>
-  ),
-  Acciones: (
-    <Stack direction="row" spacing={1} justifyContent="center" alignItems="center">
-      <Tooltip title="Editar">
-        <IconButton size="small" color="info" onClick={() => handleEdit(factor)}>
-          <EditIcon fontSize="small" />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="Eliminar">
-        <IconButton size="small" color="error" onClick={() => handleDelete(factor)}>
-          <DeleteIcon fontSize="small" />
-        </IconButton>
-      </Tooltip>
-    </Stack>
-  ),
-}));
+    nombre: (
+      <MDTypography variant="caption" fontWeight="medium">
+        {factor.name}
+      </MDTypography>
+    ),
+    UnidadPrimaria: (
+      <MDTypography variant="caption" color="text">
+        {factor.unit}
+      </MDTypography>
+    ),
+    UnidaddeCarbono: (
+      <MDTypography variant="caption" color="text">
+        {factor.unitCarbono}
+      </MDTypography>
+    ),
+    ValorUnitario: (
+      <MDTypography variant="caption" color="text">
+        {factor.valueUnit}
+      </MDTypography>
+    ),
+    ValorCarbon: (
+      <MDTypography variant="caption" color="text">
+        {factor.valueEmision}
+      </MDTypography>
+    ),
+    Factoremisión: (
+      <MDTypography variant="caption" color="text">
+        {factor.valueFactor}
+      </MDTypography>
+    ),
+    PCG: (
+      <MDTypography variant="caption" color="text">
+        {factor.pcgNombre}
+      </MDTypography>
+    ),
+    Fuente: (
+      <MDTypography variant="caption" color="text">
+        {factor.source}
+      </MDTypography>
+    ),
+    Acciones: (
+      <Stack
+        direction="row"
+        spacing={1}
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Tooltip title="Editar">
+          <IconButton
+            size="small"
+            color="info"
+            onClick={() => handleEdit(factor)}
+          >
+            <EditIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Eliminar">
+          <IconButton
+            size="small"
+            color="error"
+            onClick={() => handleDelete(factor)}
+          >
+            <DeleteIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+      </Stack>
+    ),
+  }));
 
   return (
     <DashboardLayout>
-       <DashboardNavbar></DashboardNavbar>
+      <DashboardNavbar></DashboardNavbar>
       <MDBox py={3}>
         <MDBox mb={2}>
           <MDBox
@@ -301,15 +330,15 @@ const EmissionFactorDashboard = () => {
               <Grid item>
                 <MDButton
                   variant="outlined"
-                      sx={{
-                        borderColor: "#4CAF50",
-                        color: "#4CAF50",
-                        "&:hover": {
-                          backgroundColor: "#E8F5E9",
-                          borderColor: "#43A047",
-                          color: "#388E3C",
-                        },
-                      }}
+                  sx={{
+                    borderColor: "#4CAF50",
+                    color: "#4CAF50",
+                    "&:hover": {
+                      backgroundColor: "#E8F5E9",
+                      borderColor: "#43A047",
+                      color: "#388E3C",
+                    },
+                  }}
                   onClick={handleCreate}
                 >
                   Crear Nuevo
@@ -326,6 +355,7 @@ const EmissionFactorDashboard = () => {
                   size="medium"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
+                  sx={{ width: "250px" }}
                 />
               </Grid>
             </Grid>
@@ -403,32 +433,31 @@ const EmissionFactorDashboard = () => {
       />
 
       {/* Delete Confirmation Dialog */}
-      {deleteConfirmation && (
-        <div
-          className="modal-overlay"
-          onClick={() => setDeleteConfirmation(null)}
-        >
-          <div className="confirmation-dialog">
-            <h3>Confirm Delete</h3>
-            <p>
-              Are you sure you want to delete "{deleteConfirmation.name}"?
-              <br />
-              This action cannot be undone.
-            </p>
-            <div className="confirmation-actions">
-              <button
-                className="cancel-btn"
-                onClick={() => setDeleteConfirmation(null)}
-              >
-                Cancel
-              </button>
-              <button className="confirm-delete-btn" onClick={confirmDelete}>
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <Dialog
+        open={Boolean(deleteConfirmation)}
+        onClose={() => setDeleteConfirmation(null)}
+      >
+        <DialogTitle>Confirmar eliminación</DialogTitle>
+        <DialogContent>
+          <p>
+            ¿Estás seguro de que deseas eliminar "{deleteConfirmation?.name}"?
+            <br />
+            Esta acción no se puede deshacer.
+          </p>
+        </DialogContent>
+        <DialogActions>
+          <MDButton
+            onClick={() => setDeleteConfirmation(null)}
+            variant="outlined"
+            color="error"
+          >
+            Cancelar
+          </MDButton>
+          <MDButton onClick={confirmDelete} variant="gradient" color="success">
+            Eliminar
+          </MDButton>
+        </DialogActions>
+      </Dialog>
     </DashboardLayout>
   );
 };

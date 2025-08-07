@@ -21,25 +21,21 @@ export default function ServicesPage() {
   const [selectedGroup, setSelectedGroup] = useState(null);
   const { userId, role } = useAuth();
 
-  useEffect(() => {
-    const fetchServices = async () => {
-      const data = await GetServices();
-      const flattenedRows = data.flatMap((service) =>
-        service.grupos.map((grupo) => ({
-          serviceName: service.serviceName,
-          serviceId: service.serviceId,
-          groupName: grupo.nombre,
-          groupId: grupo.grupoId,
-          actions: grupo.grupoId,
-        }))
-      );
-      setServices(flattenedRows);
-      setTableRows(flattenedRows);
-    };
-    fetchServices();
-    console.log(toString(role));
-  }, []);
+useEffect(() => {
+  if (!searchTerm) {
+    setTableRows(services);
+  } else {
+    const filtered = services.filter(
+      (item) =>
+        item.serviceName.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setTableRows(filtered);
+  }
+}, [searchTerm, services]);
 
+
+
+  
   // Update columns to include actions
   const columns = [
     { Header: "Servicio", accessor: "serviceName" },
@@ -122,12 +118,12 @@ export default function ServicesPage() {
             <Grid container spacing={2} mt={1}>
               <Grid item xs={12} sm={6} md={4} lg={3}>
                 <TextField
-                  label="Buscar servicios o grupos"
+                  label="Buscar servicios"
                   variant="outlined"
                   fullWidth
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  sx={{ mb: 3 }}
+                  sx={{ width: "200px",mb: 3 }}
                 />
               </Grid>
             </Grid>
