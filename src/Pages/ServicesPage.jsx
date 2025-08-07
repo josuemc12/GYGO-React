@@ -21,21 +21,39 @@ export default function ServicesPage() {
   const [selectedGroup, setSelectedGroup] = useState(null);
   const { userId, role } = useAuth();
 
-useEffect(() => {
-  if (!searchTerm) {
-    setTableRows(services);
-  } else {
-    const filtered = services.filter(
-      (item) =>
-        item.serviceName.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setTableRows(filtered);
-  }
-}, [searchTerm, services]);
+  useEffect(() => {
+    const fetchServices = async () => {
+      const data = await GetServices();
+      const flattenedRows = data.flatMap((service) =>
+        service.grupos.map((grupo) => ({
+          serviceName: service.serviceName,
+          serviceId: service.serviceId,
+          groupName: grupo.nombre,
+          groupId: grupo.grupoId,
+          actions: grupo.grupoId,
+        }))
+      );
+      setServices(flattenedRows);
+      setTableRows(flattenedRows);
+    };
+    fetchServices();
+  }, []);
 
+  useEffect(() => {
+    if (!searchTerm) {
+      setTableRows(services);
+    } else {
+      const filtered = services.filter((item) => {
+        const term = searchTerm.toLowerCase();
+        return (
+          item.serviceName.toLowerCase().includes(term) ||
+          item.groupName.toLowerCase().includes(term)
+        );
+      });
+      setTableRows(filtered);
+    }
+  }, [searchTerm, services]);
 
-
-  
   // Update columns to include actions
   const columns = [
     { Header: "Servicio", accessor: "serviceName" },
@@ -109,6 +127,10 @@ useEffect(() => {
                 <MDBox display="flex" alignItems="center" gap={1}>
                   <FilterAltOutlinedIcon fontSize="medium" />
                   <MDTypography variant="h6">Filtros y Acciones</MDTypography>
+                  <MDTypography variant="body2" color="text">
+                    Gestiona los servicios de las empresas dentro de la
+                    organización
+                  </MDTypography>
                 </MDBox>
               </Grid>
 
@@ -123,7 +145,7 @@ useEffect(() => {
                   fullWidth
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  sx={{ width: "200px",mb: 3 }}
+                  sx={{ width: "200px", mb: 3 }}
                 />
               </Grid>
             </Grid>

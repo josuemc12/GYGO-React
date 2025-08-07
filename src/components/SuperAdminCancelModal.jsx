@@ -8,7 +8,7 @@ import {
   CircularProgress,
   Alert
 } from '@mui/material';
-
+import MDButton from "components/MDButton";
 const SuperAdminCancelModal = ({ 
   open, 
   onClose,
@@ -63,7 +63,7 @@ const SuperAdminCancelModal = ({
         ) : (
           <>
             <Typography variant="body1" gutterBottom>
-              Grupo ID: <strong>{groupId}</strong>
+              Código del Grupo: <strong>{groupId}</strong>
             </Typography>
 
             <TextField
@@ -80,23 +80,24 @@ const SuperAdminCancelModal = ({
             />
 
             <Box sx={buttonContainerStyle}>
-              <Button 
+              <MDButton 
                 onClick={handleClose}
                 disabled={isLoading}
                 variant="outlined"
+                color="error"
                 sx={{ mr: 2 }}
               >
                 Cancelar
-              </Button>
-              <Button
+              </MDButton>
+              <MDButton
                 onClick={handleSubmit}
                 disabled={isLoading || !reason.trim()}
-                color="error"
+                color="success"
                 variant="contained"
                 endIcon={isLoading ? <CircularProgress size={24} /> : null}
               >
                 Confirmar
-              </Button>
+              </MDButton>
             </Box>
           </>
         )}

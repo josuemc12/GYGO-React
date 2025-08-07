@@ -325,6 +325,11 @@ const EmissionFactorDashboard = () => {
                   <FilterAltOutlinedIcon fontSize="medium" />
                   <MDTypography variant="h6">Filtros y Acciones</MDTypography>
                 </MDBox>
+                <MDBox display="flex" alignItems="center" gap={1}>
+                  <MDTypography variant="body2" color="text">
+                    Gestiona los factores de emisión registrados dentro de la organización
+                  </MDTypography>
+                </MDBox>
               </Grid>
 
               <Grid item>
