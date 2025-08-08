@@ -52,6 +52,7 @@ export function MonthlyConsumptionPage() {
   const [filtros, setFiltros] = useState({ mes: "", año: "" });
   const [availableYears, setAvailableYears] = useState([]);
   const [loadingYears, setLoadingYears] = useState(true);
+  const [abbreviation, setAbbreviation] = useState("");
 
    const handleAddMonthlyConsumption = () => {
     navigate(`/consumption/monthly/add/${id}`);
@@ -62,6 +63,7 @@ export function MonthlyConsumptionPage() {
       setLoading(true);
       const result = await getMonthlyConsumptions(id);
       setConsumosMensuales(result);
+      setAbbreviation(result[0].unitAbbreviation);    
       setLoading(false);
     };
     fetchMonthlyConsumption();
@@ -115,10 +117,10 @@ export function MonthlyConsumptionPage() {
       <DashboardNavbar></DashboardNavbar>
       <MDBox py={3}>
         <Grid container spacing={3}>
-          <Grid item size={{ xs: 12 }}>
+          <Grid size={{ xs: 12 }}>
             <Card sx={{ p: 3 }}>
               <Grid container alignItems="center" spacing={2}>
-                <Grid item size={{ xs: 12, md: 1 }}>
+                <Grid size={{ xs: 12, md: 1 }}>
                   <MDButton
                     variant="text"
                     color="black"
@@ -129,7 +131,7 @@ export function MonthlyConsumptionPage() {
                     Volver
                   </MDButton>
                 </Grid>
-                <Grid item size={{ xs: 12, md: 10 }}>
+                <Grid size={{ xs: 12, md: 10 }}>
                   <MDTypography variant="h4" fontWeight="bold">
                     Consumo Mensual
                   </MDTypography>
@@ -150,20 +152,20 @@ export function MonthlyConsumptionPage() {
           },
           {
             label: "Cantidad Total",
-            value: `${totales.cantidad.toFixed(2)} kWh`,
+            value: `${totales.cantidad.toFixed(2)} ${abbreviation}`,
           },
           {
             label: "Emisiones Totales",
-            value: `${totales.emisiones.toFixed(2)} kg`,
+            value: `${totales.emisiones.toFixed(2)} kg CO₂`,
           },
           {
             label: "Promedio Mensual",
             value:
               consumosFiltrados.length > 0
-                ? `${(totales.emisiones / consumosFiltrados.length).toFixed(2)} kg`
+                ? `${(totales.emisiones / consumosFiltrados.length).toFixed(2)} kg CO₂`
                 : "0 kg",
           }].map((item, index) => (
-            <Grid item size={{ xs: 12, md: 6, lg: 3 }} key={index}>
+            <Grid size={{ xs: 12, md: 6, lg: 3 }} key={index}>
               <Card sx={{ p: 2, borderLeft: "4px solid #376D4F" }}>
                 <MDTypography variant="body2" color="text" fontWeight="bold">
                   {item.label}
@@ -174,10 +176,10 @@ export function MonthlyConsumptionPage() {
           ))}
 
           {/* Filtros */}
-          <Grid item size={{ xs: 12 }} sx={{mb: 4}}>
+          <Grid size={{ xs: 12 }} sx={{mb: 4}}>
             <Card sx={{ p: 3 }}>
               <Grid container spacing={2} alignItems="center">
-                <Grid item size={{ xs: 12, md: 5 }} >
+                <Grid size={{ xs: 12, md: 5 }} >
                   <FormControl fullWidth variant="outlined">
                     <InputLabel id="mes-label">Mes</InputLabel>
                     <Select
@@ -199,7 +201,7 @@ export function MonthlyConsumptionPage() {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item size={{ xs: 12, md: 5 }}>
+                <Grid size={{ xs: 12, md: 5 }}>
                   <FormControl fullWidth>
                     <InputLabel>Año</InputLabel>
                     <Select
@@ -220,7 +222,7 @@ export function MonthlyConsumptionPage() {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item size={{ xs: 12, md: 2 }}>
+                <Grid size={{ xs: 12, md: 2 }}>
                   <MDButton variant="outlined" onClick={limpiarFiltros} color="secondary">
                     Limpiar Filtros
                   </MDButton>
@@ -230,7 +232,7 @@ export function MonthlyConsumptionPage() {
           </Grid>
 
           {/* Tabla */}
-          <Grid item size={{ xs: 12 }} sx={{mb:3}}>
+          <Grid size={{ xs: 12 }} sx={{mb:3}}>
             <Card>
               <MDBox
                 mx={2}

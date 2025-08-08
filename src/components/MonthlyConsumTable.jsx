@@ -76,7 +76,7 @@ export function MonthlyConsumptionTable({ consumos, loading, consumptionId }) {
     ),
     cantidad: (
       <MDTypography variant="caption" color="text" sx={{color: "#495057"}}>
-        {consumo.amount.toLocaleString()} kWh
+        {consumo.amount.toLocaleString()} {consumo.unitAbbreviation}
       </MDTypography>
     ),
     emisiones: (

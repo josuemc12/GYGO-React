@@ -191,7 +191,7 @@ useEffect(() => {
                 </Grid>
 
                 {/* Año */}
-                <Grid item size={{ xs: 12, md: 5 }}>
+                <Grid size={{ xs: 12, md: 5 }}>
                   <FormControl fullWidth>
                     <InputLabel>Año</InputLabel>
                     <Select
@@ -213,7 +213,7 @@ useEffect(() => {
                   </FormControl>
                 </Grid>
 
-                <Grid item size={{ xs: 12, md: 2 }}>
+                <Grid size={{ xs: 12, md: 2 }}>
                   <MDButton
                     variant="outlined"
                     onClick={() => setFiltros({ mes: "", año: "" })}

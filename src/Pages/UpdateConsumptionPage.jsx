@@ -117,10 +117,10 @@ export function UpdateConsumptionPage() {
       <DashboardNavbar></DashboardNavbar>
       <MDBox py={3}>
         <Grid container spacing={3} sx={{mb:5}}>
-          <Grid item size={{xs:12}}>
+          <Grid size={{xs:12}}>
             <Card sx={{ p: 3 }}>
               <Grid container alignItems="center" spacing={2}>
-                <Grid item size={{xs:12, md:1}}>
+                <Grid size={{xs:12, md:1}}>
                   <MDButton
                     variant="text"
                     color="black"
@@ -131,7 +131,7 @@ export function UpdateConsumptionPage() {
                     Volver
                   </MDButton>
                 </Grid>
-                <Grid item size={{xs:12, md: 10}}>
+                <Grid size={{xs:12, md: 10}}>
                   <MDTypography variant="h5" fontWeight="bold" gutterBottom>
                     Editar Consumo
                   </MDTypography>
@@ -143,7 +143,7 @@ export function UpdateConsumptionPage() {
             </Card>
           </Grid>
 
-          <Grid item size={{xs:12}}>
+          <Grid size={{xs:12}}>
             <Card sx={{ p: 3 }}>
               <MDTypography variant="h6" fontWeight="bold" gutterBottom>
                 Información del Consumo
@@ -153,7 +153,7 @@ export function UpdateConsumptionPage() {
               </MDTypography>
               <form onSubmit={handleSubmit}>
                 <Grid container spacing={2}>
-                  <Grid item size={{xs:12}}>
+                  <Grid size={{xs:12}}>
                     <TextField
                       label="Nombre *"
                       name="name"
@@ -165,7 +165,7 @@ export function UpdateConsumptionPage() {
                     />
                   </Grid>
 
-                  <Grid item size={{xs:12}}>
+                  <Grid size={{xs:12}}>
                     {loading ? (
                       <CircularProgress size={24} />
                     ) : (
@@ -192,14 +192,14 @@ export function UpdateConsumptionPage() {
                   </Grid>
 
                   {factorSeleccionado && (
-                    <Grid item size={{xs:12}}>
+                    <Grid size={{xs:12}}>
                       <MDTypography variant="body2">
                         Nombre: {factorSeleccionado.name} | Unidad: {factorSeleccionado.unitCarbono}
                       </MDTypography>
                     </Grid>
                   )}
 
-                  <Grid item size={{xs:12}}>
+                  <Grid size={{xs:12}}>
                     <FormControlLabel
                       control={
                         <Checkbox
@@ -213,14 +213,14 @@ export function UpdateConsumptionPage() {
                   </Grid>
 
                   {errors.submit && (
-                    <Grid item size={{xs:12}}>
+                    <Grid size={{xs:12}}>
                       <Alert severity="error" icon={<ErrorOutline />}>
                         {errors.submit}
                       </Alert>
                     </Grid>
                   )}
 
-                  <Grid item size={{xs:12}}>
+                  <Grid size={{xs:12}}>
                     <MDButton
                       type="submit"
                       variant="gradient"

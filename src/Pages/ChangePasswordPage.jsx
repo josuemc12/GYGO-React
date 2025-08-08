@@ -51,7 +51,7 @@ export const ChangePasswordPage = () => {
       <DashboardNavbar></DashboardNavbar>
       <MDBox py={3} mb={4}>
         <Grid container spacing={3} justifyContent={"center"}>
-          <Grid item size={{xs:12, md:8, lg:6}}>
+          <Grid size={{xs:12, md:8, lg:6}}>
             <Card sx={{p: 4}}>
               <MDTypography variant="h5" fontWeight="bold" gutterBottom>
                 Cambiar contraseña | {username || "Usuario"}

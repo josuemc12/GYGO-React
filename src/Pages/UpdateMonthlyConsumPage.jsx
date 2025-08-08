@@ -8,6 +8,7 @@ import {
   MenuItem,
   CircularProgress,
   Alert,
+  Select
 } from "@mui/material";
 import Swal from "sweetalert2";
 import MDTypography from "components/MDTypography";
@@ -94,19 +95,24 @@ export function UpdateMonthlyConsumPage() {
     }
   };
 
+  const currentYear = new Date().getFullYear();
+  const startYear = 2020;
+  const years = Array.from({ length: currentYear - startYear + 1 }, (_, i) => startYear + i);
+
+
   return (
     <DashboardLayout>
       <DashboardNavbar></DashboardNavbar>
-      <Grid container spacing={3} py={3} sx={{mb: 5}}>
-        <Grid size={{xs:12}}>
+      <Grid container spacing={3} py={3} sx={{ mb: 5 }}>
+        <Grid size={{ xs: 12 }}>
           <Card sx={{ p: 3 }}>
             <Grid container alignItems="center" spacing={2}>
-              <Grid size={{xs:12, md: 1}}>
+              <Grid size={{ xs: 12, md: 1 }}>
                 <MDButton variant="text" color="black" startIcon={<ArrowBack />} onClick={() => navigate(-1)}>
                   Volver
                 </MDButton>
               </Grid>
-              <Grid size={{xs:12, md: 10}}>
+              <Grid size={{ xs: 12, md: 10 }}>
                 <MDTypography variant="h5" fontWeight="bold" gutterBottom>
                   Editar Consumo Mensual
                 </MDTypography>
@@ -118,38 +124,60 @@ export function UpdateMonthlyConsumPage() {
           </Card>
         </Grid>
 
-        <Grid size={{xs:12}}>
+        <Grid size={{ xs: 12 }}>
           <Card sx={{ p: 3 }}>
             {loading ? (
               <CircularProgress />
             ) : (
               <form onSubmit={handleSubmit}>
                 <Grid container spacing={2}>
-                  <Grid size={{xs:12, md: 4}}>
-                    <TextField
-                      label="Mes *"
-                      type="number"
+                  <Grid size={{ xs: 12, md: 4 }}>
+                    <Select
                       name="month"
                       value={formData.month}
                       onChange={handleInputChange}
+                      displayEmpty
                       fullWidth
                       error={!!errors.month}
-                      helperText={errors.month}
-                    />
+                      sx={{ height: 40 }}
+                    >
+                      <MenuItem value="">Seleccione un mes</MenuItem>
+                      {Array.from({ length: 12 }, (_, i) => (
+                        <MenuItem key={i + 1} value={i + 1}>
+                          {new Date(0, i).toLocaleString("es", { month: "long" })}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    {errors.month && (
+                      <Alert severity="error" icon={<ErrorOutline />}>
+                        {errors.month}
+                      </Alert>
+                    )}
                   </Grid>
-                  <Grid size={{xs:12, md: 4}}>
-                    <TextField
-                      label="Año *"
-                      type="number"
+                  <Grid size={{ xs: 12, md: 4 }}>
+                    <Select
                       name="year"
                       value={formData.year}
                       onChange={handleInputChange}
+                      displayEmpty
                       fullWidth
                       error={!!errors.year}
-                      helperText={errors.year}
-                    />
+                      sx={{ height: 40 }}
+                    >
+                      <MenuItem value="">Seleccione un año</MenuItem>
+                      {years.map((y) => (
+                        <MenuItem key={y} value={y}>
+                          {y}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    {errors.year && (
+                      <Alert severity="error" icon={<ErrorOutline />}>
+                        {errors.year}
+                      </Alert>
+                    )}
                   </Grid>
-                  <Grid size={{xs:12, md: 4}}>
+                  <Grid size={{ xs: 12, md: 4 }}>
                     <TextField
                       label="Cantidad *"
                       type="number"
@@ -164,14 +192,14 @@ export function UpdateMonthlyConsumPage() {
                   </Grid>
 
                   {errors.submit && (
-                    <Grid size={{xs:12}}>
+                    <Grid size={{ xs: 12 }}>
                       <Alert severity="error" icon={<ErrorOutline />}>
                         {errors.submit}
                       </Alert>
                     </Grid>
                   )}
 
-                  <Grid size={{xs:12}}>
+                  <Grid size={{ xs: 12 }}>
                     <MDButton
                       type="submit"
                       variant="gradient"

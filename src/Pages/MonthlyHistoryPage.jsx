@@ -119,10 +119,10 @@ export function MonthlyHistoryPage() {
       <DashboardNavbar></DashboardNavbar>
       <MDBox py={3}>
         <Grid container spacing={3}>
-          <Grid item size={{xs:12}}>
+          <Grid size={{xs:12}}>
             <Card sx={{ p: 3 }}>
               <Grid container alignItems="center" spacing={2}>
-                <Grid item size={{xs: 12, md: 2}}>
+                <Grid size={{xs: 12, md: 1}}>
                   <MDButton
                     variant="text"
                     color="black"
@@ -133,7 +133,7 @@ export function MonthlyHistoryPage() {
                     Volver
                   </MDButton>
                 </Grid>
-                <Grid item size={{xs:12, md:10}}>
+                <Grid size={{xs:12, md:10}}>
                   <MDTypography variant="h5" fontWeight="bold">
                     Historial de Cambios
                   </MDTypography>
@@ -145,7 +145,7 @@ export function MonthlyHistoryPage() {
             </Card>
           </Grid>
 
-          <Grid item size={{xs:12, md:6}}>
+          <Grid size={{xs:12, md:6}}>
             <Card sx={{ p: 3 }}>
               <MDTypography variant="subtitle2" color="text">Total Cambios</MDTypography>
               <MDTypography variant="h6" fontWeight="bold">
@@ -154,7 +154,7 @@ export function MonthlyHistoryPage() {
             </Card>
           </Grid>
 
-          <Grid item size={{xs:12, md:6}}>
+          <Grid size={{xs:12, md:6}}>
             <Card sx={{ p: 3 }}>
               <MDTypography variant="subtitle2" color="text">Tipo Más Común</MDTypography>
               <MDTypography variant="h6" fontWeight="bold">
@@ -163,7 +163,7 @@ export function MonthlyHistoryPage() {
             </Card>
           </Grid>
 
-          <Grid item size={12}>
+          <Grid size={12}>
             <Card sx={{ p: 3 }}>
               <MDTypography variant="h6" fontWeight="bold" gutterBottom>
                 Registro de Actividades

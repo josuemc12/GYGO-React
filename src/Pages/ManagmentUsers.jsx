@@ -225,7 +225,7 @@ const filteredUsers = Users.filter((user) =>
             bgColor="white"
           >
             <Grid container alignItems="center" justifyContent="space-between">
-              <Grid item>
+              <Grid>
                 <MDBox display="flex" flexDirection="column">
                   <MDBox display="flex" alignItems="center" gap={1}>
                     <FilterAltOutlinedIcon fontSize="medium" />
@@ -233,7 +233,7 @@ const filteredUsers = Users.filter((user) =>
                   </MDBox>
                 </MDBox>
               </Grid>
-              <Grid item>
+              <Grid>
                 <MDButton
                   onClick={() => {
                     setInviteModalOpen(true);
@@ -261,9 +261,9 @@ const filteredUsers = Users.filter((user) =>
               spacing={2}
               mt={2}
             >
-              <Grid item>
+              <Grid>
                 <Grid container spacing={2}>
-                  <Grid item>
+                  <Grid>
                     <TextField
                       fullWidth
                       variant="outlined"
@@ -281,7 +281,7 @@ const filteredUsers = Users.filter((user) =>
 
           <MDBox pt={6} pb={3}>
             <Grid container spacing={6}>
-              <Grid item xs={12}>
+              <Grid size={{xs: 12}}>
                 <Card>
                   <MDBox
                     mx={2}

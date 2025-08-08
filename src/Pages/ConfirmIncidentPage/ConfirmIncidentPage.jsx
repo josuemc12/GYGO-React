@@ -53,7 +53,7 @@ export const ConfirmIncidentPage = () => {
     <DashboardLayout>
       <MDBox py={3}>
         <Grid container justifyContent="center"  sx={{my: 5}}>
-          <Grid item size={{xs:12, md:8, lg:6}}>
+          <Grid size={{xs:12, md:8, lg:6}}>
             <Card sx={{ p: 4, textAlign: "center" }}>
               <MDTypography variant="h5" fontWeight="bold" gutterBottom>
                 Confirmación de Incidente

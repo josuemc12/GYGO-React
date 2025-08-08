@@ -320,7 +320,7 @@ const EmissionFactorDashboard = () => {
               justifyContent="space-between"
               spacing={2}
             >
-              <Grid item>
+              <Grid>
                 <MDBox display="flex" alignItems="center" gap={1}>
                   <FilterAltOutlinedIcon fontSize="medium" />
                   <MDTypography variant="h6">Filtros y Acciones</MDTypography>
@@ -332,7 +332,7 @@ const EmissionFactorDashboard = () => {
                 </MDBox>
               </Grid>
 
-              <Grid item>
+              <Grid>
                 <MDButton
                   variant="outlined"
                   sx={{
@@ -352,7 +352,7 @@ const EmissionFactorDashboard = () => {
             </Grid>
 
             <Grid container spacing={2} mt={1}>
-              <Grid item xs={12} sm={6} md={4} lg={3}>
+              <Grid>
                 <TextField
                   fullWidth
                   variant="outlined"
@@ -368,7 +368,7 @@ const EmissionFactorDashboard = () => {
 
           <MDBox pt={6} pb={3}>
             <Grid container spacing={6}>
-              <Grid item xs={12}>
+              <Grid size={{xs: 12}}>
                 <Card>
                   <MDBox
                     mx={2}

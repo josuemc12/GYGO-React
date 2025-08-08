@@ -229,7 +229,7 @@ export const ReportsEmissionsPage = () => {
                   Configuración del Reporte
                 </Typography>
                 <Grid container spacing={3} alignItems="center">
-                  <Grid item size={{xs:12, md: 6}}>
+                  <Grid size={{xs:12, md: 6}}>
                     <FormControl fullWidth variant="outlined">
                       <InputLabel id="yearInputLabel">Año</InputLabel>
                       <Select
@@ -250,7 +250,7 @@ export const ReportsEmissionsPage = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item size={{xs:12, md: 6}}>
+                  <Grid size={{xs:12, md: 6}}>
                     <MDButton
                       variant="contained"
                       size="large"
@@ -284,7 +284,7 @@ export const ReportsEmissionsPage = () => {
                   Rango de Meses
                 </Typography>
                 <Grid container spacing={3} alignItems="center">
-                  <Grid item size={{xs:12, md: 3}}>
+                  <Grid size={{xs:12, md: 3}}>
                     <FormControl fullWidth variant="outlined">
                       <InputLabel id="yearInputLabel2">Año</InputLabel>
                       <Select
@@ -305,7 +305,7 @@ export const ReportsEmissionsPage = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item size={{xs:12, md:3}} >
+                  <Grid size={{xs:12, md:3}} >
                     <FormControl fullWidth variant="outlined">
                       <InputLabel id="initialMonthLabel">Mes Inicial</InputLabel>
                       <Select
@@ -326,7 +326,7 @@ export const ReportsEmissionsPage = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item size={{xs:12, md:3}} >
+                  <Grid size={{xs:12, md:3}} >
                     <FormControl fullWidth variant="outlined">
                       <InputLabel id="finalMonthLabel">Mes Final</InputLabel>
                       <Select
@@ -346,7 +346,7 @@ export const ReportsEmissionsPage = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item size={{xs:12, md:3}} >
+                  <Grid size={{xs:12, md:3}} >
                     <MDButton
                       variant="contained"
                       size="large"
@@ -379,7 +379,7 @@ export const ReportsEmissionsPage = () => {
                   Rango de Años
                 </Typography>
                 <Grid container spacing={3} alignItems="center">
-                  <Grid item size={{xs:12, md: 4}} >
+                  <Grid size={{xs:12, md: 4}} >
                     <FormControl fullWidth variant="outlined">
                       <InputLabel id="initialYearLabel">Año Inicial</InputLabel>
                       <Select
@@ -399,7 +399,7 @@ export const ReportsEmissionsPage = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item size={{xs:12, md: 4}} >
+                  <Grid size={{xs:12, md: 4}} >
                     <FormControl fullWidth variant="outlined">
                       <InputLabel id="finalYearLabel">Año Final</InputLabel>
                       <Select
@@ -419,7 +419,7 @@ export const ReportsEmissionsPage = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item size={{xs:12, md: 4}} >
+                  <Grid size={{xs:12, md: 4}} >
                     <MDButton
                       variant="contained"
                       size="large"

@@ -57,7 +57,7 @@ export function ConsumptionTable({ consumos, loading, onVerConsumoMensual, onEdi
   return (
     <MDBox >
       <Grid container spacing={5}>
-        <Grid item size={{ xs: 12 }}>
+        <Grid size={{ xs: 12 }}>
           <Card>
             <MDBox pt={3}>
               <DataTable

@@ -167,7 +167,7 @@ const PaymentHistoryTable = () => {
   return (
     <MDBox pt={6} pb={3}>
       <Grid container spacing={6}>
-        <Grid item xs={12}>
+        <Grid xs={12}>
           <Card>
             <MDBox
               mx={2}
