@@ -1,5 +1,4 @@
 import { jsPDF } from "jspdf";
-import logo from "../assets/logoPdf.png";
 
 export async function CreatePDF(datos) {
   const proyectosMap = new Map();
@@ -44,7 +43,11 @@ export async function CreatePDF(datos) {
 
   // Convertimos el Map a array
   const proyectos = Array.from(proyectosMap.values());
-  const year = new Date().getFullYear();
+  const fecha = new Date();
+  const año = fecha.getFullYear();
+  const mes = String(fecha.getMonth() + 1).padStart(2, "0"); 
+  const dia = String(fecha.getDate()).padStart(2, "0");
+  const nombreArchivo = `Proyectos_${dia}-${mes}-${año}.pdf`;
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
@@ -66,13 +69,7 @@ export async function CreatePDF(datos) {
   doc.setFontSize(50);
   doc.setFont("helvetica", "bold");
 
-  const texto = [
-    "Informe: plan de",
-    "gestión de",
-    "reducción para la",
-    "Carbono",
-    "Neutralidad",
-  ];
+  const texto = ["Informe:", "Proyectos"];
   let y = 40;
   texto.forEach((linea) => {
     const textWidth = doc.getTextWidth(linea);
@@ -80,28 +77,27 @@ export async function CreatePDF(datos) {
     y += 20;
   });
 
-  doc.setFontSize(12);
-  doc.setTextColor(0, 0, 0);
+  doc.setFontSize(18);
+  doc.setTextColor(112, 90, 90);
   doc.setFont("helvetica", "normal");
   doc.text(proyectos[0].grupoNombre, 20, pageHeight * 0.65);
-  doc.text(`AÑO ${year}`, 20, pageHeight * 0.65 + 6);
+  doc.text(`Año ${año}`, 20, pageHeight * 0.67 + 6);
   doc.text("Preparado por:", 20, pageHeight - 40);
   doc.text("Preparado para:", pageWidth - 60, pageHeight - 40);
 
   doc.setFontSize(10);
   //doc.text("GET YOUR GREEN ON", 20, pageHeight - 30);
   //doc.text("Avoc Sel.", 20, pageHeight - 25);
-  const logoBase64 = await getBase64FromUrl(logo);
-  doc.addImage(logoBase64, "PNG", 20, pageHeight - 25);
-  console.log(logoBase64);
+  const logoGYGO = await getBase64FromUrl("/logoPdf.png");
+  doc.addImage(logoGYGO, "PNG", 8, pageHeight - 49, 60, 60);
 
   // Inserta logo de la empresa en portada
   if (proyectos[0].logoUrl) {
     try {
-      const logoBase64 = await getBase64FromUrl(
+      const logoEmpresa = await getBase64FromUrl(
         "https://localhost:7217/" + proyectos[0].logoUrl
       );
-      doc.addImage(logoBase64, "PNG", pageWidth - 70, pageHeight - 30);
+      doc.addImage(logoEmpresa, "PNG", pageWidth - 60, pageHeight - 25, 40, 15);
     } catch (error) {
       console.warn("No se pudo cargar el logo en la portada:", error);
     }
@@ -207,5 +203,5 @@ export async function CreatePDF(datos) {
     }
   });
 
-  doc.save("Proyectos.pdf");
+  doc.save(nombreArchivo);
 }

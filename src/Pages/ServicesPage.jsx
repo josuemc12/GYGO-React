@@ -37,8 +37,22 @@ export default function ServicesPage() {
       setTableRows(flattenedRows);
     };
     fetchServices();
-    console.log(toString(role));
   }, []);
+
+  useEffect(() => {
+    if (!searchTerm) {
+      setTableRows(services);
+    } else {
+      const filtered = services.filter((item) => {
+        const term = searchTerm.toLowerCase();
+        return (
+          item.serviceName.toLowerCase().includes(term) ||
+          item.groupName.toLowerCase().includes(term)
+        );
+      });
+      setTableRows(filtered);
+    }
+  }, [searchTerm, services]);
 
   // Update columns to include actions
   const columns = [
@@ -113,6 +127,10 @@ export default function ServicesPage() {
                 <MDBox display="flex" alignItems="center" gap={1}>
                   <FilterAltOutlinedIcon fontSize="medium" />
                   <MDTypography variant="h6">Filtros y Acciones</MDTypography>
+                  <MDTypography variant="body2" color="text">
+                    Gestiona los servicios de las empresas dentro de la
+                    organización
+                  </MDTypography>
                 </MDBox>
               </Grid>
 
@@ -122,12 +140,12 @@ export default function ServicesPage() {
             <Grid container spacing={2} mt={1}>
               <Grid item xs={12} sm={6} md={4} lg={3}>
                 <TextField
-                  label="Buscar servicios o grupos"
+                  label="Buscar servicios"
                   variant="outlined"
                   fullWidth
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  sx={{ mb: 3 }}
+                  sx={{ width: "200px", mb: 3 }}
                 />
               </Grid>
             </Grid>

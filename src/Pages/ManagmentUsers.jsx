@@ -73,17 +73,20 @@ function ManagmentUsers() {
   const [modoEdicion, setModoEdicion] = useState(false);
 
 
+  const [searchTerm, setSearchTerm] = useState("");
+
+
   const [projectId, setProjectId] = useState(null);
   const [reductionUnit, setReductionUnit] = useState(null);
-    const [error, setError] = useState("");
+  const [error, setError] = useState("");
   const [editTaskId, setEditTaskId] = useState(null);
-const [inviteModalOpen, setInviteModalOpen] = useState(false);
-const [inviteLoading, setInviteLoading] = useState(false);
- 
+  const [inviteModalOpen, setInviteModalOpen] = useState(false);
+  const [inviteLoading, setInviteLoading] = useState(false);
+
   const fetchUsers = async () => {
     try {
    
-       if (filter === "todos") {
+      if (filter === "todos") {
         const data = await getUsers();
         setUsers(data);
         console.log(setUsers);
@@ -135,7 +138,10 @@ const [inviteLoading, setInviteLoading] = useState(false);
       fetchUsers();
   }, [filter]);
 
-
+const filteredUsers = Users.filter((user) =>
+  user.correo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  user.nombregrupo.toLowerCase().includes(searchTerm.toLowerCase()) 
+);
 
 
   const columns = [
@@ -148,10 +154,10 @@ const [inviteLoading, setInviteLoading] = useState(false);
     },
     { Header: "rol", accessor: "rol", align: "center" },
 
-    { Header: "Acciones", accessor: "action", align: "center" },
+    // { Header: "Acciones", accessor: "action", align: "center" },
   ];
 
-  const rows = Users.map((user) => ({
+  const rows = filteredUsers.map((user) => ({
     nombre: (
       <MDTypography variant="caption" fontWeight="medium">
         {user.nombre}
@@ -173,74 +179,65 @@ const [inviteLoading, setInviteLoading] = useState(false);
       </MDTypography>
     ),
 
-    action: (
-      <Stack
-        direction="row"
-        spacing={1}
-        justifyContent="center"
-        alignItems="center"
-      >
-        <Tooltip title="Ver detalles">
-          <IconButton size="small" >
-            <VisibilityIcon fontSize="small" />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Editar">
-          <IconButton
-            size="small"
-            color="info"
-           
-          >
-            <EditIcon fontSize="small" />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Eliminar">
-          <IconButton
-            size="small"
-            color="error"
+    // action: (
+    //   <Stack
+    //     direction="row"
+    //     spacing={1}
+    //     justifyContent="center"
+    //     alignItems="center"
+    //   >
+    //     <Tooltip title="Ver detalles">
+    //       <IconButton size="small" >
+    //         <VisibilityIcon fontSize="small" />
+    //       </IconButton>
+    //     </Tooltip>
+    //     <Tooltip title="Editar">
+    //       <IconButton
+    //         size="small"
+    //         color="info"
+    //       >
+    //         <EditIcon fontSize="small" />
+    //       </IconButton>
+    //     </Tooltip>
+    //     <Tooltip title="Eliminar">
+    //       <IconButton
+    //         size="small"
+    //         color="error"
             
-          >
-            <DeleteIcon fontSize="small" />
-          </IconButton>
-        </Tooltip>
-      </Stack>
-    ),
+    //       >
+    //         <DeleteIcon fontSize="small" />
+    //       </IconButton>
+    //     </Tooltip>
+    //   </Stack>
+    // ),
   }));
 
   return (
     <DashboardLayout>
       <DashboardNavbar></DashboardNavbar>
       <MDBox py={3}>
-       
-          <MDBox mb={2}>
-            <MDBox
-              borderRadius="xl"
-              border="1px solid #ccc"
-              p={3}
-              mb={2}
-              bgColor="white"
-            >
-              <Grid
-                container
-                alignItems="center"
-                justifyContent="space-between"
-              >
-                <Grid item>
-                  <MDBox display="flex" flexDirection="column">
-                    <MDBox display="flex" alignItems="center" gap={1}>
-                      <FilterAltOutlinedIcon fontSize="medium" />
-                      <MDTypography variant="h6">
-                        Filtros y Acciones
-                      </MDTypography>
-                    </MDBox>
-                    <MDTypography variant="body2" color="text">
-                      Filtra los proyectos por estado y fechas
-                    </MDTypography>
+        <MDBox mb={2}>
+          <MDBox
+            borderRadius="xl"
+            border="1px solid #ccc"
+            p={3}
+            mb={2}
+            bgColor="white"
+          >
+            <Grid container alignItems="center" justifyContent="space-between">
+              <Grid item>
+                <MDBox display="flex" flexDirection="column">
+                  <MDBox display="flex" alignItems="center" gap={1}>
+                    <FilterAltOutlinedIcon fontSize="medium" />
+                    <MDTypography variant="h6">Filtros y Acciones</MDTypography>
                   </MDBox>
-                </Grid>
-                <Grid item>
-                  <MDButton
-                  onClick={() => {setInviteModalOpen(true)}}
+                </MDBox>
+              </Grid>
+              <Grid item>
+                <MDButton
+                  onClick={() => {
+                    setInviteModalOpen(true);
+                  }}
                   variant="outlined"
                   sx={{
                     borderColor: "#4CAF50",
@@ -250,101 +247,89 @@ const [inviteLoading, setInviteLoading] = useState(false);
                       borderColor: "#43A047",
                       color: "#388E3C",
                     },
-                  }} 
-                  >
-                    Nuevo Usuario
-                  </MDButton>
-                </Grid>
+                  }}
+                >
+                  Nuevo Usuario
+                </MDButton>
               </Grid>
+            </Grid>
 
-              <Grid
-                container
-                alignItems="center"
-                justifyContent="space-between"
-                spacing={2}
-                mt={2}
-              >
-                <Grid item>
-                  <Grid container spacing={2}>
-                    <Grid item>
-                      <FormControl size="medium" sx={{ width: 180 }}>
-                         <InputLabel id="Estado-label">Estado</InputLabel>
-                        <Select
-                         labelId="Estado-label"
-                            name="estado"
-                            label="Estado"
-                            fullWidth
-                        
-                          
-                          sx={{ height: 40 }}
-                        >
-                          <MenuItem value="todos">Todos</MenuItem>
-                          <MenuItem value="true">Realizados</MenuItem>
-                          <MenuItem value="false">Pendientes</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Grid>
-
-         
+            <Grid
+              container
+              alignItems="center"
+              justifyContent="space-between"
+              spacing={2}
+              mt={2}
+            >
+              <Grid item>
+                <Grid container spacing={2}>
+                  <Grid item>
+                    <TextField
+                      fullWidth
+                      variant="outlined"
+                      placeholder="Buscar por nombre o grupo"
+                      size="large"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      sx={{ width: "200px" }}
+                    />
                   </Grid>
                 </Grid>
-
-
               </Grid>
-            </MDBox>
-
-            <MDBox pt={6} pb={3}>
-              <Grid container spacing={6}>
-                <Grid item xs={12}>
-                  <Card>
-                    <MDBox
-                      mx={2}
-                      mt={-3}
-                      py={3}
-                      px={2}
-                      variant="gradient"
-                      bgColor="success"
-                      borderRadius="lg"
-                      coloredShadow="success"
-                    >
-                      <MDTypography variant="h6" color="white" align="left">
-                        Proyectos
-                      </MDTypography>
-                    </MDBox>
-                    <MDBox pt={3}
-                     sx={{
-                          p: 4,
-                          textAlign: "center",
-                          minHeight: "100px",
-                          width: "1200px",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}>
-                      <DataTable
-                      
-                        table={{ columns, rows }}
-                        isSorted={false}
-                        entriesPerPage={false}
-                        showTotalEntries={true}
-                        noEndBorder
-                      />
-                    </MDBox>
-                  </Card>
-                </Grid>
-              </Grid>
-            </MDBox>
+            </Grid>
           </MDBox>
-        
-      
+
+          <MDBox pt={6} pb={3}>
+            <Grid container spacing={6}>
+              <Grid item xs={12}>
+                <Card>
+                  <MDBox
+                    mx={2}
+                    mt={-3}
+                    py={3}
+                    px={2}
+                    variant="gradient"
+                    bgColor="success"
+                    borderRadius="lg"
+                    coloredShadow="success"
+                  >
+                    <MDTypography variant="h6" color="white" align="left">
+                      Usuarios
+                    </MDTypography>
+                  </MDBox>
+                  <MDBox
+                    pt={3}
+                    sx={{
+                      p: 4,
+                      textAlign: "center",
+                      minHeight: "100px",
+                      width: "1200px",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <DataTable
+                      table={{ columns, rows }}
+                      isSorted={false}
+                      entriesPerPage={false}
+                      showTotalEntries={true}
+                      noEndBorder
+                    />
+                  </MDBox>
+                </Card>
+              </Grid>
+            </Grid>
+          </MDBox>
+        </MDBox>
       </MDBox>
 
-  <InviteModal
-          isOpen={inviteModalOpen}
-          onClose={() => setInviteModalOpen(false)}
-          onInvite={handleInviteUser}
-          loading={inviteLoading}
-        />
-        <Footer />
+      <InviteModal
+        isOpen={inviteModalOpen}
+        onClose={() => setInviteModalOpen(false)}
+        onInvite={handleInviteUser}
+        loading={inviteLoading}
+      />
+      <Footer />
     </DashboardLayout>
   );
 }

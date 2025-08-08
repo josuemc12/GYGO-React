@@ -141,11 +141,11 @@ function ProjectPage() {
     }
   };
 
-  useEffect(() => {
-    if (!startDate && !endDate) {
-      fetchProjects();
-    }
-  }, [filter]);
+useEffect(() => {
+  if (!startDate && !endDate) {
+    fetchProjects();
+  }
+}, [filter, startDate, endDate]);
 
   const SearchByDate = () => {
     if (startDate && endDate) {
@@ -153,13 +153,12 @@ function ProjectPage() {
     }
   };
 
-  const CleanDates = () => {
-    setFilter("todos");
-    fetchProjects();
-    setEndDate(null);
-    setStartDate(null);
-    setData(0);
-  };
+const CleanDates = () => {
+  setFilter("todos");
+  setEndDate(null);
+  setStartDate(null);
+  setData(0);
+};
 
   // Abrir modal y cargar detalles
   const VerMas = async (projectID) => {
@@ -633,7 +632,7 @@ function ProjectPage() {
                           fullWidth
                           value={filter}
                           onChange={(e) => setFilter(e.target.value)}
-                          sx={{ height: 40 }}
+                          sx={{ height: 45 }}
                         >
                           <MenuItem value="todos">Todos</MenuItem>
                           <MenuItem value="true">Realizados</MenuItem>
@@ -652,14 +651,6 @@ function ProjectPage() {
                             size: "small",
                             sx: {
                               width: 180, // más angosto
-                              height: 36, // más bajo
-                              "& .MuiInputBase-root": {
-                                height: 36, // grosor del input
-                                // opcional: fuente más pequeña
-                              },
-                              "& input": {
-                                padding: "6px 8px", // menos espacio interno
-                              },
                             },
                           },
                         }}
@@ -676,11 +667,6 @@ function ProjectPage() {
                             size: "small",
                             sx: {
                               width: 180, // más angosto
-                              height: 36, // más bajo
-                              "& .MuiInputBase-root": {
-                                height: 36, // grosor del input
-                                fontSize: 8, // opcional: fuente más pequeña
-                              },
                               "& input": {
                                 padding: "6px 8px",
                                 fontSize: 13, // menos espacio interno
@@ -713,7 +699,7 @@ function ProjectPage() {
                       <MDButton
                         variant="outlined"
                         onClick={CreatePDFAPI}
-                        color="dark"
+                        color="error"
                       >
                         Descargar PDF
                       </MDButton>
@@ -855,7 +841,7 @@ function ProjectPage() {
                           Cancelar
                         </MDButton>
                         <MDButton 
-                         variant="outlined"
+                        variant="outlined"
                           color="info"
                         onClick={() => UpTask()} >
                           Guardar
@@ -1023,6 +1009,7 @@ function ProjectPage() {
                 <Select
                   fullWidth
                   labelId="unidad-label"
+                  id="unidad-select"
                   sx={{ height: 40 }}
                   value={projectData.unidadreduccion}
                   onChange={(e) =>
@@ -1053,7 +1040,7 @@ function ProjectPage() {
             </Box>
           </FormControl>
 
-          <Box sx={{ display: "flex", gap: 14, mt: 2 }}>
+          <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 label="Fecha de Inicio"
@@ -1069,21 +1056,22 @@ function ProjectPage() {
                   }));
                 }}
                 inputFormat="DD-MM-YYYY"
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    sx={{
-                      width: 130, // ancho en px
-                      "& .MuiInputBase-root": {
-                        height: 86, // alto del campo de entrada
-                        fontSize: 13, // tamaño de texto opcional
-                      },
-                      "& input": {
-                        padding: "6px 8px", // padding interno del input
-                      },
-                    }}
-                  />
-                )}
+                    slotProps={{
+                          textField: {
+                            size: "small",
+                            sx: {
+                              width: 350, // más angosto
+                              "& .MuiInputBase-root": {
+                                
+                                fontSize: 2, // opcional: fuente más pequeña
+                              },
+                              "& input": {
+                                padding: "6px 8px",
+                                fontSize: 9, // menos espacio interno
+                              },
+                            },
+                          },
+                        }}
               />
             </LocalizationProvider>
 
@@ -1102,7 +1090,22 @@ function ProjectPage() {
                   }));
                 }}
                 inputFormat="DD-MM-YYYY"
-                renderInput={(params) => <TextField fullWidth {...params} />}
+                    slotProps={{
+                          textField: {
+                            size: "small",
+                            sx: {
+                              width: 350, // más angosto
+                              "& .MuiInputBase-root": {
+                              
+                                fontSize: 2, // opcional: fuente más pequeña
+                              },
+                              "& input": {
+                                padding: "6px 8px",
+                                fontSize: 9, // menos espacio interno
+                              },
+                            },
+                          },
+                        }}
               />
             </LocalizationProvider>
           </Box>
