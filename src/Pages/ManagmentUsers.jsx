@@ -154,7 +154,7 @@ const filteredUsers = Users.filter((user) =>
     },
     { Header: "rol", accessor: "rol", align: "center" },
 
-    { Header: "Acciones", accessor: "action", align: "center" },
+    // { Header: "Acciones", accessor: "action", align: "center" },
   ];
 
   const rows = filteredUsers.map((user) => ({
@@ -179,37 +179,37 @@ const filteredUsers = Users.filter((user) =>
       </MDTypography>
     ),
 
-    action: (
-      <Stack
-        direction="row"
-        spacing={1}
-        justifyContent="center"
-        alignItems="center"
-      >
-        <Tooltip title="Ver detalles">
-          <IconButton size="small" >
-            <VisibilityIcon fontSize="small" />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Editar">
-          <IconButton
-            size="small"
-            color="info"
-          >
-            <EditIcon fontSize="small" />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Eliminar">
-          <IconButton
-            size="small"
-            color="error"
+    // action: (
+    //   <Stack
+    //     direction="row"
+    //     spacing={1}
+    //     justifyContent="center"
+    //     alignItems="center"
+    //   >
+    //     <Tooltip title="Ver detalles">
+    //       <IconButton size="small" >
+    //         <VisibilityIcon fontSize="small" />
+    //       </IconButton>
+    //     </Tooltip>
+    //     <Tooltip title="Editar">
+    //       <IconButton
+    //         size="small"
+    //         color="info"
+    //       >
+    //         <EditIcon fontSize="small" />
+    //       </IconButton>
+    //     </Tooltip>
+    //     <Tooltip title="Eliminar">
+    //       <IconButton
+    //         size="small"
+    //         color="error"
             
-          >
-            <DeleteIcon fontSize="small" />
-          </IconButton>
-        </Tooltip>
-      </Stack>
-    ),
+    //       >
+    //         <DeleteIcon fontSize="small" />
+    //       </IconButton>
+    //     </Tooltip>
+    //   </Stack>
+    // ),
   }));
 
   return (
