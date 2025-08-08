@@ -123,7 +123,7 @@ export default function ServicesPage() {
               justifyContent="space-between"
               spacing={2}
             >
-              <Grid item>
+              <Grid>
                 <MDBox display="flex" alignItems="center" gap={1}>
                   <FilterAltOutlinedIcon fontSize="medium" />
                   <MDTypography variant="h6">Filtros y Acciones</MDTypography>
@@ -134,11 +134,11 @@ export default function ServicesPage() {
                 </MDBox>
               </Grid>
 
-              <Grid item></Grid>
+              <Grid></Grid>
             </Grid>
 
             <Grid container spacing={2} mt={1}>
-              <Grid item xs={12} sm={6} md={4} lg={3}>
+              <Grid xs={12} sm={6} md={4} lg={3}>
                 <TextField
                   label="Buscar servicios"
                   variant="outlined"
@@ -153,7 +153,7 @@ export default function ServicesPage() {
 
           <MDBox pt={6} pb={3}>
             <Grid container spacing={6}>
-              <Grid item xs={12}>
+              <Grid size={{xs:12}}>
                 <Card>
                   <MDBox
                     mx={2}
@@ -199,78 +199,6 @@ export default function ServicesPage() {
         <Footer />
       </MDBox>
 
-      {/*             
-            <MDBox py={3} >
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                <MDTypography variant="h4" fontWeight="bold" mb={2}>
-                    Servicios por grupo
-                </MDTypography>
-                <TextField
-                    label="Buscar servicios o grupos"
-                    variant="outlined"
-                    fullWidth
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    sx={{ mb: 3 }}
-                />
-
-                <MDBox pt={6} pb={3}>
-                    <Grid container spacing={6}>
-                        <Grid item xs={12}>
-                            <Card >
-                                <MDBox
-                                    mx={2}
-                                    mt={-3}
-                                    py={3}
-                                    px={2}
-                                    variant="gradient"
-                                    bgColor="success"
-                                    borderRadius="lg"
-                                    coloredShadow="success"
-                                >
-                                    <MDTypography variant="h6" color="white" align="left">
-                                        Servicios
-                                    </MDTypography>
-                                </MDBox>
-                                <MDBox pt={3} >
-                                    <MDBox pt={3} sx={{
-                                        width: "100%",
-                                        overflowX: "auto",
-                                        "& table": {
-                                            width: "100%",
-                                            tableLayout: "fixed",
-                                        }
-                                    }}>
-                                        <DataTable
-                                            table={{ columns, rows: tableRows }}
-                                            isSorted
-                                            entriesPerPage
-                                            showTotalEntries
-                                            noEndBorder
-                                        />
-                                    </MDBox>
-                                </MDBox>
-                            </Card>
-                        </Grid>
-                    </Grid>
-                </MDBox>
-            <Footer />  
-            </MDBox> */}
       <SuperAdminCancelModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}

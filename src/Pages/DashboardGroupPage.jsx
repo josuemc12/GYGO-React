@@ -112,7 +112,7 @@ export const DashboardGroupPage = () => {
                         textShadow: "0 1px 2px rgba(0, 0, 0, 0.05)",
                       }}
                     >
-                      ¡Hola, {username ? username : "Usuario"}! 👋
+                      ¡Hola, {username ? username : "Usuario"}! 
                     </MDTypography>
                     <MDTypography
                       variant="body1"

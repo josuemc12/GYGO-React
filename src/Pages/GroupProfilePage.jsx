@@ -56,7 +56,7 @@ export function GrupoProfilePage() {
       <DashboardNavbar></DashboardNavbar>
       <MDBox py={3}>
         <Grid container spacing={3} sx={{mb:5}}>
-          <Grid item size={{xs:12}}>
+          <Grid size={{xs:12}}>
             <Card sx={{ p: 3 }}>
               <MDTypography variant="h4" fontWeight="bold" gutterBottom>
                 Perfil del Grupo
@@ -68,14 +68,14 @@ export function GrupoProfilePage() {
           </Grid>
 
           {loading ? (
-            <Grid item size={{xs:12}}>
+            <Grid size={{xs:12}}>
               <Card sx={{ p: 3, textAlign: "center" }}>
                 <CircularProgress />
               </Card>
             </Grid>
           ) : (
             <>
-              <Grid item size={{xs:12, md:6}} >
+              <Grid size={{xs:12, md:6}} >
                 <Card sx={{ p: 3 }}>
                   <MDTypography variant="subtitle2" color="text">
                     Nombre del Grupo
@@ -93,7 +93,7 @@ export function GrupoProfilePage() {
                 </Card>
               </Grid>
 
-              <Grid item size={{xs:12, md:6}} >
+              <Grid size={{xs:12, md:6}} >
                 <Card sx={{ p: 3 }}>
                   <MDTypography variant="subtitle2" color="text">
                     Fecha de Creación

@@ -144,6 +144,7 @@ export function AddMonthlyConsumForm({ consumptionId }) {
               fullWidth
               onChange={handleChange}
               value={formData.year}
+              error={!!errors.month}
             >
               <MenuItem value={""}>Seleccione un año</MenuItem>
               {years.map((y) => (
@@ -152,7 +153,11 @@ export function AddMonthlyConsumForm({ consumptionId }) {
                 </MenuItem>
               ))}
             </Select>
-            
+            {errors.year && (
+              <Alert severity="error" icon={<ErrorOutline />}>
+                {errors.year}
+              </Alert>
+            )}
           </Grid>
 
           <Grid size={{ xs: 12 }}>

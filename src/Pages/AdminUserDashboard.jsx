@@ -247,14 +247,14 @@ const AdminUserDashboard = () => {
               justifyContent="space-between"
               spacing={2}
             >
-              <Grid item>
+              <Grid>
                 <MDBox display="flex" alignItems="center" gap={1}>
                   <FilterAltOutlinedIcon fontSize="medium" />
                   <MDTypography variant="h6">Filtros y Acciones</MDTypography>
                 </MDBox>
               </Grid>
 
-              <Grid item>
+              <Grid>
                 <MDButton
                   variant="outlined"
                   sx={{
@@ -332,7 +332,7 @@ const AdminUserDashboard = () => {
 
           <MDBox pt={6} pb={3}>
             <Grid container spacing={6}>
-              <Grid item xs={12}>
+              <Grid size={{xs: 12}}>
                 <Card>
                   <MDBox
                     mx={2}
@@ -400,69 +400,3 @@ const AdminUserDashboard = () => {
 };
 
 export default AdminUserDashboard;
-
-// <div className="admin-dashboard">
-//     {/* Dashboard Header */}
-//     <div className="dashboard-header">
-//       <div className="header-content">
-//         <h1>Group Users</h1>
-//       </div>
-//       <button
-//         className="btn btn-primary"
-//         onClick={() => setInviteModalOpen(true)}
-//       >
-//         + Invite User
-//       </button>
-//     </div>
-
-//     {/* Status Messages */}
-//     {error && (
-//       <div className="alert alert-error">
-//         <span>{error}</span>
-//         <button onClick={clearError} className="alert-close">
-//           ×
-//         </button>
-//       </div>
-//     )}
-
-//     {successMessage && (
-//       <div className="alert alert-success">
-//         <span>{successMessage}</span>
-//       </div>
-//     )}
-
-//     {/* Stats Cards */}
-//     <div className="stats-grid">
-//       <div className="stat-card">
-//         <div className="stat-value">{users.length}</div>
-//         <div className="stat-label">Total Users</div>
-//       </div>
-//       <div className="stat-card">
-//         <div className="stat-value">
-//           {users.filter((user) => user.status === "active").length}
-//         </div>
-//         <div className="stat-label">Active Users</div>
-//       </div>
-//       <div className="stat-card">
-//         <div className="stat-value">
-//           {users.filter((user) => user.status === "pending").length}
-//         </div>
-//         <div className="stat-label">Pending Invites</div>
-//       </div>
-//     </div>
-
-//     {/* User Table */}
-//     <UserTable
-//       users={users}
-//       onRemoveUser={handleRemoveUser}
-//       loading={loading}
-//     />
-
-//     {/* Invite Modal */}
-//     <InviteModal
-//       isOpen={inviteModalOpen}
-//       onClose={() => setInviteModalOpen(false)}
-//       onInvite={handleInviteUser}
-//       loading={inviteLoading}
-//     />
-//   </div>
