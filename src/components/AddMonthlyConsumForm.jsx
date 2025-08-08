@@ -20,8 +20,8 @@ import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 
 import "../styles/consumption.css";
-import { getConsumptionById } from "../API/Consumptions/Consumption"; // Deberías tener un fetch para esto
-import { addMonthlyConsumption } from "../API/Consumptions/MonthlyConsum"; // Tu función para agregar
+import { getConsumptionById } from "../API/Consumptions/Consumption";
+import { addMonthlyConsumption } from "../API/Consumptions/MonthlyConsum";
 
 export function AddMonthlyConsumForm({ consumptionId }) {
   const navigate = useNavigate();
@@ -31,6 +31,10 @@ export function AddMonthlyConsumForm({ consumptionId }) {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
+  //para el select de years
+  const currentYear = new Date().getFullYear();
+  const startYear = 2020;
+  const years = Array.from({ length: currentYear - startYear + 1 }, (_, i) => startYear + i);
 
   useEffect(() => {
     const fetchConsumo = async () => {
@@ -107,13 +111,13 @@ export function AddMonthlyConsumForm({ consumptionId }) {
       </MDTypography>
       <form onSubmit={handleSubmit}>
         <Grid container spacing={2}>
-          <Grid size={{xs:12}}>
+          <Grid size={{ xs: 12 }}>
             <Select
               name="month"
               value={formData.month}
               onChange={handleChange}
               displayEmpty
-              sx={{height: 40}}
+              sx={{ height: 40 }}
               fullWidth
               error={!!errors.month}
             >
@@ -131,20 +135,27 @@ export function AddMonthlyConsumForm({ consumptionId }) {
             )}
           </Grid>
 
-          <Grid size={{xs:12}}>
-            <TextField
-              label="Año *"
+          <Grid size={{ xs: 12 }}>
+            <Select
+            displayEmpty
+            sx={{ height: 40 }}
               name="year"
-              type="number"
+              label="Año *"
               fullWidth
-              value={formData.year}
               onChange={handleChange}
-              error={!!errors.year}
-              helperText={errors.year}
-            />
+              value={formData.year}
+            >
+              <MenuItem value={""}>Seleccione un año</MenuItem>
+              {years.map((y) => (
+                <MenuItem key={y} value={y}>
+                  {y}
+                </MenuItem>
+              ))}
+            </Select>
+            
           </Grid>
 
-          <Grid size={{xs:12}}>
+          <Grid size={{ xs: 12 }}>
             <TextField
               label="Cantidad *"
               name="amount"
@@ -163,14 +174,14 @@ export function AddMonthlyConsumForm({ consumptionId }) {
           </Grid>
 
           {errors.submit && (
-            <Grid size={{xs:12}}>
+            <Grid size={{ xs: 12 }}>
               <Alert severity="error" icon={<ErrorOutline />}>
                 {errors.submit}
               </Alert>
             </Grid>
           )}
 
-          <Grid size={{xs:12}}>
+          <Grid size={{ xs: 12 }}>
             <MDButton
               type="submit"
               variant="gradient"
