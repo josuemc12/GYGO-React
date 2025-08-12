@@ -359,16 +359,16 @@ const validateNumber = (value) => {
             </select>
           </MDBox>
         {/* Footer Buttons */}
-        <MDBox display="flex" justifyContent="flex-end" gap={2}>
+        <MDBox display="flex" justifyContent="flex-end" gap={2} mt={3}>
           <MDButton
             variant="outlined"
-            color="secondary"
+            color="error"
             onClick={onClose}
             disabled={isSubmitting}
           >
             Cerrar
           </MDButton>
-          <MDButton type="submit" color="info" disabled={isSubmitting}>
+          <MDButton type="submit"  variant="gradient" color="success" disabled={isSubmitting}>
             {isSubmitting ? "Guardando..." : editingFactor ? "Editar" : "Crear"}
           </MDButton>
         </MDBox>

@@ -137,11 +137,37 @@ useEffect(() => {
       <DashboardNavbar></DashboardNavbar>
       <MDBox py={3}>
         <Grid container spacing={3} sx={{ mb: 5 }}>
-          <Grid item size={{ xs: 12 }} sx={{ mb: 2 }}>
+          <Grid size={{ xs: 12 }}>
+            <Card
+              sx={{
+                background: "#ffffff",
+                mb: 1,
+                borderRadius: 2,
+                border: "1px solid #e5e7eb",
+                boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+              }}
+            >
+              <CardContent>
+                <Grid container alignItems="center" justifyContent="center">
+                  <Grid>
+                    <MDBox display="flex" flexDirection="column" gap={1}>
+                      <MDTypography variant="h6">Historial de Incidentes</MDTypography>
+                      <MDTypography variant="body2" color="#495057">
+                        Visualiza todos los incidentes de exceso de emisiones registrados
+                      </MDTypography>
+                    </MDBox>
+                  </Grid>
+
+                </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          <Grid size={{ xs: 12 }} sx={{ mb: 2 }}>
             <Card sx={{ p: 3 }}>
               <Grid container spacing={2} alignItems="center">
                 {/* Mes */}
-                <Grid item size={{ xs: 12, md: 5 }}>
+                <Grid size={{ xs: 12, md: 5 }}>
                   <FormControl fullWidth variant="outlined">
                     <InputLabel id="mes-label">Mes</InputLabel>
                     <Select
@@ -165,7 +191,7 @@ useEffect(() => {
                 </Grid>
 
                 {/* Año */}
-                <Grid item size={{ xs: 12, md: 5 }}>
+                <Grid size={{ xs: 12, md: 5 }}>
                   <FormControl fullWidth>
                     <InputLabel>Año</InputLabel>
                     <Select
@@ -187,7 +213,7 @@ useEffect(() => {
                   </FormControl>
                 </Grid>
 
-                <Grid item size={{ xs: 12, md: 2 }}>
+                <Grid size={{ xs: 12, md: 2 }}>
                   <MDButton
                     variant="outlined"
                     onClick={() => setFiltros({ mes: "", año: "" })}
@@ -198,33 +224,7 @@ useEffect(() => {
                 </Grid>
               </Grid>
             </Card>
-          </Grid>
-
-          <Grid size={{ xs: 12 }}>
-            <Card
-              sx={{
-                background: "#ffffff",
-                mb: 3,
-                borderRadius: 2,
-                border: "1px solid #e5e7eb",
-                boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-              }}
-            >
-              <CardContent>
-                <Grid container alignItems="center" justifyContent="center">
-                  <Grid>
-                    <MDBox display="flex" flexDirection="column" gap={1}>
-                      <MDTypography variant="h6">Historial de Incidentes</MDTypography>
-                      <MDTypography variant="body2" color="#495057">
-                        Visualiza todos los incidentes de exceso de emisiones registrados
-                      </MDTypography>
-                    </MDBox>
-                  </Grid>
-
-                </Grid>
-              </CardContent>
-            </Card>
-          </Grid>
+          </Grid>          
 
           <Grid size={{ xs: 12 }}>
             <Card>

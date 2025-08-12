@@ -8,6 +8,7 @@ import Stack from "@mui/material/Stack";
 import EditIcon from "@mui/icons-material/Edit";
 import CircularProgress from "@mui/material/CircularProgress";
 import { fetchPaymentHistory } from "../API/Subscription";
+import { Grid, Card } from "@mui/material";
 
 const PaymentHistoryTable = () => {
   const [payments, setPayments] = useState([]);
@@ -51,17 +52,17 @@ const PaymentHistoryTable = () => {
 
   const formatDate = (dateString) => {
     if (!dateString) return "-";
-    
+
     try {
       const date = new Date(dateString);
       if (isNaN(date.getTime())) return "Fecha inválida";
-      
-      return new Intl.DateTimeFormat('es-ES', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
+
+      return new Intl.DateTimeFormat("es-ES", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
       }).format(date);
     } catch (error) {
       console.error("Error formatting date:", error);
@@ -99,16 +100,24 @@ const PaymentHistoryTable = () => {
       </MDTypography>
     ),
     monto: (
-      <MDTypography variant="caption" color={payment.Monto ? "text" : "secondary"}>
+      <MDTypography
+        variant="caption"
+        color={payment.Monto ? "text" : "secondary"}
+      >
         {formatCurrency(payment.monto)}
       </MDTypography>
     ),
     acciones: (
-      <Stack direction="row" spacing={1} justifyContent="center" alignItems="center">
+      <Stack
+        direction="row"
+        spacing={1}
+        justifyContent="center"
+        alignItems="center"
+      >
         <Tooltip title="Ver detalles">
-          <IconButton 
-            size="small" 
-            color="info" 
+          <IconButton
+            size="small"
+            color="info"
             onClick={() => handleViewDetails(payment)}
             disabled={!payment} // Disable if no payment data
           >
@@ -134,11 +143,11 @@ const PaymentHistoryTable = () => {
           Error al cargar el historial: {error}
         </MDTypography>
         <MDBox mt={2}>
-          <MDTypography 
-            variant="button" 
-            color="info" 
+          <MDTypography
+            variant="button"
+            color="info"
             onClick={() => window.location.reload()}
-            sx={{ cursor: 'pointer' }}
+            sx={{ cursor: "pointer" }}
           >
             Intentar nuevamente
           </MDTypography>
@@ -156,15 +165,38 @@ const PaymentHistoryTable = () => {
   }
 
   return (
-    <MDBox pt={3}>
-      <DataTable
-        table={{ columns, rows }}
-        isSorted={true}
-        entriesPerPage={true}
-        showTotalEntries={true}
-        noEndBorder={false}
-        loading={loading}
-      />
+    <MDBox pt={6} pb={3}>
+      <Grid container spacing={6}>
+        <Grid xs={12}>
+          <Card>
+            <MDBox
+              mx={2}
+              mt={-3}
+              py={3}
+              px={2}
+              variant="gradient"
+              bgColor="success"
+              borderRadius="lg"
+              coloredShadow="success"
+            >
+              <MDTypography variant="h6" color="white" align="left">
+                Historial de pagos
+              </MDTypography>
+            </MDBox>
+            <MDBox pt={3}
+            minWidth="72rem">
+              <DataTable
+                table={{ columns, rows }}
+                isSorted={true}
+                entriesPerPage={false}
+                showTotalEntries={true}
+                noEndBorder={false}
+                loading={loading}
+              />
+            </MDBox>
+          </Card>
+        </Grid>
+      </Grid>
     </MDBox>
   );
 };

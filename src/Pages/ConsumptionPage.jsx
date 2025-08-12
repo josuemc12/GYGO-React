@@ -93,7 +93,7 @@ export function ConsumptionPage() {
                       </MDBox>
                     </MDBox>
                   </Grid>
-                  <Grid item>
+                  <Grid>
                     <MDButton
                     variant="outlined"
                       startIcon={<AddOutlined />}
@@ -119,7 +119,7 @@ export function ConsumptionPage() {
           </Grid>
 
           {/* Tabla de Consumos */}
-          <Grid item size={{ xs: 12 }}>
+          <Grid size={{ xs: 12 }}>
             <Card>
               <MDBox
                 mx={2}

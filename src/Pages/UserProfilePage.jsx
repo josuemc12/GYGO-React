@@ -51,10 +51,10 @@ export function UserProfilePage() {
       <DashboardNavbar></DashboardNavbar>
       <MDBox py={3}>
         <Grid container spacing={3}>
-          <Grid item size={{xs:12}}>
+          <Grid size={{xs:12}}>
             <Card sx={{ p: 3 }}>
               <Grid container alignItems="center" spacing={2}>
-                <Grid item size={{xs:12}} >
+                <Grid size={{xs:12}} >
                   <MDTypography variant="h4" fontWeight="bold">
                     Perfil de Usuario
                   </MDTypography>
@@ -67,14 +67,14 @@ export function UserProfilePage() {
           </Grid>
 
           {loading ? (
-            <Grid item size={{xs:12}}>
+            <Grid size={{xs:12}}>
               <Card sx={{ p: 3, textAlign: "center" }}>
                 <CircularProgress />
               </Card>
             </Grid>
           ) : (
             <>
-              <Grid item size={{xs:12, md:4}} >
+              <Grid size={{xs:12, md:4}} >
                 <Card sx={{ p: 3, display: "flex", alignItems: "center" }}>
                   <Avatar sx={{ bgcolor: "info.main", width: 56, height: 56, mr: 2 }}>
                     <PersonIcon />
@@ -88,7 +88,7 @@ export function UserProfilePage() {
                 </Card>
               </Grid>
 
-              <Grid item size={{xs:12, md:4}} >
+              <Grid size={{xs:12, md:4}} >
                 <Card sx={{ p: 3, display: "flex", alignItems: "center" }}>
                   <Avatar sx={{ bgcolor: "info.main", width: 56, height: 56, mr: 2 }}>
                     <EmailIcon />
@@ -102,7 +102,7 @@ export function UserProfilePage() {
                 </Card>
               </Grid>
 
-              <Grid item size={{xs:12, md:4}} >
+              <Grid size={{xs:12, md:4}} >
                 <Card sx={{ p: 3, display: "flex", alignItems: "center" }}>
                   <Avatar sx={{ bgcolor: "info.main", width: 56, height: 56, mr: 2 }}>
                     <GroupIcon />
@@ -118,7 +118,7 @@ export function UserProfilePage() {
                 </Card>
               </Grid>
 
-              <Grid item size={{xs:12}} sx={{mb: 5}}>
+              <Grid size={{xs:12}} sx={{mb: 5}}>
                 <Card sx={{ p: 3, textAlign: "right" }}>
                   <MDButton
                     variant="contained"

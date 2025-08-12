@@ -213,17 +213,18 @@ function DashboardNavbar({ absolute = false, light = false, isMini = false }) {
                     onClick={handleCloseMenu}
                   />
                 </Link>
-  <Link
-                  to="/subscription"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  <NotificationItem
-                    icon={<Icon>receipt_long</Icon>}
-                    title="Suscripción"
-                    onClick={handleCloseMenu}
-                  />
-                </Link>
-
+                {allowedRolesForGroup.includes(role) && (
+                  <Link
+                    to="/subscription"
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    <NotificationItem
+                      icon={<Icon>receipt_long</Icon>}
+                      title="Suscripción"
+                      onClick={handleCloseMenu}
+                    />
+                  </Link>
+                )}
                 {allowedRolesForGroup.includes(role) && (
                   <Link
                     to="/groupProfile"

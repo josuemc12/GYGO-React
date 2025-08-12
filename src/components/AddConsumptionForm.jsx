@@ -97,7 +97,7 @@ export function AddConsumptionForm() {
       </MDTypography>
       <form onSubmit={handleSubmit}>
         <Grid container spacing={2}>
-          <Grid item size={{xs:12}}>
+          <Grid size={{xs:12}}>
             <TextField
               label="Nombre *"
               name="name"
@@ -136,14 +136,14 @@ export function AddConsumptionForm() {
           
 
           {errors.submit && (
-            <Grid item size={{xs:12}}>
+            <Grid size={{xs:12}}>
               <Alert severity="error" icon={<ErrorOutline />}>
                 {errors.submit}
               </Alert>
             </Grid>
           )}
 
-          <Grid item size={{xs:12}}>
+          <Grid size={{xs:12}}>
             <MDButton
               type="submit"
               variant="gradient"

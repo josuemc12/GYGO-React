@@ -1,8 +1,12 @@
 import { useState } from "react";
 import MDButton from "@/components/MDButton";
 import { appsettings } from "../settings/appsettings";
+import MDBox from "components/MDBox";
 
-export default function CancelSubscriptionButton({ subscriptionId, onSuccess }) {
+export default function CancelSubscriptionButton({
+  subscriptionId,
+  onSuccess,
+}) {
   const [loading, setLoading] = useState(false);
 
   const handleCancel = async () => {
@@ -38,13 +42,23 @@ export default function CancelSubscriptionButton({ subscriptionId, onSuccess }) 
   };
 
   return (
-    <MDButton
-      color="error"
-      variant="gradient"
-      onClick={handleCancel}
-      disabled={loading}
-    >
-      {loading ? "Cancelando..." : "Cancelar Suscripción"}
-    </MDButton>
+<MDButton
+  color="error"
+  variant="outlined"
+  onClick={handleCancel}
+  disabled={loading}
+  sx={{
+    transition: 'all 0.3s ease',
+    '&:hover': {
+      background: (theme) => theme.palette.error.main,
+      color: '#fff !important',          // forzar color blanco
+      boxShadow: (theme) => theme.shadows[4],
+      backgroundImage: 'none',
+      border: 'none',
+    },
+  }}
+>
+  {loading ? "Cancelando..." : "Cancelar Suscripción"}
+</MDButton>
   );
 }

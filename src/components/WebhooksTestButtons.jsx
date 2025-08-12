@@ -32,7 +32,7 @@ export default function WebhookTestButtons({ paypalSubscriptionId }) {
   return (
       <MDBox pt={6} pb={3}>
         <Grid container justifyContent="center">
-          <Grid item xs={12} md={8}>
+          <Grid xs={12} md={8}>
             <Card>
               <MDBox p={3} textAlign="center">
                 <MDTypography variant="h4" fontWeight="medium" gutterBottom>

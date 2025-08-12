@@ -25,10 +25,10 @@ export function AddMonthlyConsumPage() {
       <DashboardNavbar></DashboardNavbar>
       <MDBox py={3}>
         <Grid container spacing={3} sx={{mb: 5}}>
-          <Grid item size={{xs:12}}>
+          <Grid size={{xs:12}}>
             <Card sx={{ p: 3 }}>
               <Grid container alignItems="center" spacing={2}>
-                <Grid item size={{xs:12, md:1}}>
+                <Grid size={{xs:12, md:1}}>
                   <MDButton
                     variant="text"
                     color="black"
@@ -39,7 +39,7 @@ export function AddMonthlyConsumPage() {
                     Volver
                   </MDButton>
                 </Grid>
-                <Grid item size={{xs:12, md: 10}}>
+                <Grid size={{xs:12, md: 10}}>
                   <MDTypography variant="h5" fontWeight="bold" gutterBottom>
                     Agregar Consumo Mensual
                   </MDTypography>
@@ -51,7 +51,7 @@ export function AddMonthlyConsumPage() {
             </Card>
           </Grid>
 
-          <Grid item size={{xs:12}}>
+          <Grid size={{xs:12}}>
             <AddMonthlyConsumForm consumptionId={parseInt(consumptionId)} />
           </Grid>
         </Grid>
