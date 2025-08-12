@@ -302,7 +302,7 @@ const validateNumber = (value) => {
             PCG (Greenhouse Gas)
           </MDTypography>
           <select
-            name="PCGId"
+            name="pcgId"
             value={formData.pcgId}
             onChange={handleInputChange}
             required
