@@ -225,7 +225,7 @@ function DashboardNavbar({ absolute = false, light = false, isMini = false }) {
                     />
                   </Link>
                 )}
-                {allowedRolesForGroup.includes(role) && (
+                {allowedRolesForGroup.includes(role) &&role != "GU"&& (
                   <Link
                     to="/groupProfile"
                     style={{ textDecoration: "none", color: "inherit" }}

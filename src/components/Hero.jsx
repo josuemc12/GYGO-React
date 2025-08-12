@@ -1,6 +1,13 @@
 import "../styles/Hero.css";
+import { useNavigate } from "react-router-dom";
 
 const Hero = () => {
+
+  const navigate = useNavigate();
+
+  const handleButtonClick = () => {
+    navigate("/nosotros");
+  }
   return (
     <section className="hero">
       <div className="hero-background">
@@ -13,7 +20,7 @@ const Hero = () => {
             <h2>Creando soluciones</h2>
             <h2>Ecológicas para todo</h2>
             <h2>tipo de empresas</h2>
-            <button className="cta-button">Sobre nosotros</button>
+            <button className="cta-button" onClick={()=>handleButtonClick()}>Sobre nosotros</button>
           </div>
         </div>
       </div>

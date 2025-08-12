@@ -89,6 +89,10 @@ export async function DProject(projectID) {
       `${appsettings.apiUrl}Projects/DeleteProject?projectID=${projectID}`,
       {
         method: "DELETE",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
     );
 
