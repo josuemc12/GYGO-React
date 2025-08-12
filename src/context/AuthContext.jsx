@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import { refreshLogin } from "../API/Auth"; 
+import { refreshLogin } from "../API/Auth";
 
 const AuthContext = createContext();
 
@@ -24,30 +24,31 @@ export const AuthProvider = ({ children }) => {
   };
 
   const refreshUserData = async () => {
-  try {
-    const data = await refreshLogin();
-    if (data?.user?.role && data?.user?.id) {
-      setRole(data.user.role);
-      setUserId(data.user.id);
-      setUserGroup(data.user.groupId); 
-      localStorage.setItem("userRole", data.user.role);
-      localStorage.setItem("userId", data.user.id);
-      localStorage.setItem("userGroup", data.user.groupId);
-    } else {
-      console.error("No se pudo refrescar el usuario:", data);
+    try {
+      const data = await refreshLogin();
+      if (data?.user?.role && data?.user?.id) {
+        setRole(data.user.role);
+        setUserId(data.user.id);
+        setUserGroup(data.user.groupId);
+        localStorage.setItem("userRole", data.user.role);
+        localStorage.setItem("userId", data.user.id);
+        localStorage.setItem("userGroup", data.user.groupId);
+      } else {
+        console.error("No se pudo refrescar el usuario:", data);
+      }
+    } catch (error) {
+      console.error("Error al refrescar el login:", error);
     }
-  } catch (error) {
-    console.error("Error al refrescar el login:", error);
-  }
-};
+  };
   const markUserAsPaid = () => {
     setHasPaidGroupAdminAccess(true);
   };
-  
+
   const updateRole = (newRole) => {
     setRole(newRole);
     localStorage.setItem("userRole", newRole);
   };
+ 
 
   return (
     <AuthContext.Provider
@@ -60,6 +61,7 @@ export const AuthProvider = ({ children }) => {
         refreshUserData,
         markUserAsPaid,
         updateRole,
+        getCookie,
       }}
     >
       {children}

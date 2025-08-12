@@ -8,6 +8,7 @@ export async function AddTask(taskData) {
     console.log(taskData);
     const response = await fetch(`${appsettings.apiUrl}Tasks/AddTask`, {
       method: "POST",
+      credentials: 'include', 
       headers: {
         "Content-Type": "application/json",
       },
@@ -38,6 +39,7 @@ export async function UpdateTaskt(taskData) {
       `${appsettings.apiUrl}Tasks/UpdateTask`,
       {
         method: "PUT",
+        credentials: 'include', 
         headers: {
           "Content-Type": "application/json",
         },
@@ -69,6 +71,7 @@ export async function DeleteTask(taskID) {
     const response = await fetch(
       `${appsettings.apiUrl}Tasks/DeleteTask?TaskID=${taskID}`,
       {
+        credentials: 'include', 
         method: 'DELETE',
       }
     );
@@ -99,7 +102,11 @@ export async function DeleteTask(taskID) {
 
 //API para llamar los proyectos por grupo
 export async function getTasks(projectID) {
-    const response = await fetch(`${appsettings.apiUrl}Tasks/TasksByProject/${projectID}`);
+    const response = await fetch(`${appsettings.apiUrl}Tasks/TasksByProject/${projectID}`,
+      {
+        credentials: 'include', 
+        method: 'GET',
+      });
     if(response.ok){
         const data = await response.json();
         return data;
@@ -114,8 +121,10 @@ export async function UpdateStatusTask(tasksID, status) {
   try {
     const response = await fetch(
       `${appsettings.apiUrl}Tasks/UpdateTaskStatus?TaskId=${tasksID}&status=${status}`,
-      { method: 'PUT' } // Recomiendo usar PUT para actualizar, si la API lo soporta
-    );
+      {
+        credentials: 'include', 
+        method: 'PUT',
+      });
     if (response.ok) {
       return true;
     } else {
