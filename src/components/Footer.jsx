@@ -1,6 +1,12 @@
 import "../styles/Footer.css"
+import { useNavigate } from "react-router-dom"
 
 const Footer = () => {
+  const navigate = useNavigate()
+
+  const handleMenuClick = (route) => {
+    navigate(route);
+  }
   return (
     <footer className="footer">
       <div className="container">
@@ -9,15 +15,15 @@ const Footer = () => {
             <h4>Servicios</h4>
             <ul>
               <li>
-                <a href="#auditoria">Auditoría Ambiental</a>
+                <a onClick={() => handleMenuClick("/servicios")}>Auditoría Ambiental</a>
               </li>
               <li>
-                <a href="#consultoria">Sobre Nosotros</a>
+                <a onClick={() => handleMenuClick("/nosotros")}>Sobre Nosotros</a>
               </li>
               <li>
-                <a href="#capacitacion">Paquetes</a>
+                <a onClick={() => handleMenuClick("/contactos")}>Paquetes</a>
               </li>
-              
+
             </ul>
           </div>
 
@@ -39,29 +45,29 @@ const Footer = () => {
             </ul>
           </div>
 
-         
+
 
           <div className="footer-column">
             <h4>Contacto</h4>
             <ul>
               <li>
-                <a href="#telefono">+1 234 567 8900</a>
+                <a >+(506) 6315-8782</a>
               </li>
               <li>
-                <a href="#email">info@greenon.com</a>
+                <a >fabiolamay209@gmail.com</a>
               </li>
               <li>
-                <a href="#direccion">123 Green Street</a>
+                <a >123 Green Street</a>
               </li>
               <li>
-                <a href="#horarios">Lun - Vie 9:00-18:00</a>
+                <a >Lun - Vie 9:00-18:00</a>
               </li>
             </ul>
           </div>
         </div>
 
         <div className="footer-bottom">
-          
+
           <div className="footer-logo">
             <span>Green On</span>
           </div>
