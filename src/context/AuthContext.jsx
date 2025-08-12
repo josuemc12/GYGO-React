@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }) => {
         refreshUserData,
         markUserAsPaid,
         updateRole,
-        getCookie,
+        
       }}
     >
       {children}
