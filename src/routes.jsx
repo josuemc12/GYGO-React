@@ -247,7 +247,7 @@ export const routes = [
       </ProtectedElement>
     ),
     hideInSidebar: true,
-    roles: ["GA", "DEV"],
+    roles: ["GA", "DEV", "GU"],
   },
 
   {

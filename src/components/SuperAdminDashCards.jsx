@@ -151,7 +151,7 @@ export const SuperAdminDashCards = () => {
                                     variant="outlined"
                                     fullWidth
                                     startIcon={<Assessment />}
-                                    onClick={() => navigate("/profile")}
+                                    onClick={() => navigate("/userProfile")}
                                     sx={{
                                         py: 1.5,
                                         borderRadius: 1.5,
