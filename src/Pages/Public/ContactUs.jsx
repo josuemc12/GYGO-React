@@ -9,7 +9,7 @@ export const ContactUs = () => {
               <main>
             {/* Contact Section */}
             <section className="contact-section">
-              <div className="container">
+              <div className="container-contact">
                 <div className="contact-content">
                   <div className="contact-info">
                     <h2 className="contact-title">¿Listo para comenzar?</h2>
@@ -19,27 +19,28 @@ export const ContactUs = () => {
                     <div className="contact-details">
                       <div className="contact-item">
                         <Phone className="w-6 h-6" />
-                        <div>
+                        <div style={{ marginLeft: "8%" }}>
                           <h4>Teléfono</h4>
-                          <p>+506 2222-3333</p>
+                          <p>+(506) 6315-8782</p>
                         </div>
                       </div>
                       <div className="contact-item">
                         <Mail className="w-6 h-6" />
-                        <div>
+                        <div >
                           <h4>Email</h4>
-                          <p>info@greenon.com</p>
+                          <p>fabiolamay209@gmail.com</p>
                         </div>
                       </div>
                       <div className="contact-item">
                         <MapPin className="w-6 h-6" />
-                        <div>
+                        <div style={{ marginLeft: "8%" }}>
                           <h4>Ubicación</h4>
-                          <p>San José, Costa Rica</p>
+                          <p>Alajuela, Costa Rica</p>
                         </div>
                       </div>
                     </div>
                   </div>
+                  {/* 
                   <div className="contact-form">
                     <h3>Solicita una Consulta</h3>
                     <form>
@@ -69,7 +70,7 @@ export const ContactUs = () => {
                         Enviar Mensaje
                       </button>
                     </form>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </section>

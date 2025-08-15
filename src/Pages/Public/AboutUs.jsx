@@ -50,19 +50,19 @@ export const AboutUs = () => {
           </div>
         </section>
 
-        {/* Founders Section */}
+       {/*  Founders Section
         <section className="founders-section">
           <div className="container">
             <h2 className="section-title">Nuestros Fundadores</h2>
             
             <div className="founders-grid">
-              {/* Ericka Sandoval */}
+              
               <div className="founder-card">
                 <div className="founder-image">
                   <img src="src/assets/ericka-sandoval.jpg" alt="Ericka Sandoval" />
                 </div>
                 <div className="founder-info">
-                  <h3 className="founder-name">Ericka Sandoval</h3>
+                  <h3 className="founder-name">Fabiola A. May</h3>
                   <p className="founder-description">
                     Cursante del MBA de sostenibilidad en la Escuela Ejecutiva y una profunda dedicación a la sostenibilidad ambiental y las iniciativas de banderas azules, Ericka Sandoval ha demostrado un compromiso inquebrantable con la creación de un impacto positivo duradero. Su enfoque integral hacia la gestión empresarial.
                   </p>
@@ -73,7 +73,7 @@ export const AboutUs = () => {
                 </div>
               </div>
 
-              {/* Daniela Cambronero */}
+              
               <div className="founder-card">
                 <div className="founder-image">
                   <img src="src/assets/daniela-cambronero.jpg" alt="Daniela Cambronero" />
@@ -87,11 +87,12 @@ export const AboutUs = () => {
                     Su capacidad para diseñar y ejecutar eventos que generan un impacto duradero ha sido significativamente al éxito y la reputación de la empresa en el ámbito de la sostenibilidad. Su dedicación a la causa ambiental, combinada con su enfoque estratégico para la organización de eventos, ha liderado numerosos proyectos de sostenibilidad, trabajando en estrecha colaboración con empresas y organizaciones para desarrollar soluciones ambientales sostenibles y mejorar el rendimiento ambiental de la empresa.
                   </p>
                   
-                </div>
+                </div> 
               </div>
+             
             </div>
           </div>
-        </section>
+        </section>*/}
       </main>
       <Footer />
     </div>
