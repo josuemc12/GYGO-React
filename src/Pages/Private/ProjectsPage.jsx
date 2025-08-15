@@ -45,7 +45,7 @@ import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import "../../styles/ProjectsPage.css";
+
 import { Try } from "@mui/icons-material";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import Swal from "sweetalert2";
@@ -141,11 +141,11 @@ function ProjectPage() {
     }
   };
 
-useEffect(() => {
-  if (!startDate && !endDate) {
-    fetchProjects();
-  }
-}, [filter, startDate, endDate]);
+  useEffect(() => {
+    if (!startDate && !endDate) {
+      fetchProjects();
+    }
+  }, [filter, startDate, endDate]);
 
   const SearchByDate = () => {
     if (startDate && endDate) {
@@ -153,12 +153,12 @@ useEffect(() => {
     }
   };
 
-const CleanDates = () => {
-  setFilter("todos");
-  setEndDate(null);
-  setStartDate(null);
-  setData(0);
-};
+  const CleanDates = () => {
+    setFilter("todos");
+    setEndDate(null);
+    setStartDate(null);
+    setData(0);
+  };
 
   // Abrir modal y cargar detalles
   const VerMas = async (projectID) => {
@@ -208,18 +208,18 @@ const CleanDates = () => {
 
   const CreatePDFAPI = async () => {
     try {
-      console.log(startDate)
-      console.log(endDate)
+      console.log(startDate);
+      console.log(endDate);
 
-        const formattedStart = encodeURIComponent(
-          dayjs(startDate).format("DD/MM/YYYY")
-        );
-        const formattedEnd = encodeURIComponent(
-          dayjs(endDate).format("DD/MM/YYYY")
-        );
+      const formattedStart = encodeURIComponent(
+        dayjs(startDate).format("DD/MM/YYYY")
+      );
+      const formattedEnd = encodeURIComponent(
+        dayjs(endDate).format("DD/MM/YYYY")
+      );
 
-      console.log(formattedStart)
-      console.log(formattedEnd)
+      console.log(formattedStart);
+      console.log(formattedEnd);
       const projectsPDF = await getProjectsPDF(formattedStart, formattedEnd);
       console.log(projectsPDF);
       CreatePDF(projectsPDF);
@@ -709,53 +709,64 @@ const CleanDates = () => {
               </Grid>
             </MDBox>
 
-            <MDBox pt={6} pb={3}>
-              <Grid container spacing={6}>
-                <Grid item xs={12}>
-                  <Card>
-                    <MDBox
-                      mx={2}
-                      mt={-3}
-                      py={3}
-                      px={2}
-                      variant="gradient"
-                      bgColor="success"
-                      borderRadius="lg"
-                      coloredShadow="success"
-                    >
-                      <MDTypography variant="h6" color="white" align="left">
-                        Proyectos
-                      </MDTypography>
-                    </MDBox>
-                    <MDBox pt={3}>
-                      {rows.length > 0 ? (
-                        <DataTable
-                          table={{ columns, rows }}
-                          isSorted={false}
-                          entriesPerPage={false}
-                          showTotalEntries={true}
-                          noEndBorder
-                        />
-                      ) : (
-                        <MDBox
-                          minWidth="75rem" // ajustá este valor según la altura de tu tabla con datos
-                          alignItems="center"
-                          justifyContent="center"
-                        >
-                          <MDTypography
-                            color="text"
-                            align="center"
-                            variant="body2"
-                          >
-                            No hay proyectos disponibles.
-                          </MDTypography>
-                        </MDBox>
-                      )}
-                    </MDBox>
-                  </Card>
-                </Grid>
-              </Grid>
+            <MDBox pt={6} pb={3} width="100%">
+  <Grid container spacing={5}>
+    <Grid item xs={12}>
+      <Card sx={{ width: "100%" }}>
+        {/* Encabezado */}
+        <MDBox
+          mx={2}
+          mt={-3}
+          py={3}
+          px={2}
+          variant="gradient"
+          bgColor="success"
+          borderRadius="lg"
+          coloredShadow="success"
+        >
+          <MDTypography variant="h6" color="white" align="left">
+            Proyectos
+          </MDTypography>
+        </MDBox>
+
+        {/* Contenedor de la tabla */}
+        <MDBox pt={3} width="100%" overflowX="auto">
+          {rows.length > 0 ? (
+            <DataTable
+              table={{ columns, rows }}
+              isSorted={false}
+              entriesPerPage={false}
+              showTotalEntries={true}
+              noEndBorder
+              sx={{
+                width: "100%",
+                display: "block", // forzar ancho total
+                "& .MuiTable-root": {
+                  width: "100% !important",
+                  tableLayout: "fixed", // columnas distribuidas uniformemente
+                },
+                "& .MuiTableCell-root": {
+                  wordBreak: "break-word",
+                },
+              }}
+            />
+          ) : (
+            <MDBox
+              width="100%"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <MDTypography color="text" align="center" variant="body2">
+                No hay proyectos disponibles.
+              </MDTypography>
             </MDBox>
+          )}
+        </MDBox>
+      </Card>
+    </Grid>
+  </Grid>
+</MDBox>
           </MDBox>
         </LocalizationProvider>
       </MDBox>
@@ -834,16 +845,18 @@ const CleanDates = () => {
                           gap: 1,
                         }}
                       >
-                        <MDButton 
+                        <MDButton
                           variant="outlined"
                           color="error"
-                        onClick={() => setEditTaskId(null)}>
+                          onClick={() => setEditTaskId(null)}
+                        >
                           Cancelar
                         </MDButton>
-                        <MDButton 
-                        variant="outlined"
+                        <MDButton
+                          variant="outlined"
                           color="info"
-                        onClick={() => UpTask()} >
+                          onClick={() => UpTask()}
+                        >
                           Guardar
                         </MDButton>
                       </Box>
@@ -1056,22 +1069,21 @@ const CleanDates = () => {
                   }));
                 }}
                 inputFormat="DD-MM-YYYY"
-                    slotProps={{
-                          textField: {
-                            size: "small",
-                            sx: {
-                              width: 350, // más angosto
-                              "& .MuiInputBase-root": {
-                                
-                                fontSize: 2, // opcional: fuente más pequeña
-                              },
-                              "& input": {
-                                padding: "6px 8px",
-                                fontSize: 9, // menos espacio interno
-                              },
-                            },
-                          },
-                        }}
+                slotProps={{
+                  textField: {
+                    size: "small",
+                    sx: {
+                      width: 350, // más angosto
+                      "& .MuiInputBase-root": {
+                        fontSize: 2, // opcional: fuente más pequeña
+                      },
+                      "& input": {
+                        padding: "6px 8px",
+                        fontSize: 9, // menos espacio interno
+                      },
+                    },
+                  },
+                }}
               />
             </LocalizationProvider>
 
@@ -1090,22 +1102,21 @@ const CleanDates = () => {
                   }));
                 }}
                 inputFormat="DD-MM-YYYY"
-                    slotProps={{
-                          textField: {
-                            size: "small",
-                            sx: {
-                              width: 350, // más angosto
-                              "& .MuiInputBase-root": {
-                              
-                                fontSize: 2, // opcional: fuente más pequeña
-                              },
-                              "& input": {
-                                padding: "6px 8px",
-                                fontSize: 9, // menos espacio interno
-                              },
-                            },
-                          },
-                        }}
+                slotProps={{
+                  textField: {
+                    size: "small",
+                    sx: {
+                      width: 350, // más angosto
+                      "& .MuiInputBase-root": {
+                        fontSize: 2, // opcional: fuente más pequeña
+                      },
+                      "& input": {
+                        padding: "6px 8px",
+                        fontSize: 9, // menos espacio interno
+                      },
+                    },
+                  },
+                }}
               />
             </LocalizationProvider>
           </Box>
