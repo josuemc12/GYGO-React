@@ -124,7 +124,12 @@ function DashboardNavbar({ absolute = false, light = false, isMini = false }) {
     },
   });
 
-  const allowedRolesForGroup = ["GA", "DEV", "GU"];
+  const allowedRolesForGroup = ["GA", "DEV", "GU","DEF"];
+  const allowedRolesForMessages = ["GA", "GU"];
+  const allowedRolesForSuscripcion = ["GA", "DEF"];
+  const allowedRolesForGroupA = ["GA", "GU",];
+
+
 
   return (
     <AppBar
@@ -150,7 +155,7 @@ function DashboardNavbar({ absolute = false, light = false, isMini = false }) {
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
             <MDBox color={light ? "white" : "inherit"}>
-              {allowedRolesForGroup.includes(role) && (
+              {allowedRolesForMessages.includes(role) && (
                 <>
                   <IconButton
                     sx={navbarIconButton}
@@ -213,7 +218,7 @@ function DashboardNavbar({ absolute = false, light = false, isMini = false }) {
                     onClick={handleCloseMenu}
                   />
                 </Link>
-                {allowedRolesForGroup.includes(role) && (
+                {allowedRolesForSuscripcion.includes(role) && (
                   <Link
                     to="/subscription"
                     style={{ textDecoration: "none", color: "inherit" }}
@@ -225,7 +230,7 @@ function DashboardNavbar({ absolute = false, light = false, isMini = false }) {
                     />
                   </Link>
                 )}
-                {allowedRolesForGroup.includes(role) && (
+                {allowedRolesForGroupA.includes(role) && (
                   <Link
                     to="/groupProfile"
                     style={{ textDecoration: "none", color: "inherit" }}
