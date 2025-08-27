@@ -2,8 +2,7 @@ import { appsettings } from "../settings/appsettings";
 
 
 export  async function verify2FACode(tempToken, code) {
-  console.log(tempToken);
-  console.log(code);
+
 
   try {
     const response = await fetch(`${appsettings.apiUrl}Auth/verify-2FA`, {
@@ -16,7 +15,6 @@ export  async function verify2FACode(tempToken, code) {
     });
     const data = await response.json();
 
-    console.log(data);
 
     if (response.ok) {
      
@@ -95,7 +93,7 @@ export  async function sendInvite(email) {
 }
 
 export async function registerUser(inviteToken, { email, username, password }) {
-   console.log(inviteToken);
+
   const url = inviteToken ? `User/register/${inviteToken}` : 'User/Register';
 
 
@@ -132,7 +130,7 @@ async function fetchGroupId() {
     try {
         const response = await fetch(`${appsettings.apiUrl}/getGroupId?adminToken=${encodeURIComponent(token)}`);
         const groupId = await response.json();
-        console.log('Group ID:', groupId);
+   
         return groupId;
     } catch (error) {
         console.error('Error fetching group ID:', error);
@@ -155,7 +153,7 @@ export async function getCurrentUser(){
 }
 
 export async function logoutSesion() {
-  console.log("api");
+
   const response = await fetch(`${appsettings.apiUrl}Auth/logout`, {
     method: "POST",
     credentials: "include", 
@@ -185,7 +183,7 @@ export async function refreshLogin() {
             return null;
         }
 
-        console.log("Refreshed login successfully:", data);
+       
         return data;
     } catch (error) {
         console.error("Error calling refresh-login:", error);

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
+import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import {
   Button,
   CssBaseline,
@@ -22,7 +24,7 @@ import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import Swal from "sweetalert2";
-import { PostChangePassword } from "../../API/ChangePassword";
+import { ResetPassword } from "../../API/ChangePassword";
 import MDTypography from "components/MDTypography";
 import MDBox from "components/MDBox";
 import MDButton from "components/MDButton";
@@ -50,12 +52,28 @@ const Paper = styled("div")(({ theme }) => ({
 }));
 
 export const ChangePassword = () => {
-  const [email, setEmail] = useState("");
-  const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [ConfirmPassword, SetConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation(); // <- se obtiene aquí, no dentro de la función
+  const query = new URLSearchParams(location.search);
+  const token = query.get("token");
+
+
+    //Funciona para la contraseña
+  function isPasswordValid(password) {
+    if (password.length < 8) return false;
+    if (!/[A-Z]/.test(password)) return false; 
+    if (!/[a-z]/.test(password)) return false; 
+    if (!/[0-9]/.test(password)) return false; 
+    if (!/[^A-Za-z0-9]/.test(password)) return false; 
+    return true;
+  }
+  //Termina funcion de la contraseña
+
+
 
   const handleClickShowPassword = () => {
     setShowPassword((show) => !show);
@@ -72,28 +90,33 @@ export const ChangePassword = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    if (!ConfirmPassword || !newPassword) {
+      Swal.fire({
+        icon: "warning",
+        title: "No se pudo cambiar la contraseña",
+        text: "Por favor, completá todos los campos.",
+        confirmButtonColor: "#f8bb86",
+      });
+      return;
+    }
+    //Verifica la contraseña
+    if (!isPasswordValid(ConfirmPassword) || !isPasswordValid(newPassword)) {
+      Swal.fire({
+        icon: "warning",
+        title: "Problemas con la contraseña",
+        text: "La contraseña debe tener al menos 8 caracteres, mayúscula, minúscula, número y símbolo.",
+        confirmButtonColor: "#f8bb86",
+      });
+      return;
+    }
+
+
+
     setLoading(true);
-
-    const UserDTO = {
-      email: email,
-      CurrentPassword: currentPassword,
-      NewPassword: newPassword,
-    };
     try {
-      const result = await PostChangePassword(UserDTO);
+      const result = await ResetPassword(token, newPassword, ConfirmPassword);
       setLoading(false);
-
-      if (!currentPassword || !newPassword) {
-        Swal.fire({
-          icon: "warning",
-          title: "No se pudo cambiar la contraseña",
-          text: "Por favor, completá todos los campos.",
-          confirmButtonColor: "#f8bb86",
-        });
-        return;
-      }
-
-      console.log(result);
+      
       if (result.success) {
         Swal.fire({
           icon: "success",
@@ -149,29 +172,13 @@ export const ChangePassword = () => {
                   Cambiar Contraseña
                 </Typography>
               </Box>
-              <FormControl variant="outlined" fullWidth sx={{ mb: 3 }}>
-                <InputLabel
-                  htmlFor="outlined-email"
-                  sx={{ fontSize: "1.1rem", mb: 3 }}
-                >
-                  Correo Electrónico
-                </InputLabel>
-                <OutlinedInput
-                  onChange={(e) => setEmail(e.target.value)}
-                  id="outlined-email"
-                  type="email"
-                  required
-                  label="Correo Electrónico"
-                  sx={{ fontSize: "1.1rem" }}
-                />
-              </FormControl>
 
               <FormControl variant="outlined" fullWidth sx={{ mb: 3 }}>
                 <InputLabel htmlFor="outlined-adornment-password">
-                  Contraseña Actual
+                  Nueva Contraseña
                 </InputLabel>
                 <OutlinedInput
-                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  onChange={(e) => setNewPassword(e.target.value)}
                   required
                   id="outlined-adornment-password"
                   type={showPassword ? "text" : "password"}
@@ -193,16 +200,16 @@ export const ChangePassword = () => {
                       </IconButton>
                     </InputAdornment>
                   } // hasta aqui
-                  label="Contraseña actual"
+                  label="Nueva Contraseña"
                 />
               </FormControl>
 
               <FormControl variant="outlined" fullWidth sx={{ mb: 3 }}>
                 <InputLabel htmlFor="outlined-adornment-password2">
-                  Nueva Contraseña
+                  Confirmar Contraseña
                 </InputLabel>
                 <OutlinedInput
-                  onChange={(e) => setNewPassword(e.target.value)}
+                  onChange={(e) => SetConfirmPassword(e.target.value)}
                   required
                   id="outlined-adornment-password2"
                   type={showPassword ? "text" : "password"}

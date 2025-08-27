@@ -3,7 +3,9 @@ import { useAuth } from "../../context/AuthContext";
 //import { useAuth } from '../../AuthContext';
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../API/Auth";
+import {RequestPasswordReset} from "../../API/ChangePassword"
 import {
+
   Button,
   CssBaseline,
   TextField,
@@ -16,6 +18,10 @@ import {
   Container,
   InputAdornment,
   IconButton,
+    Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle
 } from "@mui/material";
 import { Visibility, VisibilityOff, Email } from "@mui/icons-material";
 import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
@@ -52,6 +58,14 @@ export default function Login() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
+
+  const [open, setOpen] = useState(false);
+  const [emailReset, setEmailReset] = useState("");
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+
+
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -80,7 +94,7 @@ export default function Login() {
       }
 
       if (isTwoFactor) {
-        console.log("entro al two facotr");
+
         // Redirect to 2FA page
         navigate(`/verify-2fa?tempToken=${encodeURIComponent(tempToken)}`);
       } else {
@@ -97,6 +111,53 @@ export default function Login() {
       });
     }
   };
+
+
+  
+  const handleSendReset = async() => {
+    
+  if (!emailReset.trim()) {
+      Swal.fire({
+      icon: "warning",
+      title: "Campo vacío",
+      text: "Por favor, ingresa un correo electrónico.",
+    });
+    handleClose();
+    return;
+  }
+
+  try {
+
+    const response  = await RequestPasswordReset(emailReset);
+    console.log(response);
+    if (response.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Correo enviado",
+        text: "Se envió un enlace de recuperación a tu correo.",
+      });
+      handleClose();
+      setEmailReset(""); 
+    } else {
+      handleClose();
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "No se pudo enviar el enlace. Verifica el correo.",
+      });
+    }
+  } catch (error) {
+    console.error("Error enviando reset:", error);
+    Swal.fire({
+      icon: "error",
+      title: "Error inesperado",
+      text: "Hubo un error al intentar enviar el enlace.",
+    });
+
+  }
+  };
+
+
 
   return (
     <div>
@@ -183,7 +244,8 @@ export default function Login() {
                   color="primary"
                   align="right"
                   sx={{ mb: 2, cursor: "pointer", textDecoration: "underline" }}
-                  onClick={() => navigate("/ChangePassword")}
+                  onClick={handleOpen}
+
                 >
                   ¿Olvidaste tu contraseña?
                 </Typography>
@@ -212,6 +274,38 @@ export default function Login() {
             </Paper>
           </Container>
         </Box>
+
+
+         {/* Modal de recuperación */}
+        <Dialog open={open} onClose={handleClose}  fullWidth  maxWidth="sm"
+        sx={{ '& .MuiDialog-paper': { minHeight: '200px', minWidth: '300px' } }}
+        >
+          <DialogTitle>Recuperar contraseña</DialogTitle>
+          <DialogContent>
+            <TextField
+              label="Correo electrónico"
+              type="email"
+              fullWidth
+              value={emailReset}
+              onChange={(e) => setEmailReset(e.target.value)}
+                sx={{ mt: 4 }}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button 
+            variant="outlined"
+            color="error"
+            
+            onClick={handleClose}>Cancelar</Button>
+            <Button onClick={handleSendReset} variant="contained" color="primary">
+              Enviar
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+
+
+
       </ThemeProvider>
     </div>
   );

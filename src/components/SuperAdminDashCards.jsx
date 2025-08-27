@@ -39,7 +39,7 @@ export const SuperAdminDashCards = () => {
     useEffect(() => {
         const fetchData = async () => {
             const result = await getSuperAdminDashboard();
-            console.log("data: ", result)
+           
             setData(result);
         }
         fetchData()

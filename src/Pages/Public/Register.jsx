@@ -46,7 +46,6 @@ export function Register() {
   const { inviteToken } = useParams();
   const [form, setForm] = useState({ email: "", username: "", password: "" });
   const [message, setMessage] = useState("");
- console.log(inviteToken);
   const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
@@ -89,7 +88,7 @@ export function Register() {
 
     try {
 
-      console.log(inviteToken);
+      
       const response = await registerUser(inviteToken, form);
 
       if (response.success) {

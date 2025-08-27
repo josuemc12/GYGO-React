@@ -106,7 +106,7 @@ export function ReportCompanies() {
 
   const CreatePDF = async () => {
     try {
-      console.log(ReportCompaniesData);
+
 
       ReportCompaniesPDF(ReportCompaniesData);
     } catch (error) {
@@ -116,9 +116,8 @@ export function ReportCompanies() {
   };
   //Acciones para el modal
   const handleOpenModal = (group) => {
-    console.log(group);
+  
     setSelectedCompany(group);
-    console.log(selectedCompany);
     setOpenModal(true);
   };
   const handleCloseModal = async () => {

@@ -2,8 +2,7 @@
 const API_BASE_URL = "https://localhost:7217"
 
 export const createEmissionFactor = async (emissionFactorData) => {
-  console.log("eeeee");
-   console.log(emissionFactorData);
+
   const response = await fetch(`${API_BASE_URL}/api/Factor/create`, {
     method: "POST",
     credentials: "include",
@@ -40,7 +39,7 @@ export const getEmissionFactors = async () => {
 
 export const updateEmissionFactor = async (data) => {
 
-  console.log(JSON.stringify(data))
+
   const response = await fetch(`${API_BASE_URL}/api/Factor/update`, {
     method: "PUT",
     credentials: "include",

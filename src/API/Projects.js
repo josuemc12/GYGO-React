@@ -3,7 +3,7 @@ import { appsettings } from "../settings/appsettings";
 //API para llamar los proyectos por grupo
 export async function AddProject(projectData) {
   try {
-    console.log(projectData);
+
     const response = await fetch(`${appsettings.apiUrl}Projects/AddProject`, {
       method: "POST",
       credentials: "include",
@@ -24,7 +24,7 @@ export async function AddProject(projectData) {
     return true;
 
     const data = await response.json();
-    console.log(data);
+
 
     if (!data.isSuccess) {
       setError(data.errors ? data.errors.join(", ") : "Login failed");
@@ -53,7 +53,7 @@ export async function AddProject(projectData) {
 
 export async function UpdateProject(projectData) {
   try {
-    console.log(projectData);
+
     const response = await fetch(
       `${appsettings.apiUrl}Projects/UpdateProject`,
       {
@@ -75,7 +75,7 @@ export async function UpdateProject(projectData) {
     }
 
     const data = await response.json();
-    console.log(data);
+
     return true;
   } catch (error) {
     console.error("AddProject error:", error);

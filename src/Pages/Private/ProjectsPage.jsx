@@ -11,7 +11,7 @@ import {
   UpdateProject,
   DProject,
 } from "../../API/Projects";
-
+import { getFactoresEmision } from "../../API/FactorEmision";
 import {
   getTasks,
   UpdateStatusTask,
@@ -169,7 +169,7 @@ function ProjectPage() {
         proyectID: projectID,
       });
       const tasks = await getTasks(projectID);
-      console.log(tasks);
+
       const initialStatus = {};
       tasks.forEach((task) => {
         initialStatus[task.taskId] = task.status;
@@ -199,7 +199,6 @@ function ProjectPage() {
 
     UpdateStatusTask(taskId, newStatus)
       .then(() => {
-        console.log("Estado actualizado");
       })
       .catch((err) => {
         console.error("Error al actualizar estado", err);
@@ -208,9 +207,6 @@ function ProjectPage() {
 
   const CreatePDFAPI = async () => {
     try {
-      console.log(startDate);
-      console.log(endDate);
-
       const formattedStart = encodeURIComponent(
         dayjs(startDate).format("DD/MM/YYYY")
       );
@@ -218,13 +214,12 @@ function ProjectPage() {
         dayjs(endDate).format("DD/MM/YYYY")
       );
 
-      console.log(formattedStart);
-      console.log(formattedEnd);
+
       const projectsPDF = await getProjectsPDF(formattedStart, formattedEnd);
-      console.log(projectsPDF);
+
       CreatePDF(projectsPDF);
     } catch (error) {
-      console.log("Error a crear el pdf");
+
     } finally {
     }
   };
@@ -241,8 +236,9 @@ function ProjectPage() {
       fechaInicio: "",
       fechaFinal: "",
     });
-    const ReductionUnitData = await getReductionUnit();
+    const ReductionUnitData = await getFactoresEmision();
     setReductionUnit(ReductionUnitData);
+
     setOpenModalProjects(true);
   };
 
@@ -260,9 +256,7 @@ function ProjectPage() {
     });
     const ReductionUnitData = await getReductionUnit();
     setReductionUnit(ReductionUnitData);
-    console.log(project);
 
-    console.log(projectData);
     setOpenModalProjects(true);
   };
   const close = () => {
@@ -292,7 +286,7 @@ function ProjectPage() {
       }
 
       if (modoEdicion) {
-        console.log(projectData);
+      
         result = await UpdateProject(projectData);
         if (result) {
           Swal.fire({
@@ -709,64 +703,45 @@ function ProjectPage() {
               </Grid>
             </MDBox>
 
-            <MDBox pt={6} pb={3} width="100%">
-  <Grid container spacing={5}>
-    <Grid item xs={12}>
-      <Card sx={{ width: "100%" }}>
-        {/* Encabezado */}
-        <MDBox
-          mx={2}
-          mt={-3}
-          py={3}
-          px={2}
-          variant="gradient"
-          bgColor="success"
-          borderRadius="lg"
-          coloredShadow="success"
-        >
-          <MDTypography variant="h6" color="white" align="left">
-            Proyectos
-          </MDTypography>
-        </MDBox>
-
-        {/* Contenedor de la tabla */}
-        <MDBox pt={3} width="100%" overflowX="auto">
-          {rows.length > 0 ? (
-            <DataTable
-              table={{ columns, rows }}
-              isSorted={false}
-              entriesPerPage={false}
-              showTotalEntries={true}
-              noEndBorder
-              sx={{
-                width: "100%",
-                display: "block", // forzar ancho total
-                "& .MuiTable-root": {
-                  width: "100% !important",
-                  tableLayout: "fixed", // columnas distribuidas uniformemente
-                },
-                "& .MuiTableCell-root": {
-                  wordBreak: "break-word",
-                },
-              }}
-            />
-          ) : (
-            <MDBox
-              width="100%"
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-            >
-              <MDTypography color="text" align="center" variant="body2">
-                No hay proyectos disponibles.
-              </MDTypography>
-            </MDBox>
-          )}
-        </MDBox>
-      </Card>
-    </Grid>
-  </Grid>
-</MDBox>
+            {/* Tabla de proyectos */}
+            <Grid size={{ xs: 12 }} mt={10}>
+              <Card>
+                <MDBox
+                  mx={2}
+                  mt={-3}
+                  py={3}
+                  px={2}
+                  variant="gradient"
+                  bgColor="success"
+                  borderRadius="lg"
+                  coloredShadow="success"
+                >
+                  <MDTypography variant="h6" color="white" align="left">
+                    Proyectos
+                  </MDTypography>
+                </MDBox>
+                <MDBox>
+                  <MDBox>
+                    <Grid container spacing={5}>
+                      <Grid size={{ xs: 12 }}>
+                        <Card>
+                          <MDBox pt={3}>
+                            <DataTable
+                              table={{ columns, rows }}
+                              isSorted={false}
+                              entriesPerPage={false}
+                              showTotalEntries={true}
+                              noEndBorder
+                              loading={loading}
+                            />
+                          </MDBox>
+                        </Card>
+                      </Grid>
+                    </Grid>
+                  </MDBox>
+                </MDBox>
+              </Card>
+            </Grid>
           </MDBox>
         </LocalizationProvider>
       </MDBox>
@@ -1018,7 +993,7 @@ function ProjectPage() {
           <FormControl fullWidth margin="normal">
             <Box sx={{ display: "flex", gap: 2 }}>
               <FormControl fullWidth>
-                <InputLabel id="unidad-label">Unidad de Reducción</InputLabel>
+                <InputLabel id="unidad-label">Factor de emisión</InputLabel>
                 <Select
                   fullWidth
                   labelId="unidad-label"
@@ -1034,8 +1009,8 @@ function ProjectPage() {
                 >
                   {Array.isArray(reductionUnit) &&
                     reductionUnit.map((unidad) => (
-                      <MenuItem key={unidad.unidadId} value={unidad.unidadId}>
-                        {unidad.nombre}
+                      <MenuItem key={unidad.id} value={unidad.id}>
+                        {unidad.name}
                       </MenuItem>
                     ))}
                 </Select>

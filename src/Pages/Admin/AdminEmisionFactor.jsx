@@ -62,7 +62,6 @@ const EmissionFactorDashboard = () => {
       try {
         setLoading(true);
         const factors = await getEmissionFactors();
-        console.log("Fetched emission factors", factors);
         setEmissionFactors(factors);
       } catch (err) {
         console.error("Error loading emission factors:", err);
@@ -71,7 +70,6 @@ const EmissionFactorDashboard = () => {
         setLoading(false);
       }
     };
-    console.log(emissionFactors);
     fetchEmissionFactors();
   }, []);
 
@@ -106,7 +104,7 @@ const EmissionFactorDashboard = () => {
         setSectors(sectors);
         setSources(sources);
         setPcgs(pcgs);
-        console.log(pcgs);
+        
       } catch (err) {
         console.error(err);
         setError("Failed to load reference data");
@@ -162,7 +160,6 @@ const EmissionFactorDashboard = () => {
       source: factor.source,
     });
     setIsModalOpen(true);
-    console.log("Editing factor prepared:", factor);
   };
 
   const handleModalClose = () => {
