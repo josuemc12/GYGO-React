@@ -40,6 +40,11 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Tabs,
+  Tab,
+  List,
+  ListItem,
+  ListItemText,
 } from "@mui/material";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -101,8 +106,6 @@ function ProjectPage() {
     proyectId: "",
     nombre: "",
     descripcion: "",
-    unidadreduccion: "",
-    cantidadReduccion: "",
     fechaInicio: "",
     fechaFinal: "",
   });
@@ -113,7 +116,17 @@ function ProjectPage() {
     titulo: "",
     nombre: "",
     descripcion: "",
+    valorActividad: "",
+    FactorEmisionId: "",
+    EmisionesCO2e: "",
   });
+
+  const [tabIndex, setTabIndex] = useState(0);
+  const [IsEditing, setIsEditing] = useState(false);
+
+  const handleTabChange = (event, newValue) => {
+    setTabIndex(newValue);
+  };
 
   //Constante para encontrar proyectos
   const grupo = 1;
@@ -162,6 +175,7 @@ function ProjectPage() {
 
   // Abrir modal y cargar detalles
   const VerMas = async (projectID) => {
+    setIsEditing(false);
     setOpenModal(true);
     setLoading(true);
     try {
@@ -176,6 +190,9 @@ function ProjectPage() {
       });
       setTaskStatus(initialStatus);
       setTasks(tasks);
+
+      const factores = await getFactoresEmision();
+      setReductionUnit(factores);
     } catch (error) {
       setTasks(null);
       console.log("El siguiente proyecto no tiene Tareas");
@@ -186,7 +203,7 @@ function ProjectPage() {
 
   const CloseModal = () => {
     setOpenModal(false);
-    setTasks(null);
+
     fetchProjects();
   };
 
@@ -198,8 +215,7 @@ function ProjectPage() {
     }));
 
     UpdateStatusTask(taskId, newStatus)
-      .then(() => {
-      })
+      .then(() => {})
       .catch((err) => {
         console.error("Error al actualizar estado", err);
       });
@@ -214,12 +230,10 @@ function ProjectPage() {
         dayjs(endDate).format("DD/MM/YYYY")
       );
 
-
       const projectsPDF = await getProjectsPDF(formattedStart, formattedEnd);
 
       CreatePDF(projectsPDF);
     } catch (error) {
-
     } finally {
     }
   };
@@ -231,13 +245,9 @@ function ProjectPage() {
     setProjecttData({
       nombre: "",
       descripcion: "",
-      unidadreduccion: "",
-      cantidadReduccion: "",
       fechaInicio: "",
       fechaFinal: "",
     });
-    const ReductionUnitData = await getFactoresEmision();
-    setReductionUnit(ReductionUnitData);
 
     setOpenModalProjects(true);
   };
@@ -249,8 +259,6 @@ function ProjectPage() {
       proyectoId: project.proyectoId,
       nombre: project.nombre,
       descripcion: project.descripcion,
-      unidadreduccion: project.unidadreduccion,
-      cantidadReduccion: project.cantidadReduccion,
       fechaInicio: project.fechaInicio,
       fechaFinal: project.fechaFinal,
     });
@@ -286,7 +294,6 @@ function ProjectPage() {
       }
 
       if (modoEdicion) {
-      
         result = await UpdateProject(projectData);
         if (result) {
           Swal.fire({
@@ -361,11 +368,18 @@ function ProjectPage() {
   const SubmitModalTask = async () => {
     try {
       setOpenModal(false);
-      if (!taskData?.titulo || !taskData?.descripcion) {
+
+      if (
+        !taskData?.titulo ||
+        !taskData?.descripcion ||
+        !taskData?.valorActividad ||
+        !taskData?.factorEmisionId ||
+        !taskData?.emisionesCO2e
+      ) {
         Swal.fire({
           icon: "warning",
           title: "Campos incompletos",
-          text: "Por favor completá el título y la descripción.",
+          text: "Por favor completá los campos solicitados",
           confirmButtonColor: "#f0ad4e",
         });
         return;
@@ -471,15 +485,37 @@ function ProjectPage() {
     }
   };
 
+  const handleTaskDataChange = (field, value) => {
+    const updatedData = { ...taskData, [field]: value };
+
+    // Si ya tenemos valor de actividad y factor, calculamos emisiones
+    const actividad = parseFloat(updatedData.valorActividad);
+    const factorObj = reductionUnit.find(
+      (u) => u.id === Number(updatedData.factorEmisionId)
+    );
+
+    if (actividad && factorObj) {
+      updatedData.emisionesCO2e = (actividad * factorObj.valueFactor).toFixed(
+        2
+      ); // opcional: 2 decimales
+    } else {
+      updatedData.emisionesCO2e = "";
+    }
+
+    setTasktData(updatedData);
+  };
+
+  const handleEditTask = (task) => {
+    handleTaskDataChange("valorActividad", task.valorActividad);
+    handleTaskDataChange("FactorEmisionId", task.valueFactor);
+    setTasktData(task); // precarga los datos
+    setTabIndex(0); // cambia al tab de agregar/editar
+    setIsEditing(true);
+  };
+
   const columns = [
     { Header: "Nombre", accessor: "nombre", align: "left" },
     { Header: "Descripción", accessor: "descripcion", align: "left" },
-    {
-      Header: "Unidad Reducción",
-      accessor: "unidadreduccion",
-      align: "center",
-    },
-    { Header: "Cantidad", accessor: "cantidadReduccion", align: "center" },
     { Header: "Inicio", accessor: "fechaInicio", align: "center" },
     { Header: "Final", accessor: "fechaFinal", align: "center" },
     { Header: "Estado", accessor: "estatus", align: "center" },
@@ -498,16 +534,7 @@ function ProjectPage() {
         {project.descripcion}
       </MDTypography>
     ),
-    unidadreduccion: (
-      <MDTypography variant="caption" color="text">
-        {project.unidadNombre}
-      </MDTypography>
-    ),
-    cantidadReduccion: (
-      <MDTypography variant="caption" color="text">
-        {project.cantidadReduccion}
-      </MDTypography>
-    ),
+
     fechaInicio: (
       <MDTypography variant="caption" color="text">
         {dayjs(project.fechaInicio, "DD-MM-YYYY").format("DD/MM/YYYY")}
@@ -747,7 +774,6 @@ function ProjectPage() {
       </MDBox>
 
       <Modal
-        open={openModal}
         onClose={CloseModal}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
@@ -990,43 +1016,6 @@ function ProjectPage() {
             multiline
             rows={3}
           />
-          <FormControl fullWidth margin="normal">
-            <Box sx={{ display: "flex", gap: 2 }}>
-              <FormControl fullWidth>
-                <InputLabel id="unidad-label">Factor de emisión</InputLabel>
-                <Select
-                  fullWidth
-                  labelId="unidad-label"
-                  id="unidad-select"
-                  sx={{ height: 40 }}
-                  value={projectData.unidadreduccion}
-                  onChange={(e) =>
-                    setProjecttData({
-                      ...projectData,
-                      unidadreduccion: e.target.value,
-                    })
-                  }
-                >
-                  {Array.isArray(reductionUnit) &&
-                    reductionUnit.map((unidad) => (
-                      <MenuItem key={unidad.id} value={unidad.id}>
-                        {unidad.name}
-                      </MenuItem>
-                    ))}
-                </Select>
-              </FormControl>
-
-              <TextField
-                fullWidth
-                label="Cantidad"
-                name="cantidadReduccion"
-                value={projectData.cantidadReduccion}
-                onChange={handleChange}
-                type="number"
-                inputProps={{ min: 0, step: 0.01 }}
-              />
-            </Box>
-          </FormControl>
 
           <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -1116,6 +1105,205 @@ function ProjectPage() {
         </Box>
       </Modal>
       {/* Fin del Modal para agregar un nuevo proyecto */}
+
+      <Dialog open={openModal} onClose={CloseModal} fullWidth maxWidth="md">
+        <DialogTitle>Gestión de Actividades</DialogTitle>
+        <DialogContent dividers>
+          <Tabs value={tabIndex} onChange={handleTabChange}>
+            <Tab label="Agregar Actividades" />
+            <Tab label="Ver Actividades" />
+          </Tabs>
+
+          {tabIndex === 0 && (
+            <Box mt={2}>
+              <TextField
+                fullWidth
+                label="Título"
+                name="titulo"
+                margin="normal"
+                value={taskData.titulo}
+                onChange={(e) =>
+                  setTasktData({ ...taskData, titulo: e.target.value })
+                }
+              />
+              <TextField
+                fullWidth
+                label="Descripción"
+                name="descripcion"
+                margin="normal"
+                multiline
+                rows={2}
+                value={taskData.descripcion}
+                onChange={(e) =>
+                  setTasktData({
+                    ...taskData,
+                    descripcion: e.target.value,
+                  })
+                }
+              />
+              <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
+                {/* Campo Valor Actividad */}
+                <TextField
+                  fullWidth
+                  label="Valor Actividad"
+                  name=""
+                  value={taskData.valorActividad || ""}
+                  onChange={(e) =>
+                    handleTaskDataChange("valorActividad", e.target.value)
+                  }
+                />
+
+                {/* Campo Factor de emisión */}
+                <FormControl fullWidth>
+                  <InputLabel id="unidad-label">Factor de emisión</InputLabel>
+                  <Select
+                    labelId="unidad-label"
+                    id="factorEmisionId"
+                    value={taskData.factorEmisionId || ""}
+                    sx={{ height: 40 }}
+                    onChange={(e) =>
+                      handleTaskDataChange("factorEmisionId", e.target.value)
+                    }
+                  >
+                    {Array.isArray(reductionUnit) &&
+                      reductionUnit.map((unidad) => (
+                        <MenuItem key={unidad.id} value={unidad.id}>
+                          {unidad.name}
+                        </MenuItem>
+                      ))}
+                  </Select>
+                </FormControl>
+              </Box>
+
+              <TextField
+                fullWidth
+                label="Emisiones CO2"
+                name="EmisionesCO2e"
+                margin="normal"
+                value={taskData.emisionesCO2e || ""}
+                InputProps={{
+                  readOnly: true, // así el usuario no lo puede cambiar
+                }}
+              />
+            </Box>
+          )}
+
+          {tabIndex === 1 && (
+            <Box mt={2}>
+              {tasks.length === 0 ? (
+                <Typography>No hay actividades registradas.</Typography>
+              ) : (
+                <List>
+                  {tasks.map((task) => (
+                    <ListItem
+                      key={task.taskId}
+                      divider
+                      secondaryAction={
+                        <Box
+                          sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                        >
+                          <Switch
+                            checked={!!taskStatus[task.taskId]}
+                            onChange={UpdateStatusTasks(task.taskId)}
+                            inputProps={{
+                              "aria-label": "cambiar estado tarea",
+                            }}
+                            sx={{
+                              "& .MuiSwitch-thumb": {
+                                backgroundColor: taskStatus[task.taskId]
+                                  ? "#2DA14C"
+                                  : "#D32F2F",
+                              },
+                              "& .Mui-checked": {
+                                color: taskStatus[task.taskId]
+                                  ? "#2DA14C"
+                                  : "#D32F2F",
+                              },
+                              "& .MuiSwitch-track": {
+                                backgroundColor: taskStatus[task.taskId]
+                                  ? "#81ac82ff"
+                                  : "#FFCDD2",
+                              },
+                            }}
+                          />
+
+                          <IconButton
+                            color="info"
+                            edge="end"
+                            aria-label="editar"
+                            onClick={() => handleEditTask(task)}
+                          >
+                            <EditIcon />
+                          </IconButton>
+                          <IconButton
+                            color="error"
+                            edge="end"
+                            aria-label="editar"
+                            sx={{ mr: 2 }}
+                            onClick={() => {
+                              DTask(task.taskId);
+                            }}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Box>
+                      }
+                    >
+                      <ListItemText
+                        primary={task.titulo + " - " + task.emisionesCO2e}
+                        secondary={
+                          <Box
+                            sx={{
+                              display: "flex",
+                              flexDirection: "column",
+                              gap: 0.5,
+                            }}
+                          >
+                            <Typography variant="body2">
+                              <strong>Descripción:</strong> {task.descripcion}
+                            </Typography>
+                            <Box sx={{ display: "flex", gap: 2, mt: 0.5 }}>
+                              <Typography variant="body2">
+                                <strong>Valor actividad:</strong>{" "}
+                                {task.valorActividad}
+                              </Typography>
+                              <Typography variant="body2">
+                                <strong>Factor de emisión:</strong>{" "}
+                                {task.factorEmisionName}
+                              </Typography>
+                            </Box>
+                          </Box>
+                        }
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              )}
+            </Box>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <MDButton color="error" variant="outlined" onClick={CloseModal}>
+            Cerrar
+          </MDButton>
+
+          {tabIndex === 0 && (
+            <MDButton
+              variant="contained"
+              color="success"
+              onClick={() => {
+                if (IsEditing) {
+                  UpTask(); // método de actualizar
+                } else {
+                  SubmitModalTask(); // método de crear
+                }
+              }}
+            >
+              Guardar
+            </MDButton>
+          )}
+        </DialogActions>
+      </Dialog>
 
       <Footer />
     </DashboardLayout>
