@@ -137,7 +137,6 @@ export default function Login() {
         text: "Se envió un enlace de recuperación a tu correo.",
       });
       handleClose();
-      setEmailReset(""); 
     } else {
       handleClose();
       Swal.fire({
@@ -146,6 +145,7 @@ export default function Login() {
         text: "No se pudo enviar el enlace. Verifica el correo.",
       });
     }
+    setEmailReset(""); 
   } catch (error) {
     console.error("Error enviando reset:", error);
     Swal.fire({

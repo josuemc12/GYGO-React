@@ -61,19 +61,16 @@ export const ChangePassword = () => {
   const query = new URLSearchParams(location.search);
   const token = query.get("token");
 
-
-    //Funciona para la contraseña
+  //Funciona para la contraseña
   function isPasswordValid(password) {
     if (password.length < 8) return false;
-    if (!/[A-Z]/.test(password)) return false; 
-    if (!/[a-z]/.test(password)) return false; 
-    if (!/[0-9]/.test(password)) return false; 
-    if (!/[^A-Za-z0-9]/.test(password)) return false; 
+    if (!/[A-Z]/.test(password)) return false;
+    if (!/[a-z]/.test(password)) return false;
+    if (!/[0-9]/.test(password)) return false;
+    if (!/[^A-Za-z0-9]/.test(password)) return false;
     return true;
   }
   //Termina funcion de la contraseña
-
-
 
   const handleClickShowPassword = () => {
     setShowPassword((show) => !show);
@@ -99,6 +96,17 @@ export const ChangePassword = () => {
       });
       return;
     }
+
+    if (ConfirmPassword !== newPassword) {
+      Swal.fire({
+        icon: "warning",
+        title: "No se pudo cambiar la contraseña",
+        text: "Por favor, revisar la constraseña ingresada.",
+        confirmButtonColor: "#f8bb86",
+      });
+      return;
+    }
+
     //Verifica la contraseña
     if (!isPasswordValid(ConfirmPassword) || !isPasswordValid(newPassword)) {
       Swal.fire({
@@ -110,13 +118,11 @@ export const ChangePassword = () => {
       return;
     }
 
-
-
     setLoading(true);
     try {
       const result = await ResetPassword(token, newPassword, ConfirmPassword);
       setLoading(false);
-      
+
       if (result.success) {
         Swal.fire({
           icon: "success",

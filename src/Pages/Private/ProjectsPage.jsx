@@ -224,14 +224,14 @@ function ProjectPage() {
   const CreatePDFAPI = async () => {
     try {
       const formattedStart = encodeURIComponent(
-        dayjs(startDate).format("DD/MM/YYYY")
+        dayjs(startDate).format("MM-DD-YYYY")
       );
       const formattedEnd = encodeURIComponent(
-        dayjs(endDate).format("DD/MM/YYYY")
+        dayjs(endDate).format("MM-DD-YYYY")
       );
 
       const projectsPDF = await getProjectsPDF(formattedStart, formattedEnd);
-
+      
       CreatePDF(projectsPDF);
     } catch (error) {
     } finally {
@@ -773,207 +773,7 @@ function ProjectPage() {
         </LocalizationProvider>
       </MDBox>
 
-      <Modal
-        onClose={CloseModal}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 500,
-            maxHeight: "90vh", // alto máximo en pantalla
-            overflowY: "auto", // activa scroll vertical
-            bgcolor: "background.paper",
-            borderRadius: 2,
-            boxShadow: 24,
-            p: 4,
-          }}
-        >
-          {loading ? (
-            <Box sx={{ textAlign: "center" }}>
-              <CircularProgress />
-              <Typography sx={{ mt: 2 }}>Cargando detalles...</Typography>
-            </Box>
-          ) : tasks && tasks.length > 0 ? (
-            <>
-              <Typography variant="h6" gutterBottom>
-                Detalles del Proyecto: {tasks[0].proyect}
-              </Typography>
-
-              {tasks.map((task) => (
-                <Box
-                  key={task.taskId}
-                  sx={{
-                    mb: 2,
-                    p: 1,
-                    border: "1px solid #ddd",
-                    borderRadius: 1,
-                  }}
-                >
-                  {editTaskId === task.taskId ? (
-                    <>
-                      <TextField
-                        label="Título"
-                        fullWidth
-                        value={taskData.titulo}
-                        onChange={(e) =>
-                          setTasktData({ ...taskData, titulo: e.target.value })
-                        }
-                        sx={{ mb: 1 }}
-                      />
-                      <TextField
-                        label="Descripción"
-                        fullWidth
-                        multiline
-                        rows={2}
-                        value={taskData.descripcion}
-                        onChange={(e) =>
-                          setTasktData({
-                            ...taskData,
-                            descripcion: e.target.value,
-                          })
-                        }
-                        sx={{ mb: 1 }}
-                      />
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "flex-end",
-                          gap: 1,
-                        }}
-                      >
-                        <MDButton
-                          variant="outlined"
-                          color="error"
-                          onClick={() => setEditTaskId(null)}
-                        >
-                          Cancelar
-                        </MDButton>
-                        <MDButton
-                          variant="outlined"
-                          color="info"
-                          onClick={() => UpTask()}
-                        >
-                          Guardar
-                        </MDButton>
-                      </Box>
-                    </>
-                  ) : (
-                    <>
-                      <Typography variant="subtitle1" fontWeight="bold">
-                        Tarea: {task.titulo}
-                      </Typography>
-                      <Typography>Descripción: {task.descripcion}</Typography>
-                      <Typography>
-                        Estado:{" "}
-                        {taskStatus[task.taskId] ? "Completada" : "Pendiente"}
-                      </Typography>
-                      <Switch
-                        checked={!!taskStatus[task.taskId]}
-                        onChange={UpdateStatusTasks(task.taskId)}
-                        color="primary"
-                        inputProps={{ "aria-label": "cambiar estado tarea" }}
-                      />
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "flex-end",
-                          gap: 1,
-                          mt: 1,
-                        }}
-                      >
-                        <MDButton
-                          variant="outlined"
-                          color="error"
-                          size="small"
-                          onClick={() => {
-                            DTask(task.taskId);
-                          }}
-                        >
-                          Eliminar
-                        </MDButton>
-
-                        <MDButton
-                          color="info"
-                          variant="outlined"
-                          size="small"
-                          onClick={() => {
-                            setEditTaskId(task.taskId);
-                            setTasktData({
-                              TaskId: task.taskId,
-                              proyectID: task.proyectID,
-                              titulo: task.titulo,
-                              descripcion: task.descripcion,
-                            });
-                          }}
-                        >
-                          Editar
-                        </MDButton>
-                      </Box>
-                    </>
-                  )}
-                </Box>
-              ))}
-              {/* Parte para agregar una tarea */}
-            </>
-          ) : (
-            <Typography>No hay tareas para mostrar</Typography>
-          )}
-          <Box
-            sx={{
-              mt: 3,
-              border: "1px solid #ccc",
-              borderRadius: 2,
-              p: 2,
-              backgroundColor: "rgba(0,0,0,0)",
-            }}
-          >
-            <Typography variant="subtitle1">Agregar nueva tarea</Typography>
-            <TextField
-              label="Título"
-              fullWidth
-              sx={{ mt: 1 }}
-              onChange={(e) =>
-                setTasktData({ ...taskData, titulo: e.target.value })
-              }
-            />
-            <TextField
-              label="Descripción"
-              fullWidth
-              multiline
-              rows={2}
-              sx={{ mt: 1 }}
-              onChange={(e) =>
-                setTasktData({ ...taskData, descripcion: e.target.value })
-              }
-            />
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "flex-end",
-              gap: 2,
-              mt: 3,
-            }}
-          >
-            <MDButton variant="outlined" color="error" onClick={CloseModal}>
-              Cerrar
-            </MDButton>
-            <MDButton
-              color="success"
-              variant="contained"
-              onClick={SubmitModalTask}
-            >
-              Agregar
-            </MDButton>
-          </Box>
-        </Box>
-      </Modal>
-
+  
       {/* Modal para agregar un nuevo proyecto */}
       <Modal
         open={openModalProjects}
@@ -1147,6 +947,7 @@ function ProjectPage() {
                   fullWidth
                   label="Valor Actividad"
                   name=""
+                  type="number"
                   value={taskData.valorActividad || ""}
                   onChange={(e) =>
                     handleTaskDataChange("valorActividad", e.target.value)

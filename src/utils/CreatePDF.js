@@ -25,6 +25,9 @@ export async function CreatePDF(datos) {
       taskNombre: item.taskNombre,
       taskDescripcion: item.taskDescripcion,
       taskEstatus: item.taskEstatus,
+      taskValorActividad: item.taskValorActividad,
+      taskFactorEmision: item.taskFactorEmision,
+      taskEmisiones: item.taskEmisiones,
     });
   });
 
@@ -45,7 +48,7 @@ export async function CreatePDF(datos) {
   const proyectos = Array.from(proyectosMap.values());
   const fecha = new Date();
   const año = fecha.getFullYear();
-  const mes = String(fecha.getMonth() + 1).padStart(2, "0"); 
+  const mes = String(fecha.getMonth() + 1).padStart(2, "0");
   const dia = String(fecha.getDate()).padStart(2, "0");
   const nombreArchivo = `Proyectos_${dia}-${mes}-${año}.pdf`;
   const doc = new jsPDF();
@@ -132,46 +135,48 @@ export async function CreatePDF(datos) {
       }
     }
 
-    // Proyecto
+    // Título Proyecto
     doc.setFontSize(14);
     doc.setFont("helvetica", "bold");
     doc.setTextColor(...labelColor);
     doc.text("Proyecto", leftMargin, yy);
+    yy += lineHeight + 2;
 
+    // Información del proyecto
     doc.setFontSize(12);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(0, 0, 0);
-    yy += 8;
 
     const proyectoInfo = [
-      `Nombre: ${data.projectNombre || "-"}`,
-      `Descripción: ${data.projectDescripcion || "-"}`,
-      `Unidad de reduccion: ${data.projectUnidadNombre || "-"}`,
-      `Cantidad de reducción: ${data.projectCantidadReduccion || "-"} ${data.projectUnidadNombre || ""}`,
-      `Estado: ${data.projectEstatus ? "Realizado" : "Pendiente"}`,
-      `Fecha de inicio: ${data.fechaInicio || "-"}`,
-      `Fecha final: ${data.fechaFinal || "-"}`,
+      { label: "Nombre", value: data.projectNombre || "-" },
+      { label: "Descripción", value: data.projectDescripcion || "-" },
+      {
+        label: "Estado",
+        value: data.projectEstatus ? "Realizado" : "Pendiente",
+      },
+      { label: "Fecha de inicio", value: data.fechaInicio || "-" },
+      { label: "Fecha final", value: data.fechaFinal || "-" },
     ];
 
-    proyectoInfo.forEach((line) => {
+    proyectoInfo.forEach((info) => {
       checkPageBreak(lineHeight);
-      doc.text(line, leftMargin, yy);
+      doc.text(`${info.label}: ${info.value}`, leftMargin, yy);
       yy += lineHeight;
     });
 
-    yy += 8;
+    // Separador visual
+    yy += 6;
     checkPageBreak(10);
     doc.setDrawColor(200);
     doc.setLineWidth(0.5);
-    doc.line(leftMargin, yy, pageWidth - 20, yy);
-
+    doc.line(leftMargin, yy, pageWidth - leftMargin, yy);
     yy += 10;
 
     // Tareas
     doc.setFontSize(14);
     doc.setFont("helvetica", "bold");
     doc.setTextColor(...labelColor);
-    doc.text("Tareas", leftMargin, yy);
+    doc.text("Actividades", leftMargin, yy);
 
     doc.setFontSize(12);
     doc.setFont("helvetica", "normal");
@@ -179,24 +184,60 @@ export async function CreatePDF(datos) {
     yy += 8;
 
     if (Array.isArray(data.tasks) && data.tasks.length > 0) {
+      const col1 = leftMargin + 10;
+      const col2 = leftMargin + 70;
+      const col3 = leftMargin + 130;
+
       data.tasks.forEach((task, i) => {
-        checkPageBreak(lineHeight * 4);
-        doc.text(`Tarea #${i + 1}`, leftMargin, yy);
+        console.log(task);
+        checkPageBreak(lineHeight * 6);
+
+        // Título de la tarea
+        doc.setFont(undefined, "bold");
+
+        doc.setFont(undefined, "normal");
         yy += lineHeight;
-        doc.text(`Nombre: ${task.taskNombre || "-"}`, leftMargin + 10, yy);
-        yy += lineHeight;
-        doc.text(
-          `Descripción: ${task.taskDescripcion || "-"}`,
-          leftMargin + 10,
-          yy
+
+        // Fila 1: Nombre | Descripción | Valor Actividad
+        doc.text(`Nombre: ${task.taskNombre || "-"}`, col1, yy);
+        const descripcion = doc.splitTextToSize(
+          task.taskDescripcion || "-",
+          60
         );
+
+        // Mostrar la etiqueta "Descripción:" en la primera línea
+        if (descripcion.length > 0) {
+          // Primera línea con la etiqueta
+          doc.text(`Descripción: ${descripcion[0]}`, col2, yy);
+
+          // Si hay más líneas, se colocan debajo sin la etiqueta
+          for (let i = 1; i < descripcion.length; i++) {
+            yy += lineHeight;
+            doc.text(descripcion[i], col2, yy);
+          }
+        } else {
+          doc.text("Descripción: -", col2, yy);
+        }
+        doc.text(`Valor: ${task.taskValorActividad ?? "-"}`, col3, yy);
         yy += lineHeight;
+
+        // Ajustar 'yy' según el número de líneas de la descripción
+        const maxLineas = Math.max(descripcion.length, 1);
+        yy += maxLineas * lineHeight;
+
+        // Fila 2: Factor Emisión | Emisiones CO2 | Estado
+        doc.text(`Factor: ${task.taskFactorEmision ?? "-"}`, col1, yy);
+        doc.text(`Emisión: ${task.taskEmisiones ?? "-"}`, col2, yy);
         doc.text(
           `Estado: ${task.taskEstatus ? "Realizado" : "Pendiente"}`,
-          leftMargin + 10,
+          col3,
           yy
         );
         yy += lineHeight + 4;
+
+        // Separador visual
+        doc.line(leftMargin, yy, 200, yy);
+        yy += 6;
       });
     } else {
       doc.text("No hay tareas disponibles", leftMargin, yy);
