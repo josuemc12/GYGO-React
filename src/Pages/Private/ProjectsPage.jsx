@@ -711,7 +711,7 @@ function ProjectPage() {
 
             <MDBox pt={6} pb={3} width="100%">
   <Grid container spacing={5}>
-    <Grid item xs={12}>
+    <Grid size={{xs:12}}>
       <Card sx={{ width: "100%" }}>
         {/* Encabezado */}
         <MDBox
