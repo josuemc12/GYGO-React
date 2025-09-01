@@ -11,7 +11,7 @@ import {
   UpdateProject,
   DProject,
 } from "../../API/Projects";
-
+import { getFactoresEmision } from "../../API/FactorEmision";
 import {
   getTasks,
   UpdateStatusTask,
@@ -40,6 +40,11 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Tabs,
+  Tab,
+  List,
+  ListItem,
+  ListItemText,
 } from "@mui/material";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -101,8 +106,6 @@ function ProjectPage() {
     proyectId: "",
     nombre: "",
     descripcion: "",
-    unidadreduccion: "",
-    cantidadReduccion: "",
     fechaInicio: "",
     fechaFinal: "",
   });
@@ -113,7 +116,17 @@ function ProjectPage() {
     titulo: "",
     nombre: "",
     descripcion: "",
+    valorActividad: "",
+    FactorEmisionId: "",
+    EmisionesCO2e: "",
   });
+
+  const [tabIndex, setTabIndex] = useState(0);
+  const [IsEditing, setIsEditing] = useState(false);
+
+  const handleTabChange = (event, newValue) => {
+    setTabIndex(newValue);
+  };
 
   //Constante para encontrar proyectos
   const grupo = 1;
@@ -162,6 +175,7 @@ function ProjectPage() {
 
   // Abrir modal y cargar detalles
   const VerMas = async (projectID) => {
+    setIsEditing(false);
     setOpenModal(true);
     setLoading(true);
     try {
@@ -169,13 +183,16 @@ function ProjectPage() {
         proyectID: projectID,
       });
       const tasks = await getTasks(projectID);
-      console.log(tasks);
+
       const initialStatus = {};
       tasks.forEach((task) => {
         initialStatus[task.taskId] = task.status;
       });
       setTaskStatus(initialStatus);
       setTasks(tasks);
+
+      const factores = await getFactoresEmision();
+      setReductionUnit(factores);
     } catch (error) {
       setTasks(null);
       console.log("El siguiente proyecto no tiene Tareas");
@@ -186,7 +203,7 @@ function ProjectPage() {
 
   const CloseModal = () => {
     setOpenModal(false);
-    setTasks(null);
+
     fetchProjects();
   };
 
@@ -198,9 +215,7 @@ function ProjectPage() {
     }));
 
     UpdateStatusTask(taskId, newStatus)
-      .then(() => {
-        console.log("Estado actualizado");
-      })
+      .then(() => {})
       .catch((err) => {
         console.error("Error al actualizar estado", err);
       });
@@ -208,23 +223,17 @@ function ProjectPage() {
 
   const CreatePDFAPI = async () => {
     try {
-      console.log(startDate);
-      console.log(endDate);
-
       const formattedStart = encodeURIComponent(
-        dayjs(startDate).format("DD/MM/YYYY")
+        dayjs(startDate).format("MM-DD-YYYY")
       );
       const formattedEnd = encodeURIComponent(
-        dayjs(endDate).format("DD/MM/YYYY")
+        dayjs(endDate).format("MM-DD-YYYY")
       );
 
-      console.log(formattedStart);
-      console.log(formattedEnd);
       const projectsPDF = await getProjectsPDF(formattedStart, formattedEnd);
-      console.log(projectsPDF);
+      
       CreatePDF(projectsPDF);
     } catch (error) {
-      console.log("Error a crear el pdf");
     } finally {
     }
   };
@@ -236,13 +245,10 @@ function ProjectPage() {
     setProjecttData({
       nombre: "",
       descripcion: "",
-      unidadreduccion: "",
-      cantidadReduccion: "",
       fechaInicio: "",
       fechaFinal: "",
     });
-    const ReductionUnitData = await getReductionUnit();
-    setReductionUnit(ReductionUnitData);
+
     setOpenModalProjects(true);
   };
 
@@ -253,16 +259,12 @@ function ProjectPage() {
       proyectoId: project.proyectoId,
       nombre: project.nombre,
       descripcion: project.descripcion,
-      unidadreduccion: project.unidadreduccion,
-      cantidadReduccion: project.cantidadReduccion,
       fechaInicio: project.fechaInicio,
       fechaFinal: project.fechaFinal,
     });
     const ReductionUnitData = await getReductionUnit();
     setReductionUnit(ReductionUnitData);
-    console.log(project);
 
-    console.log(projectData);
     setOpenModalProjects(true);
   };
   const close = () => {
@@ -292,7 +294,6 @@ function ProjectPage() {
       }
 
       if (modoEdicion) {
-        console.log(projectData);
         result = await UpdateProject(projectData);
         if (result) {
           Swal.fire({
@@ -367,11 +368,18 @@ function ProjectPage() {
   const SubmitModalTask = async () => {
     try {
       setOpenModal(false);
-      if (!taskData?.titulo || !taskData?.descripcion) {
+
+      if (
+        !taskData?.titulo ||
+        !taskData?.descripcion ||
+        !taskData?.valorActividad ||
+        !taskData?.factorEmisionId ||
+        !taskData?.emisionesCO2e
+      ) {
         Swal.fire({
           icon: "warning",
           title: "Campos incompletos",
-          text: "Por favor completá el título y la descripción.",
+          text: "Por favor completá los campos solicitados",
           confirmButtonColor: "#f0ad4e",
         });
         return;
@@ -477,15 +485,37 @@ function ProjectPage() {
     }
   };
 
+  const handleTaskDataChange = (field, value) => {
+    const updatedData = { ...taskData, [field]: value };
+
+    // Si ya tenemos valor de actividad y factor, calculamos emisiones
+    const actividad = parseFloat(updatedData.valorActividad);
+    const factorObj = reductionUnit.find(
+      (u) => u.id === Number(updatedData.factorEmisionId)
+    );
+
+    if (actividad && factorObj) {
+      updatedData.emisionesCO2e = (actividad * factorObj.valueFactor).toFixed(
+        2
+      ); // opcional: 2 decimales
+    } else {
+      updatedData.emisionesCO2e = "";
+    }
+
+    setTasktData(updatedData);
+  };
+
+  const handleEditTask = (task) => {
+    handleTaskDataChange("valorActividad", task.valorActividad);
+    handleTaskDataChange("FactorEmisionId", task.valueFactor);
+    setTasktData(task); // precarga los datos
+    setTabIndex(0); // cambia al tab de agregar/editar
+    setIsEditing(true);
+  };
+
   const columns = [
     { Header: "Nombre", accessor: "nombre", align: "left" },
     { Header: "Descripción", accessor: "descripcion", align: "left" },
-    {
-      Header: "Unidad Reducción",
-      accessor: "unidadreduccion",
-      align: "center",
-    },
-    { Header: "Cantidad", accessor: "cantidadReduccion", align: "center" },
     { Header: "Inicio", accessor: "fechaInicio", align: "center" },
     { Header: "Final", accessor: "fechaFinal", align: "center" },
     { Header: "Estado", accessor: "estatus", align: "center" },
@@ -504,16 +534,7 @@ function ProjectPage() {
         {project.descripcion}
       </MDTypography>
     ),
-    unidadreduccion: (
-      <MDTypography variant="caption" color="text">
-        {project.unidadNombre}
-      </MDTypography>
-    ),
-    cantidadReduccion: (
-      <MDTypography variant="caption" color="text">
-        {project.cantidadReduccion}
-      </MDTypography>
-    ),
+
     fechaInicio: (
       <MDTypography variant="caption" color="text">
         {dayjs(project.fechaInicio, "DD-MM-YYYY").format("DD/MM/YYYY")}
@@ -709,270 +730,50 @@ function ProjectPage() {
               </Grid>
             </MDBox>
 
-            <MDBox pt={6} pb={3} width="100%">
-  <Grid container spacing={5}>
-    <Grid size={{xs:12}}>
-      <Card sx={{ width: "100%" }}>
-        {/* Encabezado */}
-        <MDBox
-          mx={2}
-          mt={-3}
-          py={3}
-          px={2}
-          variant="gradient"
-          bgColor="success"
-          borderRadius="lg"
-          coloredShadow="success"
-        >
-          <MDTypography variant="h6" color="white" align="left">
-            Proyectos
-          </MDTypography>
-        </MDBox>
-
-        {/* Contenedor de la tabla */}
-        <MDBox pt={3} width="100%" overflowX="auto">
-          {rows.length > 0 ? (
-            <DataTable
-              table={{ columns, rows }}
-              isSorted={false}
-              entriesPerPage={false}
-              showTotalEntries={true}
-              noEndBorder
-              sx={{
-                width: "100%",
-                display: "block", // forzar ancho total
-                "& .MuiTable-root": {
-                  width: "100% !important",
-                  tableLayout: "fixed", // columnas distribuidas uniformemente
-                },
-                "& .MuiTableCell-root": {
-                  wordBreak: "break-word",
-                },
-              }}
-            />
-          ) : (
-            <MDBox
-              width="100%"
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-            >
-              <MDTypography color="text" align="center" variant="body2">
-                No hay proyectos disponibles.
-              </MDTypography>
-            </MDBox>
-          )}
-        </MDBox>
-      </Card>
-    </Grid>
-  </Grid>
-</MDBox>
+            {/* Tabla de proyectos */}
+            <Grid size={{ xs: 12 }} mt={10}>
+              <Card>
+                <MDBox
+                  mx={2}
+                  mt={-3}
+                  py={3}
+                  px={2}
+                  variant="gradient"
+                  bgColor="success"
+                  borderRadius="lg"
+                  coloredShadow="success"
+                >
+                  <MDTypography variant="h6" color="white" align="left">
+                    Proyectos
+                  </MDTypography>
+                </MDBox>
+                <MDBox>
+                  <MDBox>
+                    <Grid container spacing={5}>
+                      <Grid size={{ xs: 12 }}>
+                        <Card>
+                          <MDBox pt={3}>
+                            <DataTable
+                              table={{ columns, rows }}
+                              isSorted={false}
+                              entriesPerPage={false}
+                              showTotalEntries={true}
+                              noEndBorder
+                              loading={loading}
+                            />
+                          </MDBox>
+                        </Card>
+                      </Grid>
+                    </Grid>
+                  </MDBox>
+                </MDBox>
+              </Card>
+            </Grid>
           </MDBox>
         </LocalizationProvider>
       </MDBox>
 
-      <Modal
-        open={openModal}
-        onClose={CloseModal}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 500,
-            maxHeight: "90vh", // alto máximo en pantalla
-            overflowY: "auto", // activa scroll vertical
-            bgcolor: "background.paper",
-            borderRadius: 2,
-            boxShadow: 24,
-            p: 4,
-          }}
-        >
-          {loading ? (
-            <Box sx={{ textAlign: "center" }}>
-              <CircularProgress />
-              <Typography sx={{ mt: 2 }}>Cargando detalles...</Typography>
-            </Box>
-          ) : tasks && tasks.length > 0 ? (
-            <>
-              <Typography variant="h6" gutterBottom>
-                Detalles del Proyecto: {tasks[0].proyect}
-              </Typography>
-
-              {tasks.map((task) => (
-                <Box
-                  key={task.taskId}
-                  sx={{
-                    mb: 2,
-                    p: 1,
-                    border: "1px solid #ddd",
-                    borderRadius: 1,
-                  }}
-                >
-                  {editTaskId === task.taskId ? (
-                    <>
-                      <TextField
-                        label="Título"
-                        fullWidth
-                        value={taskData.titulo}
-                        onChange={(e) =>
-                          setTasktData({ ...taskData, titulo: e.target.value })
-                        }
-                        sx={{ mb: 1 }}
-                      />
-                      <TextField
-                        label="Descripción"
-                        fullWidth
-                        multiline
-                        rows={2}
-                        value={taskData.descripcion}
-                        onChange={(e) =>
-                          setTasktData({
-                            ...taskData,
-                            descripcion: e.target.value,
-                          })
-                        }
-                        sx={{ mb: 1 }}
-                      />
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "flex-end",
-                          gap: 1,
-                        }}
-                      >
-                        <MDButton
-                          variant="outlined"
-                          color="error"
-                          onClick={() => setEditTaskId(null)}
-                        >
-                          Cancelar
-                        </MDButton>
-                        <MDButton
-                          variant="outlined"
-                          color="info"
-                          onClick={() => UpTask()}
-                        >
-                          Guardar
-                        </MDButton>
-                      </Box>
-                    </>
-                  ) : (
-                    <>
-                      <Typography variant="subtitle1" fontWeight="bold">
-                        Tarea: {task.titulo}
-                      </Typography>
-                      <Typography>Descripción: {task.descripcion}</Typography>
-                      <Typography>
-                        Estado:{" "}
-                        {taskStatus[task.taskId] ? "Completada" : "Pendiente"}
-                      </Typography>
-                      <Switch
-                        checked={!!taskStatus[task.taskId]}
-                        onChange={UpdateStatusTasks(task.taskId)}
-                        color="primary"
-                        inputProps={{ "aria-label": "cambiar estado tarea" }}
-                      />
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "flex-end",
-                          gap: 1,
-                          mt: 1,
-                        }}
-                      >
-                        <MDButton
-                          variant="outlined"
-                          color="error"
-                          size="small"
-                          onClick={() => {
-                            DTask(task.taskId);
-                          }}
-                        >
-                          Eliminar
-                        </MDButton>
-
-                        <MDButton
-                          color="info"
-                          variant="outlined"
-                          size="small"
-                          onClick={() => {
-                            setEditTaskId(task.taskId);
-                            setTasktData({
-                              TaskId: task.taskId,
-                              proyectID: task.proyectID,
-                              titulo: task.titulo,
-                              descripcion: task.descripcion,
-                            });
-                          }}
-                        >
-                          Editar
-                        </MDButton>
-                      </Box>
-                    </>
-                  )}
-                </Box>
-              ))}
-              {/* Parte para agregar una tarea */}
-            </>
-          ) : (
-            <Typography>No hay tareas para mostrar</Typography>
-          )}
-          <Box
-            sx={{
-              mt: 3,
-              border: "1px solid #ccc",
-              borderRadius: 2,
-              p: 2,
-              backgroundColor: "rgba(0,0,0,0)",
-            }}
-          >
-            <Typography variant="subtitle1">Agregar nueva tarea</Typography>
-            <TextField
-              label="Título"
-              fullWidth
-              sx={{ mt: 1 }}
-              onChange={(e) =>
-                setTasktData({ ...taskData, titulo: e.target.value })
-              }
-            />
-            <TextField
-              label="Descripción"
-              fullWidth
-              multiline
-              rows={2}
-              sx={{ mt: 1 }}
-              onChange={(e) =>
-                setTasktData({ ...taskData, descripcion: e.target.value })
-              }
-            />
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "flex-end",
-              gap: 2,
-              mt: 3,
-            }}
-          >
-            <MDButton variant="outlined" color="error" onClick={CloseModal}>
-              Cerrar
-            </MDButton>
-            <MDButton
-              color="success"
-              variant="contained"
-              onClick={SubmitModalTask}
-            >
-              Agregar
-            </MDButton>
-          </Box>
-        </Box>
-      </Modal>
-
+  
       {/* Modal para agregar un nuevo proyecto */}
       <Modal
         open={openModalProjects}
@@ -1015,43 +816,6 @@ function ProjectPage() {
             multiline
             rows={3}
           />
-          <FormControl fullWidth margin="normal">
-            <Box sx={{ display: "flex", gap: 2 }}>
-              <FormControl fullWidth>
-                <InputLabel id="unidad-label">Unidad de Reducción</InputLabel>
-                <Select
-                  fullWidth
-                  labelId="unidad-label"
-                  id="unidad-select"
-                  sx={{ height: 40 }}
-                  value={projectData.unidadreduccion}
-                  onChange={(e) =>
-                    setProjecttData({
-                      ...projectData,
-                      unidadreduccion: e.target.value,
-                    })
-                  }
-                >
-                  {Array.isArray(reductionUnit) &&
-                    reductionUnit.map((unidad) => (
-                      <MenuItem key={unidad.unidadId} value={unidad.unidadId}>
-                        {unidad.nombre}
-                      </MenuItem>
-                    ))}
-                </Select>
-              </FormControl>
-
-              <TextField
-                fullWidth
-                label="Cantidad"
-                name="cantidadReduccion"
-                value={projectData.cantidadReduccion}
-                onChange={handleChange}
-                type="number"
-                inputProps={{ min: 0, step: 0.01 }}
-              />
-            </Box>
-          </FormControl>
 
           <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -1141,6 +905,206 @@ function ProjectPage() {
         </Box>
       </Modal>
       {/* Fin del Modal para agregar un nuevo proyecto */}
+
+      <Dialog open={openModal} onClose={CloseModal} fullWidth maxWidth="md">
+        <DialogTitle>Gestión de Actividades</DialogTitle>
+        <DialogContent dividers>
+          <Tabs value={tabIndex} onChange={handleTabChange}>
+            <Tab label="Agregar Actividades" />
+            <Tab label="Ver Actividades" />
+          </Tabs>
+
+          {tabIndex === 0 && (
+            <Box mt={2}>
+              <TextField
+                fullWidth
+                label="Título"
+                name="titulo"
+                margin="normal"
+                value={taskData.titulo}
+                onChange={(e) =>
+                  setTasktData({ ...taskData, titulo: e.target.value })
+                }
+              />
+              <TextField
+                fullWidth
+                label="Descripción"
+                name="descripcion"
+                margin="normal"
+                multiline
+                rows={2}
+                value={taskData.descripcion}
+                onChange={(e) =>
+                  setTasktData({
+                    ...taskData,
+                    descripcion: e.target.value,
+                  })
+                }
+              />
+              <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
+                {/* Campo Valor Actividad */}
+                <TextField
+                  fullWidth
+                  label="Valor Actividad"
+                  name=""
+                  type="number"
+                  value={taskData.valorActividad || ""}
+                  onChange={(e) =>
+                    handleTaskDataChange("valorActividad", e.target.value)
+                  }
+                />
+
+                {/* Campo Factor de emisión */}
+                <FormControl fullWidth>
+                  <InputLabel id="unidad-label">Factor de emisión</InputLabel>
+                  <Select
+                    labelId="unidad-label"
+                    id="factorEmisionId"
+                    value={taskData.factorEmisionId || ""}
+                    sx={{ height: 40 }}
+                    onChange={(e) =>
+                      handleTaskDataChange("factorEmisionId", e.target.value)
+                    }
+                  >
+                    {Array.isArray(reductionUnit) &&
+                      reductionUnit.map((unidad) => (
+                        <MenuItem key={unidad.id} value={unidad.id}>
+                          {unidad.name}
+                        </MenuItem>
+                      ))}
+                  </Select>
+                </FormControl>
+              </Box>
+
+              <TextField
+                fullWidth
+                label="Emisiones CO2"
+                name="EmisionesCO2e"
+                margin="normal"
+                value={taskData.emisionesCO2e || ""}
+                InputProps={{
+                  readOnly: true, // así el usuario no lo puede cambiar
+                }}
+              />
+            </Box>
+          )}
+
+          {tabIndex === 1 && (
+            <Box mt={2}>
+              {tasks.length === 0 ? (
+                <Typography>No hay actividades registradas.</Typography>
+              ) : (
+                <List>
+                  {tasks.map((task) => (
+                    <ListItem
+                      key={task.taskId}
+                      divider
+                      secondaryAction={
+                        <Box
+                          sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                        >
+                          <Switch
+                            checked={!!taskStatus[task.taskId]}
+                            onChange={UpdateStatusTasks(task.taskId)}
+                            inputProps={{
+                              "aria-label": "cambiar estado tarea",
+                            }}
+                            sx={{
+                              "& .MuiSwitch-thumb": {
+                                backgroundColor: taskStatus[task.taskId]
+                                  ? "#2DA14C"
+                                  : "#D32F2F",
+                              },
+                              "& .Mui-checked": {
+                                color: taskStatus[task.taskId]
+                                  ? "#2DA14C"
+                                  : "#D32F2F",
+                              },
+                              "& .MuiSwitch-track": {
+                                backgroundColor: taskStatus[task.taskId]
+                                  ? "#81ac82ff"
+                                  : "#FFCDD2",
+                              },
+                            }}
+                          />
+
+                          <IconButton
+                            color="info"
+                            edge="end"
+                            aria-label="editar"
+                            onClick={() => handleEditTask(task)}
+                          >
+                            <EditIcon />
+                          </IconButton>
+                          <IconButton
+                            color="error"
+                            edge="end"
+                            aria-label="editar"
+                            sx={{ mr: 2 }}
+                            onClick={() => {
+                              DTask(task.taskId);
+                            }}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Box>
+                      }
+                    >
+                      <ListItemText
+                        primary={task.titulo + " - " + task.emisionesCO2e}
+                        secondary={
+                          <Box
+                            sx={{
+                              display: "flex",
+                              flexDirection: "column",
+                              gap: 0.5,
+                            }}
+                          >
+                            <Typography variant="body2">
+                              <strong>Descripción:</strong> {task.descripcion}
+                            </Typography>
+                            <Box sx={{ display: "flex", gap: 2, mt: 0.5 }}>
+                              <Typography variant="body2">
+                                <strong>Valor actividad:</strong>{" "}
+                                {task.valorActividad}
+                              </Typography>
+                              <Typography variant="body2">
+                                <strong>Factor de emisión:</strong>{" "}
+                                {task.factorEmisionName}
+                              </Typography>
+                            </Box>
+                          </Box>
+                        }
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              )}
+            </Box>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <MDButton color="error" variant="outlined" onClick={CloseModal}>
+            Cerrar
+          </MDButton>
+
+          {tabIndex === 0 && (
+            <MDButton
+              variant="contained"
+              color="success"
+              onClick={() => {
+                if (IsEditing) {
+                  UpTask(); // método de actualizar
+                } else {
+                  SubmitModalTask(); // método de crear
+                }
+              }}
+            >
+              Guardar
+            </MDButton>
+          )}
+        </DialogActions>
+      </Dialog>
 
       <Footer />
     </DashboardLayout>

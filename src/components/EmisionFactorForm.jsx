@@ -44,7 +44,7 @@ useEffect(() => {
   if (isOpen) {
     if (editingFactor) {
       
-      console.log("Editing factor received:", editingFactor);
+
 
       const unitId = measurementUnits.find(u => u.diminutivo === editingFactor.unit)?.id || 0;
       const unitCarbonId = measurementUnits.find(u => u.diminutivo === editingFactor.unitCarbono)?.id || 0;
@@ -105,7 +105,7 @@ const handleSubmit = async (e) => {
       sectoId: validateNumber(formData.sectoId)
     };
 
-    console.log('Datos enviados desde el modal:', JSON.stringify(payload, null, 2));
+
 
     // 3. Llamar a la función del padre
     await onSubmit(payload);

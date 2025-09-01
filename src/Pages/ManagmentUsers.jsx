@@ -89,7 +89,6 @@ function ManagmentUsers() {
       if (filter === "todos") {
         const data = await getUsers();
         setUsers(data);
-        console.log(setUsers);
       } else {
 
         const  data = await getUsersbyRol(rol);

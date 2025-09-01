@@ -81,7 +81,6 @@ const AdminUserDashboard = () => {
       setError("");
       const userData = await getGroupUsers();
       setUsers(userData);
-      console.log(userData);
     } catch (err) {
       setError("Failed to load users. Please try again.");
       console.error("Error fetching users:", err);
