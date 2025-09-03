@@ -132,7 +132,6 @@ export const routes = [
     key: "log",
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/Login",
-    key: "log",
     component: <Login />,
     hideInSidebar: true,
   },
@@ -256,7 +255,6 @@ export const routes = [
     key: "confirm-incident",
     icon: <Icon fontSize="small">check_circle</Icon>,
     route: "/emissions/confirm",
-    component: <ConfirmIncidentPage />,
 
     component: (
       <ProtectedElement>
