@@ -42,7 +42,7 @@ export const ModernDashboardCards = ({role}) => {
   useEffect(() => {
     const fetchData = async () => {
       const result = await getDashboardGroup()
-      console.log("DASHBOARD DATA:", result)
+
       setData(result)
     }
     fetchData()

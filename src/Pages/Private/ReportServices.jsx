@@ -111,7 +111,7 @@ export function ReportServices() {
 
   return (
     <DashboardLayout>
-    <DashboardNavbar></DashboardNavbar>
+      <DashboardNavbar></DashboardNavbar>
       <MDBox py={3}>
         <MDBox mb={2}>
           <MDBox
@@ -130,9 +130,7 @@ export function ReportServices() {
                   </MDBox>
                 </MDBox>
               </Grid>
-              <Grid item>
-
-              </Grid>
+              <Grid item></Grid>
             </Grid>
 
             <Grid
@@ -145,57 +143,49 @@ export function ReportServices() {
               <Grid item>
                 <Grid container spacing={2}>
                   <Grid item>
-                    <Grid container spacing={2}>
-                 
-                    </Grid>
+                    <Grid container spacing={2}></Grid>
                   </Grid>
 
                   {/* Filtrar por servicios */}
                   <Grid item>
-                    <Grid container spacing={2}>
-                    
-                    </Grid>
+                    <Grid container spacing={2}></Grid>
                   </Grid>
                 </Grid>
               </Grid>
             </Grid>
           </MDBox>
 
-          <MDBox pt={6} pb={3}>
-            <Grid container spacing={6}>
-              <Grid item xs={12}>
-                <Card>
-                  <MDBox
-                    mx={2}
-                    mt={-3}
-                    py={3}
-                    px={2}
-                    variant="gradient"
-                    bgColor="success"
-                    borderRadius="lg"
-                    coloredShadow="success"
-                  >
-                    <MDTypography variant="h6" color="white" align="left">
-                      Servicios
-                    </MDTypography>
-                  </MDBox>
-                  <MDBox
-                    pt={3}
-                    sx={{
-                      p: 4,
-                      textAlign: "center",
-                      minHeight: "100px",
-                      width: "1200px",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Bar data={dataResumen} />
-                  </MDBox>
-                </Card>
-              </Grid>
-            </Grid>
-          </MDBox>
+          <Grid size={{ xs: 12 }} mt={10}>
+            <Card>
+              <MDBox
+                mx={2}
+                mt={-3}
+                py={3}
+                px={2}
+                variant="gradient"
+                bgColor="success"
+                borderRadius="lg"
+                coloredShadow="success"
+              >
+                <MDTypography variant="h6" color="white" align="left">
+                  Servicios
+                </MDTypography>
+              </MDBox>
+              <MDBox>
+                <MDBox>
+                  <Grid container spacing={5}>
+                    <Grid size={{ xs: 12 }}>
+                      <Card>
+                        <MDBox pt={3}>
+                          <Bar data={dataResumen} />
+                        </MDBox>
+                      </Card>
+                    </Grid>
+                  </Grid>
+                </MDBox>
+              </MDBox>
+            </Card>
+          </Grid>
         </MDBox>
 
         <Footer />

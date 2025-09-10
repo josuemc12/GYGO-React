@@ -145,6 +145,9 @@ export function ConsumptionPage() {
               </MDBox>
             </Card>
           </Grid>
+
+
+          
         </Grid>
         <Footer />
       </MDBox>

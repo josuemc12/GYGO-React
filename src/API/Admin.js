@@ -48,7 +48,7 @@ export const getGroupUsers = async () => {
     }
 
     const data = await response.json(); // parse JSON here
-    console.log("Fetched users:", data);
+
     return data;
   } catch (error) {
     console.error("Error fetching group users:", error);
@@ -58,7 +58,7 @@ export const getGroupUsers = async () => {
 
 export const sendUserInvite = async (email) => {
   try {
-    console.log(email);
+   
     const response = await fetch(`${appsettings.apiUrl}Admin/sendInvite`, {
       method: "POST",
       mode: "cors",
@@ -71,7 +71,7 @@ export const sendUserInvite = async (email) => {
     });
 
     const data = await parseJSON(response);
-    console.log(data)
+
     if (!response.ok) {
       console.error(
         "Detalles del error:",
@@ -90,7 +90,7 @@ export const sendUserInvite = async (email) => {
 
 export const removeUserFromGroup = async (userId) => {
   try {
-    console.log(userId);
+
     const response = await fetch(`${appsettings.apiUrl}Admin/removeFromGroup/${userId}`, 
       {
       method: "PUT",
