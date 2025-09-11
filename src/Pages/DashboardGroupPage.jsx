@@ -43,7 +43,9 @@ export const DashboardGroupPage = () => {
 
   const renderDashboardContent = () => {
     if (role === "GA" || role == "GU") {
-      return <ModernDashboardCards />;
+      return <ModernDashboardCards
+      role={role}
+      />;
     }
     if (role === "SA") {
       return <SuperAdminDashCards />; 

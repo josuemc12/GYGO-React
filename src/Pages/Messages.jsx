@@ -141,7 +141,7 @@ export function Messages() {
 
   const handleSend = () => {
     if (input.trim() && connectionRef.current && selectedChat) {
-      connectionRef.current.invoke("SendMessage", input, userId);
+      connectionRef.current.invoke("SendMessage", input, userId,selectedChat.chatroom);
       setInput("");
     }
   };

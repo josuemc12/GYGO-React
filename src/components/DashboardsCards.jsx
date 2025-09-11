@@ -35,7 +35,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 
-export const ModernDashboardCards = () => {
+export const ModernDashboardCards = ({role}) => {
   const navigate = useNavigate();
   const [data, setData] = useState(null)
 
@@ -518,6 +518,7 @@ export const ModernDashboardCards = () => {
       </Grid>
 
       {/* Reports Card */}
+      {role === "GA" &&(
       <Grid size={{xs:12}}>
         <Card
           sx={{
@@ -570,6 +571,7 @@ export const ModernDashboardCards = () => {
           </CardContent>
         </Card>
       </Grid>
+      )}
     </Grid>
   )
 }
