@@ -4,6 +4,9 @@ import Footer from "../../components/Footer";
 import { ArrowRight, FileText, Leaf, BookOpen, Award, Users, Phone, Mail, MapPin } from 'lucide-react';
 import "../../styles/ServicesPage.css";
 import { Link } from 'react-router-dom';
+import beneficiosambientales from '../../assets/10-beneficios-ambientales-de-plantar-un-arbol.jpg';
+import certificaciones from '../../assets/istockphoto-1446199740-612x612.jpg';
+
 
 export const ServicesHomePage = () => {
 
@@ -15,7 +18,7 @@ export const ServicesHomePage = () => {
       description: 'Resolvemos cualquier inconveniente o duda acerca de la gestión ambiental de su empresa por medio de una consultoría integral y estratégica de profesionales.',
       details: 'Banderas Azul Ecológica, Bandera Costa Rica, Carbono Neutral, Agricultura Orgánica y Agroindustria Sostenible.',
       icon: <FileText className="w-8 h-8" />,
-      image: 'src/assets/10-beneficios-ambientales-de-plantar-un-arbol.jpg'
+      image: beneficiosambientales
     },
     {
       id: '02',
@@ -39,7 +42,7 @@ export const ServicesHomePage = () => {
       description: 'Obtención y mantenimiento de certificaciones ambientales reconocidas internacionalmente para empresas y organizaciones.',
       details: 'Acompañamiento completo en procesos de certificación para garantizar el cumplimiento de estándares ambientales.',
       icon: <Award className="w-8 h-8" />,
-      image: 'src/assets/istockphoto-1446199740-612x612.jpg'
+      image: certificaciones
     },
     {
       id: '05',

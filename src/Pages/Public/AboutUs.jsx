@@ -3,6 +3,10 @@ import { PublicHeader } from "../../components/PublicHeader";
 import Footer from "../../components/Footer";
 import "../../styles/AboutUsPage.css";
 import { useAuth } from "../../context/AuthContext";
+import Biotec from '../assets/biotec.jpg';
+import LaLima from '../assets/1-51ca2921-removebg-preview (1).png';
+import Garnier from '../assets/Garnier-logo.png';
+
 
 export const AboutUs = () => {
   const { logoutRol } = useAuth();
@@ -21,13 +25,13 @@ export const AboutUs = () => {
             <h2 className="section-title">Nuestros Clientes</h2>
             <div className="clients-grid">
               <div className="client-logo">
-                <img src="src/assets/biotec.jpg" alt="BIOTEC" />
+                <img src={Biotec} />
               </div>
               <div className="client-logo">
-                <img src="src/assets/1-51ca2921-removebg-preview (1).png" alt="LA LIMA" />
+                <img src={LaLima} alt="LA LIMA" />
               </div>
               <div className="client-logo">
-                <img src="src/assets/Garnier-logo.png" alt="GARNIER" />
+                <img src={Garnier} alt="GARNIER" />
               </div>
             </div>
           </div>

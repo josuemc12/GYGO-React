@@ -1,6 +1,7 @@
 "use client"
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
+import Logo from '../assets/Logo.png';
 
 export const PublicHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -366,7 +367,7 @@ export const PublicHeader = () => {
             <div className="header-content">
               <div className="logo-small" onClick={handleLogoClick}>
                 <div className="logo-icon">
-                  <img src="src/assets/Logo.png" alt="Green On Logo" />
+                  <img src={Logo} />
                 </div>
                 <span className="logo-text">Green On</span>
               </div>
