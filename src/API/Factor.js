@@ -1,9 +1,11 @@
 
 const API_BASE_URL = "https://localhost:7217"
+import { appsettings } from "../settings/appsettings";
+
 
 export const createEmissionFactor = async (emissionFactorData) => {
 
-  const response = await fetch(`${API_BASE_URL}/api/Factor/create`, {
+  const response = await fetch(`${appsettings.apiUrl}Factor/create`, {
     method: "POST",
     credentials: "include",
     headers: {
@@ -21,7 +23,7 @@ export const createEmissionFactor = async (emissionFactorData) => {
 };
 
 export const getEmissionFactors = async () => {
-  const response = await fetch(`${API_BASE_URL}/api/Factor/getAll`, {
+  const response = await fetch(`${appsettings.apiUrl}Factor/getAll`, {
     method: "GET",
     credentials: "include",
     headers: {
@@ -40,7 +42,7 @@ export const getEmissionFactors = async () => {
 export const updateEmissionFactor = async (data) => {
 
 
-  const response = await fetch(`${API_BASE_URL}/api/Factor/update`, {
+  const response = await fetch(`${appsettings.apiUrl}Factor/update`, {
     method: "PUT",
     credentials: "include",
     headers: {
@@ -58,7 +60,7 @@ export const updateEmissionFactor = async (data) => {
 };
 
 export const deleteEmissionFactor = async (id) => {
-  const response = await fetch(`${API_BASE_URL}/api/Factor/delete/${id}`, {
+  const response = await fetch(`${appsettings.apiUrl}Factor/delete/${id}`, {
     method: "DELETE",
     credentials: "include",
     headers: {
@@ -75,7 +77,7 @@ export const deleteEmissionFactor = async (id) => {
 
 
 export const getMeasurementUnits = async () => {
-  const response = await fetch(`${API_BASE_URL}/api/Unit/GetUnits`, {
+  const response = await fetch(`${appsettings.apiUrl}Unit/GetUnits`, {
     method: "GET",
     credentials: "include",
     headers: {
@@ -90,7 +92,7 @@ export const getMeasurementUnits = async () => {
 };
 
 export const getSectors = async () => {
-  const response = await fetch(`${API_BASE_URL}/api/Sector/Sector`, {
+  const response = await fetch(`${appsettings.apiUrl}Sector/Sector`, {
     method: "GET",
     credentials: "include",
     headers: {
@@ -105,7 +107,7 @@ export const getSectors = async () => {
 };
 
 export const getSources = async () => {
-  const response = await fetch(`${API_BASE_URL}/api/Source/Get`, {
+  const response = await fetch(`${appsettings.apiUrl}Source/Get`, {
     method: "GET",
     credentials: "include",
     headers: {
@@ -120,7 +122,7 @@ export const getSources = async () => {
 };
 
 export const getAllPCGs = async () => {
-  const response = await fetch(`${API_BASE_URL}/api/PCGs/PCGs`, {
+  const response = await fetch(`${appsettings.apiUrl}PCGs/PCGs`, {
     method: "GET",
     credentials: "include",
     headers: {
