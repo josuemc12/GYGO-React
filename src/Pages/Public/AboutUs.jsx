@@ -3,7 +3,7 @@ import { PublicHeader } from "../../components/PublicHeader";
 import Footer from "../../components/Footer";
 import "../../styles/AboutUsPage.css";
 import { useAuth } from "../../context/AuthContext";
-import Biotec from '../../asset/biotec.jpg';
+import Biotec from '../../assets/biotec.jpg';
 import LaLima from '../../assets/1-51ca2921-removebg-preview (1).png';
 import Garnier from '../../assets/Garnier-logo.png';
 
