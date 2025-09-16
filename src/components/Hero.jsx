@@ -1,5 +1,7 @@
 import "../styles/Hero.css";
 import { useNavigate } from "react-router-dom";
+import forestlandscape from '../../assets/forestlandscape.jpg';
+
 
 const Hero = () => {
 
@@ -11,7 +13,7 @@ const Hero = () => {
   return (
     <section className="hero">
       <div className="hero-background">
-        <img src="src\assets\forestlandscape.jpg" alt="Forest landscape" className="hero-image" />
+        <img src={forestlandscape} alt="Forest landscape" className="hero-image" />
         <div className="hero-overlay"></div>
       </div>
       <div className="hero-content">
