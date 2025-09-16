@@ -73,7 +73,7 @@ import { ChangePasswordPage } from "../Pages/ChangePasswordPage";
 import { AddGroupSAPage } from "../Pages/AddGroupSAPage";
 import { ReportCompanies } from "../Pages/ReportCompaniesPage";
 import { ConsumptionPage } from "../Pages/ConsumptionPage";
-import Logo from '../../assets/Logo.png';
+import Logo from '../assets/Logo.png';
 
 export const PrivateHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

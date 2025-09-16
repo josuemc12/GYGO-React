@@ -1,6 +1,6 @@
 import "../styles/Hero.css";
 import { useNavigate } from "react-router-dom";
-import forestlandscape from '../../assets/forestlandscape.jpg';
+import forestlandscape from '../assets/forestlandscape.jpg';
 
 
 const Hero = () => {
