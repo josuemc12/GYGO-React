@@ -6,6 +6,8 @@ import Footer from "../../components/Footer";
 import "../../styles/HomePage.css";
 import { useAuth } from "../../context/AuthContext";
 
+import BigLogo from '../../assets/BigLogo.png';
+
 export const HomePage = () => {
   const { logoutRol } = useAuth();
 
@@ -24,7 +26,7 @@ export const HomePage = () => {
             <div className="brand-logo">
               <div className="logo-container">
                 <img
-                  src="src\assets\BigLogo.png"
+                  src={BigLogo}
                   alt="Green On Logo"
                   className="logo-image"
                 ></img>
