@@ -29,7 +29,7 @@ export const DashboardGroupPage = () => {
 
       const response = await fetch(`${appsettings.apiUrl}User/UserProfile`, {
         method: "GET",
-        credentials: "include",
+        credentials: "same-origin",
       });
 
       if (response.ok) {
