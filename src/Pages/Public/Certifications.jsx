@@ -3,6 +3,11 @@ import { Card, Container, Grid, Typography, Box, Button } from "@mui/material"
 import { styled, keyframes } from "@mui/material/styles"
 import { PublicHeader } from "../../components/PublicHeader"
 import Footer from "../../components/Footer"
+import banderaAzul from '../../assets/bandera-playas.jpg';
+import HuellaCarbono from '../../assets/Logo-PPCN-1.png';
+import EsencialCostaRica from '../../assets/esencial.png';
+
+
 
 // Animaciones CSS
 const fadeInUp = keyframes`
@@ -271,17 +276,17 @@ const BackgroundDecoration = styled(Box)({
 const certifications = [
   {
     title: "Bandera Azul",
-    image: "src/assets/bandera-playas.jpg",
+    image: banderaAzul,
     link: "https://www.ict.go.cr/es/sostenibilidad/bandera-azul.html",
   },
   {
     title: "Huella de Carbono",
-    image: "src/assets/Logo-PPCN-1.png",
+    image: HuellaCarbono,
     link: "https://cambioclimatico.minae.go.cr/programa-pais-carbono-neutralidad/",
   },
   {
     title: "Esencial Costa Rica",
-    image: "src/assets/esencial.png",
+    image: EsencialCostaRica,
     link: "https://www.esencialcostarica.com/quienes-somos/",
   },
 ]

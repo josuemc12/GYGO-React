@@ -32,7 +32,7 @@ export  async function loginUser(email, password) {
 
     const response = await fetch(`${appsettings.apiUrl}Auth/login`, {
       method: 'POST',
-      credentials: "include",
+      credentials: "same-origin",
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -170,7 +170,7 @@ export async function refreshLogin() {
     try {
         const response = await fetch(`${appsettings.apiUrl}auth/refresh-login`, {
             method: "POST",
-            credentials: "include", 
+            credentials: "same-origin", 
             headers: {
                 "Content-Type": "application/json"
             }

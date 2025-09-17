@@ -18,6 +18,7 @@ import {
 import { Visibility, VisibilityOff, Email } from "@mui/icons-material";
 import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
 import Swal from "sweetalert2";
+import logo from '../../assets/Logo.png';
 
 const theme = createTheme({
   palette: {
@@ -170,7 +171,7 @@ export function Register() {
             <Paper>
               <Box textAlign="center" mb={1}>
                 <img
-                  src="/src/assets/Logo.png"
+                  src={logo}
                   alt="Logo"
                   style={{ maxWidth: "120px" }}
                 />

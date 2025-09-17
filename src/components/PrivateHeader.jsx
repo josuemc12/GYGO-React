@@ -73,6 +73,7 @@ import { ChangePasswordPage } from "../Pages/ChangePasswordPage";
 import { AddGroupSAPage } from "../Pages/AddGroupSAPage";
 import { ReportCompanies } from "../Pages/ReportCompaniesPage";
 import { ConsumptionPage } from "../Pages/ConsumptionPage";
+import Logo from '../assets/Logo.png';
 
 export const PrivateHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -161,7 +162,7 @@ export const PrivateHeader = () => {
             <div className="logo-small">
               <a href="/DashboardGroupPage" className="me-4">
                 <img
-                  src="src\assets\Logo.png"
+                  src={Logo}
                   alt="Green On Logo"
                   className="logo-image"
                 />
