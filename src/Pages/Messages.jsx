@@ -27,7 +27,7 @@ import DashboardLayout from "../examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "../examples/Navbars/DashboardNavbar";
 import { useAuth } from "../context/AuthContext";
 
-const HUB_URL = "gygo-api-testing-embqecbthjhke0gn.canadacentral-01.azurewebsites.net/chatHub";
+const HUB_URL = "/chatHub";
 
 export function Messages() {
   const [chats, setChats] = useState([]);
