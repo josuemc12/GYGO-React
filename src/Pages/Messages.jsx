@@ -60,9 +60,12 @@ export function Messages() {
   // Conexión SignalR
   useEffect(() => {
     const connection = new signalR.HubConnectionBuilder()
-      .withUrl(HUB_URL)
-      .withAutomaticReconnect()
-      .build();
+  .withUrl(HUB_URL, {
+    transport: signalR.HttpTransportType.WebSockets, 
+    withCredentials: true
+  })
+  .withAutomaticReconnect()
+  .build();
 
     connection.start().then(() => {
       // Obtener chats del usuario
