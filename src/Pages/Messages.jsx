@@ -60,10 +60,7 @@ export function Messages() {
   // Conexión SignalR
 useEffect(() => {
   const connection = new signalR.HubConnectionBuilder()
-    .withUrl("/api/chatHub", {
-      transport: signalR.HttpTransportType.WebSockets,
-      withCredentials: true, // esto va dentro del objeto de opciones, no como método aparte
-    })
+    .withUrl("/api/chatHub",{withCredentials:true})
     .withAutomaticReconnect()
     .build();
 
