@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 
+import "dayjs/locale/es"; // ¡no instalar, solo importar!
+import localizedFormat from "dayjs/plugin/localizedFormat";
+
 import { CreatePDF } from "../../utils/CreatePDF";
 import { jsPDF } from "jspdf";
 import {
@@ -73,7 +76,8 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import DataTable from "examples/Tables/DataTable";
-dayjs.extend(customParseFormat);
+dayjs.extend(localizedFormat);
+dayjs.locale("es");
 
 function ProjectPage() {
   //Hook para manejar el JSON de proyectos
@@ -231,7 +235,7 @@ function ProjectPage() {
       );
 
       const projectsPDF = await getProjectsPDF(formattedStart, formattedEnd);
-      
+
       CreatePDF(projectsPDF);
     } catch (error) {
     } finally {
@@ -288,46 +292,55 @@ function ProjectPage() {
           icon: "warning",
           title: "Campos vacíos",
           text: "Por favor, completá todos los campos antes de continuar.",
-          confirmButtonColor: "#d33",
+          showConfirmButton: false,
+          timer: 3000,
         });
         return;
       }
 
       if (modoEdicion) {
         result = await UpdateProject(projectData);
-        if (result) {
+        if (result.succes) {
           Swal.fire({
             icon: "success",
             title: "¡Proyecto actualizado!",
-            text: "El proyecto se ha actualizado correctamente.",
-            confirmButtonColor: "#44af69",
+            text: result.message,
+            showConfirmButton: false,
+            timer: 3000,
           });
           fetchProjects();
         } else {
           Swal.fire({
             icon: "error",
             title: "No se pudo actualizar el proyecto",
-            text: "Por favor, revisá los datos e intentá nuevamente.",
-            confirmButtonColor: "#d33",
+            text:
+              result.message ||
+              "Por favor, revisá los datos e intentá nuevamente.",
+            showConfirmButton: false,
+            timer: 3000,
           });
           fetchProjects();
         }
       } else {
         result = await AddProject(projectData);
-        if (result) {
+        if (result.success) {
           Swal.fire({
             icon: "success",
             title: "¡Proyecto guardado!",
-            text: "El proyecto se ha guardado correctamente.",
-            confirmButtonColor: "#44af69",
+            text: result.message,
+            showConfirmButton: false,
+            timer: 3000,
           });
           fetchProjects();
         } else {
           Swal.fire({
             icon: "error",
             title: "No se pudo agregar el proyecto",
-            text: "Por favor, revisá los datos e intentá nuevamente.",
-            confirmButtonColor: "#d33",
+            text:
+              result.message ||
+              "Por favor, revisá los datos e intentá nuevamente.",
+            showConfirmButton: false,
+            timer: 3000,
           });
           fetchProjects();
         }
@@ -337,7 +350,8 @@ function ProjectPage() {
         icon: "error",
         title: "Error en el servidor",
         text: "Ocurrió un error inesperado. Intentalo más tarde.",
-        confirmButtonColor: "#d33",
+        showConfirmButton: false,
+        timer: 3000,
       });
       fetchProjects();
     }
@@ -351,7 +365,8 @@ function ProjectPage() {
         icon: "success",
         title: "¡Proyecto Eliminado!",
         text: "El proyecto se ha eliminado correctamente.",
-        confirmButtonColor: "#44af69",
+        showConfirmButton: false,
+        timer: 3000,
       });
       fetchProjects();
     } else {
@@ -359,7 +374,8 @@ function ProjectPage() {
         icon: "error",
         title: "No se pudo eliminar el proyecto",
         text: "Por favor, revisá los datos e intentá nuevamente.",
-        confirmButtonColor: "#d33",
+        showConfirmButton: false,
+        timer: 3000,
       });
       fetchProjects();
     }
@@ -380,26 +396,31 @@ function ProjectPage() {
           icon: "warning",
           title: "Campos incompletos",
           text: "Por favor completá los campos solicitados",
-          confirmButtonColor: "#f0ad4e",
+          showConfirmButton: false,
+          timer: 3000,
         });
         return;
       }
       const result = await AddTask(taskData);
 
-      if (result) {
+      if (result.success) {
         Swal.fire({
           icon: "success",
           title: "¡Tarea agregada!",
-          text: "La tarea se agregó correctamente.",
-          confirmButtonColor: "#44af69",
+          text: result.message,
+          showConfirmButton: false,
+          timer: 3000,
         });
         fetchProjects();
       } else {
         Swal.fire({
           icon: "error",
           title: "No se pudo agregar la tarea",
-          text: "Por favor, revisá los datos e intentá nuevamente.",
-          confirmButtonColor: "#d33",
+          text:
+            result.message ||
+            "Por favor, revisá los datos e intentá nuevamente.",
+          showConfirmButton: false,
+          timer: 3000,
         });
         fetchProjects();
       }
@@ -423,31 +444,32 @@ function ProjectPage() {
           icon: "warning",
           title: "Campos incompletos",
           text: "Por favor completá el título y la descripción.",
-          confirmButtonColor: "#f0ad4e",
-        }).then(() => {
-          window.location.reload();
+          showConfirmButton: false,
+          timer: 3000,
         });
         return;
       }
       const result = await UpdateTaskt(taskData);
-
-      if (result) {
+      console.log(result);
+      if (result.success) {
         setEditTaskId(null);
         Swal.fire({
           icon: "success",
           title: "¡Tarea actualizada!",
-          text: "La tarea se agregó correctamente.",
-          confirmButtonColor: "#44af69",
+          text: result.message,
+          showConfirmButton: false,
+          timer: 3000,
         });
         fetchProjects();
       } else {
         Swal.fire({
           icon: "error",
           title: "No se pudo actualizar la tarea",
-          text: "Por favor, revisá los datos e intentá nuevamente.",
-          confirmButtonColor: "#d33",
-        }).then(() => {
-          window.location.reload();
+          text:
+            result.message ||
+            "Por favor, revisá los datos e intentá nuevamente.",
+          showConfirmButton: false,
+          timer: 3000,
         });
       }
     } catch (error) {
@@ -653,7 +675,7 @@ function ProjectPage() {
                           fullWidth
                           value={filter}
                           onChange={(e) => setFilter(e.target.value)}
-                          sx={{ height: 45 }}
+                          sx={{ height: 45, textAlign: "left" }}
                         >
                           <MenuItem value="todos">Todos</MenuItem>
                           <MenuItem value="true">Realizados</MenuItem>
@@ -663,39 +685,103 @@ function ProjectPage() {
                     </Grid>
 
                     <Grid item>
-                      <DatePicker
-                        label="Fecha Inicio"
-                        value={startDate}
-                        onChange={(newValue) => setStartDate(newValue)}
-                        slotProps={{
-                          textField: {
-                            size: "small",
-                            sx: {
-                              width: 180, // más angosto
+                      <LocalizationProvider
+                        dateAdapter={AdapterDayjs}
+                        adapterLocale="es"
+                      >
+                        <DatePicker
+                          label="Fecha Inicio"
+                          value={
+                            startDate ? dayjs(startDate, "DD-MM-YYYY") : null
+                          }
+                          onChange={(newValue) => {
+                            if (newValue) {
+                              setStartDate(newValue.format("DD-MM-YYYY"));
+                            } else {
+                              setStartDate(null);
+                            }
+                          }}
+                          inputFormat="DD-MM-YYYY"
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                              sx: {
+                                width: 180,
+                                fontFamily:
+                                  '"Roboto", "Helvetica", "Arial", sans-serif',
+                                fontSize: "0.875rem",
+                                color: "rgba(0, 0, 0, 0.87)", // mismo color de texto por defecto
+                                "& .MuiInputBase-input": {
+                                  fontSize: "0.875rem",
+                                  padding: "10px 14px", // iguala el padding del Select
+                                  color: "rgba(0, 0, 0, 0.87)", // color del texto de la fecha
+                                },
+                                "& .MuiInputLabel-root": {
+                                  fontSize: "0.875rem",
+                                  color: "rgba(0, 0, 0, 0.6)", // color del label
+                                },
+                                "& .MuiOutlinedInput-root": {
+                                  "& fieldset": {
+                                    borderColor: "rgba(0, 0, 0, 0.23)", // color del borde
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#1976d2", // color al pasar el mouse (igual que el Select)
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#1976d2", // color al enfocar
+                                  },
+                                },
+                              },
                             },
-                          },
-                        }}
-                      />
+                          }}
+                        />
+                      </LocalizationProvider>
                     </Grid>
 
                     <Grid item>
-                      <DatePicker
-                        label="Fecha Fin"
-                        value={endDate}
-                        onChange={(newValue) => setEndDate(newValue)}
-                        slotProps={{
-                          textField: {
-                            size: "small",
-                            sx: {
-                              width: 180, // más angosto
-                              "& input": {
-                                padding: "6px 8px",
-                                fontSize: 13, // menos espacio interno
+                      <LocalizationProvider
+                        dateAdapter={AdapterDayjs}
+                        adapterLocale="es"
+                      >
+                        <DatePicker
+                          label="Fecha Fin"
+                          value={endDate}
+                          onChange={(newValue) => setEndDate(newValue)}
+                          inputFormat="DD-MM-YYYY"
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                              sx: {
+                                width: 180,
+                                fontFamily:
+                                  '"Roboto", "Helvetica", "Arial", sans-serif',
+                                fontSize: "0.875rem",
+                                color: "rgba(0, 0, 0, 0.87)", // mismo color de texto por defecto
+                                "& .MuiInputBase-input": {
+                                  fontSize: "0.875rem",
+                                  padding: "10px 14px", // iguala el padding del Select
+                                  color: "rgba(0, 0, 0, 0.87)", // color del texto de la fecha
+                                },
+                                "& .MuiInputLabel-root": {
+                                  fontSize: "0.875rem",
+                                  color: "rgba(0, 0, 0, 0.6)", // color del label
+                                },
+                                "& .MuiOutlinedInput-root": {
+                                  "& fieldset": {
+                                    borderColor: "rgba(0, 0, 0, 0.23)", // color del borde
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#1976d2", // color al pasar el mouse (igual que el Select)
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#1976d2", // color al enfocar
+                                  },
+                                },
                               },
                             },
-                          },
-                        }}
-                      />
+                          }}
+                        />
+                      </LocalizationProvider>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -773,7 +859,6 @@ function ProjectPage() {
         </LocalizationProvider>
       </MDBox>
 
-  
       {/* Modal para agregar un nuevo proyecto */}
       <Modal
         open={openModalProjects}
@@ -818,7 +903,7 @@ function ProjectPage() {
           />
 
           <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
               <DatePicker
                 label="Fecha de Inicio"
                 value={
@@ -830,9 +915,11 @@ function ProjectPage() {
                   setProjecttData((prev) => ({
                     ...prev,
                     fechaInicio: newValue ? newValue.format("DD-MM-YYYY") : "",
+                    fechaFinal: "",
                   }));
                 }}
                 inputFormat="DD-MM-YYYY"
+                minDate={dayjs()}
                 slotProps={{
                   textField: {
                     size: "small",
@@ -851,7 +938,7 @@ function ProjectPage() {
               />
             </LocalizationProvider>
 
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
               <DatePicker
                 label="Fecha Final"
                 value={
@@ -860,12 +947,33 @@ function ProjectPage() {
                     : null
                 }
                 onChange={(newValue) => {
+                  if (newValue) {
+                    const fechaInicio = dayjs(
+                      projectData.fechaInicio,
+                      "DD-MM-YYYY"
+                    );
+                    const diferencia = newValue.diff(fechaInicio, "day");
+
+                    if (diferencia < 5) {
+                      alert(
+                        "La fecha final debe ser al menos 5 días después de la fecha de inicio."
+                      );
+                      return;
+                    }
+                  }
+
                   setProjecttData((prev) => ({
                     ...prev,
                     fechaFinal: newValue ? newValue.format("DD-MM-YYYY") : "",
                   }));
                 }}
                 inputFormat="DD-MM-YYYY"
+                disabled={!projectData.fechaInicio}
+                minDate={
+                  projectData.fechaInicio
+                    ? dayjs(projectData.fechaInicio, "DD-MM-YYYY").add(5, "day")
+                    : dayjs()
+                }
                 slotProps={{
                   textField: {
                     size: "small",
