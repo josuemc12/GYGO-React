@@ -554,7 +554,7 @@ export const routes = [
     collapse: [
       {
         name: "Emisiones",
-        key: "emissions-reports",
+        key: "reportsEmissions",
         icon: <Icon fontSize="small">insert_chart</Icon>,
         route: "/reportsEmissions",
 
@@ -567,7 +567,7 @@ export const routes = [
       },
       {
         name: "Empresas",
-        key: "companies-reports",
+        key: "ReportCompanies",
         icon: <Icon fontSize="small">insert_chart</Icon>,
         route: "/ReportCompanies",
 
@@ -581,7 +581,7 @@ export const routes = [
 
       {
         name: "Servicios",
-        key: "Services-reports",
+        key: "ReportServices",
         icon: <Icon fontSize="small">insert_chart</Icon>,
         route: "/ReportServices",
 

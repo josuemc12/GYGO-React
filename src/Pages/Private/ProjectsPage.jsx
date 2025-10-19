@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
-
+import CloseIcon from "@mui/icons-material/Close";
 import "dayjs/locale/es"; // ¡no instalar, solo importar!
 import localizedFormat from "dayjs/plugin/localizedFormat";
-
+import {
+  RemoveRedEyeOutlined,
+  EditOutlined,
+  DeleteOutlineOutlined,
+} from "@mui/icons-material";
 import { CreatePDF } from "../../utils/CreatePDF";
 import { jsPDF } from "jspdf";
 import {
@@ -57,11 +61,6 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import { Try } from "@mui/icons-material";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import Swal from "sweetalert2";
-
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-
 import Card from "@mui/material/Card";
 
 // Material Dashboard 2 React components
@@ -581,7 +580,7 @@ function ProjectPage() {
       >
         <Tooltip title="Ver detalles">
           <IconButton size="small" onClick={() => VerMas(project.proyectoId)}>
-            <VisibilityIcon fontSize="small" />
+            <RemoveRedEyeOutlined fontSize="small" />
           </IconButton>
         </Tooltip>
         <Tooltip title="Editar">
@@ -590,7 +589,7 @@ function ProjectPage() {
             color="info"
             onClick={() => openModalUpdateProject(project)}
           >
-            <EditIcon fontSize="small" />
+            <EditOutlined fontSize="small" />
           </IconButton>
         </Tooltip>
         <Tooltip title="Eliminar">
@@ -599,7 +598,7 @@ function ProjectPage() {
             color="error"
             onClick={() => DeleteProject(project.proyectoId)}
           >
-            <DeleteIcon fontSize="small" />
+            <DeleteOutlineOutlined fontSize="small" />
           </IconButton>
         </Tooltip>
       </Stack>
@@ -860,28 +859,27 @@ function ProjectPage() {
       </MDBox>
 
       {/* Modal para agregar un nuevo proyecto */}
-      <Modal
+      <Dialog
         open={openModalProjects}
         onClose={CloseModal}
-        aria-labelledby="add-product-modal"
+        fullWidth
+        maxWidth="md"
       >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 750,
-            bgcolor: "background.paper",
-            borderRadius: 2,
-            boxShadow: 24,
-            p: 4,
-          }}
-        >
-          <Typography variant="h6">
-            {modoEdicion ? "Editar Proyecto" : "Nuevo Proyecto"}
-          </Typography>
-
+        <DialogTitle>
+          <MDBox
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <MDTypography variant="h5">
+              {modoEdicion ? "Editar Proyecto" : "Nuevo Proyecto"}
+            </MDTypography>
+            <IconButton onClick={close}>
+              <CloseIcon />
+            </IconButton>
+          </MDBox>
+        </DialogTitle>
+        <DialogContent dividers>
           <TextField
             fullWidth
             label="Nombre"
@@ -992,35 +990,73 @@ function ProjectPage() {
               />
             </LocalizationProvider>
           </Box>
+        </DialogContent>
 
-          <Box sx={{ mt: 3, textAlign: "right" }}>
-            <MDButton
-              variant="outlined"
-              color="error"
-              onClick={close}
-              sx={{ mr: 1 }}
-            >
-              Cancelar
-            </MDButton>
-            <MDButton
-              variant="gradient"
-              color="success"
-              onClick={SubmitModalEdicion}
-            >
-              {modoEdicion ? "Editar" : "Agregar"}
-            </MDButton>
-          </Box>
-        </Box>
-      </Modal>
+        <DialogActions>
+          <MDButton
+            variant="outlined"
+            color="error"
+            onClick={close}
+            sx={{ mr: 1 }}
+          >
+            Cancelar
+          </MDButton>
+          <MDButton
+            variant="gradient"
+            color="success"
+            onClick={SubmitModalEdicion}
+          >
+            {modoEdicion ? "Editar" : "Agregar"}
+          </MDButton>
+        </DialogActions>
+      </Dialog>
       {/* Fin del Modal para agregar un nuevo proyecto */}
 
       <Dialog open={openModal} onClose={CloseModal} fullWidth maxWidth="md">
-        <DialogTitle>Gestión de Actividades</DialogTitle>
+        <DialogTitle>
+          <MDBox
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <MDTypography variant="h5">Gestión de Actividades</MDTypography>
+            <IconButton onClick={CloseModal}>
+              <CloseIcon />
+            </IconButton>
+          </MDBox>
+        </DialogTitle>
         <DialogContent dividers>
-          <Tabs value={tabIndex} onChange={handleTabChange}>
-            <Tab label="Agregar Actividades" />
-            <Tab label="Ver Actividades" />
-          </Tabs>
+   <Tabs
+  value={tabIndex}
+  onChange={handleTabChange}
+  sx={{
+    "& .MuiTabs-indicator": {
+      backgroundColor: "#308D21",
+      color: "#FFFFFF" // color de la línea inferior
+    },
+  }}
+>
+  <Tab
+    label="Agregar Actividades"
+    sx={{
+      "&.Mui-selected": {
+        backgroundColor: "#308D21", // fondo del tab seleccionado
+        color: "#FFFFFF",           // texto en blanco
+      },
+    }}
+  />
+  <Tab
+    label="Ver Actividades"
+    sx={{
+      "&.Mui-selected": {
+        backgroundColor: "#308D21",
+        color: "#FFFFFF",
+      },
+    }}
+  />
+</Tabs>
+
+
 
           {tabIndex === 0 && (
             <Box mt={2}>
@@ -1114,8 +1150,10 @@ function ProjectPage() {
                           <Switch
                             checked={!!taskStatus[task.taskId]}
                             onChange={UpdateStatusTasks(task.taskId)}
-                            inputProps={{
-                              "aria-label": "cambiar estado tarea",
+                            slotProps={{
+                              input: {
+                                "aria-label": "cambiar estado tarea",
+                              },
                             }}
                             sx={{
                               "& .MuiSwitch-thumb": {
@@ -1130,7 +1168,7 @@ function ProjectPage() {
                               },
                               "& .MuiSwitch-track": {
                                 backgroundColor: taskStatus[task.taskId]
-                                  ? "#81ac82ff"
+                                  ? "#77d27dff"
                                   : "#FFCDD2",
                               },
                             }}
@@ -1142,7 +1180,7 @@ function ProjectPage() {
                             aria-label="editar"
                             onClick={() => handleEditTask(task)}
                           >
-                            <EditIcon />
+                            <EditOutlined />
                           </IconButton>
                           <IconButton
                             color="error"
@@ -1153,7 +1191,7 @@ function ProjectPage() {
                               DTask(task.taskId);
                             }}
                           >
-                            <DeleteIcon />
+                            <DeleteOutlineOutlined />
                           </IconButton>
                         </Box>
                       }

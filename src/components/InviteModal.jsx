@@ -6,6 +6,7 @@ import {
   DialogContent,
   DialogActions,
   IconButton,
+  TextField,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import MDBox from "components/MDBox";
@@ -63,18 +64,17 @@ const InviteModal = ({ isOpen, onClose, onInvite, loading }) => {
     </MDBox>
   </DialogTitle>
 
-  <DialogContent>
+  <DialogContent dividers>
     <form onSubmit={handleSubmit}>
       <MDBox mb={2}>
-        <MDTypography variant="body2" fontWeight="medium">
-          Correo electrónico
-        </MDTypography>
-        <MDInput
+        <TextField
+        label="Correo Electronico"
+            name="correoelectronico"
           type="email"
           fullWidth
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="ejemplo@correo.com"
+        
           error={Boolean(error)}
           disabled={loading}
         />
@@ -90,7 +90,7 @@ const InviteModal = ({ isOpen, onClose, onInvite, loading }) => {
   <DialogActions>
     <MDButton
       variant="outlined"
-      color="secondary"
+      color="error"
       onClick={handleClose}
       disabled={loading}
     >
@@ -98,7 +98,7 @@ const InviteModal = ({ isOpen, onClose, onInvite, loading }) => {
     </MDButton>
     <MDButton
       variant="gradient"
-      color="info"
+      color="success"
       type="submit"
       onClick={handleSubmit}
       disabled={loading}
