@@ -52,6 +52,8 @@ import {
   List,
   ListItem,
   ListItemText,
+  FormControlLabel,
+  FormHelperText,
 } from "@mui/material";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -90,7 +92,7 @@ function ProjectPage() {
   //Hook para manejar el JSON de las tareas por proyectos
   const [tasks, setTasks] = useState(null);
   //Hook para cuando abrir el modal
-  const [openModal, setOpenModal] = useState(false);
+  const [openModalTask, setOpenModalTask] = useState(false);
   const [openModalProjects, setOpenModalProjects] = useState(false);
 
   //Hook para cuando un loading
@@ -126,7 +128,8 @@ function ProjectPage() {
 
   const [tabIndex, setTabIndex] = useState(0);
   const [IsEditing, setIsEditing] = useState(false);
-
+  const [enableEmissionFields, setEnableEmissionFields] = useState(false);
+  const [errors, setErrors] = useState({});
   const handleTabChange = (event, newValue) => {
     setTabIndex(newValue);
   };
@@ -169,60 +172,14 @@ function ProjectPage() {
     }
   };
 
-  const CleanDates = () => {
+  const ClearDates = () => {
     setFilter("todos");
     setEndDate(null);
     setStartDate(null);
     setData(0);
   };
 
-  // Abrir modal y cargar detalles
-  const VerMas = async (projectID) => {
-    setIsEditing(false);
-    setOpenModal(true);
-    setLoading(true);
-    try {
-      setTasktData({
-        proyectID: projectID,
-      });
-      const tasks = await getTasks(projectID);
 
-      const initialStatus = {};
-      tasks.forEach((task) => {
-        initialStatus[task.taskId] = task.status;
-      });
-      setTaskStatus(initialStatus);
-      setTasks(tasks);
-
-      const factores = await getFactoresEmision();
-      setReductionUnit(factores);
-    } catch (error) {
-      setTasks(null);
-      console.log("El siguiente proyecto no tiene Tareas");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const CloseModal = () => {
-    setOpenModal(false);
-
-    fetchProjects();
-  };
-
-  const UpdateStatusTasks = (taskId) => (event) => {
-    const newStatus = event.target.checked;
-    setTaskStatus((prev) => ({
-      ...prev,
-      [taskId]: newStatus,
-    }));
-
-    UpdateStatusTask(taskId, newStatus)
-      .then(() => {})
-      .catch((err) => {
-        console.error("Error al actualizar estado", err);
-      });
-  };
 
   const CreatePDFAPI = async () => {
     try {
@@ -241,8 +198,20 @@ function ProjectPage() {
     }
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setProjecttData((prev) => ({ ...prev, [name]: value }));
+
+    setErrors((prev) => ({
+      ...prev,
+      [name]: "",
+    }));
+  };
+
+  //#region Projectos
+
   // Abrir modal y cargar detalles
-  const openModalAddProject = async () => {
+  const ModalSaveProject = async () => {
     setModoEdicion(false);
     setProjectId(null);
     setProjecttData({
@@ -251,11 +220,10 @@ function ProjectPage() {
       fechaInicio: "",
       fechaFinal: "",
     });
-
     setOpenModalProjects(true);
   };
 
-  const openModalUpdateProject = async (project) => {
+  const ModalUpdateProject = async (project) => {
     setModoEdicion(true);
     setProjectId(project.projectID);
     setProjecttData({
@@ -270,45 +238,46 @@ function ProjectPage() {
 
     setOpenModalProjects(true);
   };
-  const close = () => {
+
+  const closeModalProject = () => {
+    fetchProjects();
     setOpenModalProjects(false);
-  };
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setProjecttData((prev) => ({ ...prev, [name]: value }));
+    setErrors({});
   };
 
-  const SubmitModalEdicion = async () => {
+  const HandleProjects = async () => {
     try {
       let result;
-      setOpenModalProjects(false);
-      const camposenBlanco = Object.values(projectData).some(
-        (value) => value === "" || value === null || value === undefined
-      );
-
-      if (camposenBlanco) {
-        Swal.fire({
-          icon: "warning",
-          title: "Campos vacíos",
-          text: "Por favor, completá todos los campos antes de continuar.",
-          showConfirmButton: false,
-          timer: 3000,
+      if (
+        !projectData.nombre.trim() ||
+        !projectData.descripcion.trim() ||
+        !projectData.fechaInicio.trim() ||
+        !projectData.fechaFinal.trim()
+      ) {
+        setErrors({
+          nombre: !projectData.nombre.trim() ? "Requerido" : "",
+          descripcion: !projectData.descripcion.trim() ? "Requerido" : "",
+          fechainicio: !projectData.fechaInicio.trim() ? "Requerido" : "",
+          fechafinal: !projectData.fechaFinal.trim() ? "Requerido" : "",
         });
         return;
       }
-
       if (modoEdicion) {
+        console.log("Editar");
         result = await UpdateProject(projectData);
-        if (result.succes) {
+        console.log(result);
+        if (result.success) {
+          setOpenModalProjects(false);
           Swal.fire({
             icon: "success",
             title: "¡Proyecto actualizado!",
             text: result.message,
             showConfirmButton: false,
-            timer: 3000,
+            timer: 2000,
           });
           fetchProjects();
         } else {
+          setOpenModalProjects(false);
           Swal.fire({
             icon: "error",
             title: "No se pudo actualizar el proyecto",
@@ -316,13 +285,16 @@ function ProjectPage() {
               result.message ||
               "Por favor, revisá los datos e intentá nuevamente.",
             showConfirmButton: false,
-            timer: 3000,
+            timer: 2000,
           });
           fetchProjects();
         }
       } else {
+        console.log("AQUI");
         result = await AddProject(projectData);
+        console.log(result);
         if (result.success) {
+          setOpenModalProjects(false);
           Swal.fire({
             icon: "success",
             title: "¡Proyecto guardado!",
@@ -332,6 +304,7 @@ function ProjectPage() {
           });
           fetchProjects();
         } else {
+          setOpenModalProjects(false);
           Swal.fire({
             icon: "error",
             title: "No se pudo agregar el proyecto",
@@ -379,27 +352,82 @@ function ProjectPage() {
       fetchProjects();
     }
   };
+  //#endregion
+
+  //#region Tareas
+
+  const CloseModalTaks = () => {
+    setOpenModalTask(false);
+    fetchProjects();
+    setEnableEmissionFields(false);
+    setErrors({});
+  };
+
+  const DetallesTareas = async (projectID) => {
+    setIsEditing(false);
+    setOpenModalTask(true);
+    setLoading(true);
+    try {
+      setTasktData({
+        proyectID: projectID,
+      });
+      const tasks = await getTasks(projectID);
+
+      const initialStatus = {};
+      tasks.forEach((task) => {
+        initialStatus[task.taskId] = task.status;
+      });
+      setTaskStatus(initialStatus);
+      setTasks(tasks);
+
+      const factores = await getFactoresEmision();
+      setReductionUnit(factores);
+    } catch (error) {
+      setTasks(null);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const SubmitModalTask = async () => {
     try {
-      setOpenModal(false);
-
-      if (
-        !taskData?.titulo ||
-        !taskData?.descripcion ||
-        !taskData?.valorActividad ||
-        !taskData?.factorEmisionId ||
-        !taskData?.emisionesCO2e
-      ) {
-        Swal.fire({
-          icon: "warning",
-          title: "Campos incompletos",
-          text: "Por favor completá los campos solicitados",
-          showConfirmButton: false,
-          timer: 3000,
+      if (!taskData?.titulo?.trim() || !taskData?.descripcion?.trim()) {
+        setErrors({
+          Tareatitulo: !taskData?.titulo?.trim() ? "Requerido" : "",
+          TareaDescripcion: !taskData?.descripcion?.trim() ? "Requerido" : "",
         });
         return;
       }
+
+      if (
+        !taskData?.valorActividad &&
+        !taskData?.factorEmisionId &&
+        !taskData?.emisionesCO2e
+      ) {
+        taskData.valorActividad = null;
+        taskData.factorEmisionId = null;
+        taskData.emisionesCO2e = null;
+      } else {
+        const errores = {};
+        if (
+          taskData?.valorActividad === null ||
+          taskData?.valorActividad === ""
+        ) {
+          errores.valorActividad = "Requerido";
+        }
+        if (!taskData?.factorEmisionId) {
+          errores.factorEmisionId = "Requerido";
+        }
+        if (taskData?.emisionesCO2e === null || taskData.emisionesCO2e === "") {
+          errores.emisionesCO2e = "Requerido";
+        }
+
+        if (Object.keys(errores).length > 0) {
+          setErrors(errores);
+          return;
+        }
+      }
+
       const result = await AddTask(taskData);
 
       if (result.success) {
@@ -408,9 +436,11 @@ function ProjectPage() {
           title: "¡Tarea agregada!",
           text: result.message,
           showConfirmButton: false,
-          timer: 3000,
+          timer: 2000,
         });
         fetchProjects();
+        setOpenModalTask(false);
+        setEnableEmissionFields(false);
       } else {
         Swal.fire({
           icon: "error",
@@ -419,11 +449,14 @@ function ProjectPage() {
             result.message ||
             "Por favor, revisá los datos e intentá nuevamente.",
           showConfirmButton: false,
-          timer: 3000,
+          timer: 2000,
         });
         fetchProjects();
+        setOpenModalTask(false);
+        setEnableEmissionFields(false);
       }
     } catch (error) {
+      setOpenModalTask(false);
       Swal.fire({
         icon: "error",
         title: "Error en el servidor",
@@ -435,22 +468,49 @@ function ProjectPage() {
     }
   };
 
-  const UpTask = async () => {
+  const UpdateTask = async () => {
     try {
-      setOpenModal(false);
-      if (!taskData?.titulo || !taskData?.descripcion) {
-        Swal.fire({
-          icon: "warning",
-          title: "Campos incompletos",
-          text: "Por favor completá el título y la descripción.",
-          showConfirmButton: false,
-          timer: 3000,
+      if (!taskData?.titulo?.trim() || !taskData?.descripcion?.trim()) {
+        setErrors({
+          Tareatitulo: !taskData?.titulo?.trim() ? "Requerido" : "",
+          TareaDescripcion: !taskData?.descripcion?.trim() ? "Requerido" : "",
         });
         return;
       }
+
+      if (
+        !taskData?.valorActividad &&
+        !taskData?.factorEmisionId &&
+        !taskData?.emisionesCO2e
+      ) {
+        taskData.valorActividad = null;
+        taskData.factorEmisionId = null;
+        taskData.emisionesCO2e = null;
+      } else {
+        const errores = {};
+        if (
+          taskData?.valorActividad === null ||
+          taskData?.valorActividad === ""
+        ) {
+          errores.valorActividad = "Requerido";
+        }
+        if (!taskData?.factorEmisionId) {
+          errores.factorEmisionId = "Requerido";
+        }
+        if (taskData?.emisionesCO2e === null || taskData.emisionesCO2e === "") {
+          errores.emisionesCO2e = "Requerido";
+        }
+
+        if (Object.keys(errores).length > 0) {
+          setErrors(errores);
+          return;
+        }
+      }
+
       const result = await UpdateTaskt(taskData);
-      console.log(result);
+
       if (result.success) {
+        setOpenModalTask(false);
         setEditTaskId(null);
         Swal.fire({
           icon: "success",
@@ -460,7 +520,9 @@ function ProjectPage() {
           timer: 3000,
         });
         fetchProjects();
+        setEnableEmissionFields(false);
       } else {
+        setOpenModalTask(false);
         Swal.fire({
           icon: "error",
           title: "No se pudo actualizar la tarea",
@@ -471,7 +533,9 @@ function ProjectPage() {
           timer: 3000,
         });
       }
+      setEnableEmissionFields(false);
     } catch (error) {
+      setOpenModalTask(false);
       Swal.fire({
         icon: "error",
         title: "Error en el servidor",
@@ -483,15 +547,16 @@ function ProjectPage() {
     }
   };
 
-  const DTask = async (taskID) => {
+  const DeleteTask = async (taskID) => {
     let task = await DeleteTask(taskID);
-    setOpenModal(false);
+    setOpenModalTask(false);
     if (task) {
       Swal.fire({
         icon: "success",
         title: "Tarea Eliminado!",
         text: "El proyecto se ha eliminado correctamente.",
-        confirmButtonColor: "#44af69",
+        showConfirmButton: false,
+        timer: 2000,
       });
       fetchProjects();
     } else {
@@ -499,9 +564,8 @@ function ProjectPage() {
         icon: "error",
         title: "No se pudo eliminar la tarea",
         text: "Por favor, revisá los datos e intentá nuevamente.",
-        confirmButtonColor: "#d33",
-      }).then(() => {
-        window.location.reload();
+        showConfirmButton: false,
+        timer: 2000,
       });
     }
   };
@@ -532,7 +596,31 @@ function ProjectPage() {
     setTasktData(task); // precarga los datos
     setTabIndex(0); // cambia al tab de agregar/editar
     setIsEditing(true);
+
+    // Activa el switch si la tarea ya tenía datos
+    const hasOptionalValues =
+      task.valorActividad !== null &&
+      task.valorActividad !== 0 &&
+      task.factorEmisionId !== null;
+    setEnableEmissionFields(hasOptionalValues);
   };
+
+
+    const UpdateStatusTasks = (taskId) => (event) => {
+    const newStatus = event.target.checked;
+    setTaskStatus((prev) => ({
+      ...prev,
+      [taskId]: newStatus,
+    }));
+
+    UpdateStatusTask(taskId, newStatus)
+      .then(() => {})
+      .catch((err) => {
+        console.error("Error al actualizar estado", err);
+      });
+  };
+
+  //#endregion
 
   const columns = [
     { Header: "Nombre", accessor: "nombre", align: "left" },
@@ -579,7 +667,10 @@ function ProjectPage() {
         alignItems="center"
       >
         <Tooltip title="Ver detalles">
-          <IconButton size="small" onClick={() => VerMas(project.proyectoId)}>
+          <IconButton
+            size="small"
+            onClick={() => DetallesTareas(project.proyectoId)}
+          >
             <RemoveRedEyeOutlined fontSize="small" />
           </IconButton>
         </Tooltip>
@@ -587,7 +678,7 @@ function ProjectPage() {
           <IconButton
             size="small"
             color="info"
-            onClick={() => openModalUpdateProject(project)}
+            onClick={() => ModalUpdateProject(project)}
           >
             <EditOutlined fontSize="small" />
           </IconButton>
@@ -648,7 +739,7 @@ function ProjectPage() {
                         color: "#388E3C",
                       },
                     }}
-                    onClick={openModalAddProject}
+                    onClick={ModalSaveProject}
                   >
                     Nuevo Proyecto
                   </MDButton>
@@ -795,7 +886,7 @@ function ProjectPage() {
                       Buscar por fecha
                     </MDButton>
                     <MDButton
-                      onClick={CleanDates}
+                      onClick={ClearDates}
                       variant="outlined"
                       color="secondary"
                     >
@@ -807,7 +898,7 @@ function ProjectPage() {
                         onClick={CreatePDFAPI}
                         color="error"
                       >
-                        Descargar PDF
+                        Descargar Reporte
                       </MDButton>
                     )}
                   </MDBox>
@@ -861,7 +952,7 @@ function ProjectPage() {
       {/* Modal para agregar un nuevo proyecto */}
       <Dialog
         open={openModalProjects}
-        onClose={CloseModal}
+        onClose={closeModalProject}
         fullWidth
         maxWidth="md"
       >
@@ -874,7 +965,7 @@ function ProjectPage() {
             <MDTypography variant="h5">
               {modoEdicion ? "Editar Proyecto" : "Nuevo Proyecto"}
             </MDTypography>
-            <IconButton onClick={close}>
+            <IconButton onClick={closeModalProject}>
               <CloseIcon />
             </IconButton>
           </MDBox>
@@ -887,7 +978,9 @@ function ProjectPage() {
             margin="normal"
             value={projectData.nombre}
             onChange={handleChange}
-            required
+            error={!!errors.nombre}
+            helperText={errors.nombre}
+            sx={{ mb: 2 }}
           />
           <TextField
             fullWidth
@@ -898,12 +991,16 @@ function ProjectPage() {
             onChange={handleChange}
             multiline
             rows={3}
+            error={!!errors.descripcion}
+            helperText={errors.descripcion}
+            sx={{ mb: 2 }}
           />
 
           <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
               <DatePicker
                 label="Fecha de Inicio"
+                name="fechainicio"
                 value={
                   projectData.fechaInicio
                     ? dayjs(projectData.fechaInicio, "DD-MM-YYYY")
@@ -915,12 +1012,15 @@ function ProjectPage() {
                     fechaInicio: newValue ? newValue.format("DD-MM-YYYY") : "",
                     fechaFinal: "",
                   }));
+                  setErrors((prev) => ({ ...prev, fechainicio: "" }));
                 }}
                 inputFormat="DD-MM-YYYY"
                 minDate={dayjs()}
                 slotProps={{
                   textField: {
                     size: "small",
+                    error: !!errors.fechainicio,
+                    helperText: errors.fechainicio,
                     sx: {
                       width: 350, // más angosto
                       "& .MuiInputBase-root": {
@@ -939,6 +1039,7 @@ function ProjectPage() {
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
               <DatePicker
                 label="Fecha Final"
+                name="fechafinal"
                 value={
                   projectData.fechaFinal
                     ? dayjs(projectData.fechaFinal, "DD-MM-YYYY")
@@ -964,6 +1065,7 @@ function ProjectPage() {
                     ...prev,
                     fechaFinal: newValue ? newValue.format("DD-MM-YYYY") : "",
                   }));
+                  setErrors((prev) => ({ ...prev, fechafinal: "" }));
                 }}
                 inputFormat="DD-MM-YYYY"
                 disabled={!projectData.fechaInicio}
@@ -975,6 +1077,8 @@ function ProjectPage() {
                 slotProps={{
                   textField: {
                     size: "small",
+                    error: !!errors.fechafinal,
+                    helperText: errors.fechafinal,
                     sx: {
                       width: 350, // más angosto
                       "& .MuiInputBase-root": {
@@ -996,23 +1100,24 @@ function ProjectPage() {
           <MDButton
             variant="outlined"
             color="error"
-            onClick={close}
+            onClick={closeModalProject}
             sx={{ mr: 1 }}
           >
             Cancelar
           </MDButton>
-          <MDButton
-            variant="gradient"
-            color="success"
-            onClick={SubmitModalEdicion}
-          >
+          <MDButton variant="gradient" color="success" onClick={HandleProjects}>
             {modoEdicion ? "Editar" : "Agregar"}
           </MDButton>
         </DialogActions>
       </Dialog>
       {/* Fin del Modal para agregar un nuevo proyecto */}
 
-      <Dialog open={openModal} onClose={CloseModal} fullWidth maxWidth="md">
+      <Dialog
+        open={openModalTask}
+        onClose={CloseModalTaks}
+        fullWidth
+        maxWidth="md"
+      >
         <DialogTitle>
           <MDBox
             display="flex"
@@ -1020,116 +1125,157 @@ function ProjectPage() {
             alignItems="center"
           >
             <MDTypography variant="h5">Gestión de Actividades</MDTypography>
-            <IconButton onClick={CloseModal}>
+            <IconButton onClick={CloseModalTaks}>
               <CloseIcon />
             </IconButton>
           </MDBox>
         </DialogTitle>
         <DialogContent dividers>
-   <Tabs
-  value={tabIndex}
-  onChange={handleTabChange}
-  sx={{
-    "& .MuiTabs-indicator": {
-      backgroundColor: "#308D21",
-      color: "#FFFFFF" // color de la línea inferior
-    },
-  }}
->
-  <Tab
-    label="Agregar Actividades"
-    sx={{
-      "&.Mui-selected": {
-        backgroundColor: "#308D21", // fondo del tab seleccionado
-        color: "#FFFFFF",           // texto en blanco
-      },
-    }}
-  />
-  <Tab
-    label="Ver Actividades"
-    sx={{
-      "&.Mui-selected": {
-        backgroundColor: "#308D21",
-        color: "#FFFFFF",
-      },
-    }}
-  />
-</Tabs>
-
-
+          <Tabs
+            value={tabIndex}
+            onChange={handleTabChange}
+            sx={{
+              "& .MuiTabs-indicator": {
+                backgroundColor: "#308D21",
+                color: "#FFFFFF", // color de la línea inferior
+              },
+            }}
+          >
+            <Tab
+              label="Agregar Actividades"
+              sx={{
+                "&.Mui-selected": {
+                  backgroundColor: "#308D21", // fondo del tab seleccionado
+                  color: "#FFFFFF", // texto en blanco
+                },
+              }}
+            />
+            <Tab
+              label="Ver Actividades"
+              sx={{
+                "&.Mui-selected": {
+                  backgroundColor: "#308D21",
+                  color: "#FFFFFF",
+                },
+              }}
+            />
+          </Tabs>
 
           {tabIndex === 0 && (
             <Box mt={2}>
               <TextField
                 fullWidth
                 label="Título"
-                name="titulo"
+                name="Tareatitulo"
                 margin="normal"
                 value={taskData.titulo}
-                onChange={(e) =>
-                  setTasktData({ ...taskData, titulo: e.target.value })
-                }
+                onChange={(e) => {
+                  setTasktData({ ...taskData, titulo: e.target.value });
+                  setErrors((prev) => ({ ...prev, Tareatitulo: "" }));
+                }}
+                error={!!errors.Tareatitulo}
+                helperText={errors.Tareatitulo}
+                sx={{ mb: 2 }}
               />
               <TextField
                 fullWidth
                 label="Descripción"
-                name="descripcion"
+                name="TareaDescripcion"
                 margin="normal"
                 multiline
                 rows={2}
                 value={taskData.descripcion}
-                onChange={(e) =>
-                  setTasktData({
-                    ...taskData,
-                    descripcion: e.target.value,
-                  })
-                }
-              />
-              <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
-                {/* Campo Valor Actividad */}
-                <TextField
-                  fullWidth
-                  label="Valor Actividad"
-                  name=""
-                  type="number"
-                  value={taskData.valorActividad || ""}
-                  onChange={(e) =>
-                    handleTaskDataChange("valorActividad", e.target.value)
-                  }
-                />
-
-                {/* Campo Factor de emisión */}
-                <FormControl fullWidth>
-                  <InputLabel id="unidad-label">Factor de emisión</InputLabel>
-                  <Select
-                    labelId="unidad-label"
-                    id="factorEmisionId"
-                    value={taskData.factorEmisionId || ""}
-                    sx={{ height: 40 }}
-                    onChange={(e) =>
-                      handleTaskDataChange("factorEmisionId", e.target.value)
-                    }
-                  >
-                    {Array.isArray(reductionUnit) &&
-                      reductionUnit.map((unidad) => (
-                        <MenuItem key={unidad.id} value={unidad.id}>
-                          {unidad.name}
-                        </MenuItem>
-                      ))}
-                  </Select>
-                </FormControl>
-              </Box>
-
-              <TextField
-                fullWidth
-                label="Emisiones CO2"
-                name="EmisionesCO2e"
-                margin="normal"
-                value={taskData.emisionesCO2e || ""}
-                InputProps={{
-                  readOnly: true, // así el usuario no lo puede cambiar
+                onChange={(e) => {
+                  setTasktData({ ...taskData, descripcion: e.target.value });
+                  setErrors((prev) => ({ ...prev, TareaDescripcion: "" }));
                 }}
+                error={!!errors.TareaDescripcion}
+                helperText={errors.TareaDescripcion}
+                sx={{ mb: 2 }}
               />
+
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={enableEmissionFields}
+                    onChange={(e) => setEnableEmissionFields(e.target.checked)}
+                    color="primary"
+                  />
+                }
+                label="Agregar datos de emisión"
+              />
+
+              {enableEmissionFields && (
+                <>
+                  <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
+                    {/* Campo Valor Actividad */}
+                    <TextField
+                      fullWidth
+                      label="Valor Actividad"
+                      name="valorActividad"
+                      type="number"
+                      value={taskData.valorActividad || ""}
+                      error={!!errors.valorActividad}
+                      helperText={errors.valorActividad}
+                      sx={{ mb: 2 }}
+                      onChange={(e) => {
+                        handleTaskDataChange("valorActividad", e.target.value);
+                        setErrors((prev) => ({ ...prev, valorActividad: "" }));
+                      }}
+                    />
+
+                    {/* Campo Factor de emisión */}
+                    <FormControl
+                      fullWidth
+                      error={!!errors.factorEmisionId}
+                      sx={{ mb: 2 }}
+                    >
+                      <InputLabel id="unidad-label">Factor emisión</InputLabel>
+                      <Select
+                        labelId="unidad-label"
+                        id="factorEmisionId"
+                        name="factorEmisionId"
+                        label="factorEmisionId"
+                        value={taskData.factorEmisionId || ""}
+                        sx={{ height: 40 }}
+                        onChange={(e) => {
+                          handleTaskDataChange(
+                            "factorEmisionId",
+                            e.target.value
+                          );
+                          setErrors((prev) => ({
+                            ...prev,
+                            factorEmisionId: "",
+                          }));
+                        }}
+                      >
+                        {Array.isArray(reductionUnit) &&
+                          reductionUnit.map((unidad) => (
+                            <MenuItem key={unidad.id} value={unidad.id}>
+                              {unidad.name}
+                            </MenuItem>
+                          ))}
+                      </Select>
+                      {errors.factorEmisionId && (
+                        <FormHelperText>
+                          {errors.factorEmisionId}
+                        </FormHelperText>
+                      )}
+                    </FormControl>
+                  </Box>
+
+                  <TextField
+                    fullWidth
+                    label="Emisiones CO2"
+                    name="EmisionesCO2e"
+                    margin="normal"
+                    value={taskData.emisionesCO2e || ""}
+                    InputProps={{
+                      readOnly: true, // así el usuario no lo puede cambiar
+                    }}
+                  />
+                </>
+              )}
             </Box>
           )}
 
@@ -1188,7 +1334,7 @@ function ProjectPage() {
                             aria-label="editar"
                             sx={{ mr: 2 }}
                             onClick={() => {
-                              DTask(task.taskId);
+                              DeleteTask(task.taskId);
                             }}
                           >
                             <DeleteOutlineOutlined />
@@ -1197,7 +1343,13 @@ function ProjectPage() {
                       }
                     >
                       <ListItemText
-                        primary={task.titulo + " - " + task.emisionesCO2e}
+                        primary={
+                          task.titulo +
+                          " - " +
+                          (task.emisionesCO2e === 0
+                            ? "N/A"
+                            : task.emisionesCO2e)
+                        }
                         secondary={
                           <Box
                             sx={{
@@ -1212,7 +1364,9 @@ function ProjectPage() {
                             <Box sx={{ display: "flex", gap: 2, mt: 0.5 }}>
                               <Typography variant="body2">
                                 <strong>Valor actividad:</strong>{" "}
-                                {task.valorActividad}
+                                {task.valorActividad === 0
+                                  ? "N/A"
+                                  : task.valorActividad}
                               </Typography>
                               <Typography variant="body2">
                                 <strong>Factor de emisión:</strong>{" "}
@@ -1230,7 +1384,7 @@ function ProjectPage() {
           )}
         </DialogContent>
         <DialogActions>
-          <MDButton color="error" variant="outlined" onClick={CloseModal}>
+          <MDButton color="error" variant="outlined" onClick={CloseModalTaks}>
             Cerrar
           </MDButton>
 
@@ -1240,7 +1394,7 @@ function ProjectPage() {
               color="success"
               onClick={() => {
                 if (IsEditing) {
-                  UpTask(); // método de actualizar
+                  UpdateTask(); // método de actualizar
                 } else {
                   SubmitModalTask(); // método de crear
                 }
