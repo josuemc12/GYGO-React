@@ -27,7 +27,7 @@ import DashboardLayout from "../examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "../examples/Navbars/DashboardNavbar";
 import { useAuth } from "../context/AuthContext";
 
-const HUB_URL = "/chatHub";
+
 
 export function Messages() {
   const [chats, setChats] = useState([]);
@@ -58,19 +58,16 @@ export function Messages() {
   }, [messages]);
 
   // Conexión SignalR
-  useEffect(() => {
-    const connection = new signalR.HubConnectionBuilder()
-  .withUrl(HUB_URL, {
-    transport: signalR.HttpTransportType.WebSockets, 
-    withCredentials: true
-  })
-  .withAutomaticReconnect()
-  .build();
+useEffect(() => {
+  const connection = new signalR.HubConnectionBuilder()
+    .withUrl("/api/chatHub",{withCredentials:true})
+    .withAutomaticReconnect()
+    .build();
 
     connection.start().then(() => {
       // Obtener chats del usuario
       connection.invoke("getChats", userId);
-    });
+    }).catch(err => console.error("Error de conexión:", err));
 
     // Recibir lista de chats
     connection.on("ReceiveChats", (userConnections) => {

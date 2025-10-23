@@ -71,7 +71,7 @@ function Footer({
           },
         })}
       >
-        {/* {renderLinks()} */}
+        
       </MDBox>
     </MDBox>
   );
