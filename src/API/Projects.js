@@ -3,7 +3,6 @@ import { appsettings } from "../settings/appsettings";
 //API para llamar los proyectos por grupo
 export async function AddProject(projectData) {
   try {
-
     const response = await fetch(`${appsettings.apiUrl}Projects/AddProject`, {
       method: "POST",
       credentials: "include",
@@ -13,47 +12,20 @@ export async function AddProject(projectData) {
       body: JSON.stringify(projectData),
     });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error(
-        `Error al agregar proyecto: ${response.status} - ${errorText}`
-      );
-      return false;
-    }
-
-    return true;
-
     const data = await response.json();
-
-
-    if (!data.isSuccess) {
-      setError(data.errors ? data.errors.join(", ") : "Login failed");
-      return;
+    if (!data.success) {
+      return { success: false, message: data.message };
     }
 
-    if (data.is2FactorRequired) {
-      localStorage.setItem("tempToken", data.tempToken);
-      alert("Two-factor authentication required. Please verify.");
-      return;
-    }
-
-    if (data.token) {
-      //localStorage.setItem("authToken", data.token.AccessToken);
-      alert("Login successful!");
-      navigate("/DashboardGroupPage");
-      // falta redirect a la pagina de dashboard
-    } else {
-      throw new Error("Unexpected response from server");
-    }
+    return { success: true, message: data.message };
   } catch (error) {
-    console.error("AddProject error:", error);
-    throw error;
+    console.error("Error al agregar el proyecto:", error);
+    return { success: false, message: error.message };
   }
 }
 
 export async function UpdateProject(projectData) {
   try {
-
     const response = await fetch(
       `${appsettings.apiUrl}Projects/UpdateProject`,
       {
@@ -66,20 +38,16 @@ export async function UpdateProject(projectData) {
       }
     );
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error(
-        `Error al agregar proyecto: ${response.status} - ${errorText}`
-      );
-      return false;
+    const data = await response.json();
+    if (!data.success) {
+      return { success: false, message: data.message };
     }
 
-    const data = await response.json();
+    return { success: true, message: data.message };
 
-    return true;
   } catch (error) {
-    console.error("AddProject error:", error);
-    throw error;
+    console.error("Error al actualizar el proyecto:", error);
+    return { success: false, message: error.message };
   }
 }
 // API para eliminar proyectos
@@ -95,7 +63,7 @@ export async function DProject(projectID) {
         },
       }
     );
- 
+
     if (response.ok) {
       return true;
     } else {
@@ -158,12 +126,17 @@ export async function getProjectsByDates(startDate, endDate) {
 
 //API para obtener los proyectos y tareas para el pdf
 export async function getProjectsPDF(startDate, endDate) {
-  const response = await fetch(`${appsettings.apiUrl}Projects/CreatePdf?Start_date=${startDate}&End_date=${endDate}`, {
-    method: "GET",
-    credentials: "include",
-  });
+  const response = await fetch(
+    `${appsettings.apiUrl}Projects/CreatePdf?Start_date=${startDate}&End_date=${endDate}`,
+    {
+      method: "GET",
+      credentials: "include",
+    }
+  );
+  console.log(response.ok)
   if (response.ok) {
     const data = await response.json();
+    console.log(data)
     return data;
   } else {
     return [];

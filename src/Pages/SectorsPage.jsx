@@ -9,6 +9,10 @@ import {
   Stack,
   TextField,
   Box,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import { AddOutlined, EditOutlined } from "@mui/icons-material";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -20,6 +24,7 @@ import DataTable from "examples/Tables/DataTable";
 import Footer from "examples/Footer";
 import Swal from "sweetalert2";
 import { getSectors, PostSector, UpdateSector } from "../API/Sector";
+import CloseIcon from "@mui/icons-material/Close";
 
 export default function SectorsIndexPage() {
   const [sectors, setSectors] = useState([]);
@@ -225,42 +230,50 @@ export default function SectorsIndexPage() {
       </MDBox>
 
       {/* Modal */}
-      <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 400,
-            bgcolor: "background.paper",
-            boxShadow: 24,
-            p: 4,
-            borderRadius: 2,
-          }}
-        >
-          <MDTypography variant="h6" gutterBottom>
-            {editMode ? "Editar Sector" : "Agregar Nuevo Sector"}
-          </MDTypography>
-          <TextField
-            fullWidth
-            label="Nombre del Sector"
-            value={sectorName}
-            onChange={(e) => setSectorName(e.target.value)}
-            error={!!errors.name}
-            helperText={errors.name}
-            sx={{ mb: 2 }}
-          />
-          <MDButton
-            variant="gradient"
-            color="success"
-            onClick={handleSaveSector}
-            fullWidth
-          >
-            Guardar
-          </MDButton>
+      <Dialog
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        fullWidth
+        maxWidth="xs"
+      >
+        <Box sx={{}}>
+          <DialogTitle>
+            <MDBox
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <MDTypography variant="h5" gutterBottom>
+                {editMode ? "Editar Sector" : "Agregar Nuevo Sector"}
+              </MDTypography>
+              <IconButton onClick={() => setModalOpen(false)}>
+                <CloseIcon />
+              </IconButton>
+            </MDBox>
+          </DialogTitle>
+          <DialogContent dividers>
+            <TextField
+              fullWidth
+              label="Nombre del Sector"
+              value={sectorName}
+              onChange={(e) => setSectorName(e.target.value)}
+              error={!!errors.name}
+              helperText={errors.name}
+              sx={{ mb: 2 }}
+            />
+          </DialogContent>
+          <DialogActions>
+            <MDButton
+              variant="gradient"
+              color="success"
+              onClick={handleSaveSector}
+              fullWidth
+            >
+              Guardar
+            </MDButton>
+          </DialogActions>
         </Box>
-      </Modal>
+      </Dialog>
     </DashboardLayout>
   );
 }
