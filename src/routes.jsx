@@ -113,7 +113,7 @@ export const routes = [
   {
     type: "collapse",
     name: "Dashboard",
-    key: "Dashboard",
+    key: "dashboard",
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/dashboard",
     component: (
@@ -333,7 +333,7 @@ export const routes = [
       {
         //Ruta para sectores  
         name: "Sectores",
-        key: "Sectors",
+        key: "sectores",
         icon: <Icon fontSize="small">place</Icon>,
         route: "/sectores",
 
@@ -348,7 +348,7 @@ export const routes = [
       {
         //Ruta para unidades de reduccion
         name: "Unidades de reducción",
-        key: "Units",
+        key: "unidades",
         icon: <Icon fontSize="small">straighten</Icon>,
         route: "/unidades",
 
@@ -390,7 +390,7 @@ export const routes = [
 
       {
         name: "Factor Emision",
-        key: "AdminFactorEmision",
+        key: "AdminEmisionFactor",
         icon: <Icon fontSize="small">eco</Icon>,
         route: "/AdminEmisionFactor",
 
@@ -502,7 +502,7 @@ export const routes = [
   {
     type: "collapse",
     name: "Historial de incidentes",
-    key: "incidents-history",
+    key: "emissions/incidents",
     icon: <Icon fontSize="small">list_alt</Icon>,
     route: "/emissions/incidents",
 
@@ -530,7 +530,7 @@ export const routes = [
   {
     type: "collapse",
     name: "Proyectos",
-    key: "Proyectos",
+    key: "ProjectPage",
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/ProjectPage",
 
@@ -552,7 +552,7 @@ export const routes = [
     collapse: [
       {
         name: "Emisiones",
-        key: "emissions-reports",
+        key: "reportsEmissions",
         icon: <Icon fontSize="small">insert_chart</Icon>,
         route: "/reportsEmissions",
 
@@ -565,7 +565,7 @@ export const routes = [
       },
       {
         name: "Empresas",
-        key: "companies-reports",
+        key: "ReportCompanies",
         icon: <Icon fontSize="small">insert_chart</Icon>,
         route: "/ReportCompanies",
 
@@ -579,7 +579,7 @@ export const routes = [
 
       {
         name: "Servicios",
-        key: "Services-reports",
+        key: "ReportServices",
         icon: <Icon fontSize="small">insert_chart</Icon>,
         route: "/ReportServices",
 

@@ -90,7 +90,7 @@ export const DashboardGroupPage = () => {
         <MDBox
           sx={{
             minHeight: "100vh",
-            p: 3,
+            p: 0,
           }}
         >
           <MDBox sx={{ maxWidth: 1200, mx: "auto" }}>

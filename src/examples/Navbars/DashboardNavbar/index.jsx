@@ -124,12 +124,10 @@ function DashboardNavbar({ absolute = false, light = false, isMini = false }) {
     },
   });
 
-  const allowedRolesForGroup = ["GA", "DEV", "GU","DEF"];
+  const allowedRolesForGroup = ["GA", "DEV", "GU", "DEF"];
   const allowedRolesForMessages = ["GA", "GU"];
   const allowedRolesForSuscripcion = ["GA", "DEF"];
-  const allowedRolesForGroupA = ["GA", "GU",];
-
-
+  const allowedRolesForGroupA = ["GA", "GU"];
 
   return (
     <AppBar
@@ -145,12 +143,12 @@ function DashboardNavbar({ absolute = false, light = false, isMini = false }) {
           mb={{ xs: 1, md: 0 }}
           sx={(theme) => navbarRow(theme, { isMini })}
         >
-          <Breadcrumbs
+          {/* <Breadcrumbs
             icon="home"
             title={route[route.length - 1]}
             route={route}
             light={light}
-          />
+          /> */}
         </MDBox>
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
@@ -243,6 +241,17 @@ function DashboardNavbar({ absolute = false, light = false, isMini = false }) {
                   </Link>
                 )}
               </Menu>
+              {/* Botón de menú móvil */}
+              <IconButton
+                sx={navbarMobileMenu}
+                onClick={handleMiniSidenav}
+                size="small"
+                disableRipple
+              >
+                <Icon sx={iconsStyle}>
+                  {miniSidenav ? "menu_open" : "menu"}
+                </Icon>
+              </IconButton>
             </MDBox>
           </MDBox>
         )}

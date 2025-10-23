@@ -3,9 +3,11 @@ import { useAuth } from "../../context/AuthContext";
 //import { useAuth } from '../../AuthContext';
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../API/Auth";
-import {RequestPasswordReset} from "../../API/ChangePassword"
+import { RequestPasswordReset } from "../../API/ChangePassword";
+import CloseIcon from "@mui/icons-material/Close";
+import MDBox from "components/MDBox";
+import MDTypography from "components/MDTypography";
 import {
-
   Button,
   CssBaseline,
   TextField,
@@ -18,12 +20,12 @@ import {
   Container,
   InputAdornment,
   IconButton,
-    Dialog,
+  Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle
+  DialogTitle,
 } from "@mui/material";
-import { Visibility, VisibilityOff, Email } from "@mui/icons-material";
+import { Visibility, VisibilityOff, ArrowBack } from "@mui/icons-material";
 import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
 import Swal from "sweetalert2";
 import { PublicHeader } from "../../components/PublicHeader";
@@ -39,7 +41,7 @@ const theme = createTheme({
     fontFamily: "Arial, sans-serif",
   },
   shape: { borderRadius: 12 },
-});
+})
 
 const Paper = styled("div")(({ theme }) => ({
   padding: "40px",
@@ -49,7 +51,7 @@ const Paper = styled("div")(({ theme }) => ({
   width: "100%",
   maxWidth: 400,
   margin: "0 auto",
-}));
+}))
 
 export default function Login() {
   const { login } = useAuth();
@@ -59,13 +61,10 @@ export default function Login() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
-
   const [open, setOpen] = useState(false);
   const [emailReset, setEmailReset] = useState("");
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
-
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -95,11 +94,10 @@ export default function Login() {
       }
 
       if (isTwoFactor) {
-
         // Redirect to 2FA page
         navigate(`/verify-2fa?tempToken=${encodeURIComponent(tempToken)}`);
       } else {
-        login(rol,id);
+        login(rol, id);
         // Normal login success — redirect to dashboard or home
         navigate("/Dashboard");
       }
@@ -113,52 +111,45 @@ export default function Login() {
     }
   };
 
-
-  
-  const handleSendReset = async() => {
-    
-  if (!emailReset.trim()) {
+  const handleSendReset = async () => {
+    if (!emailReset.trim()) {
       Swal.fire({
-      icon: "warning",
-      title: "Campo vacío",
-      text: "Por favor, ingresa un correo electrónico.",
-    });
-    handleClose();
-    return;
-  }
-
-  try {
-
-    const response  = await RequestPasswordReset(emailReset);
-    console.log(response);
-    if (response.success) {
-      Swal.fire({
-        icon: "success",
-        title: "Correo enviado",
-        text: "Se envió un enlace de recuperación a tu correo.",
+        icon: "warning",
+        title: "Campo vacío",
+        text: "Por favor, ingresa un correo electrónico.",
       });
       handleClose();
-    } else {
-      handleClose();
+      return;
+    }
+
+    try {
+      const response = await RequestPasswordReset(emailReset);
+      console.log(response);
+      if (response.success) {
+        Swal.fire({
+          icon: "success",
+          title: "Correo enviado",
+          text: "Se envió un enlace de recuperación a tu correo.",
+        });
+        handleClose();
+      } else {
+        handleClose();
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "No se pudo enviar el enlace. Verifica el correo.",
+        });
+      }
+      setEmailReset("");
+    } catch (error) {
+      console.error("Error enviando reset:", error);
       Swal.fire({
         icon: "error",
-        title: "Error",
-        text: "No se pudo enviar el enlace. Verifica el correo.",
+        title: "Error inesperado",
+        text: "Hubo un error al intentar enviar el enlace.",
       });
     }
-    setEmailReset(""); 
-  } catch (error) {
-    console.error("Error enviando reset:", error);
-    Swal.fire({
-      icon: "error",
-      title: "Error inesperado",
-      text: "Hubo un error al intentar enviar el enlace.",
-    });
-
-  }
   };
-
-
 
   return (
     <div>
@@ -186,15 +177,101 @@ export default function Login() {
         <CssBaseline />
         <Box
           sx={{
-            backgroundColor: "background.default",
+            background: "linear-gradient(135deg, #ecfdf5 0%, #ffffff 50%, #f0fdfa 100%)",
             minHeight: "100vh",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            position: "relative",
+            overflow: "hidden",
           }}
         >
-          <Container maxWidth="xs">
-            <Paper>
+          {/* Large circle top right */}
+          <Box
+            sx={{
+              position: "absolute",
+              top: "-96px",
+              right: "-96px",
+              width: "480px",
+              height: "480px",
+              borderRadius: "50%",
+              background: "rgba(52, 211, 153, 0.25)",
+              filter: "blur(80px)",
+              pointerEvents: "none",
+            }}
+          />
+
+          {/* Medium circle bottom left */}
+          <Box
+            sx={{
+              position: "absolute",
+              bottom: "-128px",
+              left: "-128px",
+              width: "400px",
+              height: "400px",
+              borderRadius: "50%",
+              background: "rgba(20, 184, 166, 0.2)",
+              filter: "blur(80px)",
+              pointerEvents: "none",
+            }}
+          />
+
+          {/* Small accent circle top left */}
+          <Box
+            sx={{
+              position: "absolute",
+              top: "25%",
+              left: "25%",
+              width: "192px",
+              height: "192px",
+              borderRadius: "50%",
+              background: "rgba(110, 231, 183, 0.1)",
+              filter: "blur(60px)",
+              pointerEvents: "none",
+            }}
+          />
+
+          {/* Small accent circle bottom right */}
+          <Box
+            sx={{
+              position: "absolute",
+              bottom: "33%",
+              right: "33%",
+              width: "160px",
+              height: "160px",
+              borderRadius: "50%",
+              background: "rgba(94, 234, 212, 0.1)",
+              filter: "blur(60px)",
+              pointerEvents: "none",
+            }}
+          />
+
+          <Container maxWidth="xs" sx={{ position: "relative", zIndex: 1 }}>
+            <Paper
+              sx={{
+                backgroundColor: "rgba(255, 255, 255, 0.8)",
+                backdropFilter: "blur(8px)",
+                border: "1px solid rgba(209, 250, 229, 0.5)",
+              }}
+            >
+              <Box sx={{ position: "relative" }}>
+                <IconButton
+                  onClick={() => navigate(-1)}
+                  sx={{
+                    position: "absolute",
+                    top: -8,
+                    left: -8,
+                    color: "primary.main",
+                    "&:hover": {
+                      backgroundColor: "rgba(45, 161, 76, 0.08)",
+                    },
+                  }}
+                  aria-label="regresar"
+                >
+                  <ArrowBack />
+                </IconButton>
+              </Box>
+
               <Box textAlign="center" mb={2}>
                 <img
                   src={logo}
@@ -230,10 +307,7 @@ export default function Login() {
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
-                        <IconButton
-                          onClick={() => setShowPassword(!showPassword)}
-                          edge="end"
-                        >
+                        <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
                           {showPassword ? <VisibilityOff /> : <Visibility />}
                         </IconButton>
                       </InputAdornment>
@@ -246,7 +320,6 @@ export default function Login() {
                   align="right"
                   sx={{ mb: 2, cursor: "pointer", textDecoration: "underline" }}
                   onClick={handleOpen}
-
                 >
                   ¿Olvidaste tu contraseña?
                 </Typography>
@@ -276,10 +349,15 @@ export default function Login() {
           </Container>
         </Box>
 
-
-         {/* Modal de recuperación */}
-        <Dialog open={open} onClose={handleClose}  fullWidth  maxWidth="sm"
-        sx={{ '& .MuiDialog-paper': { minHeight: '200px', minWidth: '300px' } }}
+        {/* Modal de recuperación */}
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          fullWidth
+          maxWidth="sm"
+          sx={{
+            "& .MuiDialog-paper": { minHeight: "200px", minWidth: "300px" },
+          }}
         >
           <DialogTitle>Recuperar contraseña</DialogTitle>
           <DialogContent>
@@ -289,25 +367,20 @@ export default function Login() {
               fullWidth
               value={emailReset}
               onChange={(e) => setEmailReset(e.target.value)}
-                sx={{ mt: 4 }}
+              sx={{ mt: 4 }}
             />
           </DialogContent>
           <DialogActions>
-            <Button 
-            variant="outlined"
-            color="error"
-            
-            onClick={handleClose}>Cancelar</Button>
+            <Button variant="outlined" color="error" onClick={handleClose}>
+              Cancelar
+            </Button>
             <Button onClick={handleSendReset} variant="contained" color="primary">
               Enviar
             </Button>
           </DialogActions>
         </Dialog>
-
-
-
-
       </ThemeProvider>
     </div>
-  );
+  )
 }
+

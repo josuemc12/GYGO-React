@@ -21,7 +21,7 @@ import MDButton from "components/MDButton";
 import MDBadge from "components/MDBadge";
 
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { DeleteOutlineOutlined } from "@mui/icons-material";
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
@@ -141,8 +141,6 @@ const AdminUserDashboard = () => {
         showConfirmButton: false,
       });
     } catch (err) {
-     
-
       Swal.fire({
         icon: "error",
         title: "Error al eliminar usuario",
@@ -199,7 +197,7 @@ const AdminUserDashboard = () => {
             color="error"
             onClick={() => handleRemoveUser(user.id, user.name)}
           >
-            <DeleteIcon fontSize="small" />
+            <DeleteOutlineOutlined fontSize="small" />
           </IconButton>
         </Tooltip>
       </Stack>
@@ -254,7 +252,7 @@ const AdminUserDashboard = () => {
               </Grid>
 
               <Grid>
-                <MDButton
+                {/* <MDButton
                   variant="outlined"
                   sx={{
                     mr: 2,
@@ -271,6 +269,14 @@ const AdminUserDashboard = () => {
                   Usuarios
                 </MDButton>
 
+
+
+
+
+
+
+
+
                 <MDButton
                   variant="outlined"
                   sx={{
@@ -286,6 +292,23 @@ const AdminUserDashboard = () => {
                   onClick={() => setShowHistory(true)}
                 >
                   Historial
+                </MDButton> */}
+
+                <MDButton
+                  variant="outlined"
+                  sx={{
+                    mr: 2,
+                    borderColor: "#4CAF50",
+                    color: "#4CAF50",
+                    "&:hover": {
+                      backgroundColor: "#E8F5E9",
+                      borderColor: "#43A047",
+                      color: "#388E3C",
+                    },
+                  }}
+                  onClick={() => setShowHistory(!showHistory)}
+                >
+                  {showHistory ? "Usuarios" : "Historial"}
                 </MDButton>
 
                 <MDButton
@@ -331,7 +354,7 @@ const AdminUserDashboard = () => {
 
           <MDBox pt={6} pb={3}>
             <Grid container spacing={6}>
-              <Grid size={{xs: 12}}>
+              <Grid size={{ xs: 12 }}>
                 <Card>
                   <MDBox
                     mx={2}

@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-
+import CloseIcon from "@mui/icons-material/Close";
+import "dayjs/locale/es"; // ¡no instalar, solo importar!
+import localizedFormat from "dayjs/plugin/localizedFormat";
+import {
+  RemoveRedEyeOutlined,
+  EditOutlined,
+  DeleteOutlineOutlined,
+} from "@mui/icons-material";
 import { CreatePDF } from "../../utils/CreatePDF";
 import { jsPDF } from "jspdf";
 import {
@@ -45,6 +52,8 @@ import {
   List,
   ListItem,
   ListItemText,
+  FormControlLabel,
+  FormHelperText,
 } from "@mui/material";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -54,11 +63,6 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import { Try } from "@mui/icons-material";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import Swal from "sweetalert2";
-
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-
 import Card from "@mui/material/Card";
 
 // Material Dashboard 2 React components
@@ -73,7 +77,8 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import DataTable from "examples/Tables/DataTable";
-dayjs.extend(customParseFormat);
+dayjs.extend(localizedFormat);
+dayjs.locale("es");
 
 function ProjectPage() {
   //Hook para manejar el JSON de proyectos
@@ -87,7 +92,7 @@ function ProjectPage() {
   //Hook para manejar el JSON de las tareas por proyectos
   const [tasks, setTasks] = useState(null);
   //Hook para cuando abrir el modal
-  const [openModal, setOpenModal] = useState(false);
+  const [openModalTask, setOpenModalTask] = useState(false);
   const [openModalProjects, setOpenModalProjects] = useState(false);
 
   //Hook para cuando un loading
@@ -123,7 +128,8 @@ function ProjectPage() {
 
   const [tabIndex, setTabIndex] = useState(0);
   const [IsEditing, setIsEditing] = useState(false);
-
+  const [enableEmissionFields, setEnableEmissionFields] = useState(false);
+  const [errors, setErrors] = useState({});
   const handleTabChange = (event, newValue) => {
     setTabIndex(newValue);
   };
@@ -166,17 +172,200 @@ function ProjectPage() {
     }
   };
 
-  const CleanDates = () => {
+  const ClearDates = () => {
     setFilter("todos");
     setEndDate(null);
     setStartDate(null);
     setData(0);
   };
 
+
+
+  const CreatePDFAPI = async () => {
+    try {
+      const formattedStart = encodeURIComponent(
+        dayjs(startDate).format("MM-DD-YYYY")
+      );
+      const formattedEnd = encodeURIComponent(
+        dayjs(endDate).format("MM-DD-YYYY")
+      );
+
+      const projectsPDF = await getProjectsPDF(formattedStart, formattedEnd);
+
+      CreatePDF(projectsPDF);
+    } catch (error) {
+    } finally {
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setProjecttData((prev) => ({ ...prev, [name]: value }));
+
+    setErrors((prev) => ({
+      ...prev,
+      [name]: "",
+    }));
+  };
+
+  //#region Projectos
+
   // Abrir modal y cargar detalles
-  const VerMas = async (projectID) => {
+  const ModalSaveProject = async () => {
+    setModoEdicion(false);
+    setProjectId(null);
+    setProjecttData({
+      nombre: "",
+      descripcion: "",
+      fechaInicio: "",
+      fechaFinal: "",
+    });
+    setOpenModalProjects(true);
+  };
+
+  const ModalUpdateProject = async (project) => {
+    setModoEdicion(true);
+    setProjectId(project.projectID);
+    setProjecttData({
+      proyectoId: project.proyectoId,
+      nombre: project.nombre,
+      descripcion: project.descripcion,
+      fechaInicio: project.fechaInicio,
+      fechaFinal: project.fechaFinal,
+    });
+    const ReductionUnitData = await getReductionUnit();
+    setReductionUnit(ReductionUnitData);
+
+    setOpenModalProjects(true);
+  };
+
+  const closeModalProject = () => {
+    fetchProjects();
+    setOpenModalProjects(false);
+    setErrors({});
+  };
+
+  const HandleProjects = async () => {
+    try {
+      let result;
+      if (
+        !projectData.nombre.trim() ||
+        !projectData.descripcion.trim() ||
+        !projectData.fechaInicio.trim() ||
+        !projectData.fechaFinal.trim()
+      ) {
+        setErrors({
+          nombre: !projectData.nombre.trim() ? "Requerido" : "",
+          descripcion: !projectData.descripcion.trim() ? "Requerido" : "",
+          fechainicio: !projectData.fechaInicio.trim() ? "Requerido" : "",
+          fechafinal: !projectData.fechaFinal.trim() ? "Requerido" : "",
+        });
+        return;
+      }
+      if (modoEdicion) {
+        console.log("Editar");
+        result = await UpdateProject(projectData);
+        console.log(result);
+        if (result.success) {
+          setOpenModalProjects(false);
+          Swal.fire({
+            icon: "success",
+            title: "¡Proyecto actualizado!",
+            text: result.message,
+            showConfirmButton: false,
+            timer: 2000,
+          });
+          fetchProjects();
+        } else {
+          setOpenModalProjects(false);
+          Swal.fire({
+            icon: "error",
+            title: "No se pudo actualizar el proyecto",
+            text:
+              result.message ||
+              "Por favor, revisá los datos e intentá nuevamente.",
+            showConfirmButton: false,
+            timer: 2000,
+          });
+          fetchProjects();
+        }
+      } else {
+        console.log("AQUI");
+        result = await AddProject(projectData);
+        console.log(result);
+        if (result.success) {
+          setOpenModalProjects(false);
+          Swal.fire({
+            icon: "success",
+            title: "¡Proyecto guardado!",
+            text: result.message,
+            showConfirmButton: false,
+            timer: 3000,
+          });
+          fetchProjects();
+        } else {
+          setOpenModalProjects(false);
+          Swal.fire({
+            icon: "error",
+            title: "No se pudo agregar el proyecto",
+            text:
+              result.message ||
+              "Por favor, revisá los datos e intentá nuevamente.",
+            showConfirmButton: false,
+            timer: 3000,
+          });
+          fetchProjects();
+        }
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error en el servidor",
+        text: "Ocurrió un error inesperado. Intentalo más tarde.",
+        showConfirmButton: false,
+        timer: 3000,
+      });
+      fetchProjects();
+    }
+  };
+
+  const DeleteProject = async (projectID) => {
+    let project = await DProject(projectID);
+    setOpenModalProjects(false);
+    if (project) {
+      Swal.fire({
+        icon: "success",
+        title: "¡Proyecto Eliminado!",
+        text: "El proyecto se ha eliminado correctamente.",
+        showConfirmButton: false,
+        timer: 3000,
+      });
+      fetchProjects();
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "No se pudo eliminar el proyecto",
+        text: "Por favor, revisá los datos e intentá nuevamente.",
+        showConfirmButton: false,
+        timer: 3000,
+      });
+      fetchProjects();
+    }
+  };
+  //#endregion
+
+  //#region Tareas
+
+  const CloseModalTaks = () => {
+    setOpenModalTask(false);
+    fetchProjects();
+    setEnableEmissionFields(false);
+    setErrors({});
+  };
+
+  const DetallesTareas = async (projectID) => {
     setIsEditing(false);
-    setOpenModal(true);
+    setOpenModalTask(true);
     setLoading(true);
     try {
       setTasktData({
@@ -195,215 +384,79 @@ function ProjectPage() {
       setReductionUnit(factores);
     } catch (error) {
       setTasks(null);
-      console.log("El siguiente proyecto no tiene Tareas");
     } finally {
       setLoading(false);
     }
   };
 
-  const CloseModal = () => {
-    setOpenModal(false);
-
-    fetchProjects();
-  };
-
-  const UpdateStatusTasks = (taskId) => (event) => {
-    const newStatus = event.target.checked;
-    setTaskStatus((prev) => ({
-      ...prev,
-      [taskId]: newStatus,
-    }));
-
-    UpdateStatusTask(taskId, newStatus)
-      .then(() => {})
-      .catch((err) => {
-        console.error("Error al actualizar estado", err);
-      });
-  };
-
-  const CreatePDFAPI = async () => {
-    try {
-      const formattedStart = encodeURIComponent(
-        dayjs(startDate).format("MM-DD-YYYY")
-      );
-      const formattedEnd = encodeURIComponent(
-        dayjs(endDate).format("MM-DD-YYYY")
-      );
-
-      const projectsPDF = await getProjectsPDF(formattedStart, formattedEnd);
-      
-      CreatePDF(projectsPDF);
-    } catch (error) {
-    } finally {
-    }
-  };
-
-  // Abrir modal y cargar detalles
-  const openModalAddProject = async () => {
-    setModoEdicion(false);
-    setProjectId(null);
-    setProjecttData({
-      nombre: "",
-      descripcion: "",
-      fechaInicio: "",
-      fechaFinal: "",
-    });
-
-    setOpenModalProjects(true);
-  };
-
-  const openModalUpdateProject = async (project) => {
-    setModoEdicion(true);
-    setProjectId(project.projectID);
-    setProjecttData({
-      proyectoId: project.proyectoId,
-      nombre: project.nombre,
-      descripcion: project.descripcion,
-      fechaInicio: project.fechaInicio,
-      fechaFinal: project.fechaFinal,
-    });
-    const ReductionUnitData = await getReductionUnit();
-    setReductionUnit(ReductionUnitData);
-
-    setOpenModalProjects(true);
-  };
-  const close = () => {
-    setOpenModalProjects(false);
-  };
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setProjecttData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const SubmitModalEdicion = async () => {
-    try {
-      let result;
-      setOpenModalProjects(false);
-      const camposenBlanco = Object.values(projectData).some(
-        (value) => value === "" || value === null || value === undefined
-      );
-
-      if (camposenBlanco) {
-        Swal.fire({
-          icon: "warning",
-          title: "Campos vacíos",
-          text: "Por favor, completá todos los campos antes de continuar.",
-          confirmButtonColor: "#d33",
-        });
-        return;
-      }
-
-      if (modoEdicion) {
-        result = await UpdateProject(projectData);
-        if (result) {
-          Swal.fire({
-            icon: "success",
-            title: "¡Proyecto actualizado!",
-            text: "El proyecto se ha actualizado correctamente.",
-            confirmButtonColor: "#44af69",
-          });
-          fetchProjects();
-        } else {
-          Swal.fire({
-            icon: "error",
-            title: "No se pudo actualizar el proyecto",
-            text: "Por favor, revisá los datos e intentá nuevamente.",
-            confirmButtonColor: "#d33",
-          });
-          fetchProjects();
-        }
-      } else {
-        result = await AddProject(projectData);
-        if (result) {
-          Swal.fire({
-            icon: "success",
-            title: "¡Proyecto guardado!",
-            text: "El proyecto se ha guardado correctamente.",
-            confirmButtonColor: "#44af69",
-          });
-          fetchProjects();
-        } else {
-          Swal.fire({
-            icon: "error",
-            title: "No se pudo agregar el proyecto",
-            text: "Por favor, revisá los datos e intentá nuevamente.",
-            confirmButtonColor: "#d33",
-          });
-          fetchProjects();
-        }
-      }
-    } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Error en el servidor",
-        text: "Ocurrió un error inesperado. Intentalo más tarde.",
-        confirmButtonColor: "#d33",
-      });
-      fetchProjects();
-    }
-  };
-
-  const DeleteProject = async (projectID) => {
-    let project = await DProject(projectID);
-    setOpenModalProjects(false);
-    if (project) {
-      Swal.fire({
-        icon: "success",
-        title: "¡Proyecto Eliminado!",
-        text: "El proyecto se ha eliminado correctamente.",
-        confirmButtonColor: "#44af69",
-      });
-      fetchProjects();
-    } else {
-      Swal.fire({
-        icon: "error",
-        title: "No se pudo eliminar el proyecto",
-        text: "Por favor, revisá los datos e intentá nuevamente.",
-        confirmButtonColor: "#d33",
-      });
-      fetchProjects();
-    }
-  };
-
   const SubmitModalTask = async () => {
     try {
-      setOpenModal(false);
-
-      if (
-        !taskData?.titulo ||
-        !taskData?.descripcion ||
-        !taskData?.valorActividad ||
-        !taskData?.factorEmisionId ||
-        !taskData?.emisionesCO2e
-      ) {
-        Swal.fire({
-          icon: "warning",
-          title: "Campos incompletos",
-          text: "Por favor completá los campos solicitados",
-          confirmButtonColor: "#f0ad4e",
+      if (!taskData?.titulo?.trim() || !taskData?.descripcion?.trim()) {
+        setErrors({
+          Tareatitulo: !taskData?.titulo?.trim() ? "Requerido" : "",
+          TareaDescripcion: !taskData?.descripcion?.trim() ? "Requerido" : "",
         });
         return;
       }
+
+      if (
+        !taskData?.valorActividad &&
+        !taskData?.factorEmisionId &&
+        !taskData?.emisionesCO2e
+      ) {
+        taskData.valorActividad = null;
+        taskData.factorEmisionId = null;
+        taskData.emisionesCO2e = null;
+      } else {
+        const errores = {};
+        if (
+          taskData?.valorActividad === null ||
+          taskData?.valorActividad === ""
+        ) {
+          errores.valorActividad = "Requerido";
+        }
+        if (!taskData?.factorEmisionId) {
+          errores.factorEmisionId = "Requerido";
+        }
+        if (taskData?.emisionesCO2e === null || taskData.emisionesCO2e === "") {
+          errores.emisionesCO2e = "Requerido";
+        }
+
+        if (Object.keys(errores).length > 0) {
+          setErrors(errores);
+          return;
+        }
+      }
+
       const result = await AddTask(taskData);
 
-      if (result) {
+      if (result.success) {
         Swal.fire({
           icon: "success",
           title: "¡Tarea agregada!",
-          text: "La tarea se agregó correctamente.",
-          confirmButtonColor: "#44af69",
+          text: result.message,
+          showConfirmButton: false,
+          timer: 2000,
         });
         fetchProjects();
+        setOpenModalTask(false);
+        setEnableEmissionFields(false);
       } else {
         Swal.fire({
           icon: "error",
           title: "No se pudo agregar la tarea",
-          text: "Por favor, revisá los datos e intentá nuevamente.",
-          confirmButtonColor: "#d33",
+          text:
+            result.message ||
+            "Por favor, revisá los datos e intentá nuevamente.",
+          showConfirmButton: false,
+          timer: 2000,
         });
         fetchProjects();
+        setOpenModalTask(false);
+        setEnableEmissionFields(false);
       }
     } catch (error) {
+      setOpenModalTask(false);
       Swal.fire({
         icon: "error",
         title: "Error en el servidor",
@@ -415,42 +468,74 @@ function ProjectPage() {
     }
   };
 
-  const UpTask = async () => {
+  const UpdateTask = async () => {
     try {
-      setOpenModal(false);
-      if (!taskData?.titulo || !taskData?.descripcion) {
-        Swal.fire({
-          icon: "warning",
-          title: "Campos incompletos",
-          text: "Por favor completá el título y la descripción.",
-          confirmButtonColor: "#f0ad4e",
-        }).then(() => {
-          window.location.reload();
+      if (!taskData?.titulo?.trim() || !taskData?.descripcion?.trim()) {
+        setErrors({
+          Tareatitulo: !taskData?.titulo?.trim() ? "Requerido" : "",
+          TareaDescripcion: !taskData?.descripcion?.trim() ? "Requerido" : "",
         });
         return;
       }
+
+      if (
+        !taskData?.valorActividad &&
+        !taskData?.factorEmisionId &&
+        !taskData?.emisionesCO2e
+      ) {
+        taskData.valorActividad = null;
+        taskData.factorEmisionId = null;
+        taskData.emisionesCO2e = null;
+      } else {
+        const errores = {};
+        if (
+          taskData?.valorActividad === null ||
+          taskData?.valorActividad === ""
+        ) {
+          errores.valorActividad = "Requerido";
+        }
+        if (!taskData?.factorEmisionId) {
+          errores.factorEmisionId = "Requerido";
+        }
+        if (taskData?.emisionesCO2e === null || taskData.emisionesCO2e === "") {
+          errores.emisionesCO2e = "Requerido";
+        }
+
+        if (Object.keys(errores).length > 0) {
+          setErrors(errores);
+          return;
+        }
+      }
+
       const result = await UpdateTaskt(taskData);
 
-      if (result) {
+      if (result.success) {
+        setOpenModalTask(false);
         setEditTaskId(null);
         Swal.fire({
           icon: "success",
           title: "¡Tarea actualizada!",
-          text: "La tarea se agregó correctamente.",
-          confirmButtonColor: "#44af69",
+          text: result.message,
+          showConfirmButton: false,
+          timer: 3000,
         });
         fetchProjects();
+        setEnableEmissionFields(false);
       } else {
+        setOpenModalTask(false);
         Swal.fire({
           icon: "error",
           title: "No se pudo actualizar la tarea",
-          text: "Por favor, revisá los datos e intentá nuevamente.",
-          confirmButtonColor: "#d33",
-        }).then(() => {
-          window.location.reload();
+          text:
+            result.message ||
+            "Por favor, revisá los datos e intentá nuevamente.",
+          showConfirmButton: false,
+          timer: 3000,
         });
       }
+      setEnableEmissionFields(false);
     } catch (error) {
+      setOpenModalTask(false);
       Swal.fire({
         icon: "error",
         title: "Error en el servidor",
@@ -462,15 +547,16 @@ function ProjectPage() {
     }
   };
 
-  const DTask = async (taskID) => {
+  const DeleteTask = async (taskID) => {
     let task = await DeleteTask(taskID);
-    setOpenModal(false);
+    setOpenModalTask(false);
     if (task) {
       Swal.fire({
         icon: "success",
         title: "Tarea Eliminado!",
         text: "El proyecto se ha eliminado correctamente.",
-        confirmButtonColor: "#44af69",
+        showConfirmButton: false,
+        timer: 2000,
       });
       fetchProjects();
     } else {
@@ -478,9 +564,8 @@ function ProjectPage() {
         icon: "error",
         title: "No se pudo eliminar la tarea",
         text: "Por favor, revisá los datos e intentá nuevamente.",
-        confirmButtonColor: "#d33",
-      }).then(() => {
-        window.location.reload();
+        showConfirmButton: false,
+        timer: 2000,
       });
     }
   };
@@ -511,7 +596,31 @@ function ProjectPage() {
     setTasktData(task); // precarga los datos
     setTabIndex(0); // cambia al tab de agregar/editar
     setIsEditing(true);
+
+    // Activa el switch si la tarea ya tenía datos
+    const hasOptionalValues =
+      task.valorActividad !== null &&
+      task.valorActividad !== 0 &&
+      task.factorEmisionId !== null;
+    setEnableEmissionFields(hasOptionalValues);
   };
+
+
+    const UpdateStatusTasks = (taskId) => (event) => {
+    const newStatus = event.target.checked;
+    setTaskStatus((prev) => ({
+      ...prev,
+      [taskId]: newStatus,
+    }));
+
+    UpdateStatusTask(taskId, newStatus)
+      .then(() => {})
+      .catch((err) => {
+        console.error("Error al actualizar estado", err);
+      });
+  };
+
+  //#endregion
 
   const columns = [
     { Header: "Nombre", accessor: "nombre", align: "left" },
@@ -558,17 +667,20 @@ function ProjectPage() {
         alignItems="center"
       >
         <Tooltip title="Ver detalles">
-          <IconButton size="small" onClick={() => VerMas(project.proyectoId)}>
-            <VisibilityIcon fontSize="small" />
+          <IconButton
+            size="small"
+            onClick={() => DetallesTareas(project.proyectoId)}
+          >
+            <RemoveRedEyeOutlined fontSize="small" />
           </IconButton>
         </Tooltip>
         <Tooltip title="Editar">
           <IconButton
             size="small"
             color="info"
-            onClick={() => openModalUpdateProject(project)}
+            onClick={() => ModalUpdateProject(project)}
           >
-            <EditIcon fontSize="small" />
+            <EditOutlined fontSize="small" />
           </IconButton>
         </Tooltip>
         <Tooltip title="Eliminar">
@@ -577,7 +689,7 @@ function ProjectPage() {
             color="error"
             onClick={() => DeleteProject(project.proyectoId)}
           >
-            <DeleteIcon fontSize="small" />
+            <DeleteOutlineOutlined fontSize="small" />
           </IconButton>
         </Tooltip>
       </Stack>
@@ -627,7 +739,7 @@ function ProjectPage() {
                         color: "#388E3C",
                       },
                     }}
-                    onClick={openModalAddProject}
+                    onClick={ModalSaveProject}
                   >
                     Nuevo Proyecto
                   </MDButton>
@@ -653,7 +765,7 @@ function ProjectPage() {
                           fullWidth
                           value={filter}
                           onChange={(e) => setFilter(e.target.value)}
-                          sx={{ height: 45 }}
+                          sx={{ height: 45, textAlign: "left" }}
                         >
                           <MenuItem value="todos">Todos</MenuItem>
                           <MenuItem value="true">Realizados</MenuItem>
@@ -663,39 +775,103 @@ function ProjectPage() {
                     </Grid>
 
                     <Grid item>
-                      <DatePicker
-                        label="Fecha Inicio"
-                        value={startDate}
-                        onChange={(newValue) => setStartDate(newValue)}
-                        slotProps={{
-                          textField: {
-                            size: "small",
-                            sx: {
-                              width: 180, // más angosto
+                      <LocalizationProvider
+                        dateAdapter={AdapterDayjs}
+                        adapterLocale="es"
+                      >
+                        <DatePicker
+                          label="Fecha Inicio"
+                          value={
+                            startDate ? dayjs(startDate, "DD-MM-YYYY") : null
+                          }
+                          onChange={(newValue) => {
+                            if (newValue) {
+                              setStartDate(newValue.format("DD-MM-YYYY"));
+                            } else {
+                              setStartDate(null);
+                            }
+                          }}
+                          inputFormat="DD-MM-YYYY"
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                              sx: {
+                                width: 180,
+                                fontFamily:
+                                  '"Roboto", "Helvetica", "Arial", sans-serif',
+                                fontSize: "0.875rem",
+                                color: "rgba(0, 0, 0, 0.87)", // mismo color de texto por defecto
+                                "& .MuiInputBase-input": {
+                                  fontSize: "0.875rem",
+                                  padding: "10px 14px", // iguala el padding del Select
+                                  color: "rgba(0, 0, 0, 0.87)", // color del texto de la fecha
+                                },
+                                "& .MuiInputLabel-root": {
+                                  fontSize: "0.875rem",
+                                  color: "rgba(0, 0, 0, 0.6)", // color del label
+                                },
+                                "& .MuiOutlinedInput-root": {
+                                  "& fieldset": {
+                                    borderColor: "rgba(0, 0, 0, 0.23)", // color del borde
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#1976d2", // color al pasar el mouse (igual que el Select)
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#1976d2", // color al enfocar
+                                  },
+                                },
+                              },
                             },
-                          },
-                        }}
-                      />
+                          }}
+                        />
+                      </LocalizationProvider>
                     </Grid>
 
                     <Grid item>
-                      <DatePicker
-                        label="Fecha Fin"
-                        value={endDate}
-                        onChange={(newValue) => setEndDate(newValue)}
-                        slotProps={{
-                          textField: {
-                            size: "small",
-                            sx: {
-                              width: 180, // más angosto
-                              "& input": {
-                                padding: "6px 8px",
-                                fontSize: 13, // menos espacio interno
+                      <LocalizationProvider
+                        dateAdapter={AdapterDayjs}
+                        adapterLocale="es"
+                      >
+                        <DatePicker
+                          label="Fecha Fin"
+                          value={endDate}
+                          onChange={(newValue) => setEndDate(newValue)}
+                          inputFormat="DD-MM-YYYY"
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                              sx: {
+                                width: 180,
+                                fontFamily:
+                                  '"Roboto", "Helvetica", "Arial", sans-serif',
+                                fontSize: "0.875rem",
+                                color: "rgba(0, 0, 0, 0.87)", // mismo color de texto por defecto
+                                "& .MuiInputBase-input": {
+                                  fontSize: "0.875rem",
+                                  padding: "10px 14px", // iguala el padding del Select
+                                  color: "rgba(0, 0, 0, 0.87)", // color del texto de la fecha
+                                },
+                                "& .MuiInputLabel-root": {
+                                  fontSize: "0.875rem",
+                                  color: "rgba(0, 0, 0, 0.6)", // color del label
+                                },
+                                "& .MuiOutlinedInput-root": {
+                                  "& fieldset": {
+                                    borderColor: "rgba(0, 0, 0, 0.23)", // color del borde
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#1976d2", // color al pasar el mouse (igual que el Select)
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#1976d2", // color al enfocar
+                                  },
+                                },
                               },
                             },
-                          },
-                        }}
-                      />
+                          }}
+                        />
+                      </LocalizationProvider>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -710,7 +886,7 @@ function ProjectPage() {
                       Buscar por fecha
                     </MDButton>
                     <MDButton
-                      onClick={CleanDates}
+                      onClick={ClearDates}
                       variant="outlined"
                       color="secondary"
                     >
@@ -722,7 +898,7 @@ function ProjectPage() {
                         onClick={CreatePDFAPI}
                         color="error"
                       >
-                        Descargar PDF
+                        Descargar Reporte
                       </MDButton>
                     )}
                   </MDBox>
@@ -773,30 +949,28 @@ function ProjectPage() {
         </LocalizationProvider>
       </MDBox>
 
-  
       {/* Modal para agregar un nuevo proyecto */}
-      <Modal
+      <Dialog
         open={openModalProjects}
-        onClose={CloseModal}
-        aria-labelledby="add-product-modal"
+        onClose={closeModalProject}
+        fullWidth
+        maxWidth="md"
       >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 750,
-            bgcolor: "background.paper",
-            borderRadius: 2,
-            boxShadow: 24,
-            p: 4,
-          }}
-        >
-          <Typography variant="h6">
-            {modoEdicion ? "Editar Proyecto" : "Nuevo Proyecto"}
-          </Typography>
-
+        <DialogTitle>
+          <MDBox
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <MDTypography variant="h5">
+              {modoEdicion ? "Editar Proyecto" : "Nuevo Proyecto"}
+            </MDTypography>
+            <IconButton onClick={closeModalProject}>
+              <CloseIcon />
+            </IconButton>
+          </MDBox>
+        </DialogTitle>
+        <DialogContent dividers>
           <TextField
             fullWidth
             label="Nombre"
@@ -804,7 +978,9 @@ function ProjectPage() {
             margin="normal"
             value={projectData.nombre}
             onChange={handleChange}
-            required
+            error={!!errors.nombre}
+            helperText={errors.nombre}
+            sx={{ mb: 2 }}
           />
           <TextField
             fullWidth
@@ -815,12 +991,16 @@ function ProjectPage() {
             onChange={handleChange}
             multiline
             rows={3}
+            error={!!errors.descripcion}
+            helperText={errors.descripcion}
+            sx={{ mb: 2 }}
           />
 
           <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
               <DatePicker
                 label="Fecha de Inicio"
+                name="fechainicio"
                 value={
                   projectData.fechaInicio
                     ? dayjs(projectData.fechaInicio, "DD-MM-YYYY")
@@ -830,12 +1010,17 @@ function ProjectPage() {
                   setProjecttData((prev) => ({
                     ...prev,
                     fechaInicio: newValue ? newValue.format("DD-MM-YYYY") : "",
+                    fechaFinal: "",
                   }));
+                  setErrors((prev) => ({ ...prev, fechainicio: "" }));
                 }}
                 inputFormat="DD-MM-YYYY"
+                minDate={dayjs()}
                 slotProps={{
                   textField: {
                     size: "small",
+                    error: !!errors.fechainicio,
+                    helperText: errors.fechainicio,
                     sx: {
                       width: 350, // más angosto
                       "& .MuiInputBase-root": {
@@ -851,24 +1036,49 @@ function ProjectPage() {
               />
             </LocalizationProvider>
 
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
               <DatePicker
                 label="Fecha Final"
+                name="fechafinal"
                 value={
                   projectData.fechaFinal
                     ? dayjs(projectData.fechaFinal, "DD-MM-YYYY")
                     : null
                 }
                 onChange={(newValue) => {
+                  if (newValue) {
+                    const fechaInicio = dayjs(
+                      projectData.fechaInicio,
+                      "DD-MM-YYYY"
+                    );
+                    const diferencia = newValue.diff(fechaInicio, "day");
+
+                    if (diferencia < 5) {
+                      alert(
+                        "La fecha final debe ser al menos 5 días después de la fecha de inicio."
+                      );
+                      return;
+                    }
+                  }
+
                   setProjecttData((prev) => ({
                     ...prev,
                     fechaFinal: newValue ? newValue.format("DD-MM-YYYY") : "",
                   }));
+                  setErrors((prev) => ({ ...prev, fechafinal: "" }));
                 }}
                 inputFormat="DD-MM-YYYY"
+                disabled={!projectData.fechaInicio}
+                minDate={
+                  projectData.fechaInicio
+                    ? dayjs(projectData.fechaInicio, "DD-MM-YYYY").add(5, "day")
+                    : dayjs()
+                }
                 slotProps={{
                   textField: {
                     size: "small",
+                    error: !!errors.fechafinal,
+                    helperText: errors.fechafinal,
                     sx: {
                       width: 350, // más angosto
                       "& .MuiInputBase-root": {
@@ -884,34 +1094,71 @@ function ProjectPage() {
               />
             </LocalizationProvider>
           </Box>
+        </DialogContent>
 
-          <Box sx={{ mt: 3, textAlign: "right" }}>
-            <MDButton
-              variant="outlined"
-              color="error"
-              onClick={close}
-              sx={{ mr: 1 }}
-            >
-              Cancelar
-            </MDButton>
-            <MDButton
-              variant="gradient"
-              color="success"
-              onClick={SubmitModalEdicion}
-            >
-              {modoEdicion ? "Editar" : "Agregar"}
-            </MDButton>
-          </Box>
-        </Box>
-      </Modal>
+        <DialogActions>
+          <MDButton
+            variant="outlined"
+            color="error"
+            onClick={closeModalProject}
+            sx={{ mr: 1 }}
+          >
+            Cancelar
+          </MDButton>
+          <MDButton variant="gradient" color="success" onClick={HandleProjects}>
+            {modoEdicion ? "Editar" : "Agregar"}
+          </MDButton>
+        </DialogActions>
+      </Dialog>
       {/* Fin del Modal para agregar un nuevo proyecto */}
 
-      <Dialog open={openModal} onClose={CloseModal} fullWidth maxWidth="md">
-        <DialogTitle>Gestión de Actividades</DialogTitle>
+      <Dialog
+        open={openModalTask}
+        onClose={CloseModalTaks}
+        fullWidth
+        maxWidth="md"
+      >
+        <DialogTitle>
+          <MDBox
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <MDTypography variant="h5">Gestión de Actividades</MDTypography>
+            <IconButton onClick={CloseModalTaks}>
+              <CloseIcon />
+            </IconButton>
+          </MDBox>
+        </DialogTitle>
         <DialogContent dividers>
-          <Tabs value={tabIndex} onChange={handleTabChange}>
-            <Tab label="Agregar Actividades" />
-            <Tab label="Ver Actividades" />
+          <Tabs
+            value={tabIndex}
+            onChange={handleTabChange}
+            sx={{
+              "& .MuiTabs-indicator": {
+                backgroundColor: "#308D21",
+                color: "#FFFFFF", // color de la línea inferior
+              },
+            }}
+          >
+            <Tab
+              label="Agregar Actividades"
+              sx={{
+                "&.Mui-selected": {
+                  backgroundColor: "#308D21", // fondo del tab seleccionado
+                  color: "#FFFFFF", // texto en blanco
+                },
+              }}
+            />
+            <Tab
+              label="Ver Actividades"
+              sx={{
+                "&.Mui-selected": {
+                  backgroundColor: "#308D21",
+                  color: "#FFFFFF",
+                },
+              }}
+            />
           </Tabs>
 
           {tabIndex === 0 && (
@@ -919,73 +1166,116 @@ function ProjectPage() {
               <TextField
                 fullWidth
                 label="Título"
-                name="titulo"
+                name="Tareatitulo"
                 margin="normal"
                 value={taskData.titulo}
-                onChange={(e) =>
-                  setTasktData({ ...taskData, titulo: e.target.value })
-                }
+                onChange={(e) => {
+                  setTasktData({ ...taskData, titulo: e.target.value });
+                  setErrors((prev) => ({ ...prev, Tareatitulo: "" }));
+                }}
+                error={!!errors.Tareatitulo}
+                helperText={errors.Tareatitulo}
+                sx={{ mb: 2 }}
               />
               <TextField
                 fullWidth
                 label="Descripción"
-                name="descripcion"
+                name="TareaDescripcion"
                 margin="normal"
                 multiline
                 rows={2}
                 value={taskData.descripcion}
-                onChange={(e) =>
-                  setTasktData({
-                    ...taskData,
-                    descripcion: e.target.value,
-                  })
-                }
-              />
-              <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
-                {/* Campo Valor Actividad */}
-                <TextField
-                  fullWidth
-                  label="Valor Actividad"
-                  name=""
-                  type="number"
-                  value={taskData.valorActividad || ""}
-                  onChange={(e) =>
-                    handleTaskDataChange("valorActividad", e.target.value)
-                  }
-                />
-
-                {/* Campo Factor de emisión */}
-                <FormControl fullWidth>
-                  <InputLabel id="unidad-label">Factor de emisión</InputLabel>
-                  <Select
-                    labelId="unidad-label"
-                    id="factorEmisionId"
-                    value={taskData.factorEmisionId || ""}
-                    sx={{ height: 40 }}
-                    onChange={(e) =>
-                      handleTaskDataChange("factorEmisionId", e.target.value)
-                    }
-                  >
-                    {Array.isArray(reductionUnit) &&
-                      reductionUnit.map((unidad) => (
-                        <MenuItem key={unidad.id} value={unidad.id}>
-                          {unidad.name}
-                        </MenuItem>
-                      ))}
-                  </Select>
-                </FormControl>
-              </Box>
-
-              <TextField
-                fullWidth
-                label="Emisiones CO2"
-                name="EmisionesCO2e"
-                margin="normal"
-                value={taskData.emisionesCO2e || ""}
-                InputProps={{
-                  readOnly: true, // así el usuario no lo puede cambiar
+                onChange={(e) => {
+                  setTasktData({ ...taskData, descripcion: e.target.value });
+                  setErrors((prev) => ({ ...prev, TareaDescripcion: "" }));
                 }}
+                error={!!errors.TareaDescripcion}
+                helperText={errors.TareaDescripcion}
+                sx={{ mb: 2 }}
               />
+
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={enableEmissionFields}
+                    onChange={(e) => setEnableEmissionFields(e.target.checked)}
+                    color="primary"
+                  />
+                }
+                label="Agregar datos de emisión"
+              />
+
+              {enableEmissionFields && (
+                <>
+                  <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
+                    {/* Campo Valor Actividad */}
+                    <TextField
+                      fullWidth
+                      label="Valor Actividad"
+                      name="valorActividad"
+                      type="number"
+                      value={taskData.valorActividad || ""}
+                      error={!!errors.valorActividad}
+                      helperText={errors.valorActividad}
+                      sx={{ mb: 2 }}
+                      onChange={(e) => {
+                        handleTaskDataChange("valorActividad", e.target.value);
+                        setErrors((prev) => ({ ...prev, valorActividad: "" }));
+                      }}
+                    />
+
+                    {/* Campo Factor de emisión */}
+                    <FormControl
+                      fullWidth
+                      error={!!errors.factorEmisionId}
+                      sx={{ mb: 2 }}
+                    >
+                      <InputLabel id="unidad-label">Factor emisión</InputLabel>
+                      <Select
+                        labelId="unidad-label"
+                        id="factorEmisionId"
+                        name="factorEmisionId"
+                        label="factorEmisionId"
+                        value={taskData.factorEmisionId || ""}
+                        sx={{ height: 40 }}
+                        onChange={(e) => {
+                          handleTaskDataChange(
+                            "factorEmisionId",
+                            e.target.value
+                          );
+                          setErrors((prev) => ({
+                            ...prev,
+                            factorEmisionId: "",
+                          }));
+                        }}
+                      >
+                        {Array.isArray(reductionUnit) &&
+                          reductionUnit.map((unidad) => (
+                            <MenuItem key={unidad.id} value={unidad.id}>
+                              {unidad.name}
+                            </MenuItem>
+                          ))}
+                      </Select>
+                      {errors.factorEmisionId && (
+                        <FormHelperText>
+                          {errors.factorEmisionId}
+                        </FormHelperText>
+                      )}
+                    </FormControl>
+                  </Box>
+
+                  <TextField
+                    fullWidth
+                    label="Emisiones CO2"
+                    name="EmisionesCO2e"
+                    margin="normal"
+                    value={taskData.emisionesCO2e || ""}
+                    InputProps={{
+                      readOnly: true, // así el usuario no lo puede cambiar
+                    }}
+                  />
+                </>
+              )}
             </Box>
           )}
 
@@ -1006,8 +1296,10 @@ function ProjectPage() {
                           <Switch
                             checked={!!taskStatus[task.taskId]}
                             onChange={UpdateStatusTasks(task.taskId)}
-                            inputProps={{
-                              "aria-label": "cambiar estado tarea",
+                            slotProps={{
+                              input: {
+                                "aria-label": "cambiar estado tarea",
+                              },
                             }}
                             sx={{
                               "& .MuiSwitch-thumb": {
@@ -1022,7 +1314,7 @@ function ProjectPage() {
                               },
                               "& .MuiSwitch-track": {
                                 backgroundColor: taskStatus[task.taskId]
-                                  ? "#81ac82ff"
+                                  ? "#77d27dff"
                                   : "#FFCDD2",
                               },
                             }}
@@ -1034,7 +1326,7 @@ function ProjectPage() {
                             aria-label="editar"
                             onClick={() => handleEditTask(task)}
                           >
-                            <EditIcon />
+                            <EditOutlined />
                           </IconButton>
                           <IconButton
                             color="error"
@@ -1042,16 +1334,22 @@ function ProjectPage() {
                             aria-label="editar"
                             sx={{ mr: 2 }}
                             onClick={() => {
-                              DTask(task.taskId);
+                              DeleteTask(task.taskId);
                             }}
                           >
-                            <DeleteIcon />
+                            <DeleteOutlineOutlined />
                           </IconButton>
                         </Box>
                       }
                     >
                       <ListItemText
-                        primary={task.titulo + " - " + task.emisionesCO2e}
+                        primary={
+                          task.titulo +
+                          " - " +
+                          (task.emisionesCO2e === 0
+                            ? "N/A"
+                            : task.emisionesCO2e)
+                        }
                         secondary={
                           <Box
                             sx={{
@@ -1066,7 +1364,9 @@ function ProjectPage() {
                             <Box sx={{ display: "flex", gap: 2, mt: 0.5 }}>
                               <Typography variant="body2">
                                 <strong>Valor actividad:</strong>{" "}
-                                {task.valorActividad}
+                                {task.valorActividad === 0
+                                  ? "N/A"
+                                  : task.valorActividad}
                               </Typography>
                               <Typography variant="body2">
                                 <strong>Factor de emisión:</strong>{" "}
@@ -1084,7 +1384,7 @@ function ProjectPage() {
           )}
         </DialogContent>
         <DialogActions>
-          <MDButton color="error" variant="outlined" onClick={CloseModal}>
+          <MDButton color="error" variant="outlined" onClick={CloseModalTaks}>
             Cerrar
           </MDButton>
 
@@ -1094,7 +1394,7 @@ function ProjectPage() {
               color="success"
               onClick={() => {
                 if (IsEditing) {
-                  UpTask(); // método de actualizar
+                  UpdateTask(); // método de actualizar
                 } else {
                   SubmitModalTask(); // método de crear
                 }
