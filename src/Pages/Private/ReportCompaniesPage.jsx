@@ -23,9 +23,25 @@ import {
   MenuItem,
   Card,
   InputLabel,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Chip,
 } from "@mui/material";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import CloseIcon from "@mui/icons-material/Close";
+
+import { RemoveRedEyeOutlined } from "@mui/icons-material";
+
+import {
+  Close as CloseIcon,
+  CheckCircle as CheckCircleIcon,
+  Cancel as CancelIcon,
+  Business as BusinessIcon,
+  Email as EmailIcon,
+  CalendarToday as CalendarTodayIcon,
+  Settings as SettingsIcon,
+  People as PeopleIcon,
+} from "@mui/icons-material";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -177,7 +193,7 @@ export function ReportCompanies() {
             sx={{ color: "#6c757d" }}
             onClick={() => handleOpenModal(companies)}
           >
-            <VisibilityIcon fontSize="small" />
+            <RemoveRedEyeOutlined fontSize="small" />
           </IconButton>
         </Tooltip>
       </Stack>
@@ -337,54 +353,322 @@ export function ReportCompanies() {
 
       {/* Modal para ver los detalles de la empresa */}
 
-      <Modal open={openModal} onClose={handleCloseModal}>
-        <Box sx={modalStyle}>
-          {/* Encabezado */}
-          <Grid
-            container
-            justifyContent="space-between"
-            alignItems="center"
-            mb={2}
+<Dialog
+  open={openModal}
+  onClose={handleCloseModal}
+  maxWidth="md"
+  fullWidth
+  PaperProps={{
+    sx: { borderRadius: 2 },
+  }}
+>
+  <DialogTitle>
+    <MDBox
+               display="flex"
+               justifyContent="space-between"
+               alignItems="center"
+             >
+               <MDTypography variant="h5">Detallles de la empresa</MDTypography>
+               <IconButton onClick={handleCloseModal}>
+                 <CloseIcon />
+               </IconButton>
+             </MDBox>
+  </DialogTitle>
+
+  <DialogContent dividers sx={{ py: 3 }}>
+    <Grid container spacing={2.5}>
+      {/* Primera fila - 2 columnas */}
+      {[
+        [
+          "Nombre",
+          selectedCompany?.nombre || "-",
+          BusinessIcon,
+          "info.main",
+          "info.lighter",
+        ],
+        [
+          "Correo",
+          selectedCompany?.correo || "-",
+          EmailIcon,
+          "primary.main",
+          "primary.lighter",
+        ],
+      ].map(([label, value, Icon, color, bgColor], index) => (
+        <Grid item xs={12} sm={6} key={index}>
+          <MDBox
+            sx={{
+              border: 1,
+              borderColor: "grey.300",
+              borderRadius: 2,
+              p: 2.5,
+              height: "100%",
+              transition: "all 0.2s",
+              "&:hover": {
+                borderColor: color,
+                boxShadow: 1,
+              },
+            }}
           >
-            <Typography variant="h6" fontWeight="bold">
-              Detalles de la Empresa
-            </Typography>
-            <IconButton onClick={handleCloseModal} size="small">
-              <CloseIcon />
-            </IconButton>
-          </Grid>
-
-          <Divider sx={{ mb: 2 }} />
-
-          {/* Cuerpo con datos */}
-          <Grid container spacing={2}>
-            {[
-              ["Nombre", selectedCompany?.nombre || "-"],
-              ["Correo", selectedCompany?.correo || "-"],
-              ["Fecha de incorporación", selectedCompany?.fechaCreación || "-"],
-              ["Servicio asociado", selectedCompany?.serviceName || "-"],
-              ["Cantidad de usuarios", selectedCompany?.numberOfUsers || "-"],
-              ["Estado", selectedCompany?.estatus ? "Activo" : "Inactivo"],
-            ].map(([label, value], index) => (
-              <Grid item xs={12} key={index}>
-                <Typography variant="body2" color="text.secondary" gutterBottom>
+            <MDBox display="flex" alignItems="center" gap={2}>
+              <MDBox
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: 56,
+                  height: 56,
+                  borderRadius: 2,
+                  bgcolor: bgColor,
+                  flexShrink: 0,
+                }}
+              >
+                <Icon sx={{ color: color, fontSize: 28 }} />
+              </MDBox>
+              <MDBox sx={{ minWidth: 0, flex: 1 }}>
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  fontWeight="medium"
+                  sx={{
+                    textTransform: "uppercase",
+                    letterSpacing: 0.5,
+                    display: "block",
+                  }}
+                >
                   {label}
                 </Typography>
-                <Typography variant="subtitle1" fontWeight="medium">
+                <Typography
+                  variant="body1"
+                  fontWeight="medium"
+                  color="text.primary"
+                  sx={{
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    mt: 0.5,
+                  }}
+                >
                   {value}
                 </Typography>
-              </Grid>
-            ))}
-          </Grid>
+              </MDBox>
+            </MDBox>
+          </MDBox>
+        </Grid>
+      ))}
 
-          {/* Botón de cerrar */}
-          <Box display="flex" justifyContent="flex-end" mt={4}>
-            <Button variant="contained" color="info" onClick={handleCloseModal}>
-              Cerrar
-            </Button>
-          </Box>
-        </Box>
-      </Modal>
+      {/* Segunda fila - 2 columnas */}
+      {[
+        [
+          "Fecha de incorporación",
+          selectedCompany?.fechaCreación 
+            ? new Date(selectedCompany.fechaCreación).toLocaleDateString('es-CR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+              })
+            : "-",
+          CalendarTodayIcon,
+          "warning.main",
+          "warning.lighter",
+        ],
+        [
+          "Servicio asociado",
+          selectedCompany?.serviceName || "-",
+          SettingsIcon,
+          "secondary.main",
+          "secondary.lighter",
+        ],
+      ].map(([label, value, Icon, color, bgColor], index) => (
+        <Grid item xs={12} sm={6} key={index}>
+          <MDBox
+            sx={{
+              border: 1,
+              borderColor: "grey.300",
+              borderRadius: 2,
+              p: 2.5,
+              height: "100%",
+              transition: "all 0.2s",
+              "&:hover": {
+                borderColor: color,
+                boxShadow: 1,
+              },
+            }}
+          >
+            <MDBox display="flex" alignItems="center" gap={2}>
+              <MDBox
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: 56,
+                  height: 56,
+                  borderRadius: 2,
+                  bgcolor: bgColor,
+                  flexShrink: 0,
+                }}
+              >
+                <Icon sx={{ color: color, fontSize: 28 }} />
+              </MDBox>
+              <MDBox sx={{ minWidth: 0, flex: 1 }}>
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  fontWeight="medium"
+                  sx={{
+                    textTransform: "uppercase",
+                    letterSpacing: 0.5,
+                    display: "block",
+                  }}
+                >
+                  {label}
+                </Typography>
+                <Typography
+                  variant="body1"
+                  fontWeight="medium"
+                  color="text.primary"
+                  sx={{
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    mt: 0.5,
+                  }}
+                >
+                  {value}
+                </Typography>
+              </MDBox>
+            </MDBox>
+          </MDBox>
+        </Grid>
+      ))}
+
+      {/* Tercera fila - Cantidad de usuarios (centrado) */}
+      <Grid item xs={12} sm={3}></Grid>
+      <Grid item xs={12} sm={6}>
+        <MDBox
+          sx={{
+            border: 1,
+            borderColor: "grey.300",
+            borderRadius: 2,
+            p: 2.5,
+            height: "100%",
+            transition: "all 0.2s",
+            "&:hover": {
+              borderColor: "success.main",
+              boxShadow: 1,
+            },
+          }}
+        >
+          <MDBox display="flex" alignItems="center" gap={2}>
+            <MDBox
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: 56,
+                height: 56,
+                borderRadius: 2,
+                bgcolor: "success.lighter",
+                flexShrink: 0,
+              }}
+            >
+              <PeopleIcon sx={{ color: "success.main", fontSize: 28 }} />
+            </MDBox>
+            <MDBox sx={{ minWidth: 0, flex: 1 }}>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                fontWeight="medium"
+                sx={{
+                  textTransform: "uppercase",
+                  letterSpacing: 0.5,
+                  display: "block",
+                }}
+              >
+                Cantidad de usuarios
+              </Typography>
+              <Typography
+                variant="body1"
+                fontWeight="medium"
+                color="text.primary"
+                sx={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  mt: 0.5,
+                }}
+              >
+                {selectedCompany?.numberOfUsers || "-"}
+              </Typography>
+            </MDBox>
+          </MDBox>
+        </MDBox>
+      </Grid>
+      <Grid item xs={12} sm={3}></Grid>
+
+      {/* Estado destacado - ancho completo */}
+      <Grid item xs={12}>
+        <MDBox
+          sx={{
+            border: 2,
+            borderColor: selectedCompany?.estatus
+              ? "success.light"
+              : "error.light",
+            bgcolor: selectedCompany?.estatus
+              ? "success.lighter"
+              : "error.lighter",
+            borderRadius: 2,
+            p: 2.5,
+            mt: 1,
+          }}
+        >
+          <MDBox
+  display="flex"
+  justifyContent="space-between"
+  alignItems="center"
+>
+  <MDBox display="flex" alignItems="center" gap={1.5}>
+    {/* Ícono de estado */}
+    {selectedCompany?.estatus ? (
+      <CheckCircleIcon sx={{ color: "success.main", fontSize: 32 }} />
+    ) : (
+      <CancelIcon sx={{ color: "error.main", fontSize: 32 }} />
+    )}
+
+    {/* Texto y chip uno debajo del otro */}
+    <MDBox display="flex" flexDirection="column" alignItems="flex-start">
+      <Typography
+        variant="body2"
+        fontWeight="bold"
+        color="text.primary"
+      >
+        Estado de la Empresa
+      </Typography>
+
+      <Chip
+        label={selectedCompany?.estatus ? "Activo" : "Inactivo"}
+        color={selectedCompany?.estatus ? "success" : "error"}
+        size="small"
+        sx={{
+          fontWeight: "bold",
+          fontSize: "0.75rem",
+          mt: 0.5,
+          px: 1.5,
+        }}
+      />
+    </MDBox>
+  </MDBox>
+</MDBox>
+        </MDBox>
+      </Grid>
+    </Grid>
+  </DialogContent>
+
+  <DialogActions sx={{ px: 3, py: 2 }}>
+    <MDButton variant="outlined" color="error" onClick={handleCloseModal}>
+      Cerrar
+    </MDButton>
+  </DialogActions>
+</Dialog>
 
       {/* Termina Modal para ver los detalles de la empresa */}
     </DashboardLayout>

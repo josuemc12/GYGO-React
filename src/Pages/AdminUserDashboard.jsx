@@ -75,11 +75,20 @@ const AdminUserDashboard = () => {
     }
   }, [showHistory]);
 
+  // Agregar este useEffect adicional
+useEffect(() => {
+  console.log('👥 Usuarios actualizados:', users);
+  console.table(users);
+}, [users]);
+
+
+
   const fetchUsers = async () => {
     try {
       setLoading(true);
       setError("");
       const userData = await getGroupUsers();
+      console.log(userData);
       setUsers(userData);
     } catch (err) {
       setError("Failed to load users. Please try again.");

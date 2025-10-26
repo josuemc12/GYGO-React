@@ -208,7 +208,7 @@ function ProjectPage() {
     }));
   };
 
-  //#region Projectos
+  //#region Proyectos
 
   // Abrir modal y cargar detalles
   const ModalSaveProject = async () => {
