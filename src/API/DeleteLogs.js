@@ -16,10 +16,27 @@ export async function getDeleteUsers() {
   }
 }
 
-//API para los projectos pendientes
-export async function getCountUserDelete() {
+
+export async function EmailDeleteUsers() {
   const response = await fetch(
     `${appsettings.apiUrl}DeleteLogs/LastDeleteUsers`,
+    {
+      method: "GET",
+      credentials: "include",
+    }
+  );
+  if (response.ok) {
+    const data = await response.json();
+    return data;
+  } else {
+    return [];
+  }
+}
+
+
+export async function getCountUserDelete() {
+  const response = await fetch(
+    `${appsettings.apiUrl}DeleteLogs/CountDeleteUser`,
     {
       method: "GET",
       credentials: "include",

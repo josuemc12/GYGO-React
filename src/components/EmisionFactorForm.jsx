@@ -19,7 +19,9 @@ import {
   DialogContent,
   DialogActions,
   IconButton,
+  Select,
 } from "@mui/material";
+import { name } from "dayjs/locale/es";
 
 const EmissionFactorModal = ({
   isOpen,
@@ -49,7 +51,7 @@ const EmissionFactorModal = ({
     formData.factorValue !== 0
       ? (formData.unitValue / formData.carbonValue).toFixed(4)
       : 0;
-
+  const [errors, setErrors] = useState({});
   useEffect(() => {
     if (isOpen) {
       if (editingFactor) {
@@ -112,9 +114,28 @@ const EmissionFactorModal = ({
     setIsSubmitting(true);
 
     try {
-      // 1. Validar que onSubmit existe
-      if (typeof onSubmit !== "function") {
-        throw new Error("La función onSubmit no está disponible");
+      //Validaciones básicas
+      if (
+        !formData.name.trim() ||
+        !formData.unit ||
+        !formData.unitCarbon ||
+        !formData.unitValue ||
+        !formData.carbonValue ||
+        !formData.pcgId ||
+        !formData.sourceId ||
+        !formData.sectoId
+      ) {
+        setErrors({
+          name: !formData.name.trim() ? "Requerido" : "",
+          unit: !formData.unit ? "Requerido" : "",
+          unitCarbon: !formData.unitCarbon ? "Requerido" : "",
+          unitValue: !formData.unitValue ? "Requerido" : "",
+          carbonValue: !formData.carbonValue ? "Requerido" : "",
+          pcgId: !formData.pcgId ? "Requerido" : "",
+          sourceId: !formData.sourceId ? "Requerido" : "",
+          sectoId: !formData.sectoId ? "Requerido" : "",
+        });
+        return;
       }
 
       // 2. Crear payload con validación de números
@@ -134,6 +155,7 @@ const EmissionFactorModal = ({
 
       // 4. Cerrar el modal solo si todo sale bien
       onClose();
+      setErrors({});
     } catch (error) {
       console.error("Error en el envío del formulario:", {
         error: error.message,
@@ -171,7 +193,10 @@ const EmissionFactorModal = ({
   return (
     <Dialog
       open={isOpen}
-      onClose={onClose}
+      onClose={() => {
+        setErrors({});
+        onClose();
+      }}
       aria-labelledby="add-product-modal"
       fullWidth
       maxWidth="lg"
@@ -188,7 +213,10 @@ const EmissionFactorModal = ({
               : "Crear Factor de Emisión"}
           </MDTypography>
 
-          <IconButton onClick={onClose}>
+          <IconButton onClick={() => {
+             setErrors({});
+             onClose();
+          }}>
             <CloseIcon />
           </IconButton>
         </MDBox>
@@ -198,15 +226,17 @@ const EmissionFactorModal = ({
       <form onSubmit={handleSubmit}>
         <DialogContent dividers>
           <MDBox mb={2}>
-            <MDInput
+            <TextField
               fullWidth
               label="Nombre"
               name="name"
               value={formData.name}
               onChange={handleInputChange}
-              required
               placeholder="Ingresar el nombre del Factor de emisión"
               size="small"
+              error={!!errors.name}
+              helperText={errors.name}
+              sx={{ mb: 2 }}
             />
           </MDBox>
 
@@ -215,11 +245,11 @@ const EmissionFactorModal = ({
               <MDTypography variant="caption" fontWeight="medium" mb={1}>
                 Unidad de medida primaria
               </MDTypography>
-              <select
+              <Select
                 name="unit"
                 value={formData.unit}
                 onChange={handleInputChange}
-                required
+                error={!!errors.unit}
                 style={{
                   width: "100%",
                   padding: "10px",
@@ -230,24 +260,24 @@ const EmissionFactorModal = ({
                   color: "#344767",
                 }}
               >
-                <option value={0}>Selecciona la unidad...</option>
+                <MenuItem value={0}>Selecciona la unidad...</MenuItem>
                 {measurementUnits.map((unit) => (
-                  <option key={unit.id} value={unit.id}>
+                  <MenuItem key={unit.id} value={unit.id}>
                     {unit.name}
-                  </option>
+                  </MenuItem>
                 ))}
-              </select>
+              </Select>
             </MDBox>
 
             <MDBox flex={1} minWidth="45%">
               <MDTypography variant="caption" fontWeight="medium" mb={1}>
                 Unidad de medida del carbono
               </MDTypography>
-              <select
+              <Select
                 name="unitCarbon"
                 value={formData.unitCarbon}
                 onChange={handleInputChange}
-                required
+                error={!!errors.unitCarbon}
                 style={{
                   width: "100%",
                   padding: "10px",
@@ -258,19 +288,19 @@ const EmissionFactorModal = ({
                   color: "#344767",
                 }}
               >
-                <option value={0}>Selecciona la unidad...</option>
+                <MenuItem value={0}>Selecciona la unidad...</MenuItem>
                 {measurementUnits.map((unit) => (
-                  <option key={unit.id} value={unit.id}>
+                  <MenuItem key={unit.id} value={unit.id}>
                     {unit.name}
-                  </option>
+                  </MenuItem>
                 ))}
-              </select>
+              </Select>
             </MDBox>
           </MDBox>
 
           <MDBox display="flex" gap={2} flexWrap="wrap" mb={2}>
             <MDBox flex={1} minWidth="45%">
-              <MDInput
+              <TextField
                 fullWidth
                 type="number"
                 label="Valor unitario"
@@ -281,11 +311,14 @@ const EmissionFactorModal = ({
                 required
                 placeholder="0.00"
                 size="small"
+                error={!!errors.unitValue}
+                helperText={errors.unitValue}
+                sx={{ mb: 2 }}
               />
             </MDBox>
 
             <MDBox flex={1} minWidth="45%">
-              <MDInput
+              <TextField
                 fullWidth
                 type="number"
                 label="Valor de emisión"
@@ -296,6 +329,8 @@ const EmissionFactorModal = ({
                 required
                 placeholder="0.00"
                 size="small"
+                error={!!errors.carbonValue}
+                helperText={errors.carbonValue}
               />
             </MDBox>
           </MDBox>
@@ -325,11 +360,11 @@ const EmissionFactorModal = ({
             <MDTypography variant="caption" fontWeight="medium" mb={1}>
               PCG (Greenhouse Gas)
             </MDTypography>
-            <select
+            <Select
               name="pcgId"
               value={formData.pcgId}
               onChange={handleInputChange}
-              required
+              error={!!errors.pcgId}
               style={{
                 width: "100%",
                 padding: "10px 12px",
@@ -345,25 +380,25 @@ const EmissionFactorModal = ({
                 cursor: "pointer",
               }}
             >
-              <option value={0} disabled hidden style={{ color: "#888" }}>
+              <MenuItem value={0} disabled hidden style={{ color: "#888" }}>
                 Selecciona el PCG...
-              </option>
+              </MenuItem>
               {pcgs.map((pcg) => (
-                <option key={pcg.id} value={pcg.id} style={{ color: "#000" }}>
+                <MenuItem key={pcg.id} value={pcg.id} style={{ color: "#000" }}>
                   {pcg.name}
-                </option>
+                </MenuItem>
               ))}
-            </select>
+            </Select>
           </MDBox>
           <MDBox flex={1} minWidth="45%">
             <MDTypography variant="caption" fontWeight="medium" mb={1}>
               Fuente
             </MDTypography>
-            <select
+            <Select
               name="sourceId"
               value={formData.sourceId}
               onChange={handleInputChange}
-              required
+              error={!!errors.sourceId}
               style={{
                 width: "100%",
                 padding: "10px",
@@ -374,13 +409,13 @@ const EmissionFactorModal = ({
                 color: "#344767",
               }}
             >
-              <option value={0}>Selecciona la fuente...</option>
+              <MenuItem value={0}>Selecciona la fuente...</MenuItem>
               {sources.map((source) => (
-                <option key={source.id} value={source.id}>
+                <MenuItem key={source.id} value={source.id}>
                   {source.name}
-                </option>
+                </MenuItem>
               ))}
-            </select>
+            </Select>
           </MDBox>
         </DialogContent>
 
@@ -390,7 +425,10 @@ const EmissionFactorModal = ({
             <MDButton
               variant="outlined"
               color="error"
-              onClick={onClose}
+              onClick={() => {
+             setErrors({});
+             onClose();
+          }}
               disabled={isSubmitting}
             >
               Cerrar
@@ -405,7 +443,7 @@ const EmissionFactorModal = ({
                 ? "Guardando..."
                 : editingFactor
                   ? "Editar"
-                  : "Crear"}
+                  : "Guardar"}
             </MDButton>
           </MDBox>
         </DialogActions>

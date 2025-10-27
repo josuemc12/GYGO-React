@@ -427,7 +427,7 @@ export const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/subscription",
     component: <SubscriptionSwitch />,
-    roles: ["DEV", "DEF", "GA"],
+    roles: ["DEV", "DEF"],
     
   },
 

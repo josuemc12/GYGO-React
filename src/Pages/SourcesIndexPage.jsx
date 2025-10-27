@@ -12,7 +12,13 @@ import {
   MenuItem,
   Select,
   CircularProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+
 import { AddOutlined, EditOutlined } from "@mui/icons-material";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import MDBox from "components/MDBox";
@@ -256,77 +262,86 @@ export function SourcesIndexPage() {
         <Footer />
       </MDBox>
 
-      <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 400,
-            bgcolor: "background.paper",
-            boxShadow: 24,
-            p: 4,
-            borderRadius: 2,
-          }}
-        >
-          <MDTypography variant="h6" gutterBottom>
-            {editMode ? "Editar Fuente" : "Agregar Fuente"}
-          </MDTypography>
-          <TextField
-            fullWidth
-            label="Nombre"
-            value={sourceData.nombre}
-            onChange={(e) =>
-              setSourceData({ ...sourceData, nombre: e.target.value })
-            }
-            error={!!errors.nombre}
-            helperText={errors.nombre}
-            sx={{ mb: 2 }}
-          />
-          <TextField
-            fullWidth
-            label="Año"
-            type="number"
-            value={sourceData.año}
-            onChange={(e) =>
-              setSourceData({ ...sourceData, año: e.target.value })
-            }
-            error={!!errors.año}
-            helperText={errors.año}
-            sx={{ mb: 2 }}
-          />
-          {loading ? (
-            <CircularProgress size={24} />
-          ) : (
-            <Select
-              fullWidth
-              value={sourceData.sector}
-              onChange={(e) =>
-                setSourceData({ ...sourceData, sector: e.target.value })
-              }
-              displayEmpty
-              error={!!errors.sector}
-              sx={{ mb: 2, height: 40 }}
+      <Dialog
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        fullWidth
+        maxWidth="xs"
+      >
+        <Box sx={{}}>
+          <DialogTitle>
+            <MDBox
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
             >
-              <MenuItem value="">Seleccione un sector</MenuItem>
-              {sectors.map((s) => (
-                <MenuItem key={s.sectorId} value={s.sectorId}>
-                  {s.nombre}
-                </MenuItem>
-              ))}
-            </Select>
-          )}
-          <MDButton
-            variant="gradient"
-            color="success"
-            onClick={handleSave}
-            fullWidth
-          >
-            Guardar
-          </MDButton>
+              <MDTypography variant="h6" gutterBottom>
+                {editMode ? "Editar Fuente" : "Agregar Fuente"}
+              </MDTypography>
+              <IconButton onClick={() => setModalOpen(false)}>
+                <CloseIcon />
+              </IconButton>
+            </MDBox>
+          </DialogTitle>
+          <DialogContent dividers>
+            <TextField
+              fullWidth
+              label="Nombre"
+              value={sourceData.nombre}
+              onChange={(e) =>
+                setSourceData({ ...sourceData, nombre: e.target.value })
+              }
+              error={!!errors.nombre}
+              helperText={errors.nombre}
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              fullWidth
+              label="Año"
+              type="number"
+              value={sourceData.año}
+              onChange={(e) =>
+                setSourceData({ ...sourceData, año: e.target.value })
+              }
+              error={!!errors.año}
+              helperText={errors.año}
+              sx={{ mb: 2 }}
+            />
+            {loading ? (
+              <CircularProgress size={24} />
+            ) : (
+              <Select
+                fullWidth
+                value={sourceData.sector}
+                onChange={(e) =>
+                  setSourceData({ ...sourceData, sector: e.target.value })
+                }
+                displayEmpty
+                error={!!errors.sector}
+                sx={{ mb: 2, height: 40 }}
+              >
+                <MenuItem value="">Seleccione un sector</MenuItem>
+                {sectors.map((s) => (
+                  <MenuItem key={s.sectorId} value={s.sectorId}>
+                    {s.nombre}
+                  </MenuItem>
+                ))}
+              </Select>
+            )}
+          </DialogContent>
+
+          <DialogActions>
+            <MDButton
+              variant="gradient"
+              color="success"
+              onClick={handleSave}
+              fullWidth
+            >
+              Guardar
+            </MDButton>
+          </DialogActions>
         </Box>
-      </Modal>
+      </Dialog>
     </DashboardLayout>
   );
 }

@@ -7,7 +7,7 @@ import DataTable from "examples/Tables/DataTable";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import EmissionFactorModal from "../../components/EmisionFactorForm";
 import {
-  RemoveRedEyeOutlined,
+  AddOutlined,
   EditOutlined,
   DeleteOutlineOutlined,
 } from "@mui/icons-material";
@@ -336,6 +336,7 @@ const EmissionFactorDashboard = () => {
               <Grid>
                 <MDButton
                   variant="outlined"
+                   startIcon={<AddOutlined />}
                   sx={{
                     borderColor: "#4CAF50",
                     color: "#4CAF50",
@@ -347,7 +348,7 @@ const EmissionFactorDashboard = () => {
                   }}
                   onClick={handleCreate}
                 >
-                  Crear Nuevo
+                  Agregar Factor Emisión
                 </MDButton>
               </Grid>
             </Grid>
