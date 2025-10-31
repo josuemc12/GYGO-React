@@ -46,6 +46,7 @@ import { ServicesHomePage } from "./Pages/Public/ServicesPage";
 import { AboutUs } from "./Pages/Public/AboutUs";
 import { ContactUs } from "./Pages/Public/ContactUs";
 import { ChangePassword } from "./Pages/Public/ChangePassword";
+import NotFound from "./Pages/NotFound";
 
 const ProtectedElement = ({
   children,
@@ -68,6 +69,13 @@ const ProtectedElement = ({
 };
 
 export const routes = [
+  {
+    key: "root",
+    route: "/",
+    component: <HomePage />,
+    hideInSidebar: true,
+  },
+
   {
     key: "HomePage",
     route: "/HomePage",
@@ -331,7 +339,7 @@ export const routes = [
 
     collapse: [
       {
-        //Ruta para sectores  
+        //Ruta para sectores
         name: "Sectores",
         key: "sectores",
         icon: <Icon fontSize="small">place</Icon>,
@@ -427,8 +435,7 @@ export const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/subscription",
     component: <SubscriptionSwitch />,
-    roles: ["DEV", "DEF"],
-    
+    roles: ["DEV", "DEF", "GA"],
   },
 
   {
@@ -592,6 +599,15 @@ export const routes = [
       },
     ],
     roles: ["DEV", "GA"],
+  },
+
+  // Ruta 404
+  {
+    key: "not-found",
+    route: "*",
+    component: <NotFound />,
+    hideInSidebar: true,
+
   },
 ];
 

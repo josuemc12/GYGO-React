@@ -11,7 +11,7 @@ Coded by www.creative-tim.com
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
-import logo from "../../assets/Logo.png"
+import logo from "../../assets/Logo.png";
 import { useEffect } from "react";
 
 // react-router-dom components
@@ -49,12 +49,10 @@ import {
 
 // Context de autenticación
 import { useAuth } from "../../context/AuthContext";
-import {logoutSesion} from "../../API/Auth"
-
-
+import { logoutSesion } from "../../API/Auth";
 
 function Sidenav({ color = "info", brandName, routes, ...rest }) {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const [controller, dispatch] = useMaterialUIController();
   const {
     miniSidenav,
@@ -65,24 +63,20 @@ function Sidenav({ color = "info", brandName, routes, ...rest }) {
   } = controller;
   const location = useLocation();
   const { logoutRol } = useAuth();
- 
 
+  const logoutSes = async () => {
+    //Entre al logout
 
-const logoutSes = async () => {
-  //Entre al logout
-  console.log("entro al log");
-  const logout = await logoutSesion();
-  if(logout){
-    logoutRol();
-    navigate("/HomePage");
-  }
-   
-};
+    const logout = await logoutSesion();
+    if (logout) {
+      navigate("/HomePage");
+      setTimeout(() => logoutRol(), 50);
+    }
+  };
 
   const collapseName = location.pathname.replace("/", "");
 
   let textColor = "white";
-
 
   const closeSidenav = () => setMiniSidenav(dispatch, true);
 
@@ -195,31 +189,30 @@ const logoutSes = async () => {
             <Icon sx={{ fontWeight: "bold" }}>close</Icon>
           </MDTypography>
         </MDBox>
-    <MDBox
-  component={NavLink}
-  to="/dashboard"
-  display="flex"
- 
-  alignItems="center"
-  justifyContent="center"
-  textAlign="center"
-  gap={1}
->
-  <MDBox
-    component="img"
-    src={logo}
-    alt="Logo"
-    width="3rem" // Puedes ajustarlo a 4rem o más si querés
-  />
-  <MDTypography
-    component="h6"
-    variant="h5" // Cambialo a "h5" si querés aún más grande
-    fontWeight="bold"
-    color={textColor}
-  >
-    {brandName}
-  </MDTypography>
-</MDBox>
+        <MDBox
+          component={NavLink}
+          to="/dashboard"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          textAlign="center"
+          gap={1}
+        >
+          <MDBox
+            component="img"
+            src={logo}
+            alt="Logo"
+            width="3rem" // Puedes ajustarlo a 4rem o más si querés
+          />
+          <MDTypography
+            component="h6"
+            variant="h5" // Cambialo a "h5" si querés aún más grande
+            fontWeight="bold"
+            color={textColor}
+          >
+            {brandName}
+          </MDTypography>
+        </MDBox>
       </MDBox>
 
       <Divider
@@ -244,9 +237,7 @@ const logoutSes = async () => {
               },
             }}
             onClick={() => {
-            
               logoutSes();
-              
             }}
           >
             <Icon sx={{ mr: 1 }}>logout</Icon> Cerrar sesión

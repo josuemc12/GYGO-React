@@ -220,7 +220,7 @@ const AdminUserDashboard = () => {
     ),
     role: (
       <MDTypography variant="caption" color="text">
-        {"Member"}
+        {"Miembro"}
       </MDTypography>
     ),
 
@@ -389,15 +389,7 @@ const AdminUserDashboard = () => {
                     </MDTypography>
                   </MDBox>
                   <MDBox
-                    pt={3}
-                    sx={{
-                      p: 4,
-                      textAlign: "center",
-                      minHeight: "100px",
-                      width: "1200px",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
+                    pt={3} px={3} pb={3}
                   >
                     {showHistory ? (
                       // 🔁 AQUI VA LA TABLA DE HISTORIAL

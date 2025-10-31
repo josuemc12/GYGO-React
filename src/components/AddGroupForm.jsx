@@ -13,6 +13,7 @@ import {
   Paper,
   CircularProgress,
   Avatar,
+  FormHelperText,
 } from "@mui/material";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
@@ -21,6 +22,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { PostAddGroup } from "../API/AddGroup";
 import { GetServices } from "../API/Services";
 import MDButton from "components/MDButton";
+import { refreshLogin } from "../API/Auth";
 
 export const AddGroupForm = () => {
   const [nombreGrupo, setNombreGrupo] = useState("");
@@ -30,8 +32,9 @@ export const AddGroupForm = () => {
   const [loading, setLoading] = useState(false);
   const [imageFile, setImageFile] = useState("");
   const [preview, setPreview] = useState(null); // para vista previa de la imagen
-
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   //Fetch para los servicios
   const fetchServices = async () => {
@@ -47,7 +50,6 @@ export const AddGroupForm = () => {
     fetchServices();
   }, []);
 
-  
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     setImageFile(file);
@@ -64,22 +66,24 @@ export const AddGroupForm = () => {
     setLoading(true);
 
     try {
-      if (!nombreGrupo || !correogrupo || !selectedService) {
-        Swal.fire({
-          icon: "warning",
-          title: "No se pudo registrar la empresa",
-          text: "Por favor, completá todos los campos.",
-          confirmButtonColor: "#f8bb86",
+      if (
+        !nombreGrupo.trim() ||
+        !correogrupo.trim() ||
+        !selectedService ||
+        !imageFile
+      ) {
+        setErrors({
+          nombreGrupo: !nombreGrupo.trim() ? "Requerido" : "",
+          correogrupo: !correogrupo.trim() ? "Requerido" : "",
+          selectedService: !selectedService ? "Requerido" : "",
+          imageFile: !imageFile ? "Requerido" : "",
         });
+        setLoading(false);
         return;
       }
-      if (!imageFile) {
-        Swal.fire({
-          icon: "warning",
-          title: "No se pudo registrar la empresa",
-          text: "Por favor, ingrese el logo de la empresa",
-          confirmButtonColor: "#f8bb86",
-        });
+      if (!emailRegex.test(correogrupo)) {
+        setErrors((prev) => ({ ...prev, correogrupo: "Correo inválido" }));
+        setLoading(false);
         return;
       }
       const result = await PostAddGroup(
@@ -89,25 +93,28 @@ export const AddGroupForm = () => {
         imageFile
       );
       setLoading(false);
-
+      
       if (result.success) {
-        Swal.fire({
-          icon: "success",
-          title: "Registro exitoso",
-          text: "La empresa se ha sido registrado correctamente.",
-          confirmButtonColor: "#2DA14C",
-        }).then(() => {
-          window.location.href = "/DashboardGroupPage";
-        });
-        return;
+        await new Promise((resolve) => setTimeout(resolve, 800));
+        const refreshData = await refreshLogin();
+        if (refreshData.success) {
+          Swal.fire({
+            icon: "success",
+            title: "Registro exitoso",
+            text: "La empresa se ha registrado correctamente.",
+            showConfirmButton: false,
+            timer: 2000,
+          }).then(() => {
+            window.location.href = "/Dashboard";
+          });
+        }
       } else {
         Swal.fire({
-          icon: "success",
-          title: "Registro exitoso",
+          icon: "error",
+          title: "Registro fallido",
           text: result.error.message,
-          confirmButtonColor: "#d33",
-        }).then(() => {
-          window.location.href = "/DashboardGroupPage";
+          showConfirmButton: false,
+          timer: 3000,
         });
         return;
       }
@@ -129,26 +136,40 @@ export const AddGroupForm = () => {
               label="Nombre del Grupo"
               variant="outlined"
               margin="normal"
-              required
               value={nombreGrupo}
-              onChange={(e) => setNombreGrupo(e.target.value)}
+              onChange={(e) => {
+                setNombreGrupo(e.target.value);
+                setErrors((prev) => ({ ...prev, nombreGrupo: "" }));
+              }}
+              error={!!errors.nombreGrupo}
+              helperText={errors.nombreGrupo}
             />
             <TextField
               fullWidth
               label="Correo Electrónico"
-              type="email"
               variant="outlined"
               margin="normal"
-              required
               value={correogrupo}
-              onChange={(e) => setCorreogrupo(e.target.value)}
+              onChange={(e) => {
+                setCorreogrupo(e.target.value);
+                setErrors((prev) => ({ ...prev, correogrupo: "" }));
+              }}
+              error={!!errors.correogrupo}
+              helperText={errors.correogrupo}
             />
-            <FormControl fullWidth margin="normal" required>
+            <FormControl
+              fullWidth
+              margin="normal"
+              error={!!errors.selectedService}
+            >
               <InputLabel>Servicio</InputLabel>
               <Select
                 label="Servicio"
                 value={selectedService}
-                onChange={(e) => setSelectedService(e.target.value)}
+                onChange={(e) => {
+                  setSelectedService(e.target.value);
+                  setErrors((prev) => ({ ...prev, selectedService: "" }));
+                }}
                 sx={{ height: 40 }}
               >
                 {servicesData.map((service) => (
@@ -157,24 +178,29 @@ export const AddGroupForm = () => {
                   </MenuItem>
                 ))}
               </Select>
+              {errors.selectedService && (
+                <FormHelperText>{errors.selectedService}</FormHelperText>
+              )}
             </FormControl>
 
             <Box
               sx={{
                 display: "flex",
-                justifyContent: "center", // centra horizontal
-                alignItems: "center", // centra vertical
-                height: "100%", // que tome todo el alto disponible
-                width: "100%", // todo el ancho disponible
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
               }}
             >
               <Box
                 onClick={() => document.getElementById("upload-input").click()}
                 sx={{
                   mt: 4,
-                  width: 280,
-                  height: 160,
-                  border: "2px dashed #30c622ff",
+                  width: { xs: "100%", sm: 300 }, // 📱 Responsive
+                  height: 200, // ⬆️ Más alto para mejor proporción
+                  maxWidth: 300,
+                  border: "2px dashed",
+                  borderColor: errors.imageFile ? "red" : "#30c622ff",
                   borderRadius: 2,
                   display: "flex",
                   alignItems: "center",
@@ -184,7 +210,7 @@ export const AddGroupForm = () => {
                   overflow: "hidden",
                   bgcolor: preview ? "transparent" : "background.default",
                   "&:hover": {
-                    borderColor: "#0e910eff",
+                    borderColor: errors.imageFile ? "red" : "#0e910eff",
                     bgcolor: "action.hover",
                   },
                 }}
@@ -201,11 +227,11 @@ export const AddGroupForm = () => {
                   />
                 ) : (
                   <Typography
-                    color="text.secondary"
+                    color={errors.imageFile ? "error.main" : "text.secondary"}
                     textAlign="center"
                     sx={{ px: 2 }}
                   >
-                    Haz clic aquí o arrastra y suelta para subir el logo
+                    Haz clic aquí para subir el logo
                   </Typography>
                 )}
                 <input
@@ -213,9 +239,18 @@ export const AddGroupForm = () => {
                   type="file"
                   accept="image/*"
                   style={{ display: "none" }}
-                  onChange={handleImageChange}
+                  onChange={(e) => {
+                    handleImageChange(e);
+                    setErrors((prev) => ({ ...prev, imageFile: "" }));
+                  }}
                 />
               </Box>
+
+              {errors.imageFile && (
+                <FormHelperText sx={{ color: "red", mt: 1 }}>
+                  {errors.imageFile}
+                </FormHelperText>
+              )}
             </Box>
 
             <MDButton
@@ -224,8 +259,7 @@ export const AddGroupForm = () => {
               color="success"
               sx={{
                 mt: 3,
-               
-              
+
                 "&:hover": {
                   backgroundColor: "#0e910eff", // mismo color o uno similar
                 },

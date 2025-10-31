@@ -112,7 +112,7 @@ export function UserProfilePage() {
                       Grupo
                     </MDTypography>
                     <MDTypography variant="h6">
-                      {userInfo.grupo ? `Grupo ${userInfo.grupo}` : "No asignado"}
+                      {userInfo.grupoNombre ? userInfo.grupoNombre : "No asignado"}
                     </MDTypography>
                   </div>
                 </Card>

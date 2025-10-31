@@ -54,6 +54,7 @@ import {
   setMiniSidenav,
   setOpenConfigurator,
 } from "./context/index";
+import NotFound from "./Pages/NotFound";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -70,70 +71,58 @@ export default function App() {
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const [rtlCache, setRtlCache] = useState(null);
   const { pathname } = useLocation();
+  const { role } = useAuth();
 
-  const hideSidebarRoutes = [
-    "/login",
-    
-    "/sendinvite",
-    "/verify-2fa",
+  const publicRoutes = [
     "/",
+    "/login",
     "/homepage",
     "/certificaciones",
-    "/registro",
-    "/registro/:inviteToken",
     "/servicios",
     "/nosotros",
     "/contactos",
-    "/ChangePassword",
-    "/addGroup",
-  ];
-  const matchRoute = (route, path) => {
-    // Convertir rutas con params ":param" a regex
-    const pattern = "^" + route.replace(/:\w+/g, "[^/]+") + "$";
-    const regex = new RegExp(pattern, "i");
-    return regex.test(path);
-  };
-
-  const hideSidebar = hideSidebarRoutes.some((route) => {
-    if (route.includes(":")) {
-      return matchRoute(route, pathname.toLowerCase());
-    }
-    return route.toLowerCase() === pathname.toLowerCase();
-  });
-
-  const specialRoutes = [
-    "/Login",
-    "registro",
+    "/registro",
     "/registro/:inviteToken",
     "/sendinvite",
     "/verify-2fa",
-    "/ChangePassword",
-    "/",
-    "/addGroup",
-    
+    "/changepassword",
+    "/addgroup",
   ];
-  const isSpecialRoute = specialRoutes.some((route) => {
-    if (route.includes(":")) {
-      return matchRoute(route, pathname.toLowerCase());
-    }
-    return pathname.toLowerCase().startsWith(route.toLowerCase());
-  });
 
-  const { role } = useAuth();
+  const matchRoute = (route, path) => {
+    const pattern = "^" + route.replace(/:\w+/g, "[^/]+") + "$";
+    return new RegExp(pattern, "i").test(path);
+  };
 
   const filteredRoutes = getRoutes(role);
 
-  // Cache for the rtl
-  useMemo(() => {
-    const cacheRtl = createCache({
-      key: "rtl",
-      stylisPlugins: [rtlPlugin],
+  const getAllRoutes = (routesList) => {
+    const paths = [];
+    routesList.forEach((route) => {
+      if (route.route) paths.push(route.route.toLowerCase());
+      if (route.collapse) paths.push(...getAllRoutes(route.collapse));
     });
+    return paths;
+  };
 
-    setRtlCache(cacheRtl);
+  const allValidRoutes = getAllRoutes(filteredRoutes);
+
+  const isPublicRoute = publicRoutes.some((route) => {
+    if (route.includes(":")) return matchRoute(route, pathname.toLowerCase());
+    return route.toLowerCase() === pathname.toLowerCase();
+  });
+
+  const isValidRoute = allValidRoutes.some((route) => {
+    if (route.includes(":")) return matchRoute(route, pathname.toLowerCase());
+    return pathname.toLowerCase() === route;
+  });
+
+  const hideSidebar = isPublicRoute || !isValidRoute;
+
+  useMemo(() => {
+    const cacheRtl = createCache({ key: "rtl", stylisPlugins: [rtlPlugin] });
   }, []);
 
-  // Open sidenav when mouse enter on mini sidenav
   const handleOnMouseEnter = () => {
     if (miniSidenav && !onMouseEnter) {
       setMiniSidenav(dispatch, false);
@@ -141,7 +130,6 @@ export default function App() {
     }
   };
 
-  // Close sidenav when mouse leave mini sidenav
   const handleOnMouseLeave = () => {
     if (onMouseEnter) {
       setMiniSidenav(dispatch, true);
@@ -149,16 +137,10 @@ export default function App() {
     }
   };
 
-  // Change the openConfigurator state
-  const handleConfiguratorOpen = () =>
-    setOpenConfigurator(dispatch, !openConfigurator);
-
-  // Setting the dir attribute for the body element
   useEffect(() => {
     document.body.setAttribute("dir", direction);
   }, [direction]);
 
-  // Setting page scroll to 0 when changing the route
   useEffect(() => {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
@@ -193,10 +175,12 @@ export default function App() {
           />
         </>
       )}
-      {layout === "vr" && <Configurator />}
       <Routes>
         {renderRoutes(filteredRoutes)}
-        <Route path="*" element={<Navigate to="/homepage" />} />
+        <Route
+          path="*"
+          element={isPublicRoute ? <Navigate to="/" replace /> : <NotFound />}
+        />
       </Routes>
     </ThemeProvider>
   );
