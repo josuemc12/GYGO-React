@@ -66,12 +66,13 @@ function Sidenav({ color = "info", brandName, routes, ...rest }) {
 
   const logoutSes = async () => {
     //Entre al logout
+    navigate("/HomePage")
 
-    const logout = await logoutSesion();
-    if (logout) {
-      navigate("/HomePage");
-      setTimeout(() => logoutRol(), 50);
-    }
+    // const logout = await logoutSesion();
+    // if (logout) {
+    //   navigate("/HomePage");
+    //   setTimeout(() => logoutRol(), 50);
+    // }
   };
 
   const collapseName = location.pathname.replace("/", "");
@@ -226,7 +227,9 @@ function Sidenav({ color = "info", brandName, routes, ...rest }) {
 
       {/* Botón de cerrar sesión al fondo */}
       {!miniSidenav && (
-        <MDBox mt="auto" p={2}>
+        <MDBox mt="auto" p={2} display="flex"
+            flexDirection = "column"
+            gap={1}>
           <MDButton
             fullWidth
             sx={{
@@ -240,8 +243,9 @@ function Sidenav({ color = "info", brandName, routes, ...rest }) {
               logoutSes();
             }}
           >
-            <Icon sx={{ mr: 1 }}>logout</Icon> Cerrar sesión
+            <Icon sx={{ mr: 1 }}>logout</Icon> Ir a la página principal
           </MDButton>
+          
         </MDBox>
       )}
     </SidenavRoot>
