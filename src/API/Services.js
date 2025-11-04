@@ -1,9 +1,7 @@
 import {appsettings} from '../settings/appsettings'
 
 export async function GetServices() {
-    const response = await fetch(`${appsettings.apiUrl}Services/GetServices`
-
-        , {
+    const response = await fetch(`${appsettings.apiUrl}Services/GetServices`, {
       method: 'GET',
       credentials: 'include', 
       headers: { Accept: 'application/json' }

@@ -2,11 +2,14 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import Logo from '../assets/Logo.png';
+import { logoutSesion, refreshLogin } from '../API/Auth';
+
 
 export const PublicHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
   const navigate = useNavigate()
 
   // Detectar tamaño de pantalla
@@ -14,7 +17,7 @@ export const PublicHeader = () => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768)
     }
-    
+
     checkMobile()
     window.addEventListener('resize', checkMobile)
     return () => window.removeEventListener('resize', checkMobile)
@@ -29,6 +32,20 @@ export const PublicHeader = () => {
 
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
+
+
+  // Detectar si el usuario tiene sesión (AuthToken)
+  useEffect(() => {
+    const checkSession = async () => {
+      const data = await refreshLogin()
+      if (data?.user) {
+        setIsLoggedIn(true)
+      } else {
+        setIsLoggedIn(false)
+      }
+    }
+    checkSession()
   }, [])
 
   const toggleMenu = () => {
@@ -50,6 +67,7 @@ export const PublicHeader = () => {
     closeMenu()
     navigate(route)
   }
+  const handlePanelClick = () => navigate("/dashboard")
 
   const handleLogoClick = () => {
     navigate("/HomePage")
@@ -57,6 +75,15 @@ export const PublicHeader = () => {
 
   const handleLoginClick = () => {
     navigate("/login")
+  }
+
+  const handleLogoutClick = async () => {
+    const success = await logoutSesion()
+    if (success) {
+      setIsLoggedIn(false)
+      localStorage.clear()
+      navigate("/HomePage")
+    }
   }
 
   return (
@@ -74,15 +101,15 @@ export const PublicHeader = () => {
         }
 
         .header-glass {
-          background: ${scrolled 
-            ? 'rgba(255, 255, 255, 0.95)' 
-            : 'rgba(255, 255, 255, 0.85)'};
+          background: ${scrolled
+          ? 'rgba(255, 255, 255, 0.95)'
+          : 'rgba(255, 255, 255, 0.85)'};
           backdrop-filter: blur(20px);
           border: 1px solid rgba(255, 255, 255, 0.2);
           border-radius: 16px;
-          box-shadow: ${scrolled 
-            ? '0 8px 32px rgba(0, 0, 0, 0.12)' 
-            : '0 4px 20px rgba(0, 0, 0, 0.08)'};
+          box-shadow: ${scrolled
+          ? '0 8px 32px rgba(0, 0, 0, 0.12)'
+          : '0 4px 20px rgba(0, 0, 0, 0.08)'};
           transition: all 0.3s ease-in-out;
         }
 
@@ -386,28 +413,82 @@ export const PublicHeader = () => {
                       </button>
                     </li>
                   ))}
-                  {/* Botón Log In en mobile dentro del menú */}
+                  {/* En móvil */}
                   {isMobile && (
-                    <li>
-                      <button 
-                        className="login-btn mobile-login-btn" 
-                        onClick={handleLoginClick}
-                      >
-                        Log In
-                      </button>
+                    <li className="nav-item">
+                      {isLoggedIn ? (
+                        <div className="dropdown">
+                          <button
+                            className="btn btn-success dropdown-toggle w-100"
+                            type="button"
+                            id="mobileDropdownMenu"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                          >
+                            Cuenta
+                          </button>
+                          <ul className="dropdown-menu w-100" aria-labelledby="mobileDropdownMenu">
+                            <li>
+                              <button className="dropdown-item" onClick={handlePanelClick}>
+                                Ir al panel
+                              </button>
+                            </li>
+                            <li>
+                              <button className="dropdown-item text-danger" onClick={handleLogoutClick}>
+                                Cerrar sesión
+                              </button>
+                            </li>
+                          </ul>
+                        </div>
+                      ) : (
+                        <button
+                          className="btn btn-outline-success w-100"
+                          onClick={handleLoginClick}
+                        >
+                          Iniciar Sesión
+                        </button>
+                      )}
                     </li>
                   )}
+
                 </ul>
               </nav>
 
               <div className="right-section">
-                {/* Botón Log In en desktop */}
+                {/* En desktop */}
                 {!isMobile && (
-                  <button className="login-btn" onClick={handleLoginClick}>
-                    Iniciar Sesión
-                  </button>
+                  isLoggedIn ? (
+                    <div className="dropdown">
+                      <button
+                        className="btn btn-success dropdown-toggle"
+                        type="button"
+                        id="desktopDropdownMenu"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        Cuenta
+                      </button>
+                      <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="desktopDropdownMenu">
+                        <li>
+                          <button className="dropdown-item" onClick={handlePanelClick}>
+                            Ir al panel
+                          </button>
+                        </li>
+                        <li>
+                          <button className="dropdown-item text-danger" onClick={handleLogoutClick}>
+                            Cerrar sesión
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  ) : (
+                    <button className="btn btn-success" onClick={handleLoginClick}>
+                      Iniciar Sesión
+                    </button>
+                  )
                 )}
-                
+
+
                 <button className="menu-toggle" onClick={toggleMenu} aria-label="Toggle menu" aria-expanded={isMenuOpen}>
                   <span className={`hamburger ${isMenuOpen ? "active" : ""}`}>
                     <span></span>

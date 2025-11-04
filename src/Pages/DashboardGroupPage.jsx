@@ -31,9 +31,10 @@ export const DashboardGroupPage = () => {
         method: "GET",
         credentials: "same-origin",
       });
-
+      console.log(response);
       if (response.ok) {
         const data = await response.json();
+        console.log("Datos de usuario obtenidos:", data);
         setUsername(data.username);
       }
     };

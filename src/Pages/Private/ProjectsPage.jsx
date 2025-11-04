@@ -6,6 +6,7 @@ import {
   RemoveRedEyeOutlined,
   EditOutlined,
   DeleteOutlineOutlined,
+  AddOutlined,
 } from "@mui/icons-material";
 import { CreatePDF } from "../../utils/CreatePDF";
 import { jsPDF } from "jspdf";
@@ -138,14 +139,20 @@ function ProjectPage() {
   const grupo = 1;
   const fetchProjects = async () => {
     try {
+      dayjs.extend(customParseFormat);
       let data = [];
       if (startDate && endDate) {
         const formattedStart = encodeURIComponent(
-          dayjs(startDate).format("MM/DD/YYYY")
-        );
-        const formattedEnd = encodeURIComponent(
-          dayjs(endDate).format("MM/DD/YYYY")
-        );
+  dayjs(startDate, "DD-MM-YYYY").format("MM/DD/YYYY")
+);
+
+const formattedEnd = encodeURIComponent(
+  dayjs(endDate, "DD-MM-YYYY").format("MM/DD/YYYY")
+);
+
+        console.log(formattedStart);
+        console.log(formattedEnd);
+
         data = await getProjectsByDates(formattedStart, formattedEnd);
         setData(data);
       } else if (filter === "todos") {
@@ -208,7 +215,7 @@ function ProjectPage() {
     }));
   };
 
-  //#region Projectos
+  //#region Proyectos
 
   // Abrir modal y cargar detalles
   const ModalSaveProject = async () => {
@@ -290,7 +297,7 @@ function ProjectPage() {
           fetchProjects();
         }
       } else {
-        console.log("AQUI");
+        
         result = await AddProject(projectData);
         console.log(result);
         if (result.success) {
@@ -666,7 +673,7 @@ function ProjectPage() {
         justifyContent="center"
         alignItems="center"
       >
-        <Tooltip title="Ver detalles">
+        <Tooltip title="Ver tareas">
           <IconButton
             size="small"
             onClick={() => DetallesTareas(project.proyectoId)}
@@ -730,6 +737,7 @@ function ProjectPage() {
                 <Grid item>
                   <MDButton
                     variant="outlined"
+                    startIcon={<AddOutlined />}
                     sx={{
                       borderColor: "#4CAF50",
                       color: "#4CAF50",
@@ -741,7 +749,7 @@ function ProjectPage() {
                     }}
                     onClick={ModalSaveProject}
                   >
-                    Nuevo Proyecto
+                    Agregar Proyecto
                   </MDButton>
                 </Grid>
               </Grid>
@@ -782,16 +790,16 @@ function ProjectPage() {
                         <DatePicker
                           label="Fecha Inicio"
                           value={
-                            startDate ? dayjs(startDate, "DD-MM-YYYY") : null
+                            startDate ? dayjs(startDate, "DD/MM/YYYY") : null
                           }
                           onChange={(newValue) => {
                             if (newValue) {
-                              setStartDate(newValue.format("DD-MM-YYYY"));
+                              setStartDate(newValue.format("DD/MM/YYYY"));
                             } else {
                               setStartDate(null);
                             }
                           }}
-                          inputFormat="DD-MM-YYYY"
+                          inputFormat="DD/MM/YYYY"
                           slotProps={{
                             textField: {
                               size: "small",
@@ -1106,7 +1114,7 @@ function ProjectPage() {
             Cancelar
           </MDButton>
           <MDButton variant="gradient" color="success" onClick={HandleProjects}>
-            {modoEdicion ? "Editar" : "Agregar"}
+            {modoEdicion ? "Guardar Cambios" : "Agregar"}
           </MDButton>
         </DialogActions>
       </Dialog>
@@ -1293,6 +1301,7 @@ function ProjectPage() {
                         <Box
                           sx={{ display: "flex", alignItems: "center", gap: 1 }}
                         >
+                           <Tooltip title="Cambiar estado" arrow>
                           <Switch
                             checked={!!taskStatus[task.taskId]}
                             onChange={UpdateStatusTasks(task.taskId)}
@@ -1319,7 +1328,8 @@ function ProjectPage() {
                               },
                             }}
                           />
-
+                          </Tooltip>
+                          <Tooltip title="Editar tarea" arrow>
                           <IconButton
                             color="info"
                             edge="end"
@@ -1328,6 +1338,8 @@ function ProjectPage() {
                           >
                             <EditOutlined />
                           </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Eliminar tarea" arrow>
                           <IconButton
                             color="error"
                             edge="end"
@@ -1339,6 +1351,7 @@ function ProjectPage() {
                           >
                             <DeleteOutlineOutlined />
                           </IconButton>
+                          </Tooltip>
                         </Box>
                       }
                     >
@@ -1346,7 +1359,7 @@ function ProjectPage() {
                         primary={
                           task.titulo +
                           " - " +
-                          (task.emisionesCO2e === 0
+                          (task.emisionesCO2e === 0 || task.emisionesCO2e === null
                             ? "N/A"
                             : task.emisionesCO2e)
                         }
@@ -1364,7 +1377,7 @@ function ProjectPage() {
                             <Box sx={{ display: "flex", gap: 2, mt: 0.5 }}>
                               <Typography variant="body2">
                                 <strong>Valor actividad:</strong>{" "}
-                                {task.valorActividad === 0
+                                {task.valorActividad === 0 || task.valorActividad === null
                                   ? "N/A"
                                   : task.valorActividad}
                               </Typography>
@@ -1400,7 +1413,7 @@ function ProjectPage() {
                 }
               }}
             >
-              Guardar
+              Agregar Actividad
             </MDButton>
           )}
         </DialogActions>

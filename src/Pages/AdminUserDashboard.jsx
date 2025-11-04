@@ -7,7 +7,7 @@ import {
   removeUserFromGroup,
   fetchGroupId,
 } from "../API/Admin";
-import { getDeleteUsers, getCountUserDelete } from "../API/DeleteLogs";
+import { getDeleteUsers, EmailDeleteUsers, getCountUserDelete } from "../API/DeleteLogs";
 import "../App.css";
 import "../styles/AdminDashboard.css";
 import { useNavigate } from "react-router-dom";
@@ -61,10 +61,14 @@ const AdminUserDashboard = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [showHistory, setShowHistory] = useState(false);
   const [historyRows, setHistoryRows] = useState([]);
+  const [deleteCount, setDeleteCount] = useState(0);
+
+
   //var GROUP_ID = fetchGroupId();
 
   useEffect(() => {
     fetchUsersEmail();
+    fetchCountUserDelete();
   }, []); // Solo se ejecuta una vez al montar
 
   useEffect(() => {
@@ -75,11 +79,15 @@ const AdminUserDashboard = () => {
     }
   }, [showHistory]);
 
+
+
+
   const fetchUsers = async () => {
     try {
       setLoading(true);
       setError("");
       const userData = await getGroupUsers();
+     
       setUsers(userData);
     } catch (err) {
       setError("Failed to load users. Please try again.");
@@ -89,9 +97,11 @@ const AdminUserDashboard = () => {
     }
   };
 
+
+  //#region DeleteLogs
   const fetchUsersEmail = async () => {
     try {
-      const userData = await getCountUserDelete();
+      const userData = await EmailDeleteUsers();
     } catch (err) {
       setError("Failed to load users. Please try again.");
       console.error("Error fetching users:", err);
@@ -99,6 +109,36 @@ const AdminUserDashboard = () => {
       setLoading(false);
     }
   };
+
+
+  const fetchCountUserDelete = async () => {
+    try {
+     const count = await getCountUserDelete();
+     setDeleteCount(count); 
+    } catch (err) {
+      setError("Failed to load users. Please try again.");
+      console.error("Error fetching users:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchDeleteLogs = async () => {
+    try {
+      const logs = await getDeleteUsers(); 
+      setDeleteCount(logs.length);
+      const rows = logs.map((log) => ({
+        userName: log.userName,
+        email: log.email,
+        deletedAt: new Date(log.deletedAt).toLocaleDateString(),
+        deletedByAdminName: log.deletedByAdminName || "N/A",
+      }));
+      setHistoryRows(rows);
+    } catch (error) {
+      console.error("Error loading delete history", error);
+    }
+  };
+  //#endregion
 
   const handleInviteUser = async (email) => {
     try {
@@ -180,7 +220,7 @@ const AdminUserDashboard = () => {
     ),
     role: (
       <MDTypography variant="caption" color="text">
-        {"Member"}
+        {"Miembro"}
       </MDTypography>
     ),
 
@@ -211,20 +251,6 @@ const AdminUserDashboard = () => {
     { Header: "Administrador", accessor: "deletedByAdminName", align: "left" },
   ];
 
-  const fetchDeleteLogs = async () => {
-    try {
-      const logs = await getDeleteUsers(); // tu API aquí
-      const rows = logs.map((log) => ({
-        userName: log.userName,
-        email: log.email,
-        deletedAt: new Date(log.deletedAt).toLocaleDateString(),
-        deletedByAdminName: log.deletedByAdminName || "N/A",
-      }));
-      setHistoryRows(rows);
-    } catch (error) {
-      console.error("Error loading delete history", error);
-    }
-  };
 
   return (
     <DashboardLayout>
@@ -308,7 +334,7 @@ const AdminUserDashboard = () => {
                   }}
                   onClick={() => setShowHistory(!showHistory)}
                 >
-                  {showHistory ? "Usuarios" : "Historial"}
+                  {showHistory ? "Usuarios" : "Historial de Eliminaciones"}
                 </MDButton>
 
                 <MDButton
@@ -332,24 +358,16 @@ const AdminUserDashboard = () => {
               </Grid>
             </Grid>
             {/* Stats Cards */}
-            <div className="stats-grid" style={{ marginTop: "3rem" }}>
-              <div className="stat-card">
-                <div className="stat-value">{users.length}</div>
-                <div className="stat-label">Usuarios Totales</div>
-              </div>
-              <div className="stat-card">
-                <div className="stat-value">
-                  {users.filter((user) => user.status === "active").length}
-                </div>
-                <div className="stat-label">Usuarios Activos</div>
-              </div>
-              <div className="stat-card">
-                <div className="stat-value">
-                  {users.filter((user) => user.status === "pending").length}
-                </div>
-                <div className="stat-label">Invitaciones Pendientes</div>
-              </div>
-            </div>
+          <div className="stats-grid" style={{ marginTop: "3rem" }}>
+  <div className="stat-card">
+    <div className="stat-value">{users.length}</div>
+    <div className="stat-label">Usuarios Activos</div>
+  </div>
+  <div className="stat-card">
+    <div className="stat-value">{deleteCount}</div>
+    <div className="stat-label">Usuarios Eliminados</div>
+  </div>
+</div>
           </MDBox>
 
           <MDBox pt={6} pb={3}>
@@ -371,15 +389,7 @@ const AdminUserDashboard = () => {
                     </MDTypography>
                   </MDBox>
                   <MDBox
-                    pt={3}
-                    sx={{
-                      p: 4,
-                      textAlign: "center",
-                      minHeight: "100px",
-                      width: "1200px",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
+                    pt={3} px={3} pb={3}
                   >
                     {showHistory ? (
                       // 🔁 AQUI VA LA TABLA DE HISTORIAL

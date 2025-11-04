@@ -31,11 +31,11 @@ const InviteModal = ({ isOpen, onClose, onInvite, loading }) => {
     // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!email.trim()) {
-      setError("Email is required")
+      setError("El correo electronico es obligatorio.")
       return
     }
     if (!emailRegex.test(email)) {
-      setError("Please enter a valid email address")
+      setError("Por favor ingresa una dirección de correo electrónico válida.")
       return
     }
 

@@ -6,7 +6,11 @@ import Footer from "examples/Footer";
 import DataTable from "examples/Tables/DataTable";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import EmissionFactorModal from "../../components/EmisionFactorForm";
-
+import {
+  AddOutlined,
+  EditOutlined,
+  DeleteOutlineOutlined,
+} from "@mui/icons-material";
 import {
   getMeasurementUnits,
   getSectors,
@@ -283,7 +287,7 @@ const EmissionFactorDashboard = () => {
             color="info"
             onClick={() => handleEdit(factor)}
           >
-            <EditIcon fontSize="small" />
+            <EditOutlined fontSize="small" />
           </IconButton>
         </Tooltip>
         <Tooltip title="Eliminar">
@@ -292,7 +296,7 @@ const EmissionFactorDashboard = () => {
             color="error"
             onClick={() => handleDelete(factor)}
           >
-            <DeleteIcon fontSize="small" />
+            <DeleteOutlineOutlined fontSize="small" />
           </IconButton>
         </Tooltip>
       </Stack>
@@ -332,6 +336,7 @@ const EmissionFactorDashboard = () => {
               <Grid>
                 <MDButton
                   variant="outlined"
+                   startIcon={<AddOutlined />}
                   sx={{
                     borderColor: "#4CAF50",
                     color: "#4CAF50",
@@ -343,7 +348,7 @@ const EmissionFactorDashboard = () => {
                   }}
                   onClick={handleCreate}
                 >
-                  Crear Nuevo
+                  Agregar Factor Emisión
                 </MDButton>
               </Grid>
             </Grid>

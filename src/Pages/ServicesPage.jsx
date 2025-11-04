@@ -8,7 +8,7 @@ import MDTypography from "../components/MDTypography";
 import DataTable from "../examples/Tables/DataTable";
 import { GetServices } from "../API/Reports";
 import { useAuth } from "../context/AuthContext";
-import CancelIcon from "@mui/icons-material/Cancel";
+import BlockOutlined from "@mui/icons-material/DisabledByDefaultOutlined";
 import SuperAdminCancelModal from "../components/SuperAdminCancelModal";
 import { cancelAdminSubscription } from "../API/Subscription";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
@@ -72,7 +72,7 @@ export default function ServicesPage() {
               }}
               size="small"
             >
-              <CancelIcon fontSize="medium" />
+              <BlockOutlined fontSize="medium" />
             </IconButton>
           </Tooltip>
         ),
