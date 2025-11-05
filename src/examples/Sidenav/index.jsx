@@ -62,8 +62,14 @@ function Sidenav({ color = "info", brandName, routes, ...rest }) {
     sidenavColor,
   } = controller;
   const location = useLocation();
+  const { role, loading } = useAuth();
   const { logoutRol } = useAuth();
 
+    if (loading || !role) {
+    return null; // No renderiza el sidebar
+  }
+
+  
   const logoutSes = async () => {
     //Entre al logout
     navigate("/HomePage")

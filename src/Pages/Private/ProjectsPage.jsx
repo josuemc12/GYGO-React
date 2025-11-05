@@ -143,12 +143,12 @@ function ProjectPage() {
       let data = [];
       if (startDate && endDate) {
         const formattedStart = encodeURIComponent(
-  dayjs(startDate, "DD-MM-YYYY").format("MM/DD/YYYY")
-);
+          dayjs(startDate, "DD-MM-YYYY").format("MM/DD/YYYY")
+        );
 
-const formattedEnd = encodeURIComponent(
-  dayjs(endDate, "DD-MM-YYYY").format("MM/DD/YYYY")
-);
+        const formattedEnd = encodeURIComponent(
+          dayjs(endDate, "DD-MM-YYYY").format("MM/DD/YYYY")
+        );
 
         console.log(formattedStart);
         console.log(formattedEnd);
@@ -186,8 +186,6 @@ const formattedEnd = encodeURIComponent(
     setData(0);
   };
 
-
-
   const CreatePDFAPI = async () => {
     try {
       const formattedStart = encodeURIComponent(
@@ -196,7 +194,8 @@ const formattedEnd = encodeURIComponent(
       const formattedEnd = encodeURIComponent(
         dayjs(endDate).format("MM-DD-YYYY")
       );
-
+      console.log(formattedStart);
+      console.log(formattedEnd);
       const projectsPDF = await getProjectsPDF(formattedStart, formattedEnd);
 
       CreatePDF(projectsPDF);
@@ -297,7 +296,6 @@ const formattedEnd = encodeURIComponent(
           fetchProjects();
         }
       } else {
-        
         result = await AddProject(projectData);
         console.log(result);
         if (result.success) {
@@ -612,8 +610,7 @@ const formattedEnd = encodeURIComponent(
     setEnableEmissionFields(hasOptionalValues);
   };
 
-
-    const UpdateStatusTasks = (taskId) => (event) => {
+  const UpdateStatusTasks = (taskId) => (event) => {
     const newStatus = event.target.checked;
     setTaskStatus((prev) => ({
       ...prev,
@@ -789,17 +786,16 @@ const formattedEnd = encodeURIComponent(
                       >
                         <DatePicker
                           label="Fecha Inicio"
-                          value={
-                            startDate ? dayjs(startDate, "DD/MM/YYYY") : null
-                          }
-                          onChange={(newValue) => {
-                            if (newValue) {
-                              setStartDate(newValue.format("DD/MM/YYYY"));
-                            } else {
-                              setStartDate(null);
-                            }
-                          }}
-                          inputFormat="DD/MM/YYYY"
+                          
+                           value={
+                  startDate
+                    ? dayjs(startDate, "DD-MM-YYYY")
+                    : null
+                }
+
+
+                          onChange={(newValue) => setStartDate(newValue)}
+                          inputFormat="DD-MM-YYYY"
                           slotProps={{
                             textField: {
                               size: "small",
@@ -1301,56 +1297,56 @@ const formattedEnd = encodeURIComponent(
                         <Box
                           sx={{ display: "flex", alignItems: "center", gap: 1 }}
                         >
-                           <Tooltip title="Cambiar estado" arrow>
-                          <Switch
-                            checked={!!taskStatus[task.taskId]}
-                            onChange={UpdateStatusTasks(task.taskId)}
-                            slotProps={{
-                              input: {
-                                "aria-label": "cambiar estado tarea",
-                              },
-                            }}
-                            sx={{
-                              "& .MuiSwitch-thumb": {
-                                backgroundColor: taskStatus[task.taskId]
-                                  ? "#2DA14C"
-                                  : "#D32F2F",
-                              },
-                              "& .Mui-checked": {
-                                color: taskStatus[task.taskId]
-                                  ? "#2DA14C"
-                                  : "#D32F2F",
-                              },
-                              "& .MuiSwitch-track": {
-                                backgroundColor: taskStatus[task.taskId]
-                                  ? "#77d27dff"
-                                  : "#FFCDD2",
-                              },
-                            }}
-                          />
+                          <Tooltip title="Cambiar estado" arrow>
+                            <Switch
+                              checked={!!taskStatus[task.taskId]}
+                              onChange={UpdateStatusTasks(task.taskId)}
+                              slotProps={{
+                                input: {
+                                  "aria-label": "cambiar estado tarea",
+                                },
+                              }}
+                              sx={{
+                                "& .MuiSwitch-thumb": {
+                                  backgroundColor: taskStatus[task.taskId]
+                                    ? "#2DA14C"
+                                    : "#D32F2F",
+                                },
+                                "& .Mui-checked": {
+                                  color: taskStatus[task.taskId]
+                                    ? "#2DA14C"
+                                    : "#D32F2F",
+                                },
+                                "& .MuiSwitch-track": {
+                                  backgroundColor: taskStatus[task.taskId]
+                                    ? "#77d27dff"
+                                    : "#FFCDD2",
+                                },
+                              }}
+                            />
                           </Tooltip>
                           <Tooltip title="Editar tarea" arrow>
-                          <IconButton
-                            color="info"
-                            edge="end"
-                            aria-label="editar"
-                            onClick={() => handleEditTask(task)}
-                          >
-                            <EditOutlined />
-                          </IconButton>
+                            <IconButton
+                              color="info"
+                              edge="end"
+                              aria-label="editar"
+                              onClick={() => handleEditTask(task)}
+                            >
+                              <EditOutlined />
+                            </IconButton>
                           </Tooltip>
                           <Tooltip title="Eliminar tarea" arrow>
-                          <IconButton
-                            color="error"
-                            edge="end"
-                            aria-label="editar"
-                            sx={{ mr: 2 }}
-                            onClick={() => {
-                              DeleteTask(task.taskId);
-                            }}
-                          >
-                            <DeleteOutlineOutlined />
-                          </IconButton>
+                            <IconButton
+                              color="error"
+                              edge="end"
+                              aria-label="editar"
+                              sx={{ mr: 2 }}
+                              onClick={() => {
+                                DeleteTask(task.taskId);
+                              }}
+                            >
+                              <DeleteOutlineOutlined />
+                            </IconButton>
                           </Tooltip>
                         </Box>
                       }
@@ -1359,7 +1355,8 @@ const formattedEnd = encodeURIComponent(
                         primary={
                           task.titulo +
                           " - " +
-                          (task.emisionesCO2e === 0 || task.emisionesCO2e === null
+                          (task.emisionesCO2e === 0 ||
+                          task.emisionesCO2e === null
                             ? "N/A"
                             : task.emisionesCO2e)
                         }
@@ -1377,7 +1374,8 @@ const formattedEnd = encodeURIComponent(
                             <Box sx={{ display: "flex", gap: 2, mt: 0.5 }}>
                               <Typography variant="body2">
                                 <strong>Valor actividad:</strong>{" "}
-                                {task.valorActividad === 0 || task.valorActividad === null
+                                {task.valorActividad === 0 ||
+                                task.valorActividad === null
                                   ? "N/A"
                                   : task.valorActividad}
                               </Typography>
