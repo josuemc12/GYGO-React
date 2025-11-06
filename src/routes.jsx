@@ -4,6 +4,8 @@ import { Navigate } from "react-router-dom";
 ///Iconos
 import Icon from "@mui/material/Icon";
 import { EnergySavingsLeaf } from "@mui/icons-material";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+
 
 //Ruta del login
 import Login from "./Pages/Public/Login";
@@ -98,7 +100,7 @@ export const routes = [
     type: "collapse",
     name: "Manejo de usuarios",
     key: "ManagmentUsers",
-    icon: <Icon fontSize="small">dashboard</Icon>,
+    icon: <ManageAccountsIcon fontSize="small" />,
     route: "/ManagmentUsers",
 
     component: (
@@ -595,7 +597,7 @@ export const routes = [
         route: "/ReportServices",
 
         component: (
-          <ProtectedElement roles={["GA", "DEV"]}>
+          <ProtectedElement roles={["SA", "DEV"]}>
             <ReportServices />
           </ProtectedElement>
         ),

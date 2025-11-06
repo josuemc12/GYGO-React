@@ -68,7 +68,10 @@ export function UnitsIndexPage() {
 
   const handleSave = async () => {
     if (!unitData.nombre.trim() || !unitData.diminutivo.trim()) {
-      setErrors({ nombre: "Requerido", diminutivo: "Requerido" });
+      setErrors({
+        nombre: !unitData.nombre.trim() ? "Requerido" : "",
+        diminutivo: !unitData.diminutivo.trim() ? "Requerido" : "",
+      });
       return;
     }
     try {
@@ -120,7 +123,7 @@ export function UnitsIndexPage() {
         <Tooltip title="Editar Unidad">
           <IconButton
             size="small"
-            color="success"
+            sx={{ color: "#1976D2" }}
             onClick={() => handleEditClick(unit)}
           >
             <EditOutlined fontSize="small" />
@@ -210,10 +213,10 @@ export function UnitsIndexPage() {
                 sx={{
                   p: 4,
                   textAlign: "center",
-                  minHeight: "100px",
-                  width: "1200px",
+                  width: "100%",
                   alignItems: "center",
                   justifyContent: "center",
+
                 }}
               >
                 <DataTable
@@ -259,9 +262,10 @@ export function UnitsIndexPage() {
               fullWidth
               label="Nombre"
               value={unitData.nombre}
-              onChange={(e) =>
-                setUnitData({ ...unitData, nombre: e.target.value })
-              }
+              onChange={(e) => {
+                setUnitData({ ...unitData, nombre: e.target.value });
+                setErrors((prev) => ({ ...prev, nombre: "" }));
+              }}
               error={!!errors.nombre}
               helperText={errors.nombre}
               sx={{ mb: 2 }}
@@ -270,9 +274,10 @@ export function UnitsIndexPage() {
               fullWidth
               label="Diminutivo"
               value={unitData.diminutivo}
-              onChange={(e) =>
-                setUnitData({ ...unitData, diminutivo: e.target.value })
-              }
+              onChange={(e) => {
+                setUnitData({ ...unitData, diminutivo: e.target.value });
+                setErrors((prev) => ({ ...prev, diminutivo: "" }));
+              }}
               error={!!errors.diminutivo}
               helperText={errors.diminutivo}
               sx={{ mb: 2 }}

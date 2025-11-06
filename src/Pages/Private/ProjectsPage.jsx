@@ -297,7 +297,7 @@ function ProjectPage() {
         }
       } else {
         result = await AddProject(projectData);
-       
+
         if (result.success) {
           setOpenModalProjects(false);
           Swal.fire({
@@ -786,14 +786,9 @@ function ProjectPage() {
                       >
                         <DatePicker
                           label="Fecha Inicio"
-                          
-                           value={
-                  startDate
-                    ? dayjs(startDate, "DD-MM-YYYY")
-                    : null
-                }
-
-
+                          value={
+                            startDate ? dayjs(startDate, "DD-MM-YYYY") : null
+                          }
                           onChange={(newValue) => setStartDate(newValue)}
                           inputFormat="DD-MM-YYYY"
                           slotProps={{
@@ -932,7 +927,16 @@ function ProjectPage() {
                     <Grid container spacing={5}>
                       <Grid size={{ xs: 12 }}>
                         <Card>
-                          <MDBox pt={3}>
+                          <MDBox
+                            pt={3}
+                            sx={{
+                              p: 3,
+                              textAlign: "center",
+                              width: "100%",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
                             <DataTable
                               table={{ columns, rows }}
                               isSorted={false}

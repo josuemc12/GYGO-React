@@ -389,7 +389,14 @@ const AdminUserDashboard = () => {
                     </MDTypography>
                   </MDBox>
                   <MDBox
-                    pt={3} px={3} pb={3}
+                   pt={3}
+                      sx={{
+                        p: 4,
+                        textAlign: "center",
+                        width: "100%",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
                   >
                     {showHistory ? (
                       // 🔁 AQUI VA LA TABLA DE HISTORIAL

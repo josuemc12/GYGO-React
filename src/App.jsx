@@ -46,6 +46,7 @@ export default function App() {
 
   const publicRoutes = [
     "/",
+    "*",
     "/login",
     "/homepage",
     "/certificaciones",
@@ -144,7 +145,8 @@ export default function App() {
       return [];
     });
 
-  const hideSidebar = isPublicRoute;
+  const hideSidebar = isPublicRoute || !isValidSystemRoute;
+
 
   // Si está redirigiendo, mostrar loading
   if (isRedirecting) {

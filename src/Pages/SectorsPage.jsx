@@ -115,7 +115,7 @@ export default function SectorsIndexPage() {
         <Tooltip title="Editar sector">
           <IconButton
             size="small"
-            color="success"
+            sx={{ color: "#1976D2" }}
             onClick={() => handleEditClick(sector)}
           >
             <EditOutlined fontSize="small" />
@@ -208,8 +208,7 @@ export default function SectorsIndexPage() {
                 sx={{
                   p: 4,
                   textAlign: "center",
-                  minHeight: "100px",
-                  width: "1200px",
+                  width: "100%",
                   alignItems: "center",
                   justifyContent: "center",
                 }}
@@ -256,7 +255,10 @@ export default function SectorsIndexPage() {
               fullWidth
               label="Nombre del Sector"
               value={sectorName}
-              onChange={(e) => setSectorName(e.target.value)}
+              onChange={(e) => {
+                setSectorName(e.target.value);
+                setErrors((prev) => ({ ...prev, name: "" }));
+              }}
               error={!!errors.name}
               helperText={errors.name}
               sx={{ mb: 2 }}

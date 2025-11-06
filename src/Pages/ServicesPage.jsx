@@ -153,7 +153,7 @@ export default function ServicesPage() {
 
           <MDBox pt={6} pb={3}>
             <Grid container spacing={6}>
-              <Grid size={{xs:12}}>
+              <Grid size={{ xs: 12 }}>
                 <Card>
                   <MDBox
                     mx={2}
@@ -173,12 +173,11 @@ export default function ServicesPage() {
                     <MDBox
                       pt={3}
                       sx={{
+                        p: 4,
+                        textAlign: "center",
                         width: "100%",
-                        overflowX: "auto",
-                        "& table": {
-                          width: "100%",
-                          tableLayout: "fixed",
-                        },
+                        alignItems: "center",
+                        justifyContent: "center",
                       }}
                     >
                       <DataTable

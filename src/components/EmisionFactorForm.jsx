@@ -107,6 +107,9 @@ const EmissionFactorModal = ({
           : Number(value) // Manejo de campo vacío
         : value,
     }));
+
+    setErrors((prev) => ({ ...prev, [name]: "" }));
+
   };
 
   const handleSubmit = async (e) => {

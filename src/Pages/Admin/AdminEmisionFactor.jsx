@@ -108,7 +108,6 @@ const EmissionFactorDashboard = () => {
         setSectors(sectors);
         setSources(sources);
         setPcgs(pcgs);
-        
       } catch (err) {
         console.error(err);
         setError("Failed to load reference data");
@@ -328,7 +327,8 @@ const EmissionFactorDashboard = () => {
                 </MDBox>
                 <MDBox display="flex" alignItems="center" gap={1}>
                   <MDTypography variant="body2" color="text">
-                    Gestiona los factores de emisión registrados dentro de la organización
+                    Gestiona los factores de emisión registrados dentro de la
+                    organización
                   </MDTypography>
                 </MDBox>
               </Grid>
@@ -336,7 +336,7 @@ const EmissionFactorDashboard = () => {
               <Grid>
                 <MDButton
                   variant="outlined"
-                   startIcon={<AddOutlined />}
+                  startIcon={<AddOutlined />}
                   sx={{
                     borderColor: "#4CAF50",
                     color: "#4CAF50",
@@ -370,7 +370,7 @@ const EmissionFactorDashboard = () => {
 
           <MDBox pt={6} pb={3}>
             <Grid container spacing={6}>
-              <Grid size={{xs: 12}}>
+              <Grid size={{ xs: 12 }}>
                 <Card>
                   <MDBox
                     mx={2}
@@ -386,37 +386,23 @@ const EmissionFactorDashboard = () => {
                       Factores de Emisión
                     </MDTypography>
                   </MDBox>
-                  <MDBox pt={3}>
-                    {filteredFactors.length === 0 ? (
-                      <Card
-                        sx={{
-                          p: 4,
-                          textAlign: "center",
-                          minHeight: "100px",
-                          width: "1200px",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <MDTypography
-                          variant="h6"
-                          color="text"
-                          fontWeight="regular"
-                        >
-                          {searchTerm
-                            ? "No se encontraron factores de emisión que coincidan con la búsqueda."
-                            : "No hay factores de emisión registrados aún."}
-                        </MDTypography>
-                      </Card>
-                    ) : (
-                      <DataTable
-                        table={{ columns, rows }}
-                        isSorted={false}
-                        entriesPerPage={false}
-                        showTotalEntries={true}
-                        noEndBorder
-                      />
-                    )}
+                  <MDBox
+                    pt={3}
+                    sx={{
+                      p: 4,
+                      textAlign: "center",
+                      width: "100%",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <DataTable
+                      table={{ columns, rows }}
+                      isSorted={false}
+                      entriesPerPage={false}
+                      showTotalEntries={true}
+                      noEndBorder
+                    />
                   </MDBox>
                 </Card>
               </Grid>
