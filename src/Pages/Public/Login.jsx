@@ -24,6 +24,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  CircularProgress,
 } from "@mui/material";
 import { Visibility, VisibilityOff, ArrowBack } from "@mui/icons-material";
 import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
@@ -60,6 +61,7 @@ export default function Login() {
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [open, setOpen] = useState(false);
   const [emailReset, setEmailReset] = useState("");
@@ -68,8 +70,10 @@ export default function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
     if (!email || !password) {
+      setIsLoading(false);
       Swal.fire({
         icon: "warning",
         title: "No se pudo iniciar sesión",
@@ -87,7 +91,7 @@ export default function Login() {
         Swal.fire({
           icon: "error",
           title: "Error al iniciar sesión",
-          text: "Usuario o contraseña incorrectos",
+          text: error,
           confirmButtonColor: "#d33",
         });
 
@@ -109,6 +113,8 @@ export default function Login() {
         text: "No se pudo conectar con el servidor, intentá nuevamente más tarde.",
         confirmButtonColor: "#d33",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -330,9 +336,14 @@ export default function Login() {
                   variant="contained"
                   color="primary"
                   size="large"
+                  disabled={isLoading}
                   sx={{ mt: 3, mb: 2, py: 1.5, borderRadius: 2 }}
                 >
-                  Iniciar sesión
+                  {isLoading ? (
+                    <CircularProgress size={24} color="inherit" />
+                  ) : (
+                    "Iniciar sesión"
+                  )}
                 </Button>
 
                 <Button
