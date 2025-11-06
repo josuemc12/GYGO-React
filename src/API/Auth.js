@@ -192,3 +192,25 @@ export async function refreshLogin() {
         return null;
     }
 }
+
+export async function checkUserSession() {
+    try {
+        const response = await fetch(`${appsettings.apiUrl}auth/is-user-logged-in`, {
+            method: "GET",
+            credentials: "include",
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            // console.error("Failed to validate session:", data);
+            return null;
+        }
+
+        return data;
+    } catch (error) {
+        // console.error("Error llamando al isLoggedIn", error);
+        return null;
+    }
+}
+
