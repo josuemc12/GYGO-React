@@ -42,14 +42,13 @@ export  async function loginUser(email, password) {
 
     const data = await response.json();
 
-    
-    
-
-    if (!response.ok) {
-      console.error("Detalles del error:", errorData, "Código:", response.status);
-      return { success: false, error: data.error };
+     if(!data.isSuccess) {
+      if(response.status === 401){
+          return { success: false, error: data.errors};
+        }     
     }
 
+   
     if (data.message === "2FA required") {
       return {
         success: true,
@@ -62,7 +61,10 @@ export  async function loginUser(email, password) {
 
     return { success: true, isTwoFactor: false,rol: data.rol,id:data.id};
   } catch (err) {
-    return { success: false, error: 'Login request failed.' };
+
+     console.error("Detalles del error:", errorData, "Código:", response.status);
+        return { success: false, error: 'Error del servidor. Por favor, inténtelo de nuevo más tarde.' };
+     
   }
 }
 
