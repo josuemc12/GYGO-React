@@ -297,7 +297,7 @@ function ProjectPage() {
         }
       } else {
         result = await AddProject(projectData);
-        console.log(result);
+       
         if (result.success) {
           setOpenModalProjects(false);
           Swal.fire({
