@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import Logo from '../assets/Logo.png';
-import { logoutSesion, refreshLogin } from '../API/Auth';
+import { logoutSesion, checkUserSession } from '../API/Auth';
 
 
 export const PublicHeader = () => {
@@ -36,17 +36,18 @@ export const PublicHeader = () => {
 
 
   // Detectar si el usuario tiene sesión (AuthToken)
-  useEffect(() => {
-    const checkSession = async () => {
-      const data = await refreshLogin()
-      if (data?.user) {
-        setIsLoggedIn(true)
-      } else {
-        setIsLoggedIn(false)
-      }
+useEffect(() => {
+  const checkSession = async () => {
+    const data = await checkUserSession();
+    if (data?.user) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
     }
-    checkSession()
-  }, [])
+  };
+  checkSession();
+}, []);
+
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
