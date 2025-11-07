@@ -95,7 +95,7 @@ function ProjectPage() {
   //Hook para cuando abrir el modal
   const [openModalTask, setOpenModalTask] = useState(false);
   const [openModalProjects, setOpenModalProjects] = useState(false);
-
+  const [openModalDeleteProject, setOpenModalDeleteProject] = useState(null);
   //Hook para cuando un loading
   const [loading, setLoading] = useState(false);
 
@@ -333,10 +333,19 @@ function ProjectPage() {
       fetchProjects();
     }
   };
+  const handleDelete = (projectoID) => {
+    setOpenModalDeleteProject(projectoID);
+  };
+
+  const closeModalDeleteProject = () => {
+    fetchProjects();
+    setOpenModalDeleteProject(null);
+  };
 
   const DeleteProject = async (projectID) => {
     let project = await DProject(projectID);
     setOpenModalProjects(false);
+    setOpenModalDeleteProject(null);
     if (project) {
       Swal.fire({
         icon: "success",
@@ -691,7 +700,7 @@ function ProjectPage() {
           <IconButton
             size="small"
             color="error"
-            onClick={() => DeleteProject(project.proyectoId)}
+            onClick={() => handleDelete(project.proyectoId)}
           >
             <DeleteOutlineOutlined fontSize="small" />
           </IconButton>
@@ -1418,6 +1427,61 @@ function ProjectPage() {
               Agregar Actividad
             </MDButton>
           )}
+        </DialogActions>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog
+        open={Boolean(openModalDeleteProject)}
+        onClose={closeModalDeleteProject}
+      >
+        <DialogTitle>
+          <MDBox
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <MDTypography variant="h5"> Confirmar eliminación</MDTypography>
+            <IconButton onClick={closeModalDeleteProject}>
+              <CloseIcon />
+            </IconButton>
+          </MDBox>
+        </DialogTitle>
+
+        <DialogContent dividers>
+          <MDTypography variant="body1" color="text">
+            ¿Confirma que desea eliminar este proyecto?
+            <br />
+            Tenga en cuenta que{" "}
+            <strong>
+              todas las tareas vinculadas también serán eliminadas
+            </strong>
+            .
+          </MDTypography>
+          <MDTypography
+            variant="body2"
+            color="error"
+            sx={{ mt: 1, fontWeight: 500 }}
+          >
+            Esta acción no se puede deshacer.
+          </MDTypography>
+        </DialogContent>
+
+        <DialogActions>
+          <MDButton
+            onClick={closeModalDeleteProject}
+            variant="outlined"
+            color="secondary"
+          >
+            Cancelar
+          </MDButton>
+          <MDButton
+            onClick={() => DeleteProject(openModalDeleteProject)}
+            variant="gradient"
+            color="error"
+          >
+            Eliminar
+          </MDButton>
         </DialogActions>
       </Dialog>
 
