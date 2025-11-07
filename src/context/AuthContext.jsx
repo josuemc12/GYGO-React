@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("userRole");
     localStorage.removeItem("userId");
     localStorage.removeItem("userGroup"); // ← AGREGAR
-     localStorage.clear();    
+    localStorage.clear();    
   };
 
   const refreshUserData = async () => {
