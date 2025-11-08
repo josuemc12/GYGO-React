@@ -7,6 +7,7 @@ import {
   Typography,
   MenuItem,
   Select,
+  Stack,
   InputLabel,
   FormControl,
   Box,
@@ -19,7 +20,7 @@ import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import SendIcon from "@mui/icons-material/Send";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { PostAddGroup } from "../API/AddGroup";
+import { PostAddGroup, reactivateGroup, DoesUserHaveGroup } from "../API/AddGroup";
 import { GetServices } from "../API/Services";
 import MDButton from "components/MDButton";
 import { refreshLogin } from "../API/Auth";
@@ -33,6 +34,7 @@ export const AddGroupForm = () => {
   const [imageFile, setImageFile] = useState("");
   const [preview, setPreview] = useState(null); // para vista previa de la imagen
   const [errors, setErrors] = useState({});
+  const [lastGroup, setLastGroup] = useState(null);
   const navigate = useNavigate();
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -46,8 +48,16 @@ export const AddGroupForm = () => {
     }
   };
   ///Termina el fetch
+  //fetch de lastGroup
+  const fetchLastGroup = async () => {
+    const result = await DoesUserHaveGroup();
+    if (result.success && result.data.state === true && result.data.grupo.estatus === false) {
+      setLastGroup(result.data.grupo);
+    }
+  };
   useEffect(() => {
     fetchServices();
+    fetchLastGroup();
   }, []);
 
   const handleImageChange = (e) => {
@@ -60,6 +70,32 @@ export const AddGroupForm = () => {
       setPreview(null);
     }
   };
+
+  const handleReactivateGroup = async () => {
+    const result = await reactivateGroup(lastGroup.grupoId);
+
+    if (result.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Grupo reactivado",
+        text: "El grupo se ha reactivado correctamente.",
+        timer: 2000,
+        showConfirmButton: false
+      });
+
+      await refreshLogin();
+      navigate("/Dashboard");
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "No se pudo reactivar el grupo.",
+      });
+    }
+  };
+
+
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -95,19 +131,16 @@ export const AddGroupForm = () => {
       setLoading(false);
       
       if (result.success) {
-        await new Promise((resolve) => setTimeout(resolve, 800));
-        const refreshData = await refreshLogin();
-        if (refreshData.success) {
-          Swal.fire({
-            icon: "success",
-            title: "Registro exitoso",
-            text: "La empresa se ha registrado correctamente.",
-            showConfirmButton: false,
-            timer: 2000,
-          }).then(() => {
-            window.location.href = "/Dashboard";
-          });
-        }
+        Swal.fire({
+        icon: "success",
+        title: "Registro exitoso",
+        text: "La empresa se ha registrado correctamente.",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+
+      await refreshLogin();
+      navigate("/Dashboard");
       } else {
         Swal.fire({
           icon: "error",
@@ -127,6 +160,44 @@ export const AddGroupForm = () => {
     <>
       <Container maxWidth="sm" sx={{ mt: 1 }}>
         <Paper elevation={3} sx={{ p: 4, mb: 5 }}>
+        {lastGroup && (
+  <Paper
+    elevation={3}
+    sx={{
+      p: 3,
+      mb: 4,
+      borderRadius: 3,
+      backgroundColor: "#e6e8e6",
+    }}
+  >
+    <Typography variant="h5" fontWeight="bold" gutterBottom>
+      Ya tienes un grupo previo
+    </Typography>
+
+    <Stack spacing={1.2} sx={{ mt: 1 }}>
+      <Typography>
+        <strong>Nombre:</strong> {lastGroup.nombre}
+      </Typography>
+      <Typography>
+        <strong>Correo:</strong> {lastGroup.correo}
+      </Typography>
+      <Typography>
+        <strong>Estado:</strong>{" "}
+        <span style={{ color: "#d32f2f", fontWeight: 600 }}>Inactivo</span>
+      </Typography>
+    </Stack>
+
+    <MDButton
+      fullWidth
+      color="info"
+      onClick={handleReactivateGroup}
+      sx={{ mt: 3, py: 1.2, borderRadius: 2, backgroundColor: "#" }}
+    >
+      Usar último grupo creado
+    </MDButton>
+  </Paper>
+)}
+  <hr></hr>
           <Typography variant="h4" align="center" gutterBottom sx={{ mb: 1 }}>
             Complete los campos correspondientes
           </Typography>
