@@ -14,6 +14,7 @@ import MDTypography from "@/components/MDTypography";
 import MDButton from "@/components/MDButton";
 
 import { useAuth } from "../../context/AuthContext";  // IMPORTA solo useAuth
+import {refreshLogin} from "../../API/Auth";
 import { getSubscriptionByUserId } from "../../API/Subscription";
 import WebhookTestButtons from "../../components/WebhooksTestButtons";
 
@@ -36,6 +37,7 @@ useEffect(() => {
     setModalOpen(true);
     markUserAsPaid();
     updateRole("GA");
+    refreshLogin(); //REVISAR
   } else if (status === "cancel") {
     setModalMessage("Suscripción cancelada.");
     setModalOpen(true);

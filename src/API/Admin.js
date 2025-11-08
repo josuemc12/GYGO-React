@@ -75,7 +75,7 @@ export const sendUserInvite = async (email) => {
     if (!response.ok) {
       console.error(
         "Detalles del error:",
-        errorData,
+        data, //esta linea da error
         "Código:",
         response.status
       );
