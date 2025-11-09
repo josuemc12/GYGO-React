@@ -39,3 +39,37 @@ export async function getUsers(){
         return [];
     }
 }
+
+export async function reactivateGroup(groupId){
+  const res = await fetch(`${appsettings.apiUrl}Group/reactivate/${groupId}`, {
+    method: "PUT",
+    credentials: "include"
+  });
+
+  const data = await res.json();
+
+  if (res.ok) {
+    return {success: true, data};
+  } else {
+    return {success: false}
+  }
+};
+
+
+export async function DoesUserHaveGroup(){
+  try{
+    const res = await fetch(`${appsettings.apiUrl}Group/DoesUserHaveGroup`, {
+      method: "GET",
+      credentials: "include"
+    });
+
+    if(!res.ok) return { success:false };
+
+    const data = await res.json();
+    return { success:true, data };
+
+  }catch(err){
+    return { success:false, error:err };
+  }
+}
+

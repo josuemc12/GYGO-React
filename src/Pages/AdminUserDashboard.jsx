@@ -289,48 +289,7 @@ const AdminUserDashboard = () => {
               </Grid>
 
               <Grid>
-                {/* <MDButton
-                  variant="outlined"
-                  sx={{
-                    mr: 2,
-                    borderColor: "#4CAF50",
-                    color: "#4CAF50",
-                    "&:hover": {
-                      backgroundColor: "#E8F5E9",
-                      borderColor: "#43A047",
-                      color: "#388E3C",
-                    },
-                  }}
-                  onClick={() => setShowHistory(false)}
-                >
-                  Usuarios
-                </MDButton>
-
-
-
-
-
-
-
-
-
-                <MDButton
-                  variant="outlined"
-                  sx={{
-                    mr: 2,
-                    borderColor: "#e41414ff",
-                    color: "#e41414ff",
-                    "&:hover": {
-                      backgroundColor: "#f5e8e8ff",
-                      borderColor: "#d41313ff",
-                      color: "#ac2020ff",
-                    },
-                  }}
-                  onClick={() => setShowHistory(true)}
-                >
-                  Historial
-                </MDButton> */}
-
+                
                 <MDButton
                   variant="outlined"
                   sx={{
