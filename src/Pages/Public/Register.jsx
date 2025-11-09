@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { registerUser } from "../../API/Auth";
+import { useNavigate } from "react-router-dom";
 import {
   Button,
   CssBaseline,
@@ -48,7 +49,7 @@ export function Register() {
   const [form, setForm] = useState({ email: "", username: "", password: "" });
   const [message, setMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
+  const navigate = useNavigate();
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -235,6 +236,16 @@ export function Register() {
                   sx={{ mt: 3, mb: 2, py: 1.5, borderRadius: 2 }}
                 >
                   Registrar
+                </Button>
+                <Button
+                  onClick={() => navigate("/login")}
+                  fullWidth
+                  variant="outlined"
+                  color="primary"
+                  size="large"
+                  sx={{ mt: 1, mb: 2, py: 1.5, borderRadius: 2 }}
+                >
+                  Iniciar sesión
                 </Button>
               </form>
             </Paper>
