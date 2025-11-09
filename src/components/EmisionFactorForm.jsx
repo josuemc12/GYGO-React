@@ -88,6 +88,8 @@ const EmissionFactorModal = ({
   }, [isOpen, editingFactor, measurementUnits, sources, pcgs]);
 
   const handleInputChange = (e) => {
+
+    console.log("KKFKFKEF");
     const { name, value } = e.target;
     const numericFields = [
       "unit",
@@ -118,6 +120,7 @@ const EmissionFactorModal = ({
 
     try {
       //Validaciones básicas
+      console.log("Datos antes de validar:", formData);
       if (
         !formData.name.trim() ||
         !formData.unit ||
@@ -125,9 +128,9 @@ const EmissionFactorModal = ({
         !formData.unitValue ||
         !formData.carbonValue ||
         !formData.pcgId ||
-        !formData.sourceId ||
-        !formData.sectoId
+        !formData.sourceId
       ) {
+        console.log("Validation failed");
         setErrors({
           name: !formData.name.trim() ? "Requerido" : "",
           unit: !formData.unit ? "Requerido" : "",
@@ -136,7 +139,6 @@ const EmissionFactorModal = ({
           carbonValue: !formData.carbonValue ? "Requerido" : "",
           pcgId: !formData.pcgId ? "Requerido" : "",
           sourceId: !formData.sourceId ? "Requerido" : "",
-          sectoId: !formData.sectoId ? "Requerido" : "",
         });
         return;
       }
@@ -153,6 +155,9 @@ const EmissionFactorModal = ({
         sectoId: validateNumber(formData.sectoId),
       };
 
+
+      console.log("holla");
+
       // 3. Llamar a la función del padre
       await onSubmit(payload);
 
@@ -166,8 +171,7 @@ const EmissionFactorModal = ({
         formData: formData,
       });
 
-      // Mostrar error al usuario (puedes usar tu sistema de notificaciones)
-      alert(`Error al guardar: ${error.message}`);
+  
     } finally {
       setIsSubmitting(false);
     }

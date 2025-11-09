@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-
+import CloseIcon from "@mui/icons-material/Close";
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import Footer from "examples/Footer";
@@ -61,19 +61,20 @@ const EmissionFactorDashboard = () => {
   const [sources, setSources] = useState([]);
   const [pcgs, setPcgs] = useState([]);
 
+  const fetchEmissionFactors = async () => {
+    try {
+      setLoading(true);
+      const factors = await getEmissionFactors();
+      setEmissionFactors(factors);
+    } catch (err) {
+      console.error("Error loading emission factors:", err);
+      setError("Failed to load emission factors.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchEmissionFactors = async () => {
-      try {
-        setLoading(true);
-        const factors = await getEmissionFactors();
-        setEmissionFactors(factors);
-      } catch (err) {
-        console.error("Error loading emission factors:", err);
-        setError("Failed to load emission factors.");
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchEmissionFactors();
   }, []);
 
@@ -183,9 +184,23 @@ const EmissionFactorDashboard = () => {
       setEmissionFactors((prev) =>
         prev.filter((f) => f.id !== deleteConfirmation.id)
       );
+
+      Swal.fire({
+        icon: "success",
+        title: "Eliminado",
+        text: "El factor de emisión se eliminó correctamente.",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+
       setDeleteConfirmation(null);
     } catch (error) {
       console.error("Error deleting emission factor:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Hubo un problema al eliminar el factor de emisión.",
+      });
     }
   };
 
@@ -200,19 +215,45 @@ const EmissionFactorDashboard = () => {
       }
 
       if (success) {
-        if (editingFactor) {
-          setEmissionFactors((prev) =>
-            prev.map((f) => (f.id === editingFactor.id ? formData : f))
-          );
-        } else {
-          setEmissionFactors((prev) => [...prev, formData]);
-        }
+        Swal.fire({
+          icon: "success",
+          title: editingFactor
+            ? "Factor de emisión actualizado"
+            : "Factor de emisión agregado",
+          text: editingFactor
+            ? "El factor de emisión se actualizó correctamente."
+            : "El nuevo factor de emisión se agregó correctamente.",
+          showConfirmButton: false,
+          timer: 2000,
+        });
         setIsModalOpen(false);
+        await fetchEmissionFactors();
+        // if (editingFactor) {
+        //   setEmissionFactors((prev) =>
+        //     prev.map((f) => (f.id === editingFactor.id ? formData : f))
+        //   );
+        // } else {
+        //   setEmissionFactors((prev) => [...prev, formData]);
+        // }
+        // setIsModalOpen(false);
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error al guardar",
+          text: "No se pudo guardar el factor de emisión. Intenta nuevamente.",
+          showConfirmButton: false,
+          timer: 2000,
+        });
       }
-
-      window.location.reload();
     } catch (error) {
       console.error("Error al guardar:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error inesperado",
+        text: "Ocurrió un error al intentar guardar el factor de emisión.",
+        showConfirmButton: false,
+        timer: 2000,
+      });
     }
   };
 
@@ -430,8 +471,19 @@ const EmissionFactorDashboard = () => {
         open={Boolean(deleteConfirmation)}
         onClose={() => setDeleteConfirmation(null)}
       >
-        <DialogTitle>Confirmar eliminación</DialogTitle>
-        <DialogContent>
+        <DialogTitle>
+          <MDBox
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <MDTypography variant="h5"> Confirmar eliminación</MDTypography>
+            <IconButton onClick={() => setDeleteConfirmation(null)}>
+              <CloseIcon />
+            </IconButton>
+          </MDBox>
+        </DialogTitle>
+        <DialogContent dividers>
           <p>
             ¿Estás seguro de que deseas eliminar "{deleteConfirmation?.name}"?
             <br />

@@ -131,6 +131,8 @@ function ProjectPage() {
   const [IsEditing, setIsEditing] = useState(false);
   const [enableEmissionFields, setEnableEmissionFields] = useState(false);
   const [errors, setErrors] = useState({});
+  const [submitting, setSubmitting] = useState(false);
+
   const handleTabChange = (event, newValue) => {
     setTabIndex(newValue);
   };
@@ -1122,8 +1124,19 @@ function ProjectPage() {
           >
             Cancelar
           </MDButton>
-          <MDButton variant="gradient" color="success" onClick={HandleProjects}>
-            {modoEdicion ? "Guardar Cambios" : "Agregar"}
+          <MDButton
+            variant="gradient"
+            color="success"
+            onClick={HandleProjects}
+            disabled={submitting}
+          >
+            {submitting
+              ? modoEdicion
+                ? "Guardando cambios..."
+                : "Agregando consumo..."
+              : modoEdicion
+                ? "Guardar cambios"
+                : "Agregar consumo"}
           </MDButton>
         </DialogActions>
       </Dialog>

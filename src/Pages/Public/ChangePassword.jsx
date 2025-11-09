@@ -28,6 +28,7 @@ import { ResetPassword } from "../../API/ChangePassword";
 import MDTypography from "components/MDTypography";
 import MDBox from "components/MDBox";
 import MDButton from "components/MDButton";
+import { ConsoleLogger } from "@microsoft/signalr/dist/esm/Utils";
 
 const theme = createTheme({
   palette: {
@@ -92,17 +93,19 @@ export const ChangePassword = () => {
         icon: "warning",
         title: "No se pudo cambiar la contraseña",
         text: "Por favor, completá todos los campos.",
-        confirmButtonColor: "#f8bb86",
+        timer: 2000,
+        showConfirmButton: false,
       });
       return;
     }
 
     if (ConfirmPassword !== newPassword) {
       Swal.fire({
-        icon: "warning",
+        icon: "error",
         title: "No se pudo cambiar la contraseña",
-        text: "Por favor, revisar la constraseña ingresada.",
-        confirmButtonColor: "#f8bb86",
+        text: "Las contraseñas ingresadas no coinciden.",
+        timer: 2000,
+        showConfirmButton: false,
       });
       return;
     }
@@ -113,7 +116,8 @@ export const ChangePassword = () => {
         icon: "warning",
         title: "Problemas con la contraseña",
         text: "La contraseña debe tener al menos 8 caracteres, mayúscula, minúscula, número y símbolo.",
-        confirmButtonColor: "#f8bb86",
+        timer: 2000,
+        showConfirmButton: false,
       });
       return;
     }
@@ -127,23 +131,24 @@ export const ChangePassword = () => {
         Swal.fire({
           icon: "success",
           title: "Cambio de contraseña exitoso",
-          text: "El cambio de contraseña se cambiocorrectamente.",
-          confirmButtonColor: "#2DA14C",
+          text: "La contraseña se cambió correctamente.",
+          showConfirmButton: false,
+          timer: 2000, 
         }).then(() => {
           window.location.href = "/Login";
         });
         return;
       } else {
+        console.log(result.message);
         Swal.fire({
           icon: "error",
           title: "Error al cambiar la contraseña",
-          text: result.error.message,
-          confirmButtonColor: "#d33",
+          text: result.message,
+          timer: 2000,
+          showConfirmButton: false,
         });
         return;
       }
-
-      //navigate("/DashboardGroupPage");
     } catch (error) {}
   };
 
@@ -185,7 +190,6 @@ export const ChangePassword = () => {
                 </InputLabel>
                 <OutlinedInput
                   onChange={(e) => setNewPassword(e.target.value)}
-                  required
                   id="outlined-adornment-password"
                   type={showPassword ? "text" : "password"}
                   // debo comentar esto
@@ -216,7 +220,6 @@ export const ChangePassword = () => {
                 </InputLabel>
                 <OutlinedInput
                   onChange={(e) => SetConfirmPassword(e.target.value)}
-                  required
                   id="outlined-adornment-password2"
                   type={showPassword ? "text" : "password"}
                   endAdornment={
