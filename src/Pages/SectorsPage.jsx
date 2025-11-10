@@ -73,28 +73,48 @@ export default function SectorsIndexPage() {
     }
     try {
       if (editMode) {
-        await UpdateSector({ sectorId: editingId, nombre: sectorName });
-        setModalOpen(false);
-        await Swal.fire({
-          icon: "success",
-          title: "Sector actualizado correctamente",
-          showConfirmButton: false,
-          timer: 2000,
+        const result = await UpdateSector({
+          sectorId: editingId,
+          nombre: sectorName,
         });
+        if (result.success) {
+          Swal.fire({
+            icon: "success",
+            title: "Sector actualizado correctamente",
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: result.message,
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        }
       } else {
-        await PostSector({ nombre: sectorName });
+        const result = await PostSector({ nombre: sectorName });
         setModalOpen(false);
-        await Swal.fire({
-          icon: "success",
-          title: "Sector creado exitosamente",
-          showConfirmButton: false,
-          timer: 2000,
-        });
+
+        if (result.success) {
+          Swal.fire({
+            icon: "success",
+            title: "Sector creado exitosamente",
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: result.message,
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        }
       }
       setModalOpen(false);
       await loadSectors();
     } catch (e) {
-      console.error("Error al guardar sector", e);
       Swal.fire("Error", "No se pudo guardar el sector", "error");
     }
   };

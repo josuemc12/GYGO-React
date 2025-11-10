@@ -76,23 +76,43 @@ export function UnitsIndexPage() {
     }
     try {
       if (editMode) {
-        await UpdateUnits({ unidadId: editId, ...unitData });
+        const result = await UpdateUnits({ unidadId: editId, ...unitData });
         setModalOpen(false);
-        await Swal.fire({
-          icon: "success",
-          title: "Unidad actualizada correctamente",
-          showConfirmButton: false,
-          timer: 2000,
-        });
+
+        if (result.success) {
+          Swal.fire({
+            icon: "success",
+            title: "Unidad actualizada correctamente",
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: result.message,
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        }
       } else {
-        await CreateUnits(unitData);
+        const result = await CreateUnits(unitData);
         setModalOpen(false);
-        await Swal.fire({
-          icon: "success",
-          title: "Unidad creada correctamente",
-          showConfirmButton: false,
-          timer: 2000,
-        });
+       
+        if (result.success) {
+          Swal.fire({
+            icon: "success",
+            title: "Unidad creado exitosamente",
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: result.message,
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        }
       }
       await loadUnits();
     } catch (e) {
@@ -216,7 +236,6 @@ export function UnitsIndexPage() {
                   width: "100%",
                   alignItems: "center",
                   justifyContent: "center",
-
                 }}
               >
                 <DataTable

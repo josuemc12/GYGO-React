@@ -93,32 +93,50 @@ export function SourcesIndexPage() {
 
   const handleSave = async () => {
     if (!sourceData.nombre.trim() || !sourceData.año || !sourceData.sector) {
-            setErrors({ 
-        nombre: !sourceData.nombre.trim() ? "Requerido": "", 
-        año: !sourceData.año ? "Requerido": "", 
-        sector: !sourceData.sector ? "Requerido": "",
+      setErrors({
+        nombre: !sourceData.nombre.trim() ? "Requerido" : "",
+        año: !sourceData.año ? "Requerido" : "",
+        sector: !sourceData.sector ? "Requerido" : "",
       });
       return;
     }
     try {
       if (editMode) {
-        await UpdateSource({ fuenteId: editId, ...sourceData });
+        const result = await UpdateSource({ fuenteId: editId, ...sourceData });
         setModalOpen(false);
-        await Swal.fire({
-          icon: "success",
-          title: "Fuente actualizada correctamente",
-          showConfirmButton: false,
-          timer: 2000,
-        });
+        if (result.success) {
+          Swal.fire({
+            icon: "success",
+            title: "Fuente actualizada correctamente",
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: result.message,
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        }
       } else {
-        await CreateSource(sourceData);
+        const result = await CreateSource(sourceData);
         setModalOpen(false);
-        await Swal.fire({
-          icon: "success",
-          title: "Fuente creada correctamente",
-          showConfirmButton: false,
-          timer: 2000,
-        });
+        if (result.success) {
+          Swal.fire({
+            icon: "success",
+            title: "Fuente creada correctamente",
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: result.message,
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        }
       }
       await loadSources();
     } catch (e) {
@@ -245,7 +263,7 @@ export function SourcesIndexPage() {
                 sx={{
                   p: 4,
                   textAlign: "center",
-                   width: "100%",
+                  width: "100%",
                   alignItems: "center",
                   justifyContent: "center",
                 }}
@@ -318,15 +336,13 @@ export function SourcesIndexPage() {
               <Select
                 fullWidth
                 value={sourceData.sector}
-
-                 onChange={(e) => {setSourceData({ ...sourceData, sector: e.target.value })
-                          setErrors((prev) => ({
-                            ...prev,
-                            sector: "",
-                          }));
-                        }}
-
-
+                onChange={(e) => {
+                  setSourceData({ ...sourceData, sector: e.target.value });
+                  setErrors((prev) => ({
+                    ...prev,
+                    sector: "",
+                  }));
+                }}
                 displayEmpty
                 error={!!errors.sector}
                 sx={{ mb: 2, height: 40 }}
