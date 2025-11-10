@@ -185,3 +185,35 @@ export async function cancelAdminSubscription(groupId, reason) {
   }
 }
 
+export async function confirmSubscription() {
+  try {
+    const response = await fetch(`${API_URL}/confirm`, {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error confirming subscription:", error);
+    return { success: false, message: "Error al confirmar la suscripción." };
+  }
+}
+
+export async function sendSubscriptionEmail() {
+  try {
+    const response = await fetch(`${API_URL}/send-subscription-email`, {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error sending subscription email:", error);
+    return { success: false, message: "Error al enviar el correo de suscripción." };
+  }
+}
+

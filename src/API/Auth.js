@@ -203,13 +203,11 @@ export async function checkUserSession() {
         const data = await response.json();
 
         if (!response.ok) {
-            // console.error("Failed to validate session:", data);
             return null;
         }
-
         return data;
+
     } catch (error) {
-        // console.error("Error llamando al isLoggedIn", error);
         return null;
     }
 }
