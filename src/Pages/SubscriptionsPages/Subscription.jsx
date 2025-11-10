@@ -16,12 +16,14 @@ import MDButton from "@/components/MDButton";
 import { useAuth } from "../../context/AuthContext";  // IMPORTA solo useAuth
 import {refreshLogin} from "../../API/Auth";
 import { getSubscriptionByUserId } from "../../API/Subscription";
+import { getSubscriptionByUserId, confirmSubscription, sendSubscriptionEmail } from "../../API/Subscription";
 import WebhookTestButtons from "../../components/WebhooksTestButtons";
 
 export default function SubscriptionSwitch() {
   const { role, userId, markUserAsPaid, updateRole} = useAuth();
   const [searchParams] = useSearchParams();
   const [modalMessage, setModalMessage] = useState("");
+  const status = searchParams.get("status");
   const [modalOpen, setModalOpen] = useState(false);
   const [hasSubscription, setHasSubscription] = useState(false);
   const [paypalSubscriptionId, setPaypalSubscriptionId] = useState(null);
@@ -42,6 +44,43 @@ useEffect(() => {
     setModalMessage("Suscripción cancelada.");
     setModalOpen(true);
   }
+  const confirm = async () => {
+    if (status === "success") {
+      try {
+        const confirmResponse = await confirmSubscription();
+
+        if (confirmResponse.success) {
+          console.log("Subscription confirmed:", confirmResponse.message);
+          const emailResponse = await sendSubscriptionEmail();
+
+          if (emailResponse.success) {
+            console.log("Subscription email sent:", emailResponse.message);
+          } else {
+            console.warn("Email not sent:", emailResponse.message);
+          }
+
+          setSubscriptionSuccess(true);
+          setModalMessage("¡Suscripción confirmada con éxito!");
+          markUserAsPaid();
+          updateRole("GA");
+        } else {
+          console.error("Error confirming subscription:", confirmResponse.message);
+          setModalMessage("Error al confirmar la suscripción.");
+        }
+
+      } catch (error) {
+        console.error("Unexpected error:", error);
+        setModalMessage("Ocurrió un error inesperado al confirmar la suscripción.");
+      }
+
+      setModalOpen(true);
+    } else if (status === "cancel") {
+      setModalMessage("Suscripción cancelada.");
+      setModalOpen(true);
+    }
+  };
+
+  confirm();
 }, [searchParams, markUserAsPaid, updateRole]);
 
   useEffect(() => {
