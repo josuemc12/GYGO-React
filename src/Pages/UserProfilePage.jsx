@@ -11,6 +11,7 @@ import {
   Email as EmailIcon,
   Person as PersonIcon,
   Lock as LockIcon,
+  ExitToApp as ExitToAppIcon,
 } from "@mui/icons-material";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
@@ -19,7 +20,7 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import Footer from "examples/Footer";
 import { useNavigate } from "react-router-dom";
-import { getCurrentUser } from "../API/Auth";
+import { getCurrentUser, logoutSesion } from "../API/Auth";
 
 export function UserProfilePage() {
   const navigate = useNavigate();
@@ -46,6 +47,15 @@ export function UserProfilePage() {
     navigate("/ChangePasswordPage");
   };
 
+  const handleLogout = async () => {
+    try {
+      await logoutSesion();
+      navigate("/");
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  };
+
   return (
     <DashboardLayout>
       <DashboardNavbar></DashboardNavbar>
@@ -65,7 +75,6 @@ export function UserProfilePage() {
               </Grid>
             </Card>
           </Grid>
-
           {loading ? (
             <Grid size={{xs:12}}>
               <Card sx={{ p: 3, textAlign: "center" }}>
@@ -118,17 +127,31 @@ export function UserProfilePage() {
                 </Card>
               </Grid>
 
-              <Grid size={{xs:12}} sx={{mb: 5}}>
-                <Card sx={{ p: 3, textAlign: "right" }}>
-                  <MDButton
-                    variant="contained"
-                    color="info"
-                    startIcon={<LockIcon />}
-                    onClick={handleChangePassword}
-                  >
-                    Cambiar Contraseña
-                  </MDButton>
-                </Card>
+              <Grid container spacing={2} sx={{ mb: 5 }}>
+                <Grid item xs={6}>
+                  <Card sx={{ p: 3, textAlign: "center" }}>
+                    <MDButton
+                      variant="contained"
+                      color="info"
+                      startIcon={<LockIcon />}
+                      onClick={handleChangePassword}
+                    >
+                      Cambiar Contraseña
+                    </MDButton>
+                  </Card>
+                </Grid>
+                <Grid item xs={6}>
+                  <Card sx={{ p: 3, textAlign: "center" }}>
+                    <MDButton
+                      variant="contained"
+                      color="error"
+                      startIcon={<ExitToAppIcon />}
+                      onClick={handleLogout}
+                    >
+                      Cerrar sesión
+                    </MDButton>
+                  </Card>
+                </Grid>
               </Grid>
             </>
           )}
