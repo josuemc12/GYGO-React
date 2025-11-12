@@ -137,31 +137,12 @@ const PaymentHistoryTable = () => {
   }
 
   if (error) {
-    return (
-      <MDBox p={3}>
-        <MDTypography color="error">
-          Error al cargar el historial: {error}
-        </MDTypography>
-        <MDBox mt={2}>
-          <MDTypography
-            variant="button"
-            color="info"
-            onClick={() => window.location.reload()}
-            sx={{ cursor: "pointer" }}
-          >
-            Intentar nuevamente
-          </MDTypography>
-        </MDBox>
-      </MDBox>
-    );
+  return null;
   }
 
-  if (payments.length === 0) {
-    return (
-      <MDBox p={3}>
-        <MDTypography>No se encontraron registros de pagos</MDTypography>
-      </MDBox>
-    );
+
+  if (!payments || payments.length === 0) {
+    return null;
   }
 
   return (

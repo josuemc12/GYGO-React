@@ -187,13 +187,25 @@ export async function cancelAdminSubscription(groupId, reason) {
 
 export async function confirmSubscription() {
   try {
-    const response = await fetch(`${API_URL}/confirm`, {
+    const response = await fetch(`${appsettings.apiUrl}Subscription/confirm`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
     });
 
+    console.log("Response Status:", response.status);  // Log status code
+    console.log("Response Body:", await response.text());  // Log raw body
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
     const data = await response.json();
+
+    if (!data) {
+      throw new Error("Empty response body");
+    }
+
     return data;
   } catch (error) {
     console.error("Error confirming subscription:", error);
@@ -201,9 +213,10 @@ export async function confirmSubscription() {
   }
 }
 
+
 export async function sendSubscriptionEmail() {
   try {
-    const response = await fetch(`${API_URL}/send-subscription-email`, {
+    const response = await fetch(`${appsettings.apiUrl}Subscription/send-subscription-email`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },

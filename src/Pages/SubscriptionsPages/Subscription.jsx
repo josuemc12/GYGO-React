@@ -15,7 +15,6 @@ import MDButton from "@/components/MDButton";
 
 import { useAuth } from "../../context/AuthContext";  // IMPORTA solo useAuth
 import {refreshLogin} from "../../API/Auth";
-import { getSubscriptionByUserId } from "../../API/Subscription";
 import { getSubscriptionByUserId, confirmSubscription, sendSubscriptionEmail } from "../../API/Subscription";
 import WebhookTestButtons from "../../components/WebhooksTestButtons";
 
@@ -23,7 +22,6 @@ export default function SubscriptionSwitch() {
   const { role, userId, markUserAsPaid, updateRole} = useAuth();
   const [searchParams] = useSearchParams();
   const [modalMessage, setModalMessage] = useState("");
-  const status = searchParams.get("status");
   const [modalOpen, setModalOpen] = useState(false);
   const [hasSubscription, setHasSubscription] = useState(false);
   const [paypalSubscriptionId, setPaypalSubscriptionId] = useState(null);
@@ -32,62 +30,46 @@ export default function SubscriptionSwitch() {
 
 
 useEffect(() => {
-  const status = searchParams.get("status");
-  if (status === "success") {
-    setSubscriptionSuccess(true);
-    setModalMessage("¡Suscripción realizada con éxito!");
-    setModalOpen(true);
-    markUserAsPaid();
-    updateRole("GA");
-    refreshLogin(); //REVISAR
-  } else if (status === "cancel") {
-    setModalMessage("Suscripción cancelada.");
-    setModalOpen(true);
-  }
-  const confirm = async () => {
+    const status = searchParams.get("status");
+    
     if (status === "success") {
-      try {
-        const confirmResponse = await confirmSubscription();
-
-        if (confirmResponse.success) {
-          console.log("Subscription confirmed:", confirmResponse.message);
-          const emailResponse = await sendSubscriptionEmail();
-
-          if (emailResponse.success) {
-            console.log("Subscription email sent:", emailResponse.message);
-          } else {
-            console.warn("Email not sent:", emailResponse.message);
-          }
-
-          setSubscriptionSuccess(true);
-          setModalMessage("¡Suscripción confirmada con éxito!");
-          markUserAsPaid();
-          updateRole("GA");
-        } else {
-          console.error("Error confirming subscription:", confirmResponse.message);
-          setModalMessage("Error al confirmar la suscripción.");
-        }
-
-      } catch (error) {
-        console.error("Unexpected error:", error);
-        setModalMessage("Ocurrió un error inesperado al confirmar la suscripción.");
-      }
-
+      setSubscriptionSuccess(true);
+      setModalMessage("¡Suscripción realizada con éxito!");
       setModalOpen(true);
+      markUserAsPaid();
+      updateRole("GA");
+      refreshLogin();
+
+      (async () => {
+        try {
+          const confirmResponse = await confirmSubscription();
+          if (confirmResponse.success) {
+            console.log("Subscription confirmed:", confirmResponse.message);
+            
+            const emailResponse = await sendSubscriptionEmail();
+            if (emailResponse.success) {
+              console.log("Subscription email sent:", emailResponse.message);
+            } else {
+              console.warn("Email not sent:", emailResponse.message);
+            }
+          } else {
+            console.error("Error confirming subscription:", confirmResponse.message);
+          }
+        } catch (error) {
+          console.error("Unexpected error confirming subscription:", error);
+        }
+      })();
     } else if (status === "cancel") {
       setModalMessage("Suscripción cancelada.");
       setModalOpen(true);
     }
-  };
-
-  confirm();
-}, [searchParams, markUserAsPaid, updateRole]);
+  }, [searchParams, markUserAsPaid, updateRole, refreshLogin]);
 
   useEffect(() => {
     const checkSubscription = async () => {
       if (userId) {
         try {
-          const subscription = await getSubscriptionByUserId();
+          const subscription = await getSubscriptionByUserId(userId); // Pass userId here
           if (subscription && subscription.status !== "Cancelled") {
             setHasSubscription(true);
             setPaypalSubscriptionId(subscription.payPalSubscriptionId);

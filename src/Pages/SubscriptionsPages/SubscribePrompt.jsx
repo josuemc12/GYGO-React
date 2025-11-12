@@ -13,7 +13,7 @@ import Footer from "examples/Footer";
 import { getAllPlans, subscribeToPlan } from "../../API/Subscription";
 import { useAuth } from "../../context/AuthContext";
 import "./../../styles/Subscription.css";
-import PaymentHistoryTable from "./PaymentHistoryTable";
+import PaymentHistoryTable from "../../components/PaymentHistoryTable";
 
 export default function SubscribePrompt() {
   const [plans, setPlans] = useState([]);
