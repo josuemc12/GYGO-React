@@ -72,7 +72,7 @@ export const routes = [
 
   {
     key: "HomePage",
-    route: "/HomePage",
+    route: "/pagina-inicio",
     component: <HomePage />,
   },
   {
@@ -101,7 +101,7 @@ export const routes = [
     name: "Manejo de usuarios",
     key: "ManagmentUsers",
     icon: <ManageAccountsIcon fontSize="small" />,
-    route: "/ManagmentUsers",
+    route: "/gestion-usuarios-admin",
 
     component: (
       <ProtectedElement roles={["DEV", "SA"]}>
@@ -118,7 +118,7 @@ export const routes = [
     name: "Dashboard",
     key: "dashboard",
     icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/dashboard",
+    route: "/panel-control",
     component: (
       <ProtectedElement roles={["DEV", "GA", "GU", "DEF", "SA"]}>
         <DashboardGroupPage />
@@ -134,7 +134,7 @@ export const routes = [
     name: "log",
     key: "log",
     icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/login",
+    route: "/inicio-sesion",
     component: <Login />,
     hideInSidebar: true,
   },
@@ -162,7 +162,7 @@ export const routes = [
     name: "Mensajes",
     key: "Mensajes",
     icon: <Icon fontSize="small">email</Icon>,
-    route: "/Messages",
+    route: "/mensajes",
     component: (
       <ProtectedElement roles={["GA", "GU", "DEV", "SA"]}>
         <Messages />
@@ -278,7 +278,7 @@ export const routes = [
     name: "Perfil del Usuario",
     key: "user-profile",
     icon: <Icon fontSize="small">list_alt</Icon>,
-    route: "/userProfile",
+    route: "/perfil",
 
     component: (
       <ProtectedElement roles={["GA", "DEV", "GU", "SA", "DEF"]}>
@@ -293,7 +293,7 @@ export const routes = [
     name: "Perfil del grupo",
     key: "grup-profile",
     icon: <Icon fontSize="small">list_alt</Icon>,
-    route: "/groupProfile",
+    route: "/perfil-grupo",
 
     component: (
       <ProtectedElement roles={["GA", "DEV", "SA", "GU"]}>
@@ -309,7 +309,7 @@ export const routes = [
     name: "ChangePassword",
     key: "ChangePassword",
     icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/ChangePasswordPage",
+    route: "/cambiar-contrasena",
     component: (
       <ProtectedElement roles={["GA", "DEV", "GU", "SA", "DEF"]}>
         <ChangePasswordPage />
@@ -324,7 +324,7 @@ export const routes = [
     type: "collapse",
     name: "ChangePasswordPublic",
     key: "ChangePasswordPublic",
-    route: "/ChangePassword",
+    route: "/restablecer-contrasena",
     component: <ChangePassword />,
     hideInSidebar: true,
   },
@@ -368,10 +368,10 @@ export const routes = [
       },
       //Ruta para fuentes de emisiones
       {
-        name: "Fuentes de Emisión",
-        key: "sources",
+        name: "Fuentes de emisión",
+        key: "fuentes-emision",
         icon: <Icon fontSize="small">eco</Icon>,
-        route: "/sources",
+        route: "/fuentes-emision",
 
         component: (
           <ProtectedElement roles={["DEV", "SA"]}>
@@ -384,10 +384,10 @@ export const routes = [
       ///gESTIONES DEL ADMIN DE GRUPO
 
       {
-        name: "Servicios",
-        key: "Services",
+        name: "Servicios contratados",
+        key: "servicios-contratados",
         icon: <Icon fontSize="small">business</Icon>,
-        route: "/Services",
+        route: "/servicios-contratados",
         component: (
           <ProtectedElement roles={["SA", "DEV"]}>
             <ServicesPage />
@@ -397,10 +397,10 @@ export const routes = [
       },
 
       {
-        name: "Factor Emision",
-        key: "AdminEmisionFactor",
+        name: "Factor emision",
+        key: "factor-emision",
         icon: <Icon fontSize="small">eco</Icon>,
-        route: "/AdminEmisionFactor",
+        route: "/factor-emision",
 
         component: (
           <ProtectedElement roles={["DEV", "SA"]}>
@@ -415,7 +415,7 @@ export const routes = [
         name: "Usuarios",
         key: "AdminUserDashboard",
         icon: <Icon fontSize="small">dashboard</Icon>,
-        route: "/AdminUserDashboard",
+        route: "/gestion-usuarios",
         component: (
           <ProtectedElement roles={["GA", "DEV"]}>
             <AdminUserDashboard />
@@ -433,7 +433,7 @@ export const routes = [
     name: "Suscripción",
     key: "subscription",
     icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/subscription",
+    route: "/suscripcion",
     component: <SubscriptionSwitch />,
     roles: ["DEV", "DEF", "GA"],
   },
@@ -545,7 +545,7 @@ export const routes = [
     name: "Proyectos",
     key: "ProjectPage",
     icon: <Icon fontSize="small">table_view</Icon>,
-    route: "/ProjectPage",
+    route: "/proyectos",
 
     component: (
       <ProtectedElement roles={["GA", "GU", "DEV"]}>
@@ -567,7 +567,7 @@ export const routes = [
         name: "Emisiones",
         key: "reportsEmissions",
         icon: <Icon fontSize="small">insert_chart</Icon>,
-        route: "/reportsEmissions",
+        route: "/reportes-emisiones",
 
         component: (
           <ProtectedElement roles={["GA", "DEV"]}>
@@ -578,9 +578,9 @@ export const routes = [
       },
       {
         name: "Empresas",
-        key: "ReportCompanies",
+        key: "reportes-empresas",
         icon: <Icon fontSize="small">insert_chart</Icon>,
-        route: "/ReportCompanies",
+        route: "/reportes-empresas",
 
         component: (
           <ProtectedElement roles={["SA", "DEV"]}>
@@ -592,9 +592,9 @@ export const routes = [
 
       {
         name: "Servicios",
-        key: "ReportServices",
+        key: "reportes-servicios",
         icon: <Icon fontSize="small">insert_chart</Icon>,
-        route: "/ReportServices",
+        route: "/reportes-servicios",
 
         component: (
           <ProtectedElement roles={["SA", "DEV"]}>

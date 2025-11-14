@@ -72,7 +72,7 @@ function Sidenav({ color = "info", brandName, routes, ...rest }) {
   
   const logoutSes = async () => {
     //Entre al logout
-    navigate("/HomePage")
+    navigate("/pagina-inicio")
 
     // const logout = await logoutSesion();
     // if (logout) {
@@ -198,7 +198,7 @@ function Sidenav({ color = "info", brandName, routes, ...rest }) {
         </MDBox>
         <MDBox
           component={NavLink}
-          to="/dashboard"
+          to="/panel-control"
           display="flex"
           alignItems="center"
           justifyContent="center"

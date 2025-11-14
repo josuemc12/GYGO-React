@@ -43,7 +43,7 @@ export function UserProfilePage() {
   }, []);
 
   const handleChangePassword = () => {
-    navigate("/ChangePasswordPage");
+    navigate("/cambiar-contrasena");
   };
 
   return (

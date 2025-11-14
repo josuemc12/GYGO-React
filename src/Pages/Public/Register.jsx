@@ -238,7 +238,7 @@ export function Register() {
                   Registrar
                 </Button>
                 <Button
-                  onClick={() => navigate("/login")}
+                  onClick={() => navigate("/inicio-sesion")}
                   fullWidth
                   variant="outlined"
                   color="primary"
