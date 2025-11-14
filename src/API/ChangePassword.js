@@ -10,10 +10,12 @@ export async function PostChangePassword(UserDTO) {
       },
       body: JSON.stringify(UserDTO),
     });
+    const data = await response.json(); 
+    console.log(data);
     if (response.ok) {
       return { success: true };
     }
-    const data = await response.json();
+   
 
     return { success: false, error: data };
   } catch (error) {
@@ -58,13 +60,15 @@ export async function ResetPassword(token, newPassword,ConfirmPassword) {
         confirmPassword : ConfirmPassword
       }),
     });
-
-    if (response.ok) {
-      return { success: true };
+    const data = await response.json();
+    console.log(data);
+    
+    if (!data.success) {
+      return { success: false, message:data.message };
     }
 
-    return { success: false };
+    return { success: true,message:data.message };
   } catch (error) {
-    return { success: false };
+    return { success: false,message:response.message };
   }
 }

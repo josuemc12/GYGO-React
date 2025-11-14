@@ -29,13 +29,15 @@ export const PostSector = async(sectorDTO) => {
     },
     body: JSON.stringify(sectorDTO)
   });
-
+ 
+ 
   if(response.ok){
     const data = await response.text();
-    return data;
+    return { success: true, message: data };
+
   }else{
-    const error = await response.text();
-    return error;
+    const error = await response.json();
+    return { success: false, message: error.message };
   }
 }
 
@@ -51,9 +53,9 @@ export async function UpdateSector(sectorDTO){
     
         if (response.ok) {
             const data = await response.text();
-            return data;
+            return { success: true, message: data };
         } else {
-            const error = await response.text();
-            throw new Error(error);
+            const error = await response.json();
+            return { success: false, message: error.message };
         }
 }

@@ -1,13 +1,18 @@
 import { useState, useEffect } from "react";
 import UserTable from "../components/UserAdminTable";
 import InviteModal from "../components/InviteModal";
+import CloseIcon from "@mui/icons-material/Close";
 import {
   getGroupUsers,
   sendUserInvite,
   removeUserFromGroup,
   fetchGroupId,
 } from "../API/Admin";
-import { getDeleteUsers, EmailDeleteUsers, getCountUserDelete } from "../API/DeleteLogs";
+import {
+  getDeleteUsers,
+  EmailDeleteUsers,
+  getCountUserDelete,
+} from "../API/DeleteLogs";
 import "../App.css";
 import "../styles/AdminDashboard.css";
 import { useNavigate } from "react-router-dom";
@@ -62,7 +67,7 @@ const AdminUserDashboard = () => {
   const [showHistory, setShowHistory] = useState(false);
   const [historyRows, setHistoryRows] = useState([]);
   const [deleteCount, setDeleteCount] = useState(0);
-
+  const [openModalDeleteUser, setOpenModalDeleteUser] = useState(null);
 
   //var GROUP_ID = fetchGroupId();
 
@@ -79,15 +84,12 @@ const AdminUserDashboard = () => {
     }
   }, [showHistory]);
 
-
-
-
   const fetchUsers = async () => {
     try {
       setLoading(true);
       setError("");
       const userData = await getGroupUsers();
-     
+
       setUsers(userData);
     } catch (err) {
       setError("Failed to load users. Please try again.");
@@ -96,7 +98,6 @@ const AdminUserDashboard = () => {
       setLoading(false);
     }
   };
-
 
   //#region DeleteLogs
   const fetchUsersEmail = async () => {
@@ -110,11 +111,10 @@ const AdminUserDashboard = () => {
     }
   };
 
-
   const fetchCountUserDelete = async () => {
     try {
-     const count = await getCountUserDelete();
-     setDeleteCount(count); 
+      const count = await getCountUserDelete();
+      setDeleteCount(count);
     } catch (err) {
       setError("Failed to load users. Please try again.");
       console.error("Error fetching users:", err);
@@ -125,7 +125,7 @@ const AdminUserDashboard = () => {
 
   const fetchDeleteLogs = async () => {
     try {
-      const logs = await getDeleteUsers(); 
+      const logs = await getDeleteUsers();
       setDeleteCount(logs.length);
       const rows = logs.map((log) => ({
         userName: log.userName,
@@ -166,9 +166,21 @@ const AdminUserDashboard = () => {
     }
   };
 
+  const handleDelete = (userId) => {
+    console.log("Eliminar usuario ID:", userId);
+    setOpenModalDeleteUser(userId);
+  };
+
+  const closeModalDeleteUser = () => {
+    fetchUsers();
+    setOpenModalDeleteUser(null);
+  };
+
   const handleRemoveUser = async (userId) => {
     try {
       setError("");
+
+      setOpenModalDeleteUser(null);
 
       await removeUserFromGroup(userId);
 
@@ -235,7 +247,7 @@ const AdminUserDashboard = () => {
           <IconButton
             size="small"
             color="error"
-            onClick={() => handleRemoveUser(user.id, user.name)}
+            onClick={() => handleDelete(user.id, user.name)}
           >
             <DeleteOutlineOutlined fontSize="small" />
           </IconButton>
@@ -250,7 +262,6 @@ const AdminUserDashboard = () => {
     { Header: "Fecha Eliminado", accessor: "deletedAt", align: "center" },
     { Header: "Administrador", accessor: "deletedByAdminName", align: "left" },
   ];
-
 
   return (
     <DashboardLayout>
@@ -317,16 +328,16 @@ const AdminUserDashboard = () => {
               </Grid>
             </Grid>
             {/* Stats Cards */}
-          <div className="stats-grid" style={{ marginTop: "3rem" }}>
-  <div className="stat-card">
-    <div className="stat-value">{users.length}</div>
-    <div className="stat-label">Usuarios Activos</div>
-  </div>
-  <div className="stat-card">
-    <div className="stat-value">{deleteCount}</div>
-    <div className="stat-label">Usuarios Eliminados</div>
-  </div>
-</div>
+            <div className="stats-grid" style={{ marginTop: "3rem" }}>
+              <div className="stat-card">
+                <div className="stat-value">{users.length}</div>
+                <div className="stat-label">Usuarios Activos</div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-value">{deleteCount}</div>
+                <div className="stat-label">Usuarios Eliminados</div>
+              </div>
+            </div>
           </MDBox>
 
           <MDBox pt={6} pb={3}>
@@ -348,7 +359,14 @@ const AdminUserDashboard = () => {
                     </MDTypography>
                   </MDBox>
                   <MDBox
-                    pt={3} px={3} pb={3}
+                    pt={3}
+                    sx={{
+                      p: 4,
+                      textAlign: "center",
+                      width: "100%",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
                   >
                     {showHistory ? (
                       // 🔁 AQUI VA LA TABLA DE HISTORIAL
@@ -384,6 +402,62 @@ const AdminUserDashboard = () => {
           onInvite={handleInviteUser}
           loading={inviteLoading}
         />
+
+        {/* Delete Confirmation Dialog */}
+        <Dialog
+          open={Boolean(openModalDeleteUser)}
+          onClose={closeModalDeleteUser}
+        >
+          <DialogTitle>
+            <MDBox
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <MDTypography variant="h5"> Confirmar eliminación</MDTypography>
+              <IconButton onClick={closeModalDeleteUser}>
+                <CloseIcon />
+              </IconButton>
+            </MDBox>
+          </DialogTitle>
+
+          <DialogContent dividers>
+            <MDTypography variant="body1" color="text">
+              ¿Confirma que desea eliminar este proyecto?
+              <br />
+              Tenga en cuenta que{" "}
+              <strong>
+                todas las tareas vinculadas también serán eliminadas
+              </strong>
+              .
+            </MDTypography>
+            <MDTypography
+              variant="body2"
+              color="error"
+              sx={{ mt: 1, fontWeight: 500 }}
+            >
+              Esta acción no se puede deshacer.
+            </MDTypography>
+          </DialogContent>
+
+          <DialogActions>
+            <MDButton
+              onClick={closeModalDeleteUser}
+              variant="outlined"
+              color="secondary"
+            >
+              Cancelar
+            </MDButton>
+            <MDButton
+              onClick={() => handleRemoveUser(openModalDeleteUser)}
+              variant="gradient"
+              color="error"
+            >
+              Eliminar
+            </MDButton>
+          </DialogActions>
+        </Dialog>
+
         <Footer />
       </MDBox>
     </DashboardLayout>

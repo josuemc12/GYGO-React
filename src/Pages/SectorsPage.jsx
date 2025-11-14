@@ -73,28 +73,48 @@ export default function SectorsIndexPage() {
     }
     try {
       if (editMode) {
-        await UpdateSector({ sectorId: editingId, nombre: sectorName });
-        setModalOpen(false);
-        await Swal.fire({
-          icon: "success",
-          title: "Sector actualizado correctamente",
-          showConfirmButton: false,
-          timer: 2000,
+        const result = await UpdateSector({
+          sectorId: editingId,
+          nombre: sectorName,
         });
+        if (result.success) {
+          Swal.fire({
+            icon: "success",
+            title: "Sector actualizado correctamente",
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: result.message,
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        }
       } else {
-        await PostSector({ nombre: sectorName });
+        const result = await PostSector({ nombre: sectorName });
         setModalOpen(false);
-        await Swal.fire({
-          icon: "success",
-          title: "Sector creado exitosamente",
-          showConfirmButton: false,
-          timer: 2000,
-        });
+
+        if (result.success) {
+          Swal.fire({
+            icon: "success",
+            title: "Sector creado exitosamente",
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: result.message,
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        }
       }
       setModalOpen(false);
       await loadSectors();
     } catch (e) {
-      console.error("Error al guardar sector", e);
       Swal.fire("Error", "No se pudo guardar el sector", "error");
     }
   };
@@ -115,7 +135,7 @@ export default function SectorsIndexPage() {
         <Tooltip title="Editar sector">
           <IconButton
             size="small"
-            color="success"
+            sx={{ color: "#1976D2" }}
             onClick={() => handleEditClick(sector)}
           >
             <EditOutlined fontSize="small" />
@@ -208,8 +228,7 @@ export default function SectorsIndexPage() {
                 sx={{
                   p: 4,
                   textAlign: "center",
-                  minHeight: "100px",
-                  width: "1200px",
+                  width: "100%",
                   alignItems: "center",
                   justifyContent: "center",
                 }}
@@ -256,7 +275,10 @@ export default function SectorsIndexPage() {
               fullWidth
               label="Nombre del Sector"
               value={sectorName}
-              onChange={(e) => setSectorName(e.target.value)}
+              onChange={(e) => {
+                setSectorName(e.target.value);
+                setErrors((prev) => ({ ...prev, name: "" }));
+              }}
               error={!!errors.name}
               helperText={errors.name}
               sx={{ mb: 2 }}
