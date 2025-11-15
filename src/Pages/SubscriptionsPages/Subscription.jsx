@@ -17,6 +17,7 @@ import { useAuth } from "../../context/AuthContext";  // IMPORTA solo useAuth
 import {refreshLogin} from "../../API/Auth";
 import { getSubscriptionByUserId } from "../../API/Subscription";
 import WebhookTestButtons from "../../components/WebhooksTestButtons";
+import { DoesUserHaveGroup, reactivateGroup } from "../../API/AddGroup";
 
 export default function SubscriptionSwitch() {
   const { role, userId, markUserAsPaid, updateRole} = useAuth();
@@ -68,9 +69,35 @@ useEffect(() => {
   }, [role, userId]);
 
   
-  const handleClose = () => {
+  const handleClose = async () => {
     setModalOpen(false);
-    if (subscriptionSuccess) {
+    if(!subscriptionSuccess){
+      return
+    }
+
+    try {
+      const groupCheck = await DoesUserHaveGroup();
+      if(groupCheck?.state === true){
+        const groupId = groupCheck.grupo.grupoId;
+
+        //reactivate
+        const result = await reactivateGroup(groupId);
+
+        if(result?.message === 'Grupo reactivado correctamente'){
+          await refreshLogin();
+
+          navigate("/dashboard");
+        }else{
+          console.error("Error al reactivar grupo:", result);
+        navigate("/dashboard");
+        }
+        return;
+      }
+
+      navigate("/addGroup")
+
+    } catch (ex) {
+      console.error("Error en el flujo de suscripción:", err);
       navigate("/addGroup");
     }
   };

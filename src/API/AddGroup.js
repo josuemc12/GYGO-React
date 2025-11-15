@@ -46,13 +46,7 @@ export async function reactivateGroup(groupId){
     credentials: "include"
   });
 
-  const data = await res.json();
-
-  if (res.ok) {
-    return {success: true, data};
-  } else {
-    return {success: false}
-  }
+  return await response.json();
 };
 
 
@@ -63,10 +57,8 @@ export async function DoesUserHaveGroup(){
       credentials: "include"
     });
 
-    if(!res.ok) return { success:false };
-
-    const data = await res.json();
-    return { success:true, data };
+    if(!res.ok) return { state:false };
+    return await res.json();
 
   }catch(err){
     return { success:false, error:err };
