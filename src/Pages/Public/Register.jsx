@@ -237,16 +237,6 @@ export function Register() {
                 >
                   Registrar
                 </Button>
-                <Button
-                  onClick={() => navigate("/login")}
-                  fullWidth
-                  variant="outlined"
-                  color="primary"
-                  size="large"
-                  sx={{ mt: 1, mb: 2, py: 1.5, borderRadius: 2 }}
-                >
-                  Iniciar sesión
-                </Button>
               </form>
             </Paper>
           </Container>
