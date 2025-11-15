@@ -93,28 +93,50 @@ export function SourcesIndexPage() {
 
   const handleSave = async () => {
     if (!sourceData.nombre.trim() || !sourceData.año || !sourceData.sector) {
-      setErrors({ nombre: "Requerido", año: "Requerido", sector: "Requerido" });
+      setErrors({
+        nombre: !sourceData.nombre.trim() ? "Requerido" : "",
+        año: !sourceData.año ? "Requerido" : "",
+        sector: !sourceData.sector ? "Requerido" : "",
+      });
       return;
     }
     try {
       if (editMode) {
-        await UpdateSource({ fuenteId: editId, ...sourceData });
+        const result = await UpdateSource({ fuenteId: editId, ...sourceData });
         setModalOpen(false);
-        await Swal.fire({
-          icon: "success",
-          title: "Fuente actualizada correctamente",
-          showConfirmButton: false,
-          timer: 2000,
-        });
+        if (result.success) {
+          Swal.fire({
+            icon: "success",
+            title: "Fuente actualizada correctamente",
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: result.message,
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        }
       } else {
-        await CreateSource(sourceData);
+        const result = await CreateSource(sourceData);
         setModalOpen(false);
-        await Swal.fire({
-          icon: "success",
-          title: "Fuente creada correctamente",
-          showConfirmButton: false,
-          timer: 2000,
-        });
+        if (result.success) {
+          Swal.fire({
+            icon: "success",
+            title: "Fuente creada correctamente",
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: result.message,
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        }
       }
       await loadSources();
     } catch (e) {
@@ -241,8 +263,7 @@ export function SourcesIndexPage() {
                 sx={{
                   p: 4,
                   textAlign: "center",
-                  minHeight: "100px",
-                  width: "1200px",
+                  width: "100%",
                   alignItems: "center",
                   justifyContent: "center",
                 }}
@@ -288,9 +309,10 @@ export function SourcesIndexPage() {
               fullWidth
               label="Nombre"
               value={sourceData.nombre}
-              onChange={(e) =>
-                setSourceData({ ...sourceData, nombre: e.target.value })
-              }
+              onChange={(e) => {
+                setSourceData({ ...sourceData, nombre: e.target.value });
+                setErrors((prev) => ({ ...prev, nombre: "" }));
+              }}
               error={!!errors.nombre}
               helperText={errors.nombre}
               sx={{ mb: 2 }}
@@ -300,9 +322,10 @@ export function SourcesIndexPage() {
               label="Año"
               type="number"
               value={sourceData.año}
-              onChange={(e) =>
-                setSourceData({ ...sourceData, año: e.target.value })
-              }
+              onChange={(e) => {
+                setSourceData({ ...sourceData, año: e.target.value });
+                setErrors((prev) => ({ ...prev, año: "" }));
+              }}
               error={!!errors.año}
               helperText={errors.año}
               sx={{ mb: 2 }}
@@ -313,9 +336,13 @@ export function SourcesIndexPage() {
               <Select
                 fullWidth
                 value={sourceData.sector}
-                onChange={(e) =>
-                  setSourceData({ ...sourceData, sector: e.target.value })
-                }
+                onChange={(e) => {
+                  setSourceData({ ...sourceData, sector: e.target.value });
+                  setErrors((prev) => ({
+                    ...prev,
+                    sector: "",
+                  }));
+                }}
                 displayEmpty
                 error={!!errors.sector}
                 sx={{ mb: 2, height: 40 }}

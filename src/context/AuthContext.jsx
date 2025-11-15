@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { refreshLogin } from "../API/Auth";
 import { useNavigate } from 'react-router-dom';
 const AuthContext = createContext();
@@ -8,11 +8,13 @@ export const AuthProvider = ({ children }) => {
   const [userId, setUserId] = useState(() => localStorage.getItem("userId") || null);
   const [userGroup, setUserGroup] = useState(() => localStorage.getItem("userGroup") || null); // ← AGREGAR
   const [hasPaidGroupAdminAccess, setHasPaidGroupAdminAccess] = useState(false);
+  
   const navigate = useNavigate(); 
 
 
+
   const login = (newRole, id, groupId = null) => { // ← Agregar groupId opcional
-    console.log("Guardando rol en contexto:", newRole);
+    
     setRole(newRole);
     setUserId(id);
     setUserGroup(groupId); // ← AGREGAR
@@ -81,8 +83,8 @@ export const AuthProvider = ({ children }) => {
         logoutRol,
         refreshUserData,
         markUserAsPaid,
-        updateRole,
-      }}
+        updateRole
+            }}
     >
       {children}
     </AuthContext.Provider>

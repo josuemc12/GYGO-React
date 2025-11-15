@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-
+import { AddOutlined, EditOutlined } from "@mui/icons-material";
 import {
   getUsers,
   getUsersbyRol,
@@ -234,6 +234,7 @@ const filteredUsers = Users.filter((user) =>
               </Grid>
               <Grid>
                 <MDButton
+                startIcon={<AddOutlined />}
                   onClick={() => {
                     setInviteModalOpen(true);
                   }}
@@ -248,7 +249,7 @@ const filteredUsers = Users.filter((user) =>
                     },
                   }}
                 >
-                  Nuevo Usuario
+                  Agregar Usuario
                 </MDButton>
               </Grid>
             </Grid>

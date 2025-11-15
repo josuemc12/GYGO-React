@@ -4,6 +4,8 @@ import { Navigate } from "react-router-dom";
 ///Iconos
 import Icon from "@mui/material/Icon";
 import { EnergySavingsLeaf } from "@mui/icons-material";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+
 
 //Ruta del login
 import Login from "./Pages/Public/Login";
@@ -48,22 +50,14 @@ import { ContactUs } from "./Pages/Public/ContactUs";
 import { ChangePassword } from "./Pages/Public/ChangePassword";
 import NotFound from "./Pages/NotFound";
 
-const ProtectedElement = ({
-  children,
-  allowedRoles,
-  requiresPayment = false,
-}) => {
-  const { role, hasPaidGroupAdminAccess } = useAuth();
+const ProtectedElement = ({ children, roles }) => {
+  const { role } = useAuth();
 
+  // No está logueado
   if (!role) return <Navigate to="/login" replace />;
 
-  if (allowedRoles && !allowedRoles.includes(role)) {
-    return <Navigate to="/login" replace />;
-  }
-
-  if (requiresPayment && role === "GA" && !hasPaidGroupAdminAccess) {
-    return <Navigate to="/dashboard" replace />;
-  }
+  // No tiene rol permitido
+  if (roles && !roles.includes(role)) return <Navigate to="/" replace />;
 
   return children;
 };
@@ -106,15 +100,16 @@ export const routes = [
     type: "collapse",
     name: "Manejo de usuarios",
     key: "ManagmentUsers",
-    icon: <Icon fontSize="small">dashboard</Icon>,
+    icon: <ManageAccountsIcon fontSize="small" />,
     route: "/ManagmentUsers",
 
     component: (
-      <ProtectedElement>
+      <ProtectedElement roles={["DEV", "SA"]}>
         <ManagmentUsers />
       </ProtectedElement>
     ),
     roles: ["DEV", "SA"],
+    
   },
 
   //Ruta de dashboard no visible
@@ -125,7 +120,7 @@ export const routes = [
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/dashboard",
     component: (
-      <ProtectedElement>
+      <ProtectedElement roles={["DEV", "GA", "GU", "DEF", "SA"]}>
         <DashboardGroupPage />
       </ProtectedElement>
     ),
@@ -139,7 +134,7 @@ export const routes = [
     name: "log",
     key: "log",
     icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/Login",
+    route: "/login",
     component: <Login />,
     hideInSidebar: true,
   },
@@ -169,12 +164,13 @@ export const routes = [
     icon: <Icon fontSize="small">email</Icon>,
     route: "/Messages",
     component: (
-      <ProtectedElement>
+      <ProtectedElement roles={["GA", "GU", "DEV", "SA"]}>
         <Messages />
       </ProtectedElement>
     ),
-    hideInSidebar: true,
     roles: ["GA", "GU", "DEV", "SA"],
+    hideInSidebar: true,
+   
   },
 
   //Ruta de consumo
@@ -185,7 +181,7 @@ export const routes = [
     icon: <EnergySavingsLeaf fontSize="small"></EnergySavingsLeaf>,
     route: "/consumption",
     component: (
-      <ProtectedElement>
+      <ProtectedElement roles={["DEV", "GA", "GU"]}>
         <ConsumptionPage />
       </ProtectedElement>
     ),
@@ -199,12 +195,13 @@ export const routes = [
     route: "/consumption/monthly/:id",
 
     component: (
-      <ProtectedElement>
+      <ProtectedElement roles={["DEV", "GA", "GU"]}>
         <MonthlyConsumptionPage />
       </ProtectedElement>
     ),
     hideInSidebar: true,
     roles: ["DEV", "GA", "GU"],
+  
   },
 
   {
@@ -215,12 +212,13 @@ export const routes = [
     route: "/consumption/monthly/edit/:consumptionId/:monthlyId",
 
     component: (
-      <ProtectedElement>
+      <ProtectedElement roles={["DEV", "GA", "GU"]}>
         <UpdateMonthlyConsumPage />
       </ProtectedElement>
     ),
     hideInSidebar: true,
     roles: ["DEV", "GA", "GU"],
+    
   },
 
   //Ruta para agregar grupo
@@ -232,7 +230,7 @@ export const routes = [
     route: "/addGroup",
 
     component: (
-      <ProtectedElement>
+      <ProtectedElement roles={["DEV", "SA", "GA"]}>
         <AddGroupSAPage />
       </ProtectedElement>
     ),
@@ -249,12 +247,13 @@ export const routes = [
     route: "/consumption/monthly/history/:id",
 
     component: (
-      <ProtectedElement>
+      <ProtectedElement roles={["GA", "DEV", "GU"]}>
         <MonthlyHistoryPage />
       </ProtectedElement>
     ),
+    roles: ["GA", "DEV", "GU"], 
     hideInSidebar: true,
-    roles: ["GA", "DEV", "GU"],
+   
   },
 
   {
@@ -265,7 +264,7 @@ export const routes = [
     route: "/emissions/confirm",
 
     component: (
-      <ProtectedElement>
+      <ProtectedElement roles={["GA", "GU", "DEV"]}>
         <ConfirmIncidentPage />
       </ProtectedElement>
     ),
@@ -282,7 +281,7 @@ export const routes = [
     route: "/userProfile",
 
     component: (
-      <ProtectedElement>
+      <ProtectedElement roles={["GA", "DEV", "GU", "SA", "DEF"]}>
         <UserProfilePage />
       </ProtectedElement>
     ),
@@ -297,7 +296,7 @@ export const routes = [
     route: "/groupProfile",
 
     component: (
-      <ProtectedElement>
+      <ProtectedElement roles={["GA", "DEV", "SA", "GU"]}>
         <GrupoProfilePage />
       </ProtectedElement>
     ),
@@ -312,7 +311,7 @@ export const routes = [
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/ChangePasswordPage",
     component: (
-      <ProtectedElement>
+      <ProtectedElement roles={["GA", "DEV", "GU", "SA", "DEF"]}>
         <ChangePasswordPage />
       </ProtectedElement>
     ),
@@ -346,7 +345,7 @@ export const routes = [
         route: "/sectores",
 
         component: (
-          <ProtectedElement>
+          <ProtectedElement roles={["DEV", "SA"]}>
             <SectorsIndexPage />
           </ProtectedElement>
         ),
@@ -361,7 +360,7 @@ export const routes = [
         route: "/unidades",
 
         component: (
-          <ProtectedElement>
+          <ProtectedElement roles={["DEV", "SA"]}>
             <UnitsIndexPage />
           </ProtectedElement>
         ),
@@ -375,11 +374,12 @@ export const routes = [
         route: "/sources",
 
         component: (
-          <ProtectedElement>
+          <ProtectedElement roles={["DEV", "SA"]}>
             <SourcesIndexPage />
           </ProtectedElement>
         ),
         roles: ["DEV", "SA"],
+
       },
       ///gESTIONES DEL ADMIN DE GRUPO
 
@@ -389,7 +389,7 @@ export const routes = [
         icon: <Icon fontSize="small">business</Icon>,
         route: "/Services",
         component: (
-          <ProtectedElement>
+          <ProtectedElement roles={["SA", "DEV"]}>
             <ServicesPage />
           </ProtectedElement>
         ),
@@ -403,7 +403,7 @@ export const routes = [
         route: "/AdminEmisionFactor",
 
         component: (
-          <ProtectedElement>
+          <ProtectedElement roles={["DEV", "SA"]}>
             <AdminEmisionFactor />
           </ProtectedElement>
         ),
@@ -417,11 +417,11 @@ export const routes = [
         icon: <Icon fontSize="small">dashboard</Icon>,
         route: "/AdminUserDashboard",
         component: (
-          <ProtectedElement>
+          <ProtectedElement roles={["GA", "DEV"]}>
             <AdminUserDashboard />
           </ProtectedElement>
         ),
-        roles: ["GA", "DEV"],
+        roles: ["GA", "DEV"], 
       },
     ],
     roles: ["DEV", "SA", "GA"],
@@ -445,12 +445,14 @@ export const routes = [
     icon: <Icon fontSize="small">add</Icon>,
     route: "/consumption/add",
     component: (
-      <ProtectedElement>
+      <ProtectedElement roles={["DEV", "GA", "GU"]}>
         <AddConsumptionPage />
       </ProtectedElement>
     ),
-    hideInSidebar: true,
+     hideInSidebar: true,
     roles: ["DEV", "GA", "GU"],
+   
+ 
   },
   {
     type: "collapse",
@@ -459,12 +461,14 @@ export const routes = [
     icon: <Icon fontSize="small">add</Icon>,
     route: "/consumption/edit/:id",
     component: (
-      <ProtectedElement>
+      <ProtectedElement roles={["DEV", "GA", "GU"]}>
         <UpdateConsumptionPage />
       </ProtectedElement>
     ),
     hideInSidebar: true,
     roles: ["DEV", "GA", "GU"],
+    
+
   },
   {
     type: "collapse",
@@ -473,12 +477,14 @@ export const routes = [
     icon: <Icon fontSize="small">edit_calendar</Icon>,
     route: "/consumption/monthly/edit/:consumptionId/:monthlyId",
     component: (
-      <ProtectedElement>
+      <ProtectedElement roles={["DEV", "GA", "GU"]}>
         <UpdateMonthlyConsumPage />
       </ProtectedElement>
     ),
     hideInSidebar: true,
     roles: ["DEV", "GA", "GU"],
+    
+
   },
   {
     type: "collapse",
@@ -487,11 +493,11 @@ export const routes = [
     icon: <Icon fontSize="small">add_circle</Icon>,
     route: "/consumption/monthly/add/:consumptionId",
     component: (
-      <ProtectedElement>
+      <ProtectedElement roles={["DEV", "GA", "GU"]}>
         <AddMonthlyConsumPage />
       </ProtectedElement>
     ),
-    hideInSidebar: true,
+     hideInSidebar: true,
     roles: ["DEV", "GA", "GU"],
   },
 
@@ -514,7 +520,7 @@ export const routes = [
     route: "/emissions/incidents",
 
     component: (
-      <ProtectedElement>
+      <ProtectedElement roles={["GA", "DEV"]}>
         <IncidentsHistoryPage />
       </ProtectedElement>
     ),
@@ -542,7 +548,7 @@ export const routes = [
     route: "/ProjectPage",
 
     component: (
-      <ProtectedElement>
+      <ProtectedElement roles={["GA", "GU", "DEV"]}>
         <ProjectPage />
       </ProtectedElement>
     ),
@@ -564,7 +570,7 @@ export const routes = [
         route: "/reportsEmissions",
 
         component: (
-          <ProtectedElement>
+          <ProtectedElement roles={["GA", "DEV"]}>
             <ReportsEmissionsPage />
           </ProtectedElement>
         ),
@@ -577,7 +583,7 @@ export const routes = [
         route: "/ReportCompanies",
 
         component: (
-          <ProtectedElement>
+          <ProtectedElement roles={["SA", "DEV"]}>
             <ReportCompanies />
           </ProtectedElement>
         ),
@@ -591,7 +597,7 @@ export const routes = [
         route: "/ReportServices",
 
         component: (
-          <ProtectedElement>
+          <ProtectedElement roles={["SA", "DEV"]}>
             <ReportServices />
           </ProtectedElement>
         ),
@@ -607,7 +613,6 @@ export const routes = [
     route: "*",
     component: <NotFound />,
     hideInSidebar: true,
-
   },
 ];
 
@@ -615,6 +620,9 @@ export const getRoutes = (role) => {
   const filterByRole = (routesList) => {
     return routesList
       .map((route) => {
+        // Si la ruta requiere roles y el usuario no tiene rol, bloquear
+        if (route.roles && !role) return null;
+        
         // Verificamos si este ítem tiene permiso
         const hasAccess = !route.roles || (role && route.roles.includes(role));
 

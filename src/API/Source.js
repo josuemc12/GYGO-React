@@ -32,10 +32,10 @@ export const CreateSource = async(sourceDTO) => {
 
   if(response.ok){
     const data = await response.text();
-    return data;
+     return { success: true, message: data };
   }else{
-    const error = await response.text();
-    return error;
+    const error = await response.json();
+      return { success: false, message: error.message };
   }
 }
 
@@ -51,9 +51,9 @@ export async function UpdateSource(sourceDTO){
     
         if (response.ok) {
             const data = await response.text();
-            return data;
+             return { success: true, message: data };
         } else {
-            const error = await response.text();
-            throw new Error(error);
+            const error = await response.json();
+              return { success: false, message: error.message };
         }
 }
