@@ -14,6 +14,7 @@ export const AddGroupSAPage = () => {
   };
 
   return (
+    <DashboardLayout>
     <Box component={Paper} elevation={3} sx={{ p:4, borderRadius: 2 }}>
       <Typography variant="h4" gutterBottom>
         Crear nuevo grupo
@@ -23,5 +24,6 @@ export const AddGroupSAPage = () => {
       <hr></hr>
       <AddGroupForm onGroupCreated={handleGroupCreated} />
     </Box>
+    </DashboardLayout>
   );
 };

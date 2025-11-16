@@ -131,9 +131,11 @@ export const ChangePassword = () => {
         Swal.fire({
           icon: "success",
           title: "Cambio de contraseña exitoso",
+
           text: "La contraseña se cambió correctamente.",
           showConfirmButton: false,
           timer: 2000, 
+
         }).then(() => {
           window.location.href = "/Login";
         });
