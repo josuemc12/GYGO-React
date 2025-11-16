@@ -152,8 +152,6 @@ function ProjectPage() {
           dayjs(endDate, "DD-MM-YYYY").format("MM/DD/YYYY")
         );
 
-        console.log(formattedStart);
-        console.log(formattedEnd);
 
         data = await getProjectsByDates(formattedStart, formattedEnd);
         setData(data);
@@ -271,9 +269,9 @@ function ProjectPage() {
         return;
       }
       if (modoEdicion) {
-        console.log("Editar");
+       
         result = await UpdateProject(projectData);
-        console.log(result);
+        
         if (result.success) {
           setOpenModalProjects(false);
           Swal.fire({
