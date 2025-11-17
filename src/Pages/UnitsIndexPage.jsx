@@ -159,7 +159,7 @@ export function UnitsIndexPage() {
       <MDBox py={3}>
         <Grid container spacing={3} sx={{ mb: 5 }}>
           <Grid size={{ xs: 12 }}>
-            <Card
+            <MDBox
               sx={{
                 background: "#ffffff",
                 mb: 3,
@@ -169,7 +169,7 @@ export function UnitsIndexPage() {
                 padding: 3,
               }}
             >
-              <CardContent>
+             
                 <Grid
                   container
                   alignItems="center"
@@ -183,7 +183,7 @@ export function UnitsIndexPage() {
                         </MDBox>
                         <MDBox display="flex" alignItems="center" gap={1}>
                           <MDTypography variant="body2" color="text">
-                            Gestiona las unidades registradas en el sistema
+                            Gestiona las unidades registradas en el sistema.
                           </MDTypography>
                         </MDBox>
                       </MDBox>
@@ -208,8 +208,8 @@ export function UnitsIndexPage() {
                     </MDButton>
                   </Grid>
                 </Grid>
-              </CardContent>
-            </Card>
+        
+            </MDBox>
           </Grid>
 
           <Grid size={{ xs: 12 }}>
@@ -224,7 +224,7 @@ export function UnitsIndexPage() {
                 borderRadius="lg"
                 coloredShadow="success"
               >
-                <MDTypography variant="h6" color="white">
+                <MDTypography variant="h6" color="white" align="left">
                   Registro de Unidades
                 </MDTypography>
               </MDBox>

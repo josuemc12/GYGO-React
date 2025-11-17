@@ -189,7 +189,7 @@ export function SourcesIndexPage() {
       <MDBox py={3}>
         <Grid container spacing={3} sx={{ mb: 5 }}>
           <Grid size={{ xs: 12 }}>
-            <Card
+            <MDBox
               sx={{
                 background: "#ffffff",
                 mb: 3,
@@ -199,7 +199,7 @@ export function SourcesIndexPage() {
                 padding: 3,
               }}
             >
-              <CardContent>
+              
                 <Grid
                   container
                   alignItems="center"
@@ -213,7 +213,7 @@ export function SourcesIndexPage() {
                         </MDBox>
                         <MDBox display="flex" alignItems="center" gap={1}>
                           <MDTypography variant="body2" color="text">
-                            Gestiona las fuentes registradas en el sistema
+                            Gestiona las fuentes registradas en el sistema.
                           </MDTypography>
                         </MDBox>
                       </MDBox>
@@ -238,8 +238,8 @@ export function SourcesIndexPage() {
                     </MDButton>
                   </Grid>
                 </Grid>
-              </CardContent>
-            </Card>
+             
+            </MDBox>
           </Grid>
 
           <Grid size={{ xs: 12 }}>

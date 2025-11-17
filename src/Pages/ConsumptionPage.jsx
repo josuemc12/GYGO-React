@@ -51,75 +51,55 @@ export function ConsumptionPage() {
     <DashboardLayout>
       <DashboardNavbar></DashboardNavbar>
 
-
-
-
-
-
-
-
       <MDBox py={3}>
-        <Grid container spacing={3} sx={{ mb: 5 }}>
-          {/* Header + Botón */}
-          <Grid size={{ xs: 12 }}>
-            <Card
-              sx={{
-                background: "#ffffff",
-                mb: 3,
-                borderRadius: 2,
-                border: "1px solid #e5e7eb",
-                boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-                padding: 3,
-              }}
-            >
-              <CardContent>
-                <Grid
-                  container
-                  alignItems="center"
-                  justifyContent="space-between"
-                >
-                  <Grid>
-                    <MDBox display="flex" flexDirection="column" gap={1}>
-                      <MDBox display="flex" flexDirection="column">
-                        <MDBox display="flex" alignItems="center" gap={1}>
-                          <MDTypography variant="h6">Consumos</MDTypography>
-                        </MDBox>
-                        <MDBox display="flex" alignItems="center" gap={1}>
-                          <MDTypography variant="body2" color="#495057">
-                            Gestiona y monitorea todos los consumos de tu
-                            empresa para calcular tu huella de carbono.
-                          </MDTypography>
-                        </MDBox>
-                      </MDBox>
-                    </MDBox>
-                  </Grid>
-                  <Grid>
-                    <MDButton
-                    variant="outlined"
-                      startIcon={<AddOutlined />}
-                      onClick={handleAgregarConsumo}
-                      sx={{
-                        borderColor: "#4CAF50",
-                        color: "#4CAF50",
-                        "&:hover": {
-                          backgroundColor: "#E8F5E9",
-                          borderColor: "#43A047",
-                          color: "#388E3C",
-                        },
-                      }}
-                    >
-                      Agregar Consumo
-                    </MDButton>
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
-
-            
+        <MDBox
+          sx={{
+            borderRadius: 2,
+            p: 3,
+            mb: 2,
+             background: "#ffffff",
+            border: "1px solid #e5e7eb",
+            boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+          }}
+        >
+          <Grid container alignItems="center" justifyContent="space-between">
+            <Grid item>
+              <MDBox display="flex" flexDirection="column">
+                <MDBox display="flex" alignItems="center" gap={1}>
+                  <MDTypography variant="h6">Consumo</MDTypography>
+                </MDBox>
+                <MDTypography variant="body2" color="text">
+                  Gestiona y monitorea todos los consumos de tu empresa para
+                  calcular tu huella de carbono.
+                </MDTypography>
+              </MDBox>
+            </Grid>
+            <Grid>
+              <MDButton
+                variant="outlined"
+                startIcon={<AddOutlined />}
+                onClick={handleAgregarConsumo}
+                sx={{
+                  borderColor: "#4CAF50",
+                  color: "#4CAF50",
+                  "&:hover": {
+                    backgroundColor: "#E8F5E9",
+                    borderColor: "#43A047",
+                    color: "#388E3C",
+                  },
+                }}
+              >
+                Agregar Consumo
+              </MDButton>
+            </Grid>
           </Grid>
+        </MDBox>
+
+        <Grid container spacing={3} sx={{ mb: 5 }}>
+          
 
           {/* Tabla de Consumos */}
-          <Grid size={{ xs: 12 }}>
+          <Grid size={{ xs: 12 }} mt={10}>
             <Card>
               <MDBox
                 mx={2}
@@ -145,9 +125,6 @@ export function ConsumptionPage() {
               </MDBox>
             </Card>
           </Grid>
-
-
-          
         </Grid>
         <Footer />
       </MDBox>

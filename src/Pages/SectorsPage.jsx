@@ -152,35 +152,35 @@ export default function SectorsIndexPage() {
         <Grid container spacing={3} sx={{ mb: 5 }}>
           {/* Header */}
           <Grid size={{ xs: 12 }}>
-            <Card
-              sx={{
-                background: "#ffffff",
-                mb: 3,
-                borderRadius: 2,
-                border: "1px solid #e5e7eb",
-                boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-                padding: 3,
-              }}
+            <MDBox
+               sx={{
+              borderRadius: 2,
+              p: 3,
+              mb: 2,
+              background: "#ffffff",
+              border: "1px solid #e5e7eb",
+              boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+            }}
             >
-              <CardContent>
+             
                 <Grid
                   container
                   alignItems="center"
                   justifyContent="space-between"
                 >
-                  <Grid>
-                    <MDBox display="flex" flexDirection="column" gap={1}>
-                      <MDBox display="flex" flexDirection="column">
+                  <Grid item>
+                    <MDBox display="flex" flexDirection="column" >
+                     
                         <MDBox display="flex" alignItems="center" gap={1}>
                           <MDTypography variant="h6">Sectores</MDTypography>
                         </MDBox>
                         <MDBox display="flex" alignItems="center" gap={1}>
                           <MDTypography variant="body2" color="text">
-                            Gestiona los sectores registrados dentro de la
-                            organización
+                            Gestiona los sectores registrados dentro del sistema.
+                            
                           </MDTypography>
                         </MDBox>
-                      </MDBox>
+                      
                     </MDBox>
                   </Grid>
                   <Grid>
@@ -202,8 +202,8 @@ export default function SectorsIndexPage() {
                     </MDButton>
                   </Grid>
                 </Grid>
-              </CardContent>
-            </Card>
+             
+            </MDBox>
           </Grid>
 
           {/* Tabla */}

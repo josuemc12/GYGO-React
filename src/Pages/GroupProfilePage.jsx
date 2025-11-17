@@ -14,6 +14,7 @@ import {
   TextField,
   Avatar,
 } from "@mui/material";
+import { ManageAccounts as ManageAccountsIcon } from "@mui/icons-material";
 import Swal from "sweetalert2";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
@@ -51,7 +52,7 @@ export function GrupoProfilePage() {
 
       setGroupData({
         nombre: result.nombre,
-        correo: result.correo ,
+        correo: result.correo,
         logoUrl: result.logoURL ? `${baseUrl}/${result.logoURL}` : "",
         logoFile: null,
       });
@@ -298,17 +299,18 @@ export function GrupoProfilePage() {
                 </Card>
               </Grid>
 
-              {/* Botón de edición a lo ancho */}
-              <Grid size={{ xs: 12 }}>
-                <MDButton
-                  variant="gradient"
-                  color="info"
-                  fullWidth
-                  size="large"
-                  onClick={openModalWithData}
-                >
-                  Editar Información del Grupo
-                </MDButton>
+              <Grid size={{ xs: 12 }} sx={{ mb: 3 }}>
+                <Card sx={{ p: 3, textAlign: "right" }}>
+                  <MDButton
+                    sx={{ mb: 2 }}
+                    variant="contained"
+                    color="success"
+                    startIcon={<ManageAccountsIcon />}
+                    onClick={openModalWithData}
+                  >
+                    Editar Información del Grupo
+                  </MDButton>
+                </Card>
               </Grid>
             </>
           )}
@@ -394,7 +396,6 @@ export function GrupoProfilePage() {
                     }}
                   />
                 </MDButton>
-
               </MDBox>
 
               <MDTypography

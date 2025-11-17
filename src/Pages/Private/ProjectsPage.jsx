@@ -152,7 +152,6 @@ function ProjectPage() {
           dayjs(endDate, "DD-MM-YYYY").format("MM/DD/YYYY")
         );
 
-
         data = await getProjectsByDates(formattedStart, formattedEnd);
         setData(data);
       } else if (filter === "todos") {
@@ -194,8 +193,6 @@ function ProjectPage() {
       const formattedEnd = encodeURIComponent(
         dayjs(endDate).format("MM-DD-YYYY")
       );
-      console.log(formattedStart);
-      console.log(formattedEnd);
       const projectsPDF = await getProjectsPDF(formattedStart, formattedEnd);
 
       CreatePDF(projectsPDF);
@@ -269,9 +266,8 @@ function ProjectPage() {
         return;
       }
       if (modoEdicion) {
-       
         result = await UpdateProject(projectData);
-        
+
         if (result.success) {
           setOpenModalProjects(false);
           Swal.fire({
@@ -716,11 +712,14 @@ function ProjectPage() {
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <MDBox mb={2}>
             <MDBox
-              borderRadius="xl"
-              border="1px solid #ccc"
-              p={3}
-              mb={2}
-              bgColor="white"
+              sx={{
+                borderRadius: 2,
+                p: 3,
+                mb: 2,
+                background: "#ffffff",
+                border: "1px solid #e5e7eb",
+                boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+              }}
             >
               <Grid
                 container
@@ -730,13 +729,10 @@ function ProjectPage() {
                 <Grid item>
                   <MDBox display="flex" flexDirection="column">
                     <MDBox display="flex" alignItems="center" gap={1}>
-                      <FilterAltOutlinedIcon fontSize="medium" />
-                      <MDTypography variant="h6">
-                        Filtros y Acciones
-                      </MDTypography>
+                      <MDTypography variant="h6">Proyectos</MDTypography>
                     </MDBox>
                     <MDTypography variant="body2" color="text">
-                      Filtra los proyectos por estado y fechas
+                      Filtra, organiza y administra tus proyectos fácilmente.
                     </MDTypography>
                   </MDBox>
                 </Grid>
