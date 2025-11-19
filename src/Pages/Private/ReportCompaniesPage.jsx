@@ -259,7 +259,7 @@ export function ReportCompanies() {
                 <Grid container spacing={2}>
                   <Grid item>
                     <Grid container spacing={2}>
-                      <Grid item sx={{pt:3}}>
+                      <Grid item sx={{ pt: 3 }}>
                         <FormControl size="medium" sx={{ width: 180 }}>
                           <InputLabel id="Estado-label">Estado</InputLabel>
                           <Select
@@ -281,7 +281,7 @@ export function ReportCompanies() {
                   </Grid>
 
                   {/* Filtrar por servicios */}
-                  <Grid item sx={{pt:3}}>
+                  <Grid item sx={{ pt: 3 }}>
                     <Grid container spacing={2}>
                       <Grid item>
                         <FormControl size="medium" sx={{ width: 180 }}>
@@ -373,13 +373,11 @@ export function ReportCompanies() {
       <Dialog
         open={openModal}
         onClose={handleCloseModal}
-        maxWidth={false}
-        fullWidth
+        maxWidth="xl" // Tamaños predefinidos: xs, sm, md, lg, xl
+        fullWidth // Hace que el dialog ocupe todo el ancho permitido por maxWidth
         PaperProps={{
           sx: {
-            borderRadius: 2,
-            width: "50%", // o "70%", o cualquier medida CSS
-            maxWidth: "40vw",
+            borderRadius: 2, // Solo ajusta el borde si quieres
           },
         }}
       >

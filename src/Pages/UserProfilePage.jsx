@@ -8,7 +8,11 @@ import {
   Stack,
   TextField,
   Box,
-  Dialog, DialogTitle, DialogContent
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  IconButton
 } from "@mui/material";
 import {
   ArrowBackOutlined,
@@ -16,8 +20,9 @@ import {
   Email as EmailIcon,
   Person as PersonIcon,
   Lock as LockIcon,
-  ManageAccounts as ManageAccountsIcon
+  ManageAccounts as ManageAccountsIcon,
 } from "@mui/icons-material";
+import CloseIcon from "@mui/icons-material/Close";
 import MDBox from "components/MDBox";
 import Swal from "sweetalert2";
 import MDTypography from "components/MDTypography";
@@ -27,7 +32,7 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import Footer from "examples/Footer";
 import { useNavigate } from "react-router-dom";
 import { getCurrentUser } from "../API/Auth";
-import { ChangeProfileUser } from "../API/User"
+import { ChangeProfileUser } from "../API/User";
 
 export function UserProfilePage() {
   const navigate = useNavigate();
@@ -37,9 +42,8 @@ export function UserProfilePage() {
   const [openEditModal, setOpenEditModal] = useState(false);
   const [editForm, setEditForm] = useState({
     userName: "",
-    email: ""
+    email: "",
   });
-
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -74,19 +78,21 @@ export function UserProfilePage() {
 
   const handleSaveProfile = async () => {
     setSaving(true);
-    if(editForm.email === "" || editForm.userName === ""){
+    if (editForm.email === "" || editForm.userName === "") {
       Swal.fire({
-          icon: "warning",
-          title: "Error",
-          text: "Los campos deben estar llenos",
-        });
-        setSaving(false);
-        return;
+        icon: "warning",
+        title: "Error",
+        text: "Los campos deben estar llenos",
+        showConfirmButton: false,
+          timer: 3000,
+      });
+      setSaving(false);
+      return;
     }
     try {
       const response = await ChangeProfileUser({
         userName: editForm.userName,
-        email: editForm.email
+        email: editForm.email,
       });
 
       if (response?.success) {
@@ -94,18 +100,21 @@ export function UserProfilePage() {
           icon: "success",
           title: "Éxito",
           text: response.message,
+          showConfirmButton: false,
+          timer: 3000,
         });
 
         setOpenEditModal(false);
 
         const data = await getCurrentUser();
         setUserInfo(data);
-
       } else {
         Swal.fire({
           icon: "error",
           title: "Error",
-          text: response?.message || "Ocurrió un error"
+          text: response?.message || "Ocurrió un error",
+          showConfirmButton: false,
+          timer: 3000,
         });
       }
     } catch (error) {
@@ -113,6 +122,8 @@ export function UserProfilePage() {
         icon: "error",
         title: "Error",
         text: error.message,
+        showConfirmButton: false,
+          timer: 3000,
       });
     } finally {
       setSaving(false);
@@ -127,7 +138,7 @@ export function UserProfilePage() {
           <Grid size={{ xs: 12 }}>
             <Card sx={{ p: 3 }}>
               <Grid container alignItems="center" spacing={2}>
-                <Grid size={{ xs: 12 }} >
+                <Grid size={{ xs: 12 }}>
                   <MDTypography variant="h4" fontWeight="bold">
                     Perfil de usuario
                   </MDTypography>
@@ -147,23 +158,29 @@ export function UserProfilePage() {
             </Grid>
           ) : (
             <>
-              <Grid size={{ xs: 12, md: 4 }} >
+              <Grid size={{ xs: 12, md: 4 }}>
                 <Card sx={{ p: 3, display: "flex", alignItems: "center" }}>
-                  <Avatar sx={{ bgcolor: "info.main", width: 56, height: 56, mr: 2 }}>
+                  <Avatar
+                    sx={{ bgcolor: "info.main", width: 56, height: 56, mr: 2 }}
+                  >
                     <PersonIcon />
                   </Avatar>
                   <div>
                     <MDTypography variant="subtitle2" color="text">
                       Usuario
                     </MDTypography>
-                    <MDTypography variant="h6">{userInfo.username}</MDTypography>
+                    <MDTypography variant="h6">
+                      {userInfo.username}
+                    </MDTypography>
                   </div>
                 </Card>
               </Grid>
 
-              <Grid size={{ xs: 12, md: 4 }} >
+              <Grid size={{ xs: 12, md: 4 }}>
                 <Card sx={{ p: 3, display: "flex", alignItems: "center" }}>
-                  <Avatar sx={{ bgcolor: "info.main", width: 56, height: 56, mr: 2 }}>
+                  <Avatar
+                    sx={{ bgcolor: "info.main", width: 56, height: 56, mr: 2 }}
+                  >
                     <EmailIcon />
                   </Avatar>
                   <div>
@@ -175,9 +192,11 @@ export function UserProfilePage() {
                 </Card>
               </Grid>
 
-              <Grid size={{ xs: 12, md: 4 }} >
+              <Grid size={{ xs: 12, md: 4 }}>
                 <Card sx={{ p: 3, display: "flex", alignItems: "center" }}>
-                  <Avatar sx={{ bgcolor: "info.main", width: 56, height: 56, mr: 2 }}>
+                  <Avatar
+                    sx={{ bgcolor: "info.main", width: 56, height: 56, mr: 2 }}
+                  >
                     <GroupIcon />
                   </Avatar>
                   <div>
@@ -185,7 +204,9 @@ export function UserProfilePage() {
                       Grupo
                     </MDTypography>
                     <MDTypography variant="h6">
-                      {userInfo.grupoNombre ? userInfo.grupoNombre : "No asignado"}
+                      {userInfo.grupoNombre
+                        ? userInfo.grupoNombre
+                        : "No asignado"}
                     </MDTypography>
                   </div>
                 </Card>
@@ -217,14 +238,27 @@ export function UserProfilePage() {
         </Grid>
         <Footer />
       </MDBox>
-      <Dialog open={openEditModal} onClose={handleCloseEditModal} fullWidth
-      maxWidth="md" >
-         <DialogTitle>
-          <MDTypography variant="h5" fontWeight="bold" color="dark">
+      <Dialog
+        open={openEditModal}
+        onClose={handleCloseEditModal}
+        fullWidth
+        maxWidth="md"
+      >
+        <DialogTitle>
+          <MDBox
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <MDTypography variant="h5" fontWeight="bold" color="dark">
               Editar Perfil
-          </MDTypography>
-         </DialogTitle>
-           <DialogContent sx={{ p: 3 }}>
+            </MDTypography>
+            <IconButton onClick={handleCloseEditModal}>
+              <CloseIcon />
+            </IconButton>
+          </MDBox>
+        </DialogTitle>
+        <DialogContent dividers sx={{ p: 3 }}>
           <TextField
             fullWidth
             label="Nombre de Usuario"
@@ -244,29 +278,23 @@ export function UserProfilePage() {
               setEditForm({ ...editForm, email: e.target.value })
             }
           />
+        </DialogContent>
+<DialogActions>
+  <Stack
+    direction={{ xs: "column", sm: "row" }}
+    spacing={2}
+    width="100%"
+  >
+    <MDButton sx={{ flex: 1 }} color="info" variant="contained" onClick={handleSaveProfile}>
+      {saving ? <CircularProgress size={24} color="inherit" /> : "Guardar"}
+    </MDButton>
 
-          <Stack direction="row" spacing={2} mt={3}>
-            <MDButton
-              fullWidth
-              color="info"
-              variant="contained"
-              onClick={handleSaveProfile}
-            >
-              {saving ? <CircularProgress size={24} color="inherit" /> : "Guardar"}
-            </MDButton>
-
-            <MDButton
-              fullWidth
-              color="error"
-              variant="contained"
-              onClick={handleCloseEditModal}
-            >
-              Cancelar
-            </MDButton>
-          </Stack>
-          </DialogContent>
+    <MDButton sx={{ flex: 1 }} color="error" variant="contained" onClick={handleCloseEditModal}>
+      Cancelar
+    </MDButton>
+  </Stack>
+</DialogActions>
       </Dialog>
-
     </DashboardLayout>
   );
 }

@@ -13,6 +13,7 @@ import {
   IconButton,
   TextField,
   Avatar,
+  Stack,
 } from "@mui/material";
 import { ManageAccounts as ManageAccountsIcon } from "@mui/icons-material";
 import Swal from "sweetalert2";
@@ -40,6 +41,7 @@ export function GrupoProfilePage() {
     logoFile: null,
   });
   const [previewLogo, setPreviewLogo] = useState(null);
+  const [saving, setSaving] = useState(false);
 
   const fetchGrupo = async () => {
     try {
@@ -115,22 +117,25 @@ export function GrupoProfilePage() {
   };
 
   const UpdateGroup = async () => {
+    setSaving(true);
     try {
       if (!groupData.nombre.trim() || !groupData.correo.trim()) {
         setErrors({
           nombre: !groupData.nombre.trim() ? "Requerido" : "",
           correo: !groupData.correo.trim() ? "Requerido" : "",
         });
+        setSaving(false);
         return;
       }
       if (!groupData.logoFile && !groupData.logoUrl) {
         setErrors((prev) => ({ ...prev, logoFile: "Requerido" }));
+        setSaving(false);
         return;
       }
 
       if (!emailRegex.test(groupData.correo)) {
         setErrors((prev) => ({ ...prev, correo: "Correo inválido" }));
-
+        setSaving(false);
         return;
       }
 
@@ -144,6 +149,7 @@ export function GrupoProfilePage() {
             correo: "",
             logo: "Formato no válido. Use JPG, PNG",
           });
+          setSaving(false);
           return;
         }
 
@@ -153,6 +159,7 @@ export function GrupoProfilePage() {
             correo: "",
             logo: "El logo no debe superar 5MB",
           });
+          setSaving(false);
           return;
         }
       }
@@ -194,6 +201,8 @@ export function GrupoProfilePage() {
         timer: 3000,
       });
       fetchGrupo();
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -317,7 +326,7 @@ export function GrupoProfilePage() {
         </Grid>
 
         {/* Modal para actulizar información */}
-        <Dialog open={openModal} onClose={closeModal} maxWidth="sm" fullWidth>
+        <Dialog open={openModal} onClose={closeModal} maxWidth="md" fullWidth>
           <DialogTitle>
             <MDBox
               display="flex"
@@ -433,17 +442,33 @@ export function GrupoProfilePage() {
           </DialogContent>
 
           <DialogActions>
-            <MDButton
-              onClick={() => UpdateGroup()}
-              variant="outlined"
-              color="success"
+            <Stack
+              direction={{ xs: "column", sm: "row" }}
+              spacing={2}
+              width="100%"
             >
-              Guardar
-            </MDButton>
+              <MDButton
+                sx={{ flex: 1 }}
+                onClick={() => UpdateGroup()}
+                variant="contained"
+                color="info"
+              >
+                {saving ? (
+                  <CircularProgress size={24} color="inherit" />
+                ) : (
+                  "Guardar"
+                )}
+              </MDButton>
 
-            <MDButton onClick={closeModal} variant="gradient" color="error">
-              Cancelar
-            </MDButton>
+              <MDButton
+                sx={{ flex: 1 }}
+                onClick={closeModal}
+                variant="contained"
+                color="error"
+              >
+                Cancelar
+              </MDButton>
+            </Stack>
           </DialogActions>
         </Dialog>
         {/* Modal para actulizar información */}
