@@ -38,7 +38,7 @@ useEffect(() => {
     setModalOpen(true);
     markUserAsPaid();
     updateRole("GA");
-    refreshLogin(); //REVISAR
+    //refreshLogin(); //REVISAR
   } else if (status === "cancel") {
     setModalMessage("Suscripción cancelada.");
     setModalOpen(true);
@@ -86,19 +86,19 @@ useEffect(() => {
         if(result?.message === 'Grupo reactivado correctamente'){
           await refreshLogin();
 
-          navigate("/dashboard");
+          navigate("panel-control");
         }else{
           console.error("Error al reactivar grupo:", result);
-        navigate("/dashboard");
+        navigate("panel-control");
         }
         return;
       }
 
-      navigate("/addGroup")
+      navigate("/agregar-grupo")
 
     } catch (ex) {
       console.error("Error en el flujo de suscripción:", err);
-      navigate("/addGroup");
+      navigate("/agregar-grupo");
     }
   };
 

@@ -34,6 +34,7 @@ export default function SectorsIndexPage() {
   const [sectorName, setSectorName] = useState("");
   const [editingId, setEditingId] = useState(null);
   const [errors, setErrors] = useState({});
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     loadSectors();
@@ -43,7 +44,9 @@ export default function SectorsIndexPage() {
     setLoading(true);
     try {
       const data = await getSectors();
+
       setSectors(data);
+      console.log(sectors);
     } catch (e) {
       console.error("Error cargando sectores", e);
     } finally {
@@ -119,12 +122,16 @@ export default function SectorsIndexPage() {
     }
   };
 
+  const filtered = sectors.filter((item) =>
+    item.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const columns = [
     { Header: "Nombre del Sector", accessor: "name", align: "left" },
     { Header: "Acciones", accessor: "actions", align: "center" },
   ];
 
-  const rows = sectors.map((sector) => ({
+  const rows = filtered.map((sector) => ({
     name: (
       <MDTypography variant="caption" fontWeight="medium">
         {sector.nombre}
@@ -152,58 +159,67 @@ export default function SectorsIndexPage() {
         <Grid container spacing={3} sx={{ mb: 5 }}>
           {/* Header */}
           <Grid size={{ xs: 12 }}>
-            <Card
+            <MDBox
               sx={{
-                background: "#ffffff",
-                mb: 3,
                 borderRadius: 2,
+                p: 3,
+                mb: 2,
+                background: "#ffffff",
                 border: "1px solid #e5e7eb",
                 boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-                padding: 3,
               }}
             >
-              <CardContent>
-                <Grid
-                  container
-                  alignItems="center"
-                  justifyContent="space-between"
-                >
-                  <Grid>
-                    <MDBox display="flex" flexDirection="column" gap={1}>
-                      <MDBox display="flex" flexDirection="column">
-                        <MDBox display="flex" alignItems="center" gap={1}>
-                          <MDTypography variant="h6">Sectores</MDTypography>
-                        </MDBox>
-                        <MDBox display="flex" alignItems="center" gap={1}>
-                          <MDTypography variant="body2" color="text">
-                            Gestiona los sectores registrados dentro de la
-                            organización
-                          </MDTypography>
-                        </MDBox>
-                      </MDBox>
+              <Grid
+                container
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <Grid item>
+                  <MDBox display="flex" flexDirection="column">
+                    <MDBox display="flex" alignItems="center" gap={1}>
+                      <MDTypography variant="h6">Sectores</MDTypography>
                     </MDBox>
-                  </Grid>
-                  <Grid>
-                    <MDButton
-                      variant="outlined"
-                      onClick={handleAddSectorClick}
-                      startIcon={<AddOutlined />}
-                      sx={{
-                        borderColor: "#4CAF50",
-                        color: "#4CAF50",
-                        "&:hover": {
-                          backgroundColor: "#E8F5E9",
-                          borderColor: "#43A047",
-                          color: "#388E3C",
-                        },
-                      }}
-                    >
-                      Agregar Sector
-                    </MDButton>
-                  </Grid>
+                    <MDBox display="flex" alignItems="center" gap={1}>
+                      <MDTypography variant="body2" color="text">
+                        Gestiona los sectores registrados dentro del sistema.
+                      </MDTypography>
+                    </MDBox>
+                  </MDBox>
                 </Grid>
-              </CardContent>
-            </Card>
+                <Grid>
+                  <MDButton
+                    variant="outlined"
+                    onClick={handleAddSectorClick}
+                    startIcon={<AddOutlined />}
+                    sx={{
+                      borderColor: "#4CAF50",
+                      color: "#4CAF50",
+                      "&:hover": {
+                        backgroundColor: "#E8F5E9",
+                        borderColor: "#43A047",
+                        color: "#388E3C",
+                      },
+                    }}
+                  >
+                    Agregar Sector
+                  </MDButton>
+                </Grid>
+              </Grid>
+
+              <Grid container spacing={2} mt={1}>
+                <Grid xs={12} sm={6} md={4} lg={3}>
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    placeholder="Buscar por nombre del sector..."
+                    size="large"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    sx={{ width: "230px", mb: 3 }}
+                  />
+                </Grid>
+              </Grid>
+            </MDBox>
           </Grid>
 
           {/* Tabla */}

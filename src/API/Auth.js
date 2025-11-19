@@ -170,7 +170,7 @@ export async function logoutSesion() {
 
 export async function refreshLogin() {
     try {
-        const response = await fetch(`${appsettings.apiUrl}auth/refresh-login`, {
+        const response = await fetch(`${appsettings.apiUrl}Auth/refresh-login`, {
             method: "POST",
             credentials: "include", 
             headers: {

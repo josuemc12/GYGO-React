@@ -206,19 +206,27 @@ export function ReportCompanies() {
       <MDBox py={3}>
         <MDBox mb={2}>
           <MDBox
-            borderRadius="xl"
-            border="1px solid #ccc"
-            p={3}
-            mb={2}
-            bgColor="white"
+            sx={{
+              borderRadius: 2,
+              p: 3,
+              mb: 2,
+              background: "#ffffff",
+              border: "1px solid #e5e7eb",
+              boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+            }}
           >
             <Grid container alignItems="center" justifyContent="space-between">
               <Grid item>
                 <MDBox display="flex" flexDirection="column">
                   <MDBox display="flex" alignItems="center" gap={1}>
-                    <FilterAltOutlinedIcon fontSize="medium" />
-                    <MDTypography variant="h6">Filtros y Acciones</MDTypography>
+                    <MDTypography variant="h6">
+                      Reportes de Empresas
+                    </MDTypography>
                   </MDBox>
+                  <MDTypography variant="body2" color="text">
+                    Visualiza los datos y detalles de cada empresa dentro del
+                    sistema.
+                  </MDTypography>
                 </MDBox>
               </Grid>
               <Grid item>
@@ -251,7 +259,7 @@ export function ReportCompanies() {
                 <Grid container spacing={2}>
                   <Grid item>
                     <Grid container spacing={2}>
-                      <Grid item>
+                      <Grid item sx={{ pt: 3 }}>
                         <FormControl size="medium" sx={{ width: 180 }}>
                           <InputLabel id="Estado-label">Estado</InputLabel>
                           <Select
@@ -273,7 +281,7 @@ export function ReportCompanies() {
                   </Grid>
 
                   {/* Filtrar por servicios */}
-                  <Grid item>
+                  <Grid item sx={{ pt: 3 }}>
                     <Grid container spacing={2}>
                       <Grid item>
                         <FormControl size="medium" sx={{ width: 180 }}>
@@ -365,13 +373,11 @@ export function ReportCompanies() {
       <Dialog
         open={openModal}
         onClose={handleCloseModal}
-        maxWidth={false}
-        fullWidth
+        maxWidth="xl" // Tamaños predefinidos: xs, sm, md, lg, xl
+        fullWidth // Hace que el dialog ocupe todo el ancho permitido por maxWidth
         PaperProps={{
           sx: {
-            borderRadius: 2,
-            width: "50%", // o "70%", o cualquier medida CSS
-            maxWidth: "40vw",
+            borderRadius: 2, // Solo ajusta el borde si quieres
           },
         }}
       >

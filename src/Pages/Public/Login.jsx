@@ -110,7 +110,7 @@ export default function Login() {
       } else {
         login(rol, id);
         // Normal login success — redirect to dashboard or home
-        navigate("/Dashboard");
+        navigate("/panel-control");
       }
     } catch (error) {
       Swal.fire({
@@ -280,7 +280,7 @@ export default function Login() {
             >
               <Box sx={{ position: "relative" }}>
                 <IconButton
-                  onClick={() => navigate(-1)}
+                  onClick={() => navigate("/pagina-inicio")}
                   sx={{
                     position: "absolute",
                     top: -8,

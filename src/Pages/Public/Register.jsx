@@ -100,7 +100,7 @@ export function Register() {
           text: "El usuario ha sido registrado correctamente.",
           confirmButtonColor: "#2DA14C",
         }).then(() => {
-          window.location.href = "/login";
+          window.location.href = "/inicio-sesion";
         });
         return;
       } else {
@@ -236,6 +236,16 @@ export function Register() {
                   sx={{ mt: 3, mb: 2, py: 1.5, borderRadius: 2 }}
                 >
                   Registrar
+                </Button>
+                <Button
+                  onClick={() => navigate("/inicio-sesion")}
+                  fullWidth
+                  variant="outlined"
+                  color="primary"
+                  size="large"
+                  sx={{ mt: 1, mb: 2, py: 1.5, borderRadius: 2 }}
+                >
+                  Iniciar sesión
                 </Button>
               </form>
             </Paper>

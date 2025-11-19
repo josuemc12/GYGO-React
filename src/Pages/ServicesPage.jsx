@@ -13,6 +13,8 @@ import SuperAdminCancelModal from "../components/SuperAdminCancelModal";
 import { cancelAdminSubscription } from "../API/Subscription";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import Tooltip from "@mui/material/Tooltip";
+
+
 export default function ServicesPage() {
   const [services, setServices] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -111,11 +113,14 @@ export default function ServicesPage() {
       <MDBox py={3}>
         <MDBox mb={2}>
           <MDBox
-            borderRadius="xl"
-            border="1px solid #ccc"
-            p={3}
-            mb={2}
-            bgColor="white"
+            sx={{
+              borderRadius: 2,
+              p: 3,
+              mb: 2,
+              background: "#ffffff",
+              border: "1px solid #e5e7eb",
+              boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+            }}
           >
             <Grid
               container
@@ -123,13 +128,15 @@ export default function ServicesPage() {
               justifyContent="space-between"
               spacing={2}
             >
-              <Grid>
-                <MDBox display="flex" alignItems="center" gap={1}>
-                  <FilterAltOutlinedIcon fontSize="medium" />
-                  <MDTypography variant="h6">Filtros y Acciones</MDTypography>
+              <Grid item>
+                <MDBox display="flex" flexDirection="column">
+                  <MDBox display="flex" alignItems="center" gap={1}>
+                    <MDTypography variant="h6">
+                      Empresas Registradas
+                    </MDTypography>
+                  </MDBox>
                   <MDTypography variant="body2" color="text">
-                    Gestiona los servicios de las empresas dentro de la
-                    organización
+                    Gestiona y visualiza las empresas que utilizan el sistema.
                   </MDTypography>
                 </MDBox>
               </Grid>
@@ -140,9 +147,10 @@ export default function ServicesPage() {
             <Grid container spacing={2} mt={1}>
               <Grid xs={12} sm={6} md={4} lg={3}>
                 <TextField
-                  label="Buscar servicios"
-                  variant="outlined"
                   fullWidth
+                  variant="outlined"
+                  placeholder="Buscar por nombre de empresa..."
+                  size="large"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   sx={{ width: "200px", mb: 3 }}

@@ -60,14 +60,14 @@ export const ModernDashboardCards = ({role}) => {
   }
 
   const handleVerConsumos = () => {
-    navigate("/consumption")
+    navigate("/consumo")
   }
   const handleVerProyecto = () => {
-    navigate("/projectPage")
+    navigate("/proyectos")
   }
 
   const handleVerReportes = ( ) =>{
-    navigate("/reportsEmissions")
+    navigate("/reportes-emisiones")
   }
   const { groupName, projects, consumptions, hasProjects, hasConsumption } = data
 
@@ -180,7 +180,7 @@ export const ModernDashboardCards = ({role}) => {
                   variant="outlined"
                   fullWidth
                   startIcon={<Assessment />}
-                  onClick={() => navigate("/groupProfile")}
+                  onClick={() => navigate("/perfil")}
                   sx={{
                     py: 1.5,
                     borderRadius: 1.5,

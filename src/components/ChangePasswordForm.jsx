@@ -21,12 +21,18 @@ import MDButton from "components/MDButton";
 export const ChangePasswordForm = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleClickShowPassword = () => {
-    setShowPassword((show) => !show);
+  const handleClickShowCurrentPassword = () => {
+    setShowCurrentPassword((show) => !show);
+  };
+
+  const handleClickShowNewPassword = () => {
+    setShowNewPassword((show) => !show);
   };
 
   const handleMouseDownPassword = (event) => {
@@ -106,22 +112,22 @@ export const ChangePasswordForm = () => {
           <OutlinedInput
             onChange={(e) => setCurrentPassword(e.target.value)}
             id="outlined-adornment-password"
-            type={showPassword ? "text" : "password"}
+            type={showCurrentPassword ? "text" : "password"}
             // debo comentar esto
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
                   aria-label={
-                    showPassword
+                    showCurrentPassword
                       ? "Ocultar la contraseña"
                       : "Mostrar la contraseña"
                   }
-                  onClick={handleClickShowPassword}
+                  onClick={handleClickShowCurrentPassword}
                   onMouseDown={handleMouseDownPassword}
                   onMouseUp={handleMouseUpPassword}
                   edge="end"
                 >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                  {showCurrentPassword ? <VisibilityOff /> : <Visibility />}
                 </IconButton>
               </InputAdornment>
             } // hasta aqui
@@ -136,21 +142,21 @@ export const ChangePasswordForm = () => {
           <OutlinedInput
             onChange={(e) => setNewPassword(e.target.value)}
             id="outlined-adornment-password2"
-            type={showPassword ? "text" : "password"}
+            type={showNewPassword ? "text" : "password"}
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
                   aria-label={
-                    showPassword
+                    showNewPassword
                       ? "Ocultar la contraseña"
                       : "Mostrar la contraseña"
                   }
-                  onClick={handleClickShowPassword}
+                  onClick={handleClickShowNewPassword}
                   onMouseDown={handleMouseDownPassword}
                   onMouseUp={handleMouseUpPassword}
                   edge="end"
                 >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                  {showNewPassword ? <VisibilityOff /> : <Visibility />}
                 </IconButton>
               </InputAdornment>
             }

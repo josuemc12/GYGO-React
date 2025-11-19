@@ -349,11 +349,14 @@ const EmissionFactorDashboard = () => {
       <MDBox py={3}>
         <MDBox mb={2}>
           <MDBox
-            borderRadius="xl"
-            border="1px solid #ccc"
-            p={3}
-            mb={2}
-            bgColor="white"
+            sx={{
+              borderRadius: 2,
+              p: 3,
+              mb: 2,
+              background: "#ffffff",
+              border: "1px solid #e5e7eb",
+              boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+            }}
           >
             <Grid
               container
@@ -363,13 +366,12 @@ const EmissionFactorDashboard = () => {
             >
               <Grid>
                 <MDBox display="flex" alignItems="center" gap={1}>
-                  <FilterAltOutlinedIcon fontSize="medium" />
-                  <MDTypography variant="h6">Filtros y Acciones</MDTypography>
+                 
+                  <MDTypography variant="h6">Factores de Emisión</MDTypography>
                 </MDBox>
                 <MDBox display="flex" alignItems="center" gap={1}>
                   <MDTypography variant="body2" color="text">
-                    Gestiona los factores de emisión registrados dentro de la
-                    organización
+                    Administra y supervisa los factores de emisión registrados en la organización.
                   </MDTypography>
                 </MDBox>
               </Grid>

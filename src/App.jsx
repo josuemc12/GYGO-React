@@ -47,15 +47,17 @@ export default function App() {
   const publicRoutes = [
     "/",
     "*",
-    "/login",
-    "/homepage",
+    "/inicio-sesion",
+    "/pagina-inicio",
     "/certificaciones",
     "/servicios",
     "/nosotros",
     "/contactos",
     "/registro",
-    "/changepassword",
+    "/registro/:inviteToken",
+    "/restablecer-contrasena",
     "/verify-2fa",
+    "/agregar-grupo"
   ];
 
   const matchRoute = (route, path) => {
@@ -99,9 +101,9 @@ export default function App() {
   useEffect(() => {
     // Si no hay rol, no es ruta pública, PERO SÍ es una ruta válida del sistema
     // entonces redirigir a login
-    if (!role && !isPublicRoute && isValidSystemRoute && pathname !== "/Login") {
+    if (!role && !isPublicRoute && isValidSystemRoute && pathname !== "/inicio-sesion") {
       setIsRedirecting(true);
-      navigate("/Login", { replace: true });
+      navigate("/inicio-sesion", { replace: true });
     } else {
       setIsRedirecting(false);
     }

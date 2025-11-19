@@ -75,7 +75,7 @@ export const AddGroupForm = () => {
       });
 
       await refreshLogin();
-      navigate("/Dashboard");
+      navigate("/panel-control");
     } else {
       Swal.fire({
         icon: "error",
@@ -131,7 +131,7 @@ export const AddGroupForm = () => {
       });
 
       await refreshLogin();
-      navigate("/Dashboard");
+      navigate("/panel-control");
       } else {
         Swal.fire({
           icon: "error",
@@ -339,6 +339,7 @@ export const AddGroupForm = () => {
           </Box>
         </Paper>
       </Container>
+     
     </>
   );
 };

@@ -4,7 +4,7 @@ import { AddOutlined, EditOutlined } from "@mui/icons-material";
 import {
   getUsers,
   getUsersbyRol,
-  sendDefaultUserInvite
+  sendDefaultUserInvite,
 } from "../API/ManagmentUsers";
 
 import InviteModal from "../components/InviteModal";
@@ -30,7 +30,6 @@ import {
   DialogContent,
   DialogActions,
 } from "@mui/material";
-
 
 import { Try } from "@mui/icons-material";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
@@ -61,20 +60,17 @@ function ManagmentUsers() {
   //Hook para manejar el JSON de proyectos filtro
   const [filter, setFilter] = useState("todos");
   //Hook para manejar el JSON de proyectos por fechas
-  
+
   const [openModal, setOpenModal] = useState(false);
   const [openModalProjects, setOpenModalProjects] = useState(false);
 
   //Hook para cuando un loading
   const [loading, setLoading] = useState(false);
 
-  
   //Use State para el modal de agregar o editar proyectos
   const [modoEdicion, setModoEdicion] = useState(false);
 
-
   const [searchTerm, setSearchTerm] = useState("");
-
 
   const [projectId, setProjectId] = useState(null);
   const [reductionUnit, setReductionUnit] = useState(null);
@@ -85,63 +81,61 @@ function ManagmentUsers() {
 
   const fetchUsers = async () => {
     try {
-   
       if (filter === "todos") {
         const data = await getUsers();
         setUsers(data);
       } else {
-
-        const  data = await getUsersbyRol(rol);
+        const data = await getUsersbyRol(rol);
         setUsers(data);
       }
-     
     } catch (err) {
       console.error(err);
     }
   };
 
   const handleInviteUser = async (email) => {
-      try {
-        setInviteLoading(true);
-        setError("");
-  
-        await sendDefaultUserInvite(email);
-  
-        // Mostrar mensaje de éxito con SweetAlert
-        Swal.fire({
-          icon: "success",
-          title: "Invitación Enviada",
-          text: `Invitación enviada exitosamente a ${email}`,
-          timer: 3000,
-          showConfirmButton: false,
-        });
-        setInviteModalOpen(false);
-  
-        fetchUsers();
-      } catch (err) {
-        Swal.fire({
-      icon: "error",
-      title: "Error",
-      text: err.message || "No se pudo enviar la invitación. Intenta nuevamente.",
-      confirmButtonText: "Cerrar",
-      customClass: {
-    container: 'swal-top'
-  }
-    });
-      } finally {
-        setInviteLoading(false);
-      }
-    };
+    try {
+      setInviteLoading(true);
+      setError("");
 
-  useEffect(() => { 
+      await sendDefaultUserInvite(email);
+
+      // Mostrar mensaje de éxito con SweetAlert
+      Swal.fire({
+        icon: "success",
+        title: "Invitación Enviada",
+        text: `Invitación enviada exitosamente a ${email}`,
+        timer: 3000,
+        showConfirmButton: false,
+      });
+      setInviteModalOpen(false);
+
       fetchUsers();
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text:
+          err.message || "No se pudo enviar la invitación. Intenta nuevamente.",
+        confirmButtonText: "Cerrar",
+        customClass: {
+          container: "swal-top",
+        },
+      });
+    } finally {
+      setInviteLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
   }, [filter]);
 
-const filteredUsers = Users.filter((user) =>
-  user.correo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  user.nombregrupo.toLowerCase().includes(searchTerm.toLowerCase()) 
-);
-
+  const filteredUsers = Users.filter(
+    (user) =>
+      user.correo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.nombregrupo.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const columns = [
     { Header: "Nombre", accessor: "nombre", align: "left" },
@@ -202,7 +196,7 @@ const filteredUsers = Users.filter((user) =>
     //       <IconButton
     //         size="small"
     //         color="error"
-            
+
     //       >
     //         <DeleteIcon fontSize="small" />
     //       </IconButton>
@@ -217,24 +211,32 @@ const filteredUsers = Users.filter((user) =>
       <MDBox py={3}>
         <MDBox mb={2}>
           <MDBox
-            borderRadius="xl"
-            border="1px solid #ccc"
-            p={3}
-            mb={2}
-            bgColor="white"
+            sx={{
+              borderRadius: 2,
+              p: 3,
+              mb: 2,
+              background: "#ffffff",
+              border: "1px solid #e5e7eb",
+              boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+            }}
           >
             <Grid container alignItems="center" justifyContent="space-between">
               <Grid>
                 <MDBox display="flex" flexDirection="column">
                   <MDBox display="flex" alignItems="center" gap={1}>
-                    <FilterAltOutlinedIcon fontSize="medium" />
-                    <MDTypography variant="h6">Filtros y Acciones</MDTypography>
+                    <MDTypography variant="h6">
+                      Gestión de Usuarios
+                    </MDTypography>
                   </MDBox>
+                  <MDTypography variant="body2" color="text">
+                    Visualiza usuarios existentes e invita nuevos miembros al
+                    sistema.
+                  </MDTypography>
                 </MDBox>
               </Grid>
               <Grid>
                 <MDButton
-                startIcon={<AddOutlined />}
+                  startIcon={<AddOutlined />}
                   onClick={() => {
                     setInviteModalOpen(true);
                   }}
@@ -281,7 +283,7 @@ const filteredUsers = Users.filter((user) =>
 
           <MDBox pt={6} pb={3}>
             <Grid container spacing={6}>
-              <Grid size={{xs: 12}}>
+              <Grid size={{ xs: 12 }}>
                 <Card>
                   <MDBox
                     mx={2}
@@ -300,10 +302,9 @@ const filteredUsers = Users.filter((user) =>
                   <MDBox
                     pt={3}
                     sx={{
-                      p: 4,
+                      p: 3,
                       textAlign: "center",
-                      minHeight: "100px",
-                      width: "1200px",
+                      width: "100%",
                       alignItems: "center",
                       justifyContent: "center",
                     }}

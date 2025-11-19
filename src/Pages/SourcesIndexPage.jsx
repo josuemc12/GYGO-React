@@ -45,6 +45,7 @@ export function SourcesIndexPage() {
   const [errors, setErrors] = useState({});
   const [editMode, setEditMode] = useState(false);
   const [editId, setEditId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     loadSources();
@@ -145,6 +146,10 @@ export function SourcesIndexPage() {
     }
   };
 
+    const filtered = sources.filter((item) =>
+    item.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const columns = [
     { Header: "Nombre", accessor: "nombre", align: "left" },
     { Header: "Año", accessor: "año", align: "left" },
@@ -152,7 +157,7 @@ export function SourcesIndexPage() {
     { Header: "Acciones", accessor: "actions", align: "center" },
   ];
 
-  const rows = sources.map((source) => ({
+  const rows = filtered.map((source) => ({
     nombre: (
       <MDTypography variant="caption" fontWeight="medium">
         {source.nombre}
@@ -189,7 +194,7 @@ export function SourcesIndexPage() {
       <MDBox py={3}>
         <Grid container spacing={3} sx={{ mb: 5 }}>
           <Grid size={{ xs: 12 }}>
-            <Card
+            <MDBox
               sx={{
                 background: "#ffffff",
                 mb: 3,
@@ -199,7 +204,7 @@ export function SourcesIndexPage() {
                 padding: 3,
               }}
             >
-              <CardContent>
+              
                 <Grid
                   container
                   alignItems="center"
@@ -213,7 +218,7 @@ export function SourcesIndexPage() {
                         </MDBox>
                         <MDBox display="flex" alignItems="center" gap={1}>
                           <MDTypography variant="body2" color="text">
-                            Gestiona las fuentes registradas en el sistema
+                            Gestiona las fuentes registradas en el sistema.
                           </MDTypography>
                         </MDBox>
                       </MDBox>
@@ -238,8 +243,25 @@ export function SourcesIndexPage() {
                     </MDButton>
                   </Grid>
                 </Grid>
-              </CardContent>
-            </Card>
+             
+
+             <Grid container spacing={2} mt={1}>
+                <Grid xs={12} sm={6} md={4} lg={3}>
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    placeholder="Buscar por nombre de fuente de emsión.."
+                    size="large"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    sx={{ width: "230px", mb: 3 }}
+                  />
+                </Grid>
+              </Grid>
+
+
+
+            </MDBox>
           </Grid>
 
           <Grid size={{ xs: 12 }}>

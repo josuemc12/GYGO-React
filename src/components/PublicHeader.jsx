@@ -68,14 +68,14 @@ useEffect(() => {
     closeMenu()
     navigate(route)
   }
-  const handlePanelClick = () => navigate("/dashboard")
+  const handlePanelClick = () => navigate("/panel-control")
 
   const handleLogoClick = () => {
-    navigate("/HomePage")
+    navigate("/pagina-inicio")
   }
 
   const handleLoginClick = () => {
-    navigate("/login")
+    navigate("/inicio-sesion")
   }
 
   const handleLogoutClick = async () => {
@@ -83,7 +83,7 @@ useEffect(() => {
     if (success) {
       setIsLoggedIn(false)
       localStorage.clear()
-      navigate("/HomePage")
+      navigate("/pagina-inicio")
     }
   }
 

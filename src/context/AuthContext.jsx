@@ -4,9 +4,9 @@ import { useNavigate } from 'react-router-dom';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [role, setRole] = useState(() => localStorage.getItem("userRole"));
-  const [userId, setUserId] = useState(() => localStorage.getItem("userId") || null);
-  const [userGroup, setUserGroup] = useState(() => localStorage.getItem("userGroup") || null); // ← AGREGAR
+  const [role, setRole] = useState(() => sessionStorage.getItem("userRole"));
+  const [userId, setUserId] = useState(() => sessionStorage.getItem("userId") || null);
+  const [userGroup, setUserGroup] = useState(() => sessionStorage.getItem("userGroup") || null); // ← AGREGAR
   const [hasPaidGroupAdminAccess, setHasPaidGroupAdminAccess] = useState(false);
   
   const navigate = useNavigate(); 
@@ -18,10 +18,10 @@ export const AuthProvider = ({ children }) => {
     setRole(newRole);
     setUserId(id);
     setUserGroup(groupId); // ← AGREGAR
-    localStorage.setItem("userRole", newRole);
-    localStorage.setItem("userId", id);
+    sessionStorage.setItem("userRole", newRole);
+    sessionStorage.setItem("userId", id);
     if (groupId) {
-      localStorage.setItem("userGroup", groupId); // ← AGREGAR
+      sessionStorage.setItem("userGroup", groupId); // ← AGREGAR
     }
   };
 
@@ -29,10 +29,10 @@ export const AuthProvider = ({ children }) => {
     setRole(null);
     setUserId(null);
     setUserGroup(null); // ← AGREGAR
-    localStorage.removeItem("userRole");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("userGroup"); // ← AGREGAR
-    localStorage.clear();    
+    sessionStorage.removeItem("userRole");
+    sessionStorage.removeItem("userId");
+    sessionStorage.removeItem("userGroup"); // ← AGREGAR
+    sessionStorage.clear();    
   };
 
   const refreshUserData = async () => {
@@ -45,11 +45,11 @@ export const AuthProvider = ({ children }) => {
         setUserId(data.user.id);
         setUserGroup(data.user.groupId); // ← Ahora sí existe
         
-        localStorage.setItem("userRole", data.user.role);
-        localStorage.setItem("userId", data.user.id);
+        sessionStorage.setItem("userRole", data.user.role);
+        sessionStorage.setItem("userId", data.user.id);
         
         if (data.user.groupId) { // ← Solo guardar si existe
-          localStorage.setItem("userGroup", data.user.groupId);
+          sessionStorage.setItem("userGroup", data.user.groupId);
         }
         
         return true; // ← Indicar éxito
@@ -69,7 +69,7 @@ export const AuthProvider = ({ children }) => {
 
   const updateRole = (newRole) => {
     setRole(newRole);
-    localStorage.setItem("userRole", newRole);
+    sessionStorage.setItem("userRole", newRole);
   };
 
   return (
