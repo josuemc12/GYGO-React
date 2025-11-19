@@ -100,7 +100,7 @@ export function Register() {
           text: "El usuario ha sido registrado correctamente.",
           confirmButtonColor: "#2DA14C",
         }).then(() => {
-          window.location.href = "/login";
+          window.location.href = "/inicio-sesion";
         });
         return;
       } else {

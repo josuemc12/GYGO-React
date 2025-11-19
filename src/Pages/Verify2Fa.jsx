@@ -32,7 +32,7 @@ export function Verify2FA() {
         });
 
         setTimeout(() => {
-          navigate("/dashboard");
+          navigate("/panel-control");
         }, 1600); // pequeño margen por si tarda en cerrarse el Swal
       } else {
         Swal.fire({

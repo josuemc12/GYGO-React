@@ -54,8 +54,10 @@ export default function App() {
     "/nosotros",
     "/contactos",
     "/registro",
+    "/registro/:inviteToken",
     "/restablecer-contrasena",
     "/verify-2fa",
+    "/agregar-grupo"
   ];
 
   const matchRoute = (route, path) => {

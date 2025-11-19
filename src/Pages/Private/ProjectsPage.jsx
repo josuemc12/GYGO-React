@@ -1213,6 +1213,7 @@ function ProjectPage() {
                   setTasktData({ ...taskData, descripcion: e.target.value });
                   setErrors((prev) => ({ ...prev, TareaDescripcion: "" }));
                 }}
+                 inputProps={{ maxLength: 50 }}
                 error={!!errors.TareaDescripcion}
                 helperText={errors.TareaDescripcion}
                 sx={{ mb: 2 }}

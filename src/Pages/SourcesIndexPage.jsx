@@ -45,6 +45,7 @@ export function SourcesIndexPage() {
   const [errors, setErrors] = useState({});
   const [editMode, setEditMode] = useState(false);
   const [editId, setEditId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     loadSources();
@@ -145,6 +146,10 @@ export function SourcesIndexPage() {
     }
   };
 
+    const filtered = sources.filter((item) =>
+    item.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const columns = [
     { Header: "Nombre", accessor: "nombre", align: "left" },
     { Header: "Año", accessor: "año", align: "left" },
@@ -152,7 +157,7 @@ export function SourcesIndexPage() {
     { Header: "Acciones", accessor: "actions", align: "center" },
   ];
 
-  const rows = sources.map((source) => ({
+  const rows = filtered.map((source) => ({
     nombre: (
       <MDTypography variant="caption" fontWeight="medium">
         {source.nombre}
@@ -239,6 +244,23 @@ export function SourcesIndexPage() {
                   </Grid>
                 </Grid>
              
+
+             <Grid container spacing={2} mt={1}>
+                <Grid xs={12} sm={6} md={4} lg={3}>
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    placeholder="Buscar por nombre de fuente de emsión.."
+                    size="large"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    sx={{ width: "230px", mb: 3 }}
+                  />
+                </Grid>
+              </Grid>
+
+
+
             </MDBox>
           </Grid>
 

@@ -179,7 +179,7 @@ export const routes = [
     name: "Consumo",
     key: "consumption",
     icon: <EnergySavingsLeaf fontSize="small"></EnergySavingsLeaf>,
-    route: "/consumption",
+    route: "/consumo",
     component: (
       <ProtectedElement roles={["DEV", "GA", "GU"]}>
         <ConsumptionPage />
@@ -192,7 +192,7 @@ export const routes = [
     name: "Consumo mensual",
     key: "monthly-consumption",
     icon: <Icon fontSize="small">bar_chart</Icon>,
-    route: "/consumption/monthly/:id",
+    route: "/consumo/mensual/:id",
 
     component: (
       <ProtectedElement roles={["DEV", "GA", "GU"]}>
@@ -209,7 +209,7 @@ export const routes = [
     name: "Editar consumo mensual",
     key: "edit-monthly-consumption",
     icon: <Icon fontSize="small">edit_calendar</Icon>,
-    route: "/consumption/monthly/edit/:consumptionId/:monthlyId",
+    route: "/consumo/mensual/editar/:consumptionId/:monthlyId",
 
     component: (
       <ProtectedElement roles={["DEV", "GA", "GU"]}>
@@ -227,7 +227,7 @@ export const routes = [
     name: "Agregar grupo",
     key: "add-group",
     icon: <Icon fontSize="small">bar_chart</Icon>,
-    route: "/addGroup",
+    route: "/agregar-grupo",
 
     component: (
       <ProtectedElement roles={["DEV", "SA", "GA"]}>
@@ -244,7 +244,7 @@ export const routes = [
     name: "Historial mensual",
     key: "monthly-history",
     icon: <Icon fontSize="small">history</Icon>,
-    route: "/consumption/monthly/history/:id",
+    route: "/consumo/mensual/historial/:id",
 
     component: (
       <ProtectedElement roles={["GA", "DEV", "GU"]}>
@@ -261,7 +261,7 @@ export const routes = [
     name: "Confirm Emission Incident",
     key: "confirm-incident",
     icon: <Icon fontSize="small">check_circle</Icon>,
-    route: "/emissions/confirm",
+    route: "/emisiones/confirmación",
 
     component: (
       <ProtectedElement roles={["GA", "GU", "DEV"]}>
@@ -443,7 +443,7 @@ export const routes = [
     name: "Agregar consumo",
     key: "add-consumption",
     icon: <Icon fontSize="small">add</Icon>,
-    route: "/consumption/add",
+    route: "/consumo/agregar",
     component: (
       <ProtectedElement roles={["DEV", "GA", "GU"]}>
         <AddConsumptionPage />
@@ -459,7 +459,7 @@ export const routes = [
     name: "Actualizar consumo",
     key: "add-consumption",
     icon: <Icon fontSize="small">add</Icon>,
-    route: "/consumption/edit/:id",
+    route: "/consumo/editar/:id",
     component: (
       <ProtectedElement roles={["DEV", "GA", "GU"]}>
         <UpdateConsumptionPage />
@@ -475,7 +475,7 @@ export const routes = [
     name: "Editar consumo mensual",
     key: "edit-monthly-consumption",
     icon: <Icon fontSize="small">edit_calendar</Icon>,
-    route: "/consumption/monthly/edit/:consumptionId/:monthlyId",
+    route: "/consumo/mensual/editar/:consumptionId/:monthlyId",
     component: (
       <ProtectedElement roles={["DEV", "GA", "GU"]}>
         <UpdateMonthlyConsumPage />
@@ -491,7 +491,7 @@ export const routes = [
     name: "Agregar consumo mensual",
     key: "add-monthly-consumption",
     icon: <Icon fontSize="small">add_circle</Icon>,
-    route: "/consumption/monthly/add/:consumptionId",
+    route: "/consumo/mensual/agregar/:consumptionId",
     component: (
       <ProtectedElement roles={["DEV", "GA", "GU"]}>
         <AddMonthlyConsumPage />
@@ -506,7 +506,7 @@ export const routes = [
     name: "Segundo Factor",
     key: "Segundo-Factor",
     icon: <Icon fontSize="small">add_circle</Icon>,
-    route: "/verify-2fa",
+    route: "/verificar-2fa",
     component: <Verify2FA />,
     hideInSidebar: true,
   },
@@ -517,7 +517,7 @@ export const routes = [
     name: "Historial de incidentes",
     key: "emissions/incidents",
     icon: <Icon fontSize="small">list_alt</Icon>,
-    route: "/emissions/incidents",
+    route: "/emisiones/incidentes",
 
     component: (
       <ProtectedElement roles={["GA", "DEV"]}>
@@ -534,7 +534,7 @@ export const routes = [
     name: "Consumo mensual",
     key: "monthly-consumption",
     icon: <Icon fontSize="small">bar_chart</Icon>,
-    route: "/consumption/monthly/:id",
+    route: "/consumo/mensual/:id",
     component: <MonthlyConsumptionPage />,
     hideInSidebar: true,
   },

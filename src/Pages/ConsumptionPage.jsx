@@ -19,6 +19,12 @@ import MDTypography from "components/MDTypography";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 
+
+import { refreshLogin } from "../API/Auth"; 
+
+
+
+
 export function ConsumptionPage() {
   const [consumos, setConsumos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -34,17 +40,23 @@ export function ConsumptionPage() {
     fetchConsumos();
   }, []);
   const handleAgregarConsumo = () => {
-    navigate("/consumption/add");
+    navigate("/consumo/agregar");
   };
 
+
+   const handleAgregarConsumoo = async() => {
+    await refreshLogin();
+  };
+
+
   const handleVerConsumoMensual = (consumo) => {
-    navigate(`/consumption/monthly/${consumo.consumptionId}`, {
+    navigate(`/consumo/mensual/${consumo.consumptionId}`, {
       state: consumo,
     });
   };
 
   const handleEditarConsumo = (id) => {
-    navigate(`/consumption/edit/${id}`);
+    navigate(`/consumo/editar/${id}`);
   };
 
   return (
@@ -91,6 +103,11 @@ export function ConsumptionPage() {
               >
                 Agregar Consumo
               </MDButton>
+
+
+
+
+
             </Grid>
           </Grid>
         </MDBox>

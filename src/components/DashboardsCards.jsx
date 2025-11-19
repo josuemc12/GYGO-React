@@ -60,7 +60,7 @@ export const ModernDashboardCards = ({role}) => {
   }
 
   const handleVerConsumos = () => {
-    navigate("/consumption")
+    navigate("/consumo")
   }
   const handleVerProyecto = () => {
     navigate("/proyectos")
