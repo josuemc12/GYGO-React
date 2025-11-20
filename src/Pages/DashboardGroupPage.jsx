@@ -8,15 +8,17 @@ import Footer from "examples/Footer";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import { Card, Grid, CardContent } from "@mui/material";
+import {fetchValidarEstadoUsuario} from "../API/Admin";
 import { useAuth } from "../context/AuthContext";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import { SuperAdminDashCards } from "../components/SuperAdminDashCards";
+import { useNavigate } from "react-router-dom";
 
 export const DashboardGroupPage = () => {
 
   const { role } = useAuth();
   const [username, setUsername] = useState(null);
-
+  const navigate = useNavigate();
   
     useEffect(() => {
     const init = async () => {
@@ -40,6 +42,16 @@ export const DashboardGroupPage = () => {
     };
 
     init();
+  }, []);
+
+  useEffect(()=>{
+    const validateUserState = async() =>{
+      const userState = await fetchValidarEstadoUsuario();
+      if(userState.state === true){
+        navigate("/agregar-grupo")
+      }
+    }
+    validateUserState();
   }, []);
 
   const renderDashboardContent = () => {

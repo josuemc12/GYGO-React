@@ -130,4 +130,18 @@ async function fetchGroupId() {
   }
 }
 
+export async function fetchValidarEstadoUsuario(){
+  try {
+    const response = await fetch(`${appsettings.apiUrl}admin/ValidarEstadoUsuario`, {
+      method: "GET",
+      credentials: "include",
+    });
+    if(!response.ok) return { state:false };
+    return await response.json();
+
+  } catch (error) {
+    return { state:false, error };
+  }
+}
+
 export { getGroupId, fetchGroupId };
