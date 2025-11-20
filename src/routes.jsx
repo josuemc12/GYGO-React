@@ -230,11 +230,11 @@ export const routes = [
     route: "/agregar-grupo",
 
     component: (
-      <ProtectedElement roles={["DEV", "SA", "GA"]}>
+      <ProtectedElement roles={["DEV", "SA", "GA", "DEF"]}> 
         <AddGroupSAPage />
       </ProtectedElement>
     ),
-    roles: ["DEV", "SA", "GA"],
+    roles: ["DEV", "SA", "GA", "DEF"],
     hideInSidebar: true,
   },
 

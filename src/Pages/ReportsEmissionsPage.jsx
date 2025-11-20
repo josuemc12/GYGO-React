@@ -271,7 +271,7 @@ export const ReportsEmissionsPage = () => {
                             : "inherit",
                       }}
                     >
-                      Por Fuente
+                      Por factor de emisión
                     </Button>
 
                     <Button
