@@ -107,11 +107,13 @@ export async function registerUser(inviteToken, { email, username, password }) {
       body: JSON.stringify({ email, username, password }),
     });
 
-    if (response.ok) {
-      return { success: true };
+    const data = await response.json();
+      if (!data.success) {
+      return { success: false, message: data.message };
     }
 
-    const data = await response.json();
+    return { success: true, message: data.message };
+
     return { success: false, error: data.error || 'Registro fallido' };
   } catch {
     return { success: false, error: 'Error al comunicarse con el servidor' };

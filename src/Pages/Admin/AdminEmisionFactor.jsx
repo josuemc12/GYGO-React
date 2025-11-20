@@ -250,7 +250,7 @@ const EmissionFactorDashboard = () => {
       Swal.fire({
         icon: "error",
         title: "Error inesperado",
-        text: "Ocurrió un error al intentar guardar el factor de emisión.",
+        text: "Ocurrió un error al intentar guardar el factor de emisión. Revise los datos ingresados.",
         showConfirmButton: false,
         timer: 2000,
       });

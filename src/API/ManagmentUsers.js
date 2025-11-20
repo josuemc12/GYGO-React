@@ -1,10 +1,5 @@
 import { appsettings } from "../settings/appsettings";
 
-
-
-
-
-
 //API para llamar los proyectos por grupo
 export async function getUsers() {
   const response = await fetch(`${appsettings.apiUrl}ManagmentUsers/AllUsers`, {
@@ -39,24 +34,28 @@ export async function getUsersbyRol(rol) {
 
 export const sendDefaultUserInvite = async (email) => {
   try {
-    const response = await fetch(`${appsettings.apiUrl}Admin/sendInviteDefault`, {
-      method: "POST",
-      mode: "cors",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify(email),
-    });
+    const response = await fetch(
+      `${appsettings.apiUrl}Admin/sendInviteDefault`,
+      {
+        method: "POST",
+        mode: "cors",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(email),
+      }
+    );
 
-    const data = await response.text();
-    if (!response.ok) {
-      throw new Error(data || "Error al enviar invitación.");
+    const data = await response.json();
+    console.log(data);
+    if (!data.success) {
+      return { success: false, message: data.message };
     }
 
-    return data;
+    return { success: true, message: data.message };
   } catch (error) {
-    throw error;
+    return { success: false, message: error.message || "Error de conexión" };
   }
 };

@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+
 import { registerUser } from "../../API/Auth";
 import { useNavigate } from "react-router-dom";
 import {
@@ -19,7 +21,7 @@ import {
 import { Visibility, VisibilityOff, Email } from "@mui/icons-material";
 import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
 import Swal from "sweetalert2";
-import logo from '../../assets/Logo.png';
+import logo from "../../assets/Logo.png";
 
 const theme = createTheme({
   palette: {
@@ -34,17 +36,16 @@ const theme = createTheme({
 });
 
 const Paper = styled("div")(({ theme }) => ({
-   padding: "40px",
+  padding: "40px",
   backgroundColor: "white",
   borderRadius: theme.shape.borderRadius,
   boxShadow: theme.shadows[5],
   width: "100%",
-   maxWidth: 400,        
+  maxWidth: 400,
   margin: "0 auto",
 }));
 
 export function Register() {
- 
   const { inviteToken } = useParams();
   const [form, setForm] = useState({ email: "", username: "", password: "" });
   const [message, setMessage] = useState("");
@@ -57,13 +58,30 @@ export function Register() {
   //Funciona para la contraseña
   function isPasswordValid(password) {
     if (password.length < 8) return false;
-    if (!/[A-Z]/.test(password)) return false; 
-    if (!/[a-z]/.test(password)) return false; 
-    if (!/[0-9]/.test(password)) return false; 
-    if (!/[^A-Za-z0-9]/.test(password)) return false; 
+    if (!/[A-Z]/.test(password)) return false;
+    if (!/[a-z]/.test(password)) return false;
+    if (!/[0-9]/.test(password)) return false;
+    if (!/[^A-Za-z0-9]/.test(password)) return false;
     return true;
   }
   //Termina funcion de la contraseña
+
+  useEffect(() => {
+    if (inviteToken) {
+      try {
+        const decoded = jwtDecode(inviteToken);
+
+        const invitedEmail = decoded.InvitedEmail;
+
+        setForm((prev) => ({
+          ...prev,
+          email: invitedEmail || "",
+        }));
+      } catch (error) {
+        console.error("Token inválido:", error);
+      }
+    }
+  }, [inviteToken]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -89,26 +107,27 @@ export function Register() {
     }
 
     try {
-
-      
       const response = await registerUser(inviteToken, form);
-
+      console.log(response);
       if (response.success) {
         Swal.fire({
           icon: "success",
           title: "Registro exitoso",
           text: "El usuario ha sido registrado correctamente.",
-          confirmButtonColor: "#2DA14C",
-        }).then(() => {
-          window.location.href = "/inicio-sesion";
+          timer: 3000, // se cierra después de 3 segundos
+          showConfirmButton: false,
+          willClose: () => {
+            window.location.href = "/inicio-sesion";
+          },
         });
         return;
       } else {
         Swal.fire({
           icon: "error",
           title: "Error al registrar al usuario",
-          text: "Puede que el correo o nombre de usuario ya esté en uso.",
-          confirmButtonColor: "#d33",
+          text: response.message,
+          showConfirmButton: false,
+          timer: 3000,
         });
         return;
       }
@@ -117,7 +136,8 @@ export function Register() {
         icon: "error",
         title: "Error",
         text: "No se pudo conectar con el servidor, intentá nuevamente más tarde.",
-        confirmButtonColor: "#d33",
+        showConfirmButton: false,
+        timer: 3000,
       });
     }
   };
@@ -171,11 +191,7 @@ export function Register() {
           <Container maxWidth="xs">
             <Paper>
               <Box textAlign="center" mb={1}>
-                <img
-                  src={logo}
-                  alt="Logo"
-                  style={{ maxWidth: "120px" }}
-                />
+                <img src={logo} alt="Logo" style={{ maxWidth: "120px" }} />
               </Box>
 
               <Box textAlign="center" mb={2}>
@@ -193,6 +209,7 @@ export function Register() {
                   variant="outlined"
                   value={form.email}
                   onChange={handleChange}
+                  disabled={!!inviteToken}
                 />
                 <TextField
                   fullWidth
@@ -237,16 +254,18 @@ export function Register() {
                 >
                   Registrar
                 </Button>
-                <Button
-                  onClick={() => navigate("/inicio-sesion")}
-                  fullWidth
-                  variant="outlined"
-                  color="primary"
-                  size="large"
-                  sx={{ mt: 1, mb: 2, py: 1.5, borderRadius: 2 }}
-                >
-                  Iniciar sesión
-                </Button>
+                {!inviteToken && (
+                  <Button
+                    onClick={() => navigate("/inicio-sesion")}
+                    fullWidth
+                    variant="outlined"
+                    color="primary"
+                    size="large"
+                    sx={{ mt: 1, mb: 2, py: 1.5, borderRadius: 2 }}
+                  >
+                    Iniciar sesión
+                  </Button>
+                )}
               </form>
             </Paper>
           </Container>

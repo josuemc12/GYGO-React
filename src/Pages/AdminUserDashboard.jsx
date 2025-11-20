@@ -147,19 +147,33 @@ const AdminUserDashboard = () => {
       setInviteLoading(true);
       setError("");
 
-      await sendUserInvite(email);
+      const result = await sendUserInvite(email);
+ 
 
-      // Mostrar mensaje de éxito con SweetAlert
-      Swal.fire({
-        icon: "success",
-        title: "invitación enviada",
-        text: `Invitación enviada exitosamente a ${email}`,
-        timer: 3000,
-        showConfirmButton: false,
-      });
-      setInviteModalOpen(false);
 
-      fetchUsers();
+      if (result.success) {
+        // Mostrar mensaje de éxito con SweetAlert
+        Swal.fire({
+          icon: "success",
+          title: "invitación enviada",
+          text: `Invitación enviada exitosamente a ${email}`,
+          timer: 3000,
+          showConfirmButton: false,
+        });
+        setInviteModalOpen(false);
+
+        fetchUsers();
+      } else {
+        setInviteModalOpen(false);
+        Swal.fire({
+          icon: "error",
+          title: "No se pudo enviar la invitación",
+          text: result.message ,
+          showConfirmButton: false,
+          timer: 3000,
+        });
+        fetchUsers();
+      }
     } catch (err) {
       setError(err.message || "Failed to send invitation. Please try again.");
       console.error("Error sending invite:", err);
@@ -298,7 +312,7 @@ const AdminUserDashboard = () => {
                   variant="outlined"
                   sx={{
                     mr: 2,
-                   borderColor: "#bfdcff",
+                    borderColor: "#bfdcff",
                     color: "#1479fc",
                     "&:hover": {
                       backgroundColor: "#dbe6f5ff",

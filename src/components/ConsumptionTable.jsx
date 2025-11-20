@@ -12,6 +12,8 @@ export function ConsumptionTable({
   onVerConsumoMensual,
   onEditarConsumo,
 }) {
+
+  
   const columns = [
     { Header: "Nombre Consumo", accessor: "name", align: "left" },
     { Header: "Nombre Factor", accessor: "factorName", align: "left" },

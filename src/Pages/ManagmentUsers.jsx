@@ -98,19 +98,32 @@ function ManagmentUsers() {
       setInviteLoading(true);
       setError("");
 
-      await sendDefaultUserInvite(email);
+      const result = await sendDefaultUserInvite(email);
 
-      // Mostrar mensaje de éxito con SweetAlert
-      Swal.fire({
-        icon: "success",
-        title: "Invitación Enviada",
-        text: `Invitación enviada exitosamente a ${email}`,
-        timer: 3000,
-        showConfirmButton: false,
-      });
-      setInviteModalOpen(false);
-
-      fetchUsers();
+      if (result.success) {
+        // Mostrar mensaje de éxito con SweetAlert
+        Swal.fire({
+          icon: "success",
+          title: "Invitación Enviada",
+          text: `Invitación enviada exitosamente a ${email}`,
+          timer: 3000,
+          showConfirmButton: false,
+        });
+        setInviteModalOpen(false);
+        fetchUsers();
+        return;
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error al enviar la invitación",
+          text: result.message,
+          showConfirmButton: false,
+          timer: 3000,
+        });
+        setInviteModalOpen(false);
+        fetchUsers();
+        return;
+      }
     } catch (err) {
       Swal.fire({
         icon: "error",
