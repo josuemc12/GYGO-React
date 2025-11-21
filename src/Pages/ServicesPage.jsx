@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { TextField, Grid, Box, Card, IconButton } from "@mui/material";
+import { TextField, Grid, Box, Card, IconButton,FormControl,InputLabel,Select,MenuItem } from "@mui/material";
 import Footer from "examples/Footer";
 import DashboardLayout from "../examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "../examples/Navbars/DashboardNavbar";
@@ -14,7 +14,6 @@ import { cancelAdminSubscription } from "../API/Subscription";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import Tooltip from "@mui/material/Tooltip";
 
-
 export default function ServicesPage() {
   const [services, setServices] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -22,6 +21,7 @@ export default function ServicesPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const { userId, role } = useAuth();
+  const [selectedGroupFilter, setSelectedGroupFilter] = useState("todos");
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -42,19 +42,27 @@ export default function ServicesPage() {
   }, []);
 
   useEffect(() => {
-    if (!searchTerm) {
-      setTableRows(services);
-    } else {
-      const filtered = services.filter((item) => {
-        const term = searchTerm.toLowerCase();
-        return (
+    let filtered = services;
+
+    if (selectedGroupFilter !== "todos") {
+      filtered = filtered.filter(
+        (item) => item.groupName === selectedGroupFilter
+      );
+    }
+
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase();
+      filtered = filtered.filter(
+        (item) =>
           item.serviceName.toLowerCase().includes(term) ||
           item.groupName.toLowerCase().includes(term)
-        );
-      });
-      setTableRows(filtered);
+      );
     }
-  }, [searchTerm, services]);
+
+    setTableRows(filtered);
+  }, [searchTerm, selectedGroupFilter, services]);
+
+  const gruposUnicos = [...new Set(services.map((s) => s.groupName))];
 
   // Update columns to include actions
   const columns = [
@@ -145,7 +153,7 @@ export default function ServicesPage() {
             </Grid>
 
             <Grid container spacing={2} mt={1}>
-              <Grid xs={12} sm={6} md={4} lg={3}>
+              {/* <Grid xs={12} sm={6} md={4} lg={3}>
                 <TextField
                   fullWidth
                   variant="outlined"
@@ -155,6 +163,26 @@ export default function ServicesPage() {
                   onChange={(e) => setSearchTerm(e.target.value)}
                   sx={{ width: "200px", mb: 3 }}
                 />
+              </Grid> */}
+
+              <Grid>
+                <FormControl fullWidth>
+                  <InputLabel id="grupo-select-label">Grupo</InputLabel>
+                  <Select
+                    labelId="grupo-select-label"
+                    value={selectedGroup}
+                    label="Grupo"
+                    onChange={(e) => setSelectedGroup(e.target.value)}
+                    sx={{ width: 200, height: 40 }}
+                  >
+                    <MenuItem value="todos">Todos</MenuItem>
+                    {gruposUnicos.map((g, i) => (
+                      <MenuItem key={i} value={g}>
+                        {g}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Grid>
             </Grid>
           </MDBox>
