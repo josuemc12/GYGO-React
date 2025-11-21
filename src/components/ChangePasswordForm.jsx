@@ -77,7 +77,7 @@ export const ChangePasswordForm = () => {
           confirmButtonColor: "#2DA14C",
           timer: 3000,
         }).then(() => {
-          window.location.href = "/dashboard";
+          window.location.href = "/panel-control";
         });
         return;
       } else {

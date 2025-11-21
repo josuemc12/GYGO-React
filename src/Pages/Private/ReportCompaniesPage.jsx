@@ -88,7 +88,7 @@ export function ReportCompanies() {
   const [serviceFilter, setServiceFilter] = useState("todos");
   const [openModal, setOpenModal] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState(null);
-
+  
   const fetchReportCompanies = async () => {
     try {
       const statusParam =

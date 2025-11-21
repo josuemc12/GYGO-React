@@ -59,6 +59,7 @@ function ManagmentUsers() {
   const [Users, setUsers] = useState([]);
   //Hook para manejar el JSON de proyectos filtro
   const [filter, setFilter] = useState("todos");
+  const [selectedGroup, setSelectedGroup] = useState("todos");
   //Hook para manejar el JSON de proyectos por fechas
 
   const [openModal, setOpenModal] = useState(false);
@@ -79,6 +80,13 @@ function ManagmentUsers() {
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
   const [inviteLoading, setInviteLoading] = useState(false);
 
+  const roleLabels = {
+    Default: "Usuario nuevo",
+    developer: "desarrollador",
+    GroupAdmin: "Administrador de grupo",
+    GroupUser: "Usuario de grupo",
+  };
+
   const fetchUsers = async () => {
     try {
       if (filter === "todos") {
@@ -98,19 +106,32 @@ function ManagmentUsers() {
       setInviteLoading(true);
       setError("");
 
-      await sendDefaultUserInvite(email);
+      const result = await sendDefaultUserInvite(email);
 
-      // Mostrar mensaje de éxito con SweetAlert
-      Swal.fire({
-        icon: "success",
-        title: "Invitación Enviada",
-        text: `Invitación enviada exitosamente a ${email}`,
-        timer: 3000,
-        showConfirmButton: false,
-      });
-      setInviteModalOpen(false);
-
-      fetchUsers();
+      if (result.success) {
+        // Mostrar mensaje de éxito con SweetAlert
+        Swal.fire({
+          icon: "success",
+          title: "Invitación Enviada",
+          text: `Invitación enviada exitosamente a ${email}`,
+          timer: 3000,
+          showConfirmButton: false,
+        });
+        setInviteModalOpen(false);
+        fetchUsers();
+        return;
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error al enviar la invitación",
+          text: result.message,
+          showConfirmButton: false,
+          timer: 3000,
+        });
+        setInviteModalOpen(false);
+        fetchUsers();
+        return;
+      }
     } catch (err) {
       Swal.fire({
         icon: "error",
@@ -131,11 +152,18 @@ function ManagmentUsers() {
     fetchUsers();
   }, [filter]);
 
-  const filteredUsers = Users.filter(
-    (user) =>
-      user.correo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.nombregrupo.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const gruposUnicos = [...new Set(Users.map((u) => u.nombregrupo))];
+
+  const filteredUsers = Users.filter((user) => {
+    const matchesSearch = user.nombregrupo
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+
+    const matchesGroup =
+      selectedGroup === "todos" || user.nombregrupo === selectedGroup;
+
+    return matchesSearch && matchesGroup;
+  });
 
   const columns = [
     { Header: "Nombre", accessor: "nombre", align: "left" },
@@ -168,7 +196,7 @@ function ManagmentUsers() {
     ),
     rol: (
       <MDTypography variant="caption" color="text">
-        {user.rol}
+        {roleLabels[user.rol] || user.rol}
       </MDTypography>
     ),
 
@@ -263,7 +291,7 @@ function ManagmentUsers() {
               spacing={2}
               mt={2}
             >
-              <Grid>
+              {/* <Grid>
                 <Grid container spacing={2}>
                   <Grid>
                     <TextField
@@ -277,6 +305,25 @@ function ManagmentUsers() {
                     />
                   </Grid>
                 </Grid>
+              </Grid> */}
+              <Grid>
+                <FormControl fullWidth>
+                  <InputLabel id="grupo-select-label">Filtrar por grupo</InputLabel>
+                  <Select
+                    labelId="grupo-select-label"
+                    value={selectedGroup}
+                    label="Grupo"
+                    onChange={(e) => setSelectedGroup(e.target.value)}
+                    sx={{ width: 200, height: 40 }}
+                  >
+                    <MenuItem value="todos">Todos</MenuItem>
+                    {gruposUnicos.map((g, i) => (
+                      <MenuItem key={i} value={g}>
+                        {g}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Grid>
             </Grid>
           </MDBox>

@@ -1,8 +1,9 @@
 import { appsettings } from "../settings/appsettings";
+import { fetchWithAuth } from "../utils/fetchWithAuth";
 
 export const ChangeProfileUser = async(changeProfile) => {
     try {
-    const response = await fetch(`${appsettings.apiUrl}user/editProfile`, {
+    const response = await fetchWithAuth(`${appsettings.apiUrl}user/editProfile`, {
       method: "PUT",
       credentials: "include",
       headers: {
@@ -10,8 +11,10 @@ export const ChangeProfileUser = async(changeProfile) => {
       },
       body: JSON.stringify(changeProfile),
     });
+    if (!response) return;
+
+
     const data = await response.json(); 
-    console.log(data);
     return data
   } catch (error) {
     return { success: false, error: error.message };

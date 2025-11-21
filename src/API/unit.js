@@ -1,14 +1,15 @@
 import { appsettings } from "../settings/appsettings";
+import { fetchWithAuth } from "../utils/fetchWithAuth";
 
 export const getUnits = async () => {
   try {
-    const response = await fetch(`${appsettings.apiUrl}Unit/GetUnits`, {
+    const response = await fetchWithAuth(`${appsettings.apiUrl}Unit/GetUnits`, {
       method: "GET",
-      credentials: "include",
+      //credentials: "include",
       headers: { Accept: "application/json" },
     });
 
-    if (!response.ok) {
+    if (!response || !response.ok) {
       throw new Error("Failed to load categories");
     }
 
@@ -21,14 +22,15 @@ export const getUnits = async () => {
 };
 
 export const CreateUnits = async (unitDTO) => {
-  const response = await fetch(`${appsettings.apiUrl}Unit/CreateUnit`, {
+  const response = await fetchWithAuth(`${appsettings.apiUrl}Unit/CreateUnit`, {
     method: "POST",
-    credentials: "include",
+    //credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(unitDTO),
   });
+  if (!response) return;
 
   if (response.ok) {
     const data = await response.text();
@@ -40,14 +42,18 @@ export const CreateUnits = async (unitDTO) => {
 };
 
 export async function UpdateUnits(unitDTO) {
-  const response = await fetch(`${appsettings.apiUrl}Unit/Update`, {
+  const response = await fetchWithAuth(`${appsettings.apiUrl}Unit/Update`, {
     method: "POST",
-    credentials: "include",
+    //credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(unitDTO),
   });
+
+  
+  if (!response) return;
+
 
   if (response.ok) {
     const data = await response.text();

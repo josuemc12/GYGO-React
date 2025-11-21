@@ -518,7 +518,7 @@ function ProjectPage() {
       }
 
       const result = await UpdateTaskt(taskData);
-
+      console.log(result);
       if (result.success) {
         setOpenModalTask(false);
         setEditTaskId(null);

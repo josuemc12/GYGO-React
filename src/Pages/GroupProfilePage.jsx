@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useAuth } from "../context/AuthContext";
+
 import {
   Grid,
   Card,
@@ -30,6 +32,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function GrupoProfilePage() {
+  const { role } = useAuth();
+
   const [grupo, setGrupo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [openModal, setOpenModal] = useState(false);
@@ -49,8 +53,6 @@ export function GrupoProfilePage() {
       setGrupo(result);
 
       const baseUrl = import.meta.env.VITE_API_URL;
-
-      console.log("API URL:", import.meta.env.VITE_API_URL);
 
       setGroupData({
         nombre: result.nombre,
@@ -308,19 +310,21 @@ export function GrupoProfilePage() {
                 </Card>
               </Grid>
 
-              <Grid size={{ xs: 12 }} sx={{ mb: 3 }}>
-                <Card sx={{ p: 3, textAlign: "right" }}>
-                  <MDButton
-                    sx={{ mb: 2 }}
-                    variant="contained"
-                    color="success"
-                    startIcon={<ManageAccountsIcon />}
-                    onClick={openModalWithData}
-                  >
-                    Editar Información del Grupo
-                  </MDButton>
-                </Card>
-              </Grid>
+              {role !== "GU" && (
+                <Grid size={{ xs: 12 }} sx={{ mb: 3 }}>
+                  <Card sx={{ p: 3, textAlign: "right" }}>
+                    <MDButton
+                      sx={{ mb: 2 }}
+                      variant="contained"
+                      color="success"
+                      startIcon={<ManageAccountsIcon />}
+                      onClick={openModalWithData}
+                    >
+                      Editar Información del Grupo
+                    </MDButton>
+                  </Card>
+                </Grid>
+              )}
             </>
           )}
         </Grid>

@@ -25,7 +25,7 @@ import {
   DialogContent,
   DialogTitle,
   CircularProgress,
-   FormControlLabel,
+  FormControlLabel,
   FormHelperText,
 } from "@mui/material";
 import { Visibility, VisibilityOff, ArrowBack } from "@mui/icons-material";
@@ -69,10 +69,11 @@ export default function Login() {
   const [emailReset, setEmailReset] = useState("");
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
-  setOpen(false);
-  setErrors({});
-  setEmailReset("");
-};
+    setOpen(false);
+    setErrors({});
+    setEmailReset("");
+  };
+  const [saving, setSaving] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -84,7 +85,8 @@ export default function Login() {
         icon: "warning",
         title: "No se pudo iniciar sesión",
         text: "Por favor, completá todos los campos.",
-        confirmButtonColor: "#f8bb86",
+        showConfirmButton: false,
+        timer: 3000,
       });
       return;
     }
@@ -98,7 +100,8 @@ export default function Login() {
           icon: "error",
           title: "Error al iniciar sesión",
           text: error,
-          confirmButtonColor: "#d33",
+          showConfirmButton: false,
+          timer: 3000,
         });
 
         return;
@@ -106,7 +109,7 @@ export default function Login() {
 
       if (isTwoFactor) {
         // Redirect to 2FA page
-        navigate(`/verify-2fa?tempToken=${encodeURIComponent(tempToken)}`);
+        navigate(`/verificar-2fa?tempToken=${encodeURIComponent(tempToken)}`);
       } else {
         login(rol, id);
         // Normal login success — redirect to dashboard or home
@@ -117,15 +120,13 @@ export default function Login() {
         icon: "error",
         title: "Error",
         text: "No se pudo conectar con el servidor, intentá nuevamente más tarde.",
-        confirmButtonColor: "#d33",
+        showConfirmButton: false,
+        timer: 3000,
       });
     } finally {
       setIsLoading(false);
     }
   };
-
-
-
 
   const handleSendReset = async () => {
     if (!emailReset.trim()) {
@@ -136,10 +137,14 @@ export default function Login() {
     }
     //Validacion de correo
     if (!/\S+@\S+\.\S+/.test(emailReset)) {
-      setErrors((prev) => ({ ...prev, email: "Correo electronico es obligatorio" }));
+      setErrors((prev) => ({
+        ...prev,
+        email: "Correo electronico es obligatorio",
+      }));
       return;
     }
     try {
+      setSaving(true);
       const response = await RequestPasswordReset(emailReset);
       if (response.success) {
         Swal.fire({
@@ -149,8 +154,10 @@ export default function Login() {
           showConfirmButton: false,
           timer: 2000,
         });
+        setSaving(false);
         handleClose();
       } else {
+        setSaving(false);
         handleClose();
         Swal.fire({
           icon: "error",
@@ -160,6 +167,7 @@ export default function Login() {
           showConfirmButton: false,
         });
       }
+      setSaving(false);
       setErrors({});
       setEmailReset("");
     } catch (error) {
@@ -424,7 +432,7 @@ export default function Login() {
             variant="contained"
             color="success"
           >
-            Enviar
+            {saving ? <CircularProgress size={24} color="inherit" /> : "Enviar"}
           </MDButton>
         </DialogActions>
       </Dialog>

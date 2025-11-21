@@ -56,7 +56,7 @@ export default function App() {
     "/registro",
     "/registro/:inviteToken",
     "/restablecer-contrasena",
-    "/verify-2fa",
+    "/verificar-2fa",
     "/agregar-grupo"
   ];
 

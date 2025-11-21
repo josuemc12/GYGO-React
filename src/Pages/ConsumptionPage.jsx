@@ -11,6 +11,7 @@ import {
   Avatar,
   Box,
   Typography,
+  TextField
 } from "@mui/material";
 import { EnergySavingsLeaf, AddOutlined, Padding } from "@mui/icons-material";
 import MDBox from "components/MDBox";
@@ -19,15 +20,12 @@ import MDTypography from "components/MDTypography";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 
-
-import { refreshLogin } from "../API/Auth"; 
-
-
-
+import { refreshLogin } from "../API/Auth";
 
 export function ConsumptionPage() {
   const [consumos, setConsumos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -43,11 +41,9 @@ export function ConsumptionPage() {
     navigate("/consumo/agregar");
   };
 
-
-   const handleAgregarConsumoo = async() => {
+  const handleAgregarConsumoo = async () => {
     await refreshLogin();
   };
-
 
   const handleVerConsumoMensual = (consumo) => {
     navigate(`/consumo/mensual/${consumo.consumptionId}`, {
@@ -59,6 +55,12 @@ export function ConsumptionPage() {
     navigate(`/consumo/editar/${id}`);
   };
 
+  const consumosFiltrados = consumos.filter((c) =>
+  c.name.toLowerCase().includes(searchTerm.toLowerCase())
+);
+
+
+
   return (
     <DashboardLayout>
       <DashboardNavbar></DashboardNavbar>
@@ -69,7 +71,7 @@ export function ConsumptionPage() {
             borderRadius: 2,
             p: 3,
             mb: 2,
-             background: "#ffffff",
+            background: "#ffffff",
             border: "1px solid #e5e7eb",
             boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
           }}
@@ -103,18 +105,24 @@ export function ConsumptionPage() {
               >
                 Agregar Consumo
               </MDButton>
-
-
-
-
-
+            </Grid>
+          </Grid>
+          <Grid container spacing={2} mt={1}>
+            <Grid xs={12} sm={6} md={4} lg={3}>
+              <TextField
+                fullWidth
+                variant="outlined"
+                placeholder="Buscar por nombre del consumo..."
+                size="large"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                sx={{ width: "230px", mb: 3 }}
+              />
             </Grid>
           </Grid>
         </MDBox>
 
         <Grid container spacing={3} sx={{ mb: 5 }}>
-          
-
           {/* Tabla de Consumos */}
           <Grid size={{ xs: 12 }} mt={10}>
             <Card>
@@ -134,7 +142,7 @@ export function ConsumptionPage() {
               </MDBox>
               <MDBox>
                 <ConsumptionTable
-                  consumos={consumos}
+                  consumos={consumosFiltrados}
                   loading={loading}
                   onVerConsumoMensual={handleVerConsumoMensual}
                   onEditarConsumo={handleEditarConsumo}
