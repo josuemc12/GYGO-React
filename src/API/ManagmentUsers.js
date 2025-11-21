@@ -1,11 +1,18 @@
 import { appsettings } from "../settings/appsettings";
+import { fetchWithAuth } from "../utils/fetchWithAuth";
 
 //API para llamar los proyectos por grupo
 export async function getUsers() {
-  const response = await fetch(`${appsettings.apiUrl}ManagmentUsers/AllUsers`, {
-    method: "GET",
-    credentials: "include",
-  });
+  const response = await fetchWithAuth(
+    `${appsettings.apiUrl}ManagmentUsers/AllUsers`,
+    {
+      method: "GET",
+      credentials: "include",
+    }
+  );
+
+  if (!response) return;
+
   if (response.ok) {
     const data = await response.json();
     return data;
@@ -16,13 +23,16 @@ export async function getUsers() {
 
 //API para los projectos pendientes
 export async function getUsersbyRol(rol) {
-  const response = await fetch(
+  const response = await fetchWithAuth(
     `${appsettings.apiUrl}ManagmentUsers/rol/${rol}`,
     {
       method: "GET",
       credentials: "include",
     }
   );
+
+  if (!response) return;
+
   if (response.ok) {
     const data = await response.json();
     return data;
@@ -34,7 +44,7 @@ export async function getUsersbyRol(rol) {
 
 export const sendDefaultUserInvite = async (email) => {
   try {
-    const response = await fetch(
+    const response = await fetchWithAuth(
       `${appsettings.apiUrl}Admin/sendInviteDefault`,
       {
         method: "POST",
@@ -47,9 +57,10 @@ export const sendDefaultUserInvite = async (email) => {
         body: JSON.stringify(email),
       }
     );
+    if (!response) return;
 
     const data = await response.json();
-    console.log(data);
+
     if (!data.success) {
       return { success: false, message: data.message };
     }

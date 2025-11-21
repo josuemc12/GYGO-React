@@ -1,16 +1,22 @@
 import { appsettings } from "../settings/appsettings";
+import { fetchWithAuth } from "../utils/fetchWithAuth";
 
 //API para llamar los proyectos por grupo
 export async function AddProject(projectData) {
   try {
-    const response = await fetch(`${appsettings.apiUrl}Projects/AddProject`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(projectData),
-    });
+    const response = await fetchWithAuth(
+      `${appsettings.apiUrl}Projects/AddProject`,
+      {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(projectData),
+      }
+    );
+
+    if (!response) return;
 
     const data = await response.json();
     if (!data.success) {
@@ -26,7 +32,7 @@ export async function AddProject(projectData) {
 
 export async function UpdateProject(projectData) {
   try {
-    const response = await fetch(
+    const response = await fetchWithAuth(
       `${appsettings.apiUrl}Projects/UpdateProject`,
       {
         method: "PUT",
@@ -38,13 +44,14 @@ export async function UpdateProject(projectData) {
       }
     );
 
+    if (!response) return;
+
     const data = await response.json();
     if (!data.success) {
       return { success: false, message: data.message };
     }
 
     return { success: true, message: data.message };
-
   } catch (error) {
     console.error("Error al actualizar el proyecto:", error);
     return { success: false, message: error.message };
@@ -53,7 +60,7 @@ export async function UpdateProject(projectData) {
 // API para eliminar proyectos
 export async function DProject(projectID) {
   try {
-    const response = await fetch(
+    const response = await fetchWithAuth(
       `${appsettings.apiUrl}Projects/DeleteProject?projectID=${projectID}`,
       {
         method: "DELETE",
@@ -63,6 +70,8 @@ export async function DProject(projectID) {
         },
       }
     );
+
+    if (!response) return;
 
     if (response.ok) {
       return true;
@@ -78,10 +87,15 @@ export async function DProject(projectID) {
 
 //API para llamar los proyectos por grupo
 export async function getProjects() {
-  const response = await fetch(`${appsettings.apiUrl}Projects/AllProjects`, {
-    method: "GET",
-    credentials: "include",
-  });
+  const response = await fetchWithAuth(
+    `${appsettings.apiUrl}Projects/AllProjects`,
+    {
+      method: "GET",
+      credentials: "include",
+    }
+  );
+  if (!response) return;
+
   if (response.ok) {
     const data = await response.json();
     return data;
@@ -92,13 +106,15 @@ export async function getProjects() {
 
 //API para los projectos pendientes
 export async function getProjectsbyStatus(status) {
-  const response = await fetch(
+  const response = await fetchWithAuth(
     `${appsettings.apiUrl}Projects/status/${status}`,
     {
       method: "GET",
       credentials: "include",
     }
   );
+  if (!response) return;
+
   if (response.ok) {
     const data = await response.json();
     return data;
@@ -109,13 +125,15 @@ export async function getProjectsbyStatus(status) {
 
 //API para obtener los proyectos por fechas
 export async function getProjectsByDates(startDate, endDate) {
-  const response = await fetch(
+  const response = await fetchWithAuth(
     `${appsettings.apiUrl}Projects/dates?Start_date=${startDate}&End_date=${endDate}`,
     {
       method: "GET",
       credentials: "include",
     }
   );
+  if (!response) return;
+
   if (response.ok) {
     const data = await response.json();
     return data;
@@ -126,17 +144,18 @@ export async function getProjectsByDates(startDate, endDate) {
 
 //API para obtener los proyectos y tareas para el pdf
 export async function getProjectsPDF(startDate, endDate) {
-  const response = await fetch(
+  const response = await fetchWithAuth(
     `${appsettings.apiUrl}Projects/CreatePdf?Start_date=${startDate}&End_date=${endDate}`,
     {
       method: "GET",
       credentials: "include",
     }
   );
-  console.log(response.ok)
+  if (!response) return;
+
   if (response.ok) {
     const data = await response.json();
-    console.log(data)
+
     return data;
   } else {
     return [];

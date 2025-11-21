@@ -1,21 +1,27 @@
 import { appsettings } from "../settings/appsettings";
+import { fetchWithAuth } from "../utils/fetchWithAuth";
 
 export async function PostChangePassword(UserDTO) {
   try {
-    const response = await fetch(`${appsettings.apiUrl}user/ChangePassword`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(UserDTO),
-    });
-    const data = await response.json(); 
-    console.log(data);
+    const response = await fetchWithAuth(
+      `${appsettings.apiUrl}user/ChangePassword`,
+      {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(UserDTO),
+      }
+    );
+
+    if (!response) return;
+
+    const data = await response.json();
+
     if (response.ok) {
       return { success: true };
     }
-   
 
     return { success: false, error: data };
   } catch (error) {
@@ -23,52 +29,59 @@ export async function PostChangePassword(UserDTO) {
   }
 }
 
-
-
-
 export async function RequestPasswordReset(email) {
   try {
-    const response = await fetch(`${appsettings.apiUrl}user/RequestPasswordReset`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(email),
-    });
+    const response = await fetch(
+      `${appsettings.apiUrl}user/RequestPasswordReset`,
+      {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(email),
+      }
+    );
+    if (!response) return;
+
     if (response.ok) {
       return { success: true };
     }
-    return { success: false};
+    return { success: false };
   } catch (error) {
-    return { success: false};
+    return { success: false };
   }
 }
 
-
-export async function ResetPassword(token, newPassword,ConfirmPassword) {
+export async function ResetPassword(token, newPassword, ConfirmPassword) {
   try {
-    const response = await fetch(`${appsettings.apiUrl}User/ResetPassword`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        token: token,
-        NewPassword: newPassword,
-        confirmPassword : ConfirmPassword
-      }),
-    });
+    const response = await fetchWithAuth(
+      `${appsettings.apiUrl}User/ResetPassword`,
+      {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          token: token,
+          NewPassword: newPassword,
+          confirmPassword: ConfirmPassword,
+        }),
+      }
+    );
+
+    if (!response) return;
+
     const data = await response.json();
     console.log(data);
-    
+
     if (!data.success) {
-      return { success: false, message:data.message };
+      return { success: false, message: data.message };
     }
 
-    return { success: true,message:data.message };
+    return { success: true, message: data.message };
   } catch (error) {
-    return { success: false,message:response.message };
+    return { success: false, message: response.message };
   }
 }

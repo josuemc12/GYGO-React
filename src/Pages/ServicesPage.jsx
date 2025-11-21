@@ -165,14 +165,14 @@ export default function ServicesPage() {
                 />
               </Grid> */}
 
-              <Grid>
+             <Grid sx={{ pt: 1 }}>
                 <FormControl fullWidth>
-                  <InputLabel id="grupo-select-label">Grupo</InputLabel>
+                  <InputLabel id="group-filter-label">Filtrar por grupo</InputLabel>
                   <Select
-                    labelId="grupo-select-label"
-                    value={selectedGroup}
-                    label="Grupo"
-                    onChange={(e) => setSelectedGroup(e.target.value)}
+                    labelId="group-filter-label"
+                    value={selectedGroupFilter}
+                    label="Filtrar por grupo"
+                    onChange={(e) => setSelectedGroupFilter(e.target.value)}
                     sx={{ width: 200, height: 40 }}
                   >
                     <MenuItem value="todos">Todos</MenuItem>

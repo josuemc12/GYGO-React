@@ -18,7 +18,7 @@ import {
   InputAdornment,
   IconButton,
 } from "@mui/material";
-import { Visibility, VisibilityOff, Email } from "@mui/icons-material";
+import { Visibility, VisibilityOff, Email,ArrowBack } from "@mui/icons-material";
 import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
 import Swal from "sweetalert2";
 import logo from "../../assets/Logo.png";
@@ -91,7 +91,8 @@ export function Register() {
         icon: "warning",
         title: "No se pudo registrar al usuario",
         text: "Por favor, completá todos los campos.",
-        confirmButtonColor: "#f8bb86",
+        showConfirmButton: false,
+        timer: 3000,
       });
       return;
     }
@@ -101,14 +102,14 @@ export function Register() {
         icon: "warning",
         title: "Problemas con la contraseña",
         text: "La contraseña debe tener al menos 8 caracteres, mayúscula, minúscula, número y símbolo.",
-        confirmButtonColor: "#f8bb86",
+        showConfirmButton: false,
+        timer: 3000,
       });
       return;
     }
 
     try {
       const response = await registerUser(inviteToken, form);
-      console.log(response);
       if (response.success) {
         Swal.fire({
           icon: "success",
@@ -190,6 +191,25 @@ export function Register() {
         >
           <Container maxWidth="xs">
             <Paper>
+ <Box sx={{ position: "relative" }}>
+                <IconButton
+                  onClick={() => navigate("/pagina-inicio")}
+                  sx={{
+                    position: "absolute",
+                    top: -8,
+                    left: -8,
+                    color: "primary.main",
+                    "&:hover": {
+                      backgroundColor: "rgba(45, 161, 76, 0.08)",
+                    },
+                  }}
+                  aria-label="regresar"
+                >
+                  <ArrowBack />
+                </IconButton>
+              </Box>
+
+
               <Box textAlign="center" mb={1}>
                 <img src={logo} alt="Logo" style={{ maxWidth: "120px" }} />
               </Box>

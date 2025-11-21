@@ -137,7 +137,7 @@ export const ChangePassword = () => {
           timer: 2000, 
 
         }).then(() => {
-          window.location.href = "/Login";
+          window.location.href = "/inicio-sesion";
         });
         return;
       } else {

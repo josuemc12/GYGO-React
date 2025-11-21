@@ -308,7 +308,7 @@ function ManagmentUsers() {
               </Grid> */}
               <Grid>
                 <FormControl fullWidth>
-                  <InputLabel id="grupo-select-label">Grupo</InputLabel>
+                  <InputLabel id="grupo-select-label">Filtrar por grupo</InputLabel>
                   <Select
                     labelId="grupo-select-label"
                     value={selectedGroup}

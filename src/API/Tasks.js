@@ -1,17 +1,21 @@
 import { appsettings } from "../settings/appsettings";
+import { fetchWithAuth } from "../utils/fetchWithAuth";
+
 
 //API para llamar los proyectos por grupo
 export async function AddTask(taskData) {
   try {
     console.log(taskData);
-    const response = await fetch(`${appsettings.apiUrl}Tasks/AddTask`, {
+    const response = await fetchWithAuth(`${appsettings.apiUrl}Tasks/AddTask`, {
       method: "POST",
-      credentials: "include",
+      //credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(taskData),
     });
+
+    if (!response) return;
 
     const data = await response.json();
     
@@ -28,14 +32,18 @@ export async function AddTask(taskData) {
 
 export async function UpdateTaskt(taskData) {
   try {
-    const response = await fetch(`${appsettings.apiUrl}Tasks/UpdateTask`, {
+    const response = await fetchWithAuth(`${appsettings.apiUrl}Tasks/UpdateTask`, {
       method: "PUT",
-      credentials: "include",
+      //credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(taskData),
     });
+
+    if (!response) return;
+
+
     const data = await response.json();
 
     if (!data.success) {
@@ -52,13 +60,16 @@ export async function UpdateTaskt(taskData) {
 // API para eliminar proyectos
 export async function DeleteTask(taskID) {
   try {
-    const response = await fetch(
+    const response = await fetchWithAuth(
       `${appsettings.apiUrl}Tasks/DeleteTask?TaskID=${taskID}`,
       {
-        credentials: "include",
+        //credentials: "include",
         method: "DELETE",
       }
     );
+
+    if (!response) return;
+
 
     if (response.ok) {
       return true;
@@ -74,13 +85,17 @@ export async function DeleteTask(taskID) {
 
 //API para llamar los proyectos por grupo
 export async function getTasks(projectID) {
-  const response = await fetch(
+  const response = await fetchWithAuth(
     `${appsettings.apiUrl}Tasks/TasksByProject/${projectID}`,
     {
-      credentials: "include",
+      //credentials: "include",
       method: "GET",
     }
   );
+
+   if (!response) return [];
+
+
   if (response.ok) {
     const data = await response.json();
     return data;
@@ -92,13 +107,17 @@ export async function getTasks(projectID) {
 //API para actulizar el status de los proyectos
 export async function UpdateStatusTask(tasksID, status) {
   try {
-    const response = await fetch(
+    const response = await fetchWithAuth(
       `${appsettings.apiUrl}Tasks/UpdateTaskStatus?TaskId=${tasksID}&status=${status}`,
       {
-        credentials: "include",
+        //credentials: "include",
         method: "PUT",
       }
     );
+
+     if (!response) return false;
+
+     
     if (response.ok) {
       return true;
     } else {

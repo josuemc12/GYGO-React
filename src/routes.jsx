@@ -99,7 +99,7 @@ export const routes = [
   {
     type: "collapse",
     name: "Manejo de usuarios",
-    key: "ManagmentUsers",
+    key: "gestion-usuarios-admin",
     icon: <ManageAccountsIcon fontSize="small" />,
     route: "/gestion-usuarios-admin",
 
@@ -116,7 +116,7 @@ export const routes = [
   {
     type: "collapse",
     name: "Dashboard",
-    key: "dashboard",
+    key: "panel-control",
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/panel-control",
     component: (
@@ -177,7 +177,7 @@ export const routes = [
   {
     type: "collapse",
     name: "Consumo",
-    key: "consumption",
+    key: "consumo",
     icon: <EnergySavingsLeaf fontSize="small"></EnergySavingsLeaf>,
     route: "/consumo",
     component: (
@@ -413,7 +413,7 @@ export const routes = [
       //Ruta Tabla de usuarios
       {
         name: "Usuarios",
-        key: "AdminUserDashboard",
+        key: "gestion-usuarios",
         icon: <Icon fontSize="small">dashboard</Icon>,
         route: "/gestion-usuarios",
         component: (
@@ -431,7 +431,7 @@ export const routes = [
   {
     type: "collapse",
     name: "Suscripción",
-    key: "subscription",
+    key: "suscripcion",
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/suscripcion",
     component: <SubscriptionSwitch />,
@@ -502,20 +502,18 @@ export const routes = [
   },
 
   {
-    type: "collapse",
-    name: "Segundo Factor",
+   
+  
     key: "Segundo-Factor",
-    icon: <Icon fontSize="small">add_circle</Icon>,
     route: "/verificar-2fa",
     component: <Verify2FA />,
-    hideInSidebar: true,
   },
 
   //Ruta de incidents history
   {
     type: "collapse",
     name: "Historial de incidentes",
-    key: "emissions/incidents",
+    key: "emisiones/incidentes",
     icon: <Icon fontSize="small">list_alt</Icon>,
     route: "/emisiones/incidentes",
 
@@ -543,7 +541,7 @@ export const routes = [
   {
     type: "collapse",
     name: "Proyectos",
-    key: "ProjectPage",
+    key: "proyectos",
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/proyectos",
 
@@ -565,7 +563,7 @@ export const routes = [
     collapse: [
       {
         name: "Emisiones",
-        key: "reportsEmissions",
+        key: "reportes-emisiones",
         icon: <Icon fontSize="small">insert_chart</Icon>,
         route: "/reportes-emisiones",
 
