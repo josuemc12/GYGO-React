@@ -103,6 +103,22 @@ export const ReportsEmissionsPage = () => {
     });
   };
 
+  const getLabelTitle = () => {
+  switch (selectedReport) {
+    case "monthly":
+      return "Mes";
+    case "sources":
+      return "Factor de emisión";
+    case "rangeMonths":
+      return "Mes";
+    case "rangeYears":
+      return "Año";
+    default:
+      return "Dato";
+  }
+};
+
+
   const handleInputChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
@@ -606,7 +622,7 @@ export const ReportsEmissionsPage = () => {
                       color="error"
                       size="large"
                       onClick={() =>
-                        exportChartToPDF(chartRef, labels, emissions)
+                        exportChartToPDF(chartRef, labels, emissions, getLabelTitle())
                       }
                       sx={{
                         px: 4,
@@ -625,7 +641,7 @@ export const ReportsEmissionsPage = () => {
                       variant="contained"
                       color="success"
                       size="large"
-                      onClick={() => exportToExcel(labels, emissions)}
+                      onClick={() => exportToExcel(labels, emissions, getLabelTitle())}
                       sx={{
                         px: 4,
                         py: 1.5,

@@ -63,7 +63,9 @@ export function MonthlyConsumptionPage() {
       setLoading(true);
       const result = await getMonthlyConsumptions(id);
       setConsumosMensuales(result);
-      setAbbreviation(result[0].unitAbbreviation);    
+      if(result.length > 0 ){        
+        setAbbreviation(result[0].unitAbbreviation);    
+      }
       setLoading(false);
     };
     fetchMonthlyConsumption();
