@@ -1170,7 +1170,7 @@ function ProjectPage() {
               sx={{
                 "&.Mui-selected": {
                   backgroundColor: "#308D21", // fondo del tab seleccionado
-                  color: "#FFFFFF", // texto en blanco
+                  color: "#FFFFFF !important", // texto en blanco
                 },
               }}
             />
@@ -1179,7 +1179,7 @@ function ProjectPage() {
               sx={{
                 "&.Mui-selected": {
                   backgroundColor: "#308D21",
-                  color: "#FFFFFF",
+                  color: "#FFFFFF !important",
                 },
               }}
             />
