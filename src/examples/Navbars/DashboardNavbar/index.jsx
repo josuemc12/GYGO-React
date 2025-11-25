@@ -143,12 +143,12 @@ function DashboardNavbar({ absolute = false, light = false, isMini = false }) {
           mb={{ xs: 1, md: 0 }}
           sx={(theme) => navbarRow(theme, { isMini })}
         >
-          {/* <Breadcrumbs
+          { <Breadcrumbs
             icon="home"
             title={route[route.length - 1]}
             route={route}
             light={light}
-          /> */}
+          /> }
         </MDBox>
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
@@ -172,7 +172,7 @@ function DashboardNavbar({ absolute = false, light = false, isMini = false }) {
                     transformOrigin={{ vertical: "top", horizontal: "left" }}
                   >
                     <Link
-                      to="/Messages"
+                      to="/mensajes"
                       style={{ textDecoration: "none", color: "inherit" }}
                     >
                       <NotificationItem
@@ -207,7 +207,7 @@ function DashboardNavbar({ absolute = false, light = false, isMini = false }) {
                 }}
               >
                 <Link
-                  to="/userProfile"
+                  to="/perfil"
                   style={{ textDecoration: "none", color: "inherit" }}
                 >
                   <NotificationItem
@@ -218,7 +218,7 @@ function DashboardNavbar({ absolute = false, light = false, isMini = false }) {
                 </Link>
                 {allowedRolesForSuscripcion.includes(role) && (
                   <Link
-                    to="/subscription"
+                    to="/suscripcion"
                     style={{ textDecoration: "none", color: "inherit" }}
                   >
                     <NotificationItem
@@ -230,7 +230,7 @@ function DashboardNavbar({ absolute = false, light = false, isMini = false }) {
                 )}
                 {allowedRolesForGroupA.includes(role) && (
                   <Link
-                    to="/groupProfile"
+                    to="/perfil-grupo"
                     style={{ textDecoration: "none", color: "inherit" }}
                   >
                     <NotificationItem

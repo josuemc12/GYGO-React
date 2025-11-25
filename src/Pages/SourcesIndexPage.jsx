@@ -45,6 +45,7 @@ export function SourcesIndexPage() {
   const [errors, setErrors] = useState({});
   const [editMode, setEditMode] = useState(false);
   const [editId, setEditId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     loadSources();
@@ -93,28 +94,50 @@ export function SourcesIndexPage() {
 
   const handleSave = async () => {
     if (!sourceData.nombre.trim() || !sourceData.año || !sourceData.sector) {
-      setErrors({ nombre: "Requerido", año: "Requerido", sector: "Requerido" });
+      setErrors({
+        nombre: !sourceData.nombre.trim() ? "Requerido" : "",
+        año: !sourceData.año ? "Requerido" : "",
+        sector: !sourceData.sector ? "Requerido" : "",
+      });
       return;
     }
     try {
       if (editMode) {
-        await UpdateSource({ fuenteId: editId, ...sourceData });
+        const result = await UpdateSource({ fuenteId: editId, ...sourceData });
         setModalOpen(false);
-        await Swal.fire({
-          icon: "success",
-          title: "Fuente actualizada correctamente",
-          showConfirmButton: false,
-          timer: 2000,
-        });
+        if (result.success) {
+          Swal.fire({
+            icon: "success",
+            title: "Fuente actualizada correctamente",
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: result.message,
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        }
       } else {
-        await CreateSource(sourceData);
+        const result = await CreateSource(sourceData);
         setModalOpen(false);
-        await Swal.fire({
-          icon: "success",
-          title: "Fuente creada correctamente",
-          showConfirmButton: false,
-          timer: 2000,
-        });
+        if (result.success) {
+          Swal.fire({
+            icon: "success",
+            title: "Fuente creada correctamente",
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: result.message,
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        }
       }
       await loadSources();
     } catch (e) {
@@ -123,6 +146,10 @@ export function SourcesIndexPage() {
     }
   };
 
+    const filtered = sources.filter((item) =>
+    item.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const columns = [
     { Header: "Nombre", accessor: "nombre", align: "left" },
     { Header: "Año", accessor: "año", align: "left" },
@@ -130,7 +157,7 @@ export function SourcesIndexPage() {
     { Header: "Acciones", accessor: "actions", align: "center" },
   ];
 
-  const rows = sources.map((source) => ({
+  const rows = filtered.map((source) => ({
     nombre: (
       <MDTypography variant="caption" fontWeight="medium">
         {source.nombre}
@@ -167,7 +194,7 @@ export function SourcesIndexPage() {
       <MDBox py={3}>
         <Grid container spacing={3} sx={{ mb: 5 }}>
           <Grid size={{ xs: 12 }}>
-            <Card
+            <MDBox
               sx={{
                 background: "#ffffff",
                 mb: 3,
@@ -177,7 +204,7 @@ export function SourcesIndexPage() {
                 padding: 3,
               }}
             >
-              <CardContent>
+              
                 <Grid
                   container
                   alignItems="center"
@@ -191,7 +218,7 @@ export function SourcesIndexPage() {
                         </MDBox>
                         <MDBox display="flex" alignItems="center" gap={1}>
                           <MDTypography variant="body2" color="text">
-                            Gestiona las fuentes registradas en el sistema
+                            Gestiona las fuentes registradas en el sistema.
                           </MDTypography>
                         </MDBox>
                       </MDBox>
@@ -216,8 +243,25 @@ export function SourcesIndexPage() {
                     </MDButton>
                   </Grid>
                 </Grid>
-              </CardContent>
-            </Card>
+             
+
+             <Grid container spacing={2} mt={1}>
+                <Grid xs={12} sm={6} md={4} lg={3}>
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    placeholder="Buscar por nombre de fuente de emsión.."
+                    size="large"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    sx={{ width: "230px", mb: 3 }}
+                  />
+                </Grid>
+              </Grid>
+
+
+
+            </MDBox>
           </Grid>
 
           <Grid size={{ xs: 12 }}>
@@ -241,8 +285,7 @@ export function SourcesIndexPage() {
                 sx={{
                   p: 4,
                   textAlign: "center",
-                  minHeight: "100px",
-                  width: "1200px",
+                  width: "100%",
                   alignItems: "center",
                   justifyContent: "center",
                 }}
@@ -288,9 +331,10 @@ export function SourcesIndexPage() {
               fullWidth
               label="Nombre"
               value={sourceData.nombre}
-              onChange={(e) =>
-                setSourceData({ ...sourceData, nombre: e.target.value })
-              }
+              onChange={(e) => {
+                setSourceData({ ...sourceData, nombre: e.target.value });
+                setErrors((prev) => ({ ...prev, nombre: "" }));
+              }}
               error={!!errors.nombre}
               helperText={errors.nombre}
               sx={{ mb: 2 }}
@@ -300,9 +344,10 @@ export function SourcesIndexPage() {
               label="Año"
               type="number"
               value={sourceData.año}
-              onChange={(e) =>
-                setSourceData({ ...sourceData, año: e.target.value })
-              }
+              onChange={(e) => {
+                setSourceData({ ...sourceData, año: e.target.value });
+                setErrors((prev) => ({ ...prev, año: "" }));
+              }}
               error={!!errors.año}
               helperText={errors.año}
               sx={{ mb: 2 }}
@@ -313,9 +358,13 @@ export function SourcesIndexPage() {
               <Select
                 fullWidth
                 value={sourceData.sector}
-                onChange={(e) =>
-                  setSourceData({ ...sourceData, sector: e.target.value })
-                }
+                onChange={(e) => {
+                  setSourceData({ ...sourceData, sector: e.target.value });
+                  setErrors((prev) => ({
+                    ...prev,
+                    sector: "",
+                  }));
+                }}
                 displayEmpty
                 error={!!errors.sector}
                 sx={{ mb: 2, height: 40 }}

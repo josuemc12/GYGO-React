@@ -34,6 +34,9 @@ export function UnitsIndexPage() {
   const [errors, setErrors] = useState({});
   const [editMode, setEditMode] = useState(false);
   const [editId, setEditId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+
+
 
   useEffect(() => {
     loadUnits();
@@ -68,28 +71,51 @@ export function UnitsIndexPage() {
 
   const handleSave = async () => {
     if (!unitData.nombre.trim() || !unitData.diminutivo.trim()) {
-      setErrors({ nombre: "Requerido", diminutivo: "Requerido" });
+      setErrors({
+        nombre: !unitData.nombre.trim() ? "Requerido" : "",
+        diminutivo: !unitData.diminutivo.trim() ? "Requerido" : "",
+      });
       return;
     }
     try {
       if (editMode) {
-        await UpdateUnits({ unidadId: editId, ...unitData });
+        const result = await UpdateUnits({ unidadId: editId, ...unitData });
         setModalOpen(false);
-        await Swal.fire({
-          icon: "success",
-          title: "Unidad actualizada correctamente",
-          showConfirmButton: false,
-          timer: 2000,
-        });
+
+        if (result.success) {
+          Swal.fire({
+            icon: "success",
+            title: "Unidad actualizada correctamente",
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: result.message,
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        }
       } else {
-        await CreateUnits(unitData);
+        const result = await CreateUnits(unitData);
         setModalOpen(false);
-        await Swal.fire({
-          icon: "success",
-          title: "Unidad creada correctamente",
-          showConfirmButton: false,
-          timer: 2000,
-        });
+       
+        if (result.success) {
+          Swal.fire({
+            icon: "success",
+            title: "Unidad creado exitosamente",
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: result.message,
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        }
       }
       await loadUnits();
     } catch (e) {
@@ -98,13 +124,17 @@ export function UnitsIndexPage() {
     }
   };
 
+    const filtered = units.filter((item) =>
+    item.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const columns = [
     { Header: "Nombre", accessor: "nombre", align: "left" },
     { Header: "Diminutivo", accessor: "diminutivo", align: "left" },
     { Header: "Acciones", accessor: "actions", align: "center" },
   ];
 
-  const rows = units.map((unit) => ({
+  const rows = filtered.map((unit) => ({
     nombre: (
       <MDTypography variant="caption" fontWeight="medium">
         {unit.nombre}
@@ -120,7 +150,7 @@ export function UnitsIndexPage() {
         <Tooltip title="Editar Unidad">
           <IconButton
             size="small"
-            color="success"
+            sx={{ color: "#1976D2" }}
             onClick={() => handleEditClick(unit)}
           >
             <EditOutlined fontSize="small" />
@@ -136,7 +166,7 @@ export function UnitsIndexPage() {
       <MDBox py={3}>
         <Grid container spacing={3} sx={{ mb: 5 }}>
           <Grid size={{ xs: 12 }}>
-            <Card
+            <MDBox
               sx={{
                 background: "#ffffff",
                 mb: 3,
@@ -146,7 +176,7 @@ export function UnitsIndexPage() {
                 padding: 3,
               }}
             >
-              <CardContent>
+             
                 <Grid
                   container
                   alignItems="center"
@@ -160,7 +190,7 @@ export function UnitsIndexPage() {
                         </MDBox>
                         <MDBox display="flex" alignItems="center" gap={1}>
                           <MDTypography variant="body2" color="text">
-                            Gestiona las unidades registradas en el sistema
+                            Gestiona las unidades registradas en el sistema.
                           </MDTypography>
                         </MDBox>
                       </MDBox>
@@ -185,8 +215,26 @@ export function UnitsIndexPage() {
                     </MDButton>
                   </Grid>
                 </Grid>
-              </CardContent>
-            </Card>
+                
+           <Grid container spacing={2} mt={1}>
+                <Grid xs={12} sm={6} md={4} lg={3}>
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    placeholder="Buscar por nombre de la unidad ..."
+                    size="large"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    sx={{ width: "230px", mb: 3 }}
+                  />
+                </Grid>
+              </Grid>
+
+
+
+
+
+            </MDBox>
           </Grid>
 
           <Grid size={{ xs: 12 }}>
@@ -201,7 +249,7 @@ export function UnitsIndexPage() {
                 borderRadius="lg"
                 coloredShadow="success"
               >
-                <MDTypography variant="h6" color="white">
+                <MDTypography variant="h6" color="white" align="left">
                   Registro de Unidades
                 </MDTypography>
               </MDBox>
@@ -210,8 +258,7 @@ export function UnitsIndexPage() {
                 sx={{
                   p: 4,
                   textAlign: "center",
-                  minHeight: "100px",
-                  width: "1200px",
+                  width: "100%",
                   alignItems: "center",
                   justifyContent: "center",
                 }}
@@ -259,9 +306,10 @@ export function UnitsIndexPage() {
               fullWidth
               label="Nombre"
               value={unitData.nombre}
-              onChange={(e) =>
-                setUnitData({ ...unitData, nombre: e.target.value })
-              }
+              onChange={(e) => {
+                setUnitData({ ...unitData, nombre: e.target.value });
+                setErrors((prev) => ({ ...prev, nombre: "" }));
+              }}
               error={!!errors.nombre}
               helperText={errors.nombre}
               sx={{ mb: 2 }}
@@ -270,9 +318,10 @@ export function UnitsIndexPage() {
               fullWidth
               label="Diminutivo"
               value={unitData.diminutivo}
-              onChange={(e) =>
-                setUnitData({ ...unitData, diminutivo: e.target.value })
-              }
+              onChange={(e) => {
+                setUnitData({ ...unitData, diminutivo: e.target.value });
+                setErrors((prev) => ({ ...prev, diminutivo: "" }));
+              }}
               error={!!errors.diminutivo}
               helperText={errors.diminutivo}
               sx={{ mb: 2 }}

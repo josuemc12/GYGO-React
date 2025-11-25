@@ -78,7 +78,7 @@ export function AddConsumptionForm() {
         showConfirmButton: false,
         timer: 2000,
       });
-      navigate("/consumption");
+      navigate("/consumo");
     } catch (err) {
       console.error("Error al guardar:", err);
       setErrors({ submit: "Error al guardar. Intente de nuevo." });

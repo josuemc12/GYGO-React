@@ -14,14 +14,15 @@ export const AddGroupSAPage = () => {
   };
 
   return (
-    <Box component={Paper} elevation={3} sx={{ p:4, borderRadius: 2 }}>
-      <Typography variant="h4" gutterBottom>
-        Crear nuevo grupo
-      </Typography>
+    <>
+      <Box component={Paper} elevation={3} sx={{ p: 4, borderRadius: 2 }}>
+        <Typography variant="h4" gutterBottom>
+          Crear nuevo grupo
+        </Typography>
 
-   
-      <hr></hr>
-      <AddGroupForm onGroupCreated={handleGroupCreated} />
-    </Box>
+        <hr></hr>
+        <AddGroupForm onGroupCreated={handleGroupCreated} />
+      </Box>
+    </>
   );
 };

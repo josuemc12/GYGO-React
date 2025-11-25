@@ -14,45 +14,18 @@ Coded by www.creative-tim.com
 */
 import "regenerator-runtime/runtime";
 import { useState, useEffect, useMemo } from "react";
-
-// react-router components
-import { Routes, Route, Navigate, useLocation } from "react-router-dom";
-
-// @mui material components
+import { Routes, Route, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import Icon from "@mui/material/Icon";
 
-// Material Dashboard 2 React components
-import MDBox from "components/MDBox";
-
-// Material Dashboard 2 React example components
 import Sidenav from "examples/Sidenav";
-
-// Material Dashboard 2 React themes
 import theme from "assets/theme";
-import themeRTL from "assets/theme/theme-rtl";
-
-// Material Dashboard 2 React Dark Mode themes
 import themeDark from "assets/theme-dark";
-import themeDarkRTL from "assets/theme-dark/theme-rtl";
-
-// RTL plugins
-import rtlPlugin from "stylis-plugin-rtl";
-import { CacheProvider } from "@emotion/react";
-import createCache from "@emotion/cache";
-
-//Manejo de roles
 import { useAuth } from "./context/AuthContext";
-
-// Rutas
 import { routes, getRoutes } from "./routes";
-
-// Material Dashboard 2 React contexts
 import {
   useMaterialUIController,
   setMiniSidenav,
-  setOpenConfigurator,
 } from "./context/index";
 import NotFound from "./Pages/NotFound";
 
@@ -62,31 +35,29 @@ export default function App() {
     miniSidenav,
     direction,
     layout,
-    openConfigurator,
     sidenavColor,
-    transparentSidenav,
-    whiteSidenav,
     darkMode,
   } = controller;
   const [onMouseEnter, setOnMouseEnter] = useState(false);
-  const [rtlCache, setRtlCache] = useState(null);
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const { pathname } = useLocation();
   const { role } = useAuth();
+  const navigate = useNavigate();
 
   const publicRoutes = [
     "/",
-    "/login",
-    "/homepage",
+    "*",
+    "/inicio-sesion",
+    "/pagina-inicio",
     "/certificaciones",
     "/servicios",
     "/nosotros",
     "/contactos",
     "/registro",
     "/registro/:inviteToken",
-    "/sendinvite",
-    "/verify-2fa",
-    "/changepassword",
-    "/addgroup",
+    "/restablecer-contrasena",
+    "/verificar-2fa",
+    "/agregar-grupo"
   ];
 
   const matchRoute = (route, path) => {
@@ -94,34 +65,49 @@ export default function App() {
     return new RegExp(pattern, "i").test(path);
   };
 
-  const filteredRoutes = getRoutes(role);
-
-  const getAllRoutes = (routesList) => {
-    const paths = [];
-    routesList.forEach((route) => {
-      if (route.route) paths.push(route.route.toLowerCase());
-      if (route.collapse) paths.push(...getAllRoutes(route.collapse));
-    });
-    return paths;
-  };
-
-  const allValidRoutes = getAllRoutes(filteredRoutes);
-
   const isPublicRoute = publicRoutes.some((route) => {
     if (route.includes(":")) return matchRoute(route, pathname.toLowerCase());
     return route.toLowerCase() === pathname.toLowerCase();
   });
 
-  const isValidRoute = allValidRoutes.some((route) => {
+  const filteredRoutes = getRoutes(role);
+
+  // NUEVO: Función para obtener TODAS las rutas del sistema (no solo las filtradas por rol)
+  const getAllSystemRoutes = () => {
+    const allRoutes = [];
+    const extractRoutes = (routesList) => {
+      routesList.forEach((route) => {
+        if (route.route && route.route !== "*") {
+          allRoutes.push(route.route.toLowerCase());
+        }
+        if (route.collapse) {
+          extractRoutes(route.collapse);
+        }
+      });
+    };
+    extractRoutes(routes); // usa 'routes' importado, no 'filteredRoutes'
+    return allRoutes;
+  };
+
+  const allSystemRoutes = getAllSystemRoutes();
+
+  // NUEVO: Verificar si la ruta actual existe en el sistema
+  const isValidSystemRoute = allSystemRoutes.some((route) => {
     if (route.includes(":")) return matchRoute(route, pathname.toLowerCase());
     return pathname.toLowerCase() === route;
   });
 
-  const hideSidebar = isPublicRoute || !isValidRoute;
-
-  useMemo(() => {
-    const cacheRtl = createCache({ key: "rtl", stylisPlugins: [rtlPlugin] });
-  }, []);
+  // ESTE useEffect MANEJA LA REDIRECCIÓN
+  useEffect(() => {
+    // Si no hay rol, no es ruta pública, PERO SÍ es una ruta válida del sistema
+    // entonces redirigir a login
+    if (!role && !isPublicRoute && isValidSystemRoute && pathname !== "/inicio-sesion") {
+      setIsRedirecting(true);
+      navigate("/inicio-sesion", { replace: true });
+    } else {
+      setIsRedirecting(false);
+    }
+  }, [role, pathname, isPublicRoute, isValidSystemRoute, navigate]);
 
   const handleOnMouseEnter = () => {
     if (miniSidenav && !onMouseEnter) {
@@ -161,26 +147,29 @@ export default function App() {
       return [];
     });
 
+  const hideSidebar = isPublicRoute || !isValidSystemRoute;
+
+
+  // Si está redirigiendo, mostrar loading
+  if (isRedirecting) {
+    return null;
+  }
+
   return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <CssBaseline />
       {layout === "dashboard" && !hideSidebar && (
-        <>
-          <Sidenav
-            color={sidenavColor}
-            brandName="GYGO"
-            routes={filteredRoutes}
-            onMouseEnter={handleOnMouseEnter}
-            onMouseLeave={handleOnMouseLeave}
-          />
-        </>
+        <Sidenav
+          color={sidenavColor}
+          brandName="GYGO"
+          routes={filteredRoutes}
+          onMouseEnter={handleOnMouseEnter}
+          onMouseLeave={handleOnMouseLeave}
+        />
       )}
       <Routes>
         {renderRoutes(filteredRoutes)}
-        <Route
-          path="*"
-          element={isPublicRoute ? <Navigate to="/" replace /> : <NotFound />}
-        />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </ThemeProvider>
   );

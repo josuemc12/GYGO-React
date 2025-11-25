@@ -47,17 +47,8 @@ export const AddGroupForm = () => {
       console.error(err);
     }
   };
-  ///Termina el fetch
-  //fetch de lastGroup
-  const fetchLastGroup = async () => {
-    const result = await DoesUserHaveGroup();
-    if (result.success && result.data.state === true && result.data.grupo.estatus === false) {
-      setLastGroup(result.data.grupo);
-    }
-  };
   useEffect(() => {
     fetchServices();
-    fetchLastGroup();
   }, []);
 
   const handleImageChange = (e) => {
@@ -84,7 +75,7 @@ export const AddGroupForm = () => {
       });
 
       await refreshLogin();
-      navigate("/Dashboard");
+      navigate("/panel-control");
     } else {
       Swal.fire({
         icon: "error",
@@ -140,7 +131,7 @@ export const AddGroupForm = () => {
       });
 
       await refreshLogin();
-      navigate("/Dashboard");
+      navigate("/panel-control");
       } else {
         Swal.fire({
           icon: "error",
@@ -348,6 +339,7 @@ export const AddGroupForm = () => {
           </Box>
         </Paper>
       </Container>
+     
     </>
   );
 };

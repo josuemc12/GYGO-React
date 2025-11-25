@@ -1,13 +1,17 @@
 import { appsettings } from "../settings/appsettings";
-
-
-
+import { fetchWithAuth } from "../utils/fetchWithAuth";
 
 export async function getDeleteUsers() {
-  const response = await fetch(`${appsettings.apiUrl}DeleteLogs/DeleteUsers`, {
-    method: "GET",
-    credentials: "include",
-  });
+  const response = await fetchWithAuth(
+    `${appsettings.apiUrl}DeleteLogs/DeleteUsers`,
+    {
+      method: "GET",
+      credentials: "include",
+    }
+  );
+
+  if (!response) return;
+
   if (response.ok) {
     const data = await response.json();
     return data;
@@ -16,15 +20,17 @@ export async function getDeleteUsers() {
   }
 }
 
-
 export async function EmailDeleteUsers() {
-  const response = await fetch(
+  const response = await fetchWithAuth(
     `${appsettings.apiUrl}DeleteLogs/LastDeleteUsers`,
     {
       method: "GET",
       credentials: "include",
     }
   );
+
+  if (!response) return;
+
   if (response.ok) {
     const data = await response.json();
     return data;
@@ -33,15 +39,17 @@ export async function EmailDeleteUsers() {
   }
 }
 
-
 export async function getCountUserDelete() {
-  const response = await fetch(
+  const response = await fetchWithAuth(
     `${appsettings.apiUrl}DeleteLogs/CountDeleteUser`,
     {
       method: "GET",
       credentials: "include",
     }
   );
+
+  if (!response) return;
+
   if (response.ok) {
     const data = await response.json();
     return data;

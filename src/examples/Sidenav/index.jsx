@@ -62,11 +62,17 @@ function Sidenav({ color = "info", brandName, routes, ...rest }) {
     sidenavColor,
   } = controller;
   const location = useLocation();
+  const { role, loading } = useAuth();
   const { logoutRol } = useAuth();
 
+    if (loading || !role) {
+    return null; // No renderiza el sidebar
+  }
+
+  
   const logoutSes = async () => {
     //Entre al logout
-    navigate("/HomePage")
+    navigate("/pagina-inicio")
 
     // const logout = await logoutSesion();
     // if (logout) {
@@ -192,7 +198,7 @@ function Sidenav({ color = "info", brandName, routes, ...rest }) {
         </MDBox>
         <MDBox
           component={NavLink}
-          to="/dashboard"
+          to="/panel-control"
           display="flex"
           alignItems="center"
           justifyContent="center"
