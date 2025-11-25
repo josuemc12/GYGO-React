@@ -13,6 +13,7 @@ import Footer from "examples/Footer";
 import { getAllPlans, subscribeToPlan } from "../../API/Subscription";
 import { useAuth } from "../../context/AuthContext";
 import "./../../styles/Subscription.css";
+import PaymentHistoryTable from "../../components/PaymentHistoryTable";
 
 export default function SubscribePrompt() {
   const [plans, setPlans] = useState([]);
@@ -99,6 +100,11 @@ export default function SubscribePrompt() {
         <p className="footer-text">Todos los planes incluyen garantía de 30 días. Cancela en cualquier momento.</p>
       </div>
     </div>
+
+    <div className="Historial">
+            <PaymentHistoryTable />  
+    </div>
+
      <Footer />  
      </DashboardLayout>
   )

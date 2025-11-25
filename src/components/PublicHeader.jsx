@@ -89,7 +89,7 @@ useEffect(() => {
 
   return (
     <>
-      <style jsx>{`
+      <style>{`
         .header {
           position: fixed;
           top: 16px;
