@@ -2,8 +2,15 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 import { verify2FACode } from "../API/Auth";
-import { useAuth } from "../context/AuthContext"
-import { Box, Container, Paper, Typography, TextField, Button } from "@mui/material";
+import { useAuth } from "../context/AuthContext";
+import {
+  Box,
+  Container,
+  Paper,
+  Typography,
+  TextField,
+  Button,
+} from "@mui/material";
 import Swal from "sweetalert2";
 
 export function Verify2FA() {
@@ -20,6 +27,18 @@ export function Verify2FA() {
     try {
       const { success, rol, error } = await verify2FACode(tempToken, code);
 
+      if (!code) {
+        Swal.fire({
+          icon: "warning",
+          title: "No se pudo iniciar sesión",
+          text: "Por favor, completá todos los campos.",
+          showConfirmButton: false,
+          timer: 3000,
+        });
+        return;
+      }
+      console.log(success);
+      console.log(error);
       if (success) {
         login(rol);
         Swal.fire({
@@ -38,7 +57,7 @@ export function Verify2FA() {
         Swal.fire({
           icon: "error",
           title: "Código incorrecto",
-          text: "El código ingresado no es válido. Inténtalo nuevamente.",
+          text: error,
           confirmButtonColor: "#d33",
         });
       }
@@ -88,34 +107,42 @@ export function Verify2FA() {
 
         <form onSubmit={handleSubmit} style={{ width: "100%" }}>
           <TextField
+            type="text"
             fullWidth
+            name="code"
             label="Código de verificación"
             variant="outlined"
             margin="normal"
             value={code}
-            onChange={(e) => setCode(e.target.value)}
-            required
-            inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (/^\d{0,6}$/.test(value)) setCode(value); // solo números y máx 6 dígitos
+            }}
+            inputProps={{
+              maxLength: 6,
+              inputMode: "numeric",
+              pattern: "[0-9]*",
+            }}
           />
 
           <Button
-  type="submit"
-  variant="contained"
-  fullWidth
-  size="large"
-  sx={{
-    mt: 2,
-    backgroundColor: "#2DA14C", // verde
-    color: "#fff",               // letras blancas
-    "&:hover": {
-      backgroundColor: "#1fcc4bff", // verde más oscuro al hacer hover
-    },
-  }}
->
-  Verificar
-</Button>
+            type="submit"
+            variant="contained"
+            fullWidth
+            size="large"
+            sx={{
+              mt: 2,
+              backgroundColor: "#2DA14C", // verde
+              color: "#fff", // letras blancas
+              "&:hover": {
+                backgroundColor: "#1fcc4bff", // verde más oscuro al hacer hover
+              },
+            }}
+          >
+            Verificar
+          </Button>
         </form>
       </Paper>
     </Box>
   );
-};
+}

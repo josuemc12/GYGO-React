@@ -3,7 +3,7 @@ import { fetchWithAuth } from "../utils/fetchWithAuth";
 
 export async function verify2FACode(tempToken, code) {
   try {
-    const response = await fetchWithAuth(
+    const response = await fetch(
       `${appsettings.apiUrl}Auth/verify-2FA`,
       {
         method: "POST",

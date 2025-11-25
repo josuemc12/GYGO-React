@@ -137,9 +137,8 @@ const PaymentHistoryTable = () => {
   }
 
   if (error) {
-  return null;
+    return null;
   }
-
 
   if (!payments || payments.length === 0) {
     return null;
@@ -164,8 +163,16 @@ const PaymentHistoryTable = () => {
                 Historial de pagos
               </MDTypography>
             </MDBox>
-            <MDBox pt={3}
-            minWidth="72rem">
+            <MDBox
+              pt={3}
+              sx={{
+                p: 3,
+                textAlign: "center",
+                width: "100%",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               <DataTable
                 table={{ columns, rows }}
                 isSorted={true}
