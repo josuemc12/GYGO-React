@@ -41,7 +41,6 @@ useEffect(() => {
       setModalOpen(true);
       markUserAsPaid();
       updateRole("GA");
-
       const confirmUserSubscription = async () => {
         try {
           const confirmation = await confirmSubscription();  
@@ -70,7 +69,7 @@ useEffect(() => {
     const checkSubscription = async () => {
       if (userId) {
         try {
-          const subscription = await getSubscriptionByUserId();
+          const subscription = await getSubscriptionByUserId(userId); // Pass userId here
           if (subscription && subscription.status !== "Cancelled") {
             setHasSubscription(true);
             setPaypalSubscriptionId(subscription.payPalSubscriptionId);
