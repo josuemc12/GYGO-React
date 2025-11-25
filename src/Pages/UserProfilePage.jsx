@@ -20,6 +20,7 @@ import {
   Email as EmailIcon,
   Person as PersonIcon,
   Lock as LockIcon,
+  ExitToApp as ExitToAppIcon,
   ManageAccounts as ManageAccountsIcon,
 } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
@@ -31,7 +32,7 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import Footer from "examples/Footer";
 import { useNavigate } from "react-router-dom";
-import { getCurrentUser } from "../API/Auth";
+import { getCurrentUser, logoutSesion } from "../API/Auth";
 import { ChangeProfileUser } from "../API/User";
 
 export function UserProfilePage() {
@@ -130,6 +131,15 @@ export function UserProfilePage() {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await logoutSesion();
+      navigate("/");
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  };
+
   return (
     <DashboardLayout>
       <DashboardNavbar></DashboardNavbar>
@@ -149,7 +159,6 @@ export function UserProfilePage() {
               </Grid>
             </Card>
           </Grid>
-
           {loading ? (
             <Grid size={{ xs: 12 }}>
               <Card sx={{ p: 3, textAlign: "center" }}>
@@ -211,7 +220,6 @@ export function UserProfilePage() {
                   </div>
                 </Card>
               </Grid>
-
               <Grid size={{ xs: 12 }} sx={{ mb: 5 }}>
                 <Card sx={{ p: 3, textAlign: "right" }}>
                   <MDButton
