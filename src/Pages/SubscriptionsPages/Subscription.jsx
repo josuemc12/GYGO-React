@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
 import SuperAdminSubscriptionManager from "./SuperAdminSubscriptionManager";
@@ -26,69 +26,85 @@ export default function SubscriptionSwitch() {
   const [modalMessage, setModalMessage] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [hasSubscription, setHasSubscription] = useState(false);
-  const [paypalSubscriptionId, setPaypalSubscriptionId] = useState(null);
   const [subscriptionSuccess, setSubscriptionSuccess] = useState(false);
   const navigate = useNavigate();
+  const [paypalSubscriptionId, setPaypalSubscriptionId] = useState(null);
   const [emailSent, setEmailSent] = useState(false);
 
+  const status = searchParams.get("status");
+  const processedRef = useRef(false);
+
+  const reloadSubscription = async () => {
+    try {
+      const subscription = await getSubscriptionByUserId(userId);
+      if (subscription && subscription.status !== "Cancelled") {
+        setHasSubscription(true);
+        setPaypalSubscriptionId(subscription.payPalSubscriptionId);
+      } else {
+        setHasSubscription(false);
+        setPaypalSubscriptionId(null);
+      }
+    } catch (err) {
+      setHasSubscription(false);
+      setPaypalSubscriptionId(null);
+    }
+  };
 
 useEffect(() => {
-  const status = searchParams.get("status");
-  if (status === "success") {
-    if (!emailSent) { 
+    if (!status) return;
+    if (processedRef.current) return;
+    processedRef.current = true;
+
+    if (status === "success") {
       setSubscriptionSuccess(true);
       setModalMessage("¡Suscripción realizada con éxito!");
       setModalOpen(true);
       markUserAsPaid();
       updateRole("GA");
-      const confirmUserSubscription = async () => {
+
+      (async () => {
         try {
-          const confirmation = await confirmSubscription();  
-          console.log("Subscription confirmed:", confirmation);
-          refreshLogin(); 
-
-          const emailResponse = await sendSubscriptionEmail();
-          console.log("Correo de suscripción enviado:", emailResponse);
-
+          const confirmation = await confirmSubscription();
+          await reloadSubscription();
+          await refreshLogin();
+          await sendSubscriptionEmail();
           setEmailSent(true);
         } catch (error) {
-          console.error("Error confirming subscription or sending email:", error);
+          console.error(error);
         }
-      };
-
-      confirmUserSubscription(); 
+      })();
     }
-  } else if (status === "cancel") {
-    updateRole("DEF");
-    setModalMessage("Suscripción cancelada.");
-    setModalOpen(true);
-  }
-}, [searchParams, markUserAsPaid, updateRole, emailSent]);
+
+    if (status === "cancel") {
+      updateRole("DEF");
+      setModalMessage("Suscripción cancelada.");
+      setModalOpen(true);
+    }
+  }, [status]);
 
   useEffect(() => {
-    const checkSubscription = async () => {
-      if (userId) {
-        try {
-          const subscription = await getSubscriptionByUserId(userId); // Pass userId here
-          if (subscription && subscription.status !== "Cancelled") {
-            setHasSubscription(true);
-            setPaypalSubscriptionId(subscription.payPalSubscriptionId);
-          } else {
-            setHasSubscription(false);
-            setPaypalSubscriptionId(null);
-          }
-        } catch (error) {
-          console.warn("No subscription found or error:", error.message);
+  const checkSubscription = async () => {
+    if (userId) {
+      try {
+        const subscription = await getSubscriptionByUserId(userId);
+        if (subscription && subscription.status !== "Cancelled") {
+          setHasSubscription(true);
+          setPaypalSubscriptionId(subscription.payPalSubscriptionId);
+        } else {
           setHasSubscription(false);
           setPaypalSubscriptionId(null);
         }
+      } catch (error) {
+        console.warn("No subscription found or error:", error.message);
+        setHasSubscription(false);
+        setPaypalSubscriptionId(null);
       }
-    };
+    }
+  };
 
-    checkSubscription();
-  }, [role, userId]);
+  checkSubscription();
+}, [userId]);
 
-  
   const handleClose = async () => {
     setModalOpen(false);
     if(!subscriptionSuccess){
