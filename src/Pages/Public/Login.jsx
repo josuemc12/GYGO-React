@@ -31,7 +31,6 @@ import {
 import { Visibility, VisibilityOff, ArrowBack } from "@mui/icons-material";
 import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
 import Swal from "sweetalert2";
-import  {PublicHeader}  from "../../components/PublicHeader";
 import logo from "../../assets/Logo.png";
 
 const theme = createTheme({
@@ -95,18 +94,19 @@ export default function Login() {
       const { success, isTwoFactor, tempToken, error, rol, id } =
         await loginUser(email, password);
       console.log(success, isTwoFactor, tempToken, error, rol, id);
+      
       if (!success) {
-        Swal.fire({
+      Swal.fire({
           icon: "error",
           title: "Error al iniciar sesión",
           text: error,
           showConfirmButton: false,
           timer: 3000,
         });
-
-        return;
       }
 
+      
+     
       if (isTwoFactor) {
         // Redirect to 2FA page
         navigate(`/verificar-2fa?tempToken=${encodeURIComponent(tempToken)}`);
