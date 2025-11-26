@@ -57,11 +57,11 @@ export const SuperAdminDashCards = () => {
     }
 
     const handleVerGrupos = () => {
-        navigate("/ReportCompanies")
+        navigate("/reportes-empresas")
     }
 
     const handleVerReportes = () => {
-        navigate("/ReportServices")
+        navigate("/reportes-servicios")
     }
 
     const { totalGroups, totalUsers, totalUnits, totalSources, totalFactors, recentGroups } = data
@@ -151,7 +151,7 @@ export const SuperAdminDashCards = () => {
                                     variant="outlined"
                                     fullWidth
                                     startIcon={<Assessment />}
-                                    onClick={() => navigate("/userProfile")}
+                                    onClick={() => navigate("/perfil")}
                                     sx={{
                                         py: 1.5,
                                         borderRadius: 1.5,

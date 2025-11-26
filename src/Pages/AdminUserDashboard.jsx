@@ -1,13 +1,20 @@
 import { useState, useEffect } from "react";
 import UserTable from "../components/UserAdminTable";
 import InviteModal from "../components/InviteModal";
+import CloseIcon from "@mui/icons-material/Close";
+import { Users, Trash2 } from "lucide-react";
 import {
   getGroupUsers,
   sendUserInvite,
   removeUserFromGroup,
   fetchGroupId,
 } from "../API/Admin";
-import { getDeleteUsers, EmailDeleteUsers, getCountUserDelete } from "../API/DeleteLogs";
+import {
+  getDeleteUsers,
+  EmailDeleteUsers,
+  getCountUserDelete,
+} from "../API/DeleteLogs";
+import BoltIcon from "@mui/icons-material/Bolt";
 import "../App.css";
 import "../styles/AdminDashboard.css";
 import { useNavigate } from "react-router-dom";
@@ -51,7 +58,7 @@ import {
 } from "@mui/material";
 
 import { refreshLogin } from "../API/Auth";
-
+import FavoriteIcon from "@mui/icons-material/Favorite";
 const AdminUserDashboard = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -62,7 +69,7 @@ const AdminUserDashboard = () => {
   const [showHistory, setShowHistory] = useState(false);
   const [historyRows, setHistoryRows] = useState([]);
   const [deleteCount, setDeleteCount] = useState(0);
-
+  const [openModalDeleteUser, setOpenModalDeleteUser] = useState(null);
 
   //var GROUP_ID = fetchGroupId();
 
@@ -79,15 +86,12 @@ const AdminUserDashboard = () => {
     }
   }, [showHistory]);
 
-
-
-
   const fetchUsers = async () => {
     try {
       setLoading(true);
       setError("");
       const userData = await getGroupUsers();
-     
+
       setUsers(userData);
     } catch (err) {
       setError("Failed to load users. Please try again.");
@@ -96,7 +100,6 @@ const AdminUserDashboard = () => {
       setLoading(false);
     }
   };
-
 
   //#region DeleteLogs
   const fetchUsersEmail = async () => {
@@ -110,11 +113,10 @@ const AdminUserDashboard = () => {
     }
   };
 
-
   const fetchCountUserDelete = async () => {
     try {
-     const count = await getCountUserDelete();
-     setDeleteCount(count); 
+      const count = await getCountUserDelete();
+      setDeleteCount(count);
     } catch (err) {
       setError("Failed to load users. Please try again.");
       console.error("Error fetching users:", err);
@@ -125,7 +127,7 @@ const AdminUserDashboard = () => {
 
   const fetchDeleteLogs = async () => {
     try {
-      const logs = await getDeleteUsers(); 
+      const logs = await getDeleteUsers();
       setDeleteCount(logs.length);
       const rows = logs.map((log) => ({
         userName: log.userName,
@@ -145,19 +147,33 @@ const AdminUserDashboard = () => {
       setInviteLoading(true);
       setError("");
 
-      await sendUserInvite(email);
+      const result = await sendUserInvite(email);
+ 
 
-      // Mostrar mensaje de éxito con SweetAlert
-      Swal.fire({
-        icon: "success",
-        title: "invitación enviada",
-        text: `Invitación enviada exitosamente a ${email}`,
-        timer: 3000,
-        showConfirmButton: false,
-      });
-      setInviteModalOpen(false);
 
-      fetchUsers();
+      if (result.success) {
+        // Mostrar mensaje de éxito con SweetAlert
+        Swal.fire({
+          icon: "success",
+          title: "invitación enviada",
+          text: `Invitación enviada exitosamente a ${email}`,
+          timer: 3000,
+          showConfirmButton: false,
+        });
+        setInviteModalOpen(false);
+
+        fetchUsers();
+      } else {
+        setInviteModalOpen(false);
+        Swal.fire({
+          icon: "error",
+          title: "No se pudo enviar la invitación",
+          text: result.message ,
+          showConfirmButton: false,
+          timer: 3000,
+        });
+        fetchUsers();
+      }
     } catch (err) {
       setError(err.message || "Failed to send invitation. Please try again.");
       console.error("Error sending invite:", err);
@@ -166,9 +182,21 @@ const AdminUserDashboard = () => {
     }
   };
 
+  const handleDelete = (userId) => {
+    console.log("Eliminar usuario ID:", userId);
+    setOpenModalDeleteUser(userId);
+  };
+
+  const closeModalDeleteUser = () => {
+    fetchUsers();
+    setOpenModalDeleteUser(null);
+  };
+
   const handleRemoveUser = async (userId) => {
     try {
       setError("");
+
+      setOpenModalDeleteUser(null);
 
       await removeUserFromGroup(userId);
 
@@ -235,7 +263,7 @@ const AdminUserDashboard = () => {
           <IconButton
             size="small"
             color="error"
-            onClick={() => handleRemoveUser(user.id, user.name)}
+            onClick={() => handleDelete(user.id, user.name)}
           >
             <DeleteOutlineOutlined fontSize="small" />
           </IconButton>
@@ -251,44 +279,45 @@ const AdminUserDashboard = () => {
     { Header: "Administrador", accessor: "deletedByAdminName", align: "left" },
   ];
 
-
   return (
     <DashboardLayout>
       <DashboardNavbar></DashboardNavbar>
       <MDBox py={3}>
         <MDBox mb={2}>
           <MDBox
-            borderRadius="xl"
-            border="1px solid #ccc"
-            p={3}
-            mb={2}
-            bgColor="white"
+            sx={{
+              borderRadius: 2,
+              p: 3,
+              mb: 2,
+              background: "#ffffff",
+              border: "1px solid #e5e7eb",
+              boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+            }}
           >
-            <Grid
-              container
-              alignItems="center"
-              justifyContent="space-between"
-              spacing={2}
-            >
-              <Grid>
-                <MDBox display="flex" alignItems="center" gap={1}>
-                  <FilterAltOutlinedIcon fontSize="medium" />
-                  <MDTypography variant="h6">Filtros y Acciones</MDTypography>
+            <Grid container alignItems="center" justifyContent="space-between">
+              <Grid item>
+                <MDBox display="flex" flexDirection="column">
+                  <MDBox display="flex" alignItems="center" gap={1}>
+                    <MDTypography variant="h6">Usuarios</MDTypography>
+                  </MDBox>
+                  <MDTypography variant="body2" color="text">
+                    Visualiza los usuarios activos y revisa el historial de
+                    eliminaciones.
+                  </MDTypography>
                 </MDBox>
               </Grid>
 
               <Grid>
-                
                 <MDButton
                   variant="outlined"
                   sx={{
                     mr: 2,
-                    borderColor: "#4CAF50",
-                    color: "#4CAF50",
+                    borderColor: "#bfdcff",
+                    color: "#1479fc",
                     "&:hover": {
-                      backgroundColor: "#E8F5E9",
-                      borderColor: "#43A047",
-                      color: "#388E3C",
+                      backgroundColor: "#dbe6f5ff",
+                      borderColor: "#1479fc",
+                      color: "#065fd4ff",
                     },
                   }}
                   onClick={() => setShowHistory(!showHistory)}
@@ -299,12 +328,12 @@ const AdminUserDashboard = () => {
                 <MDButton
                   variant="outlined"
                   sx={{
-                    borderColor: "#4CAF50",
-                    color: "#4CAF50",
+                    borderColor: "#bfdcff",
+                    color: "#1479fc",
                     "&:hover": {
-                      backgroundColor: "#E8F5E9",
-                      borderColor: "#43A047",
-                      color: "#388E3C",
+                      backgroundColor: "#dbe6f5ff",
+                      borderColor: "#1479fc",
+                      color: "#065fd4ff",
                     },
                   }}
                   onClick={() => {
@@ -317,16 +346,120 @@ const AdminUserDashboard = () => {
               </Grid>
             </Grid>
             {/* Stats Cards */}
-          <div className="stats-grid" style={{ marginTop: "3rem" }}>
-  <div className="stat-card">
-    <div className="stat-value">{users.length}</div>
-    <div className="stat-label">Usuarios Activos</div>
-  </div>
-  <div className="stat-card">
-    <div className="stat-value">{deleteCount}</div>
-    <div className="stat-label">Usuarios Eliminados</div>
-  </div>
-</div>
+
+            {/* Stats Cards */}
+            {/* Stats Cards */}
+            <MDBox display="flex" gap={2} sx={{ mt: 3 }}>
+              {/* Card 1: Usuarios Activos */}
+              <MDBox
+                sx={{
+                  flex: 1,
+                  p: 2.5,
+                  borderRadius: 2,
+                  border: "1px solid #e5e7eb",
+                  backgroundColor: "#ffffff",
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    border: "1px solid #80D8FF", // ← Borde azul estilo AZURE
+                    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.06)",
+                    transform: "translateY(-2px)",
+                  },
+                }}
+              >
+                <MDBox display="flex" alignItems="center" gap={2}>
+                  <MDBox
+                    sx={{
+                      width: 48,
+                      height: 48,
+                      borderRadius: 2,
+                      backgroundColor: "#EAFBF1",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Users size={28} color="#4CAF50" />
+                  </MDBox>
+
+                  <MDBox>
+                    <MDTypography
+                      variant="caption"
+                      sx={{
+                        color: "#9CA3AF",
+                        textTransform: "uppercase",
+                        letterSpacing: "0.5px",
+                        fontWeight: 600,
+                      }}
+                    >
+                      Usuarios Activos
+                    </MDTypography>
+
+                    <MDTypography
+                      variant="h3"
+                      fontWeight="bold"
+                      sx={{ color: "#111827", lineHeight: 1.1, mt: 0.25 }}
+                    >
+                      {users.length}
+                    </MDTypography>
+                  </MDBox>
+                </MDBox>
+              </MDBox>
+
+              {/* Card 2: Usuarios Eliminados */}
+              <MDBox
+                sx={{
+                  flex: 1,
+                  p: 2.5,
+                  borderRadius: 2,
+                  border: "1px solid #e5e7eb",
+                  backgroundColor: "#ffffff",
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    border: "1px solid #80D8FF", // ← Borde azul estilo AZURE
+                    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.06)",
+                    transform: "translateY(-2px)",
+                  },
+                }}
+              >
+                <MDBox display="flex" alignItems="center" gap={2}>
+                  <MDBox
+                    sx={{
+                      width: 48,
+                      height: 48,
+                      borderRadius: 2,
+                      backgroundColor: "#FDECEC",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Trash2 size={28} color="#EF5350" />
+                  </MDBox>
+
+                  <MDBox>
+                    <MDTypography
+                      variant="caption"
+                      sx={{
+                        color: "#9CA3AF",
+                        textTransform: "uppercase",
+                        letterSpacing: "0.5px",
+                        fontWeight: 600,
+                      }}
+                    >
+                      Usuarios Eliminados
+                    </MDTypography>
+
+                    <MDTypography
+                      variant="h3"
+                      fontWeight="bold"
+                      sx={{ color: "#111827", lineHeight: 1.1, mt: 0.25 }}
+                    >
+                      {deleteCount}
+                    </MDTypography>
+                  </MDBox>
+                </MDBox>
+              </MDBox>
+            </MDBox>
           </MDBox>
 
           <MDBox pt={6} pb={3}>
@@ -348,7 +481,14 @@ const AdminUserDashboard = () => {
                     </MDTypography>
                   </MDBox>
                   <MDBox
-                    pt={3} px={3} pb={3}
+                    pt={3}
+                    sx={{
+                      p: 4,
+                      textAlign: "center",
+                      width: "100%",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
                   >
                     {showHistory ? (
                       // 🔁 AQUI VA LA TABLA DE HISTORIAL
@@ -384,6 +524,62 @@ const AdminUserDashboard = () => {
           onInvite={handleInviteUser}
           loading={inviteLoading}
         />
+
+        {/* Delete Confirmation Dialog */}
+        <Dialog
+          open={Boolean(openModalDeleteUser)}
+          onClose={closeModalDeleteUser}
+        >
+          <DialogTitle>
+            <MDBox
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <MDTypography variant="h5"> Confirmar eliminación</MDTypography>
+              <IconButton onClick={closeModalDeleteUser}>
+                <CloseIcon />
+              </IconButton>
+            </MDBox>
+          </DialogTitle>
+
+          <DialogContent dividers>
+            <MDTypography variant="body1" color="text">
+              ¿Confirma que desea eliminar este proyecto?
+              <br />
+              Tenga en cuenta que{" "}
+              <strong>
+                todas las tareas vinculadas también serán eliminadas
+              </strong>
+              .
+            </MDTypography>
+            <MDTypography
+              variant="body2"
+              color="error"
+              sx={{ mt: 1, fontWeight: 500 }}
+            >
+              Esta acción no se puede deshacer.
+            </MDTypography>
+          </DialogContent>
+
+          <DialogActions>
+            <MDButton
+              onClick={closeModalDeleteUser}
+              variant="outlined"
+              color="secondary"
+            >
+              Cancelar
+            </MDButton>
+            <MDButton
+              onClick={() => handleRemoveUser(openModalDeleteUser)}
+              variant="gradient"
+              color="error"
+            >
+              Eliminar
+            </MDButton>
+          </DialogActions>
+        </Dialog>
+
         <Footer />
       </MDBox>
     </DashboardLayout>

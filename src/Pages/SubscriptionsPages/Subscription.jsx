@@ -15,8 +15,10 @@ import MDButton from "@/components/MDButton";
 
 import { useAuth } from "../../context/AuthContext";  // IMPORTA solo useAuth
 import {refreshLogin} from "../../API/Auth";
-import { getSubscriptionByUserId } from "../../API/Subscription";
+import { getSubscriptionByUserId, confirmSubscription, sendSubscriptionEmail } from "../../API/Subscription";
 import WebhookTestButtons from "../../components/WebhooksTestButtons";
+import { DoesUserHaveGroup, reactivateGroup } from "../../API/AddGroup";
+import PaymentHistoryTable from "../../components/PaymentHistoryTable";
 
 export default function SubscriptionSwitch() {
   const { role, userId, markUserAsPaid, updateRole} = useAuth();
@@ -27,28 +29,47 @@ export default function SubscriptionSwitch() {
   const [paypalSubscriptionId, setPaypalSubscriptionId] = useState(null);
   const [subscriptionSuccess, setSubscriptionSuccess] = useState(false);
   const navigate = useNavigate();
+  const [emailSent, setEmailSent] = useState(false);
 
 
 useEffect(() => {
   const status = searchParams.get("status");
   if (status === "success") {
-    setSubscriptionSuccess(true);
-    setModalMessage("¡Suscripción realizada con éxito!");
-    setModalOpen(true);
-    markUserAsPaid();
-    updateRole("GA");
-    refreshLogin(); //REVISAR
+    if (!emailSent) { 
+      setSubscriptionSuccess(true);
+      setModalMessage("¡Suscripción realizada con éxito!");
+      setModalOpen(true);
+      markUserAsPaid();
+      updateRole("GA");
+      const confirmUserSubscription = async () => {
+        try {
+          const confirmation = await confirmSubscription();  
+          console.log("Subscription confirmed:", confirmation);
+          refreshLogin(); 
+
+          const emailResponse = await sendSubscriptionEmail();
+          console.log("Correo de suscripción enviado:", emailResponse);
+
+          setEmailSent(true);
+        } catch (error) {
+          console.error("Error confirming subscription or sending email:", error);
+        }
+      };
+
+      confirmUserSubscription(); 
+    }
   } else if (status === "cancel") {
+    updateRole("DEF");
     setModalMessage("Suscripción cancelada.");
     setModalOpen(true);
   }
-}, [searchParams, markUserAsPaid, updateRole]);
+}, [searchParams, markUserAsPaid, updateRole, emailSent]);
 
   useEffect(() => {
     const checkSubscription = async () => {
       if (userId) {
         try {
-          const subscription = await getSubscriptionByUserId();
+          const subscription = await getSubscriptionByUserId(userId); // Pass userId here
           if (subscription && subscription.status !== "Cancelled") {
             setHasSubscription(true);
             setPaypalSubscriptionId(subscription.payPalSubscriptionId);
@@ -68,10 +89,34 @@ useEffect(() => {
   }, [role, userId]);
 
   
-  const handleClose = () => {
+  const handleClose = async () => {
     setModalOpen(false);
-    if (subscriptionSuccess) {
-      navigate("/addGroup");
+    if(!subscriptionSuccess){
+      return
+    }
+
+    try {
+      const groupCheck = await DoesUserHaveGroup();
+      if(groupCheck?.state === true){
+        const groupId = groupCheck.grupo.grupoId;
+        const result = await reactivateGroup(groupId);
+
+        if(result?.message === 'Grupo reactivado correctamente'){
+          await refreshLogin();
+
+          navigate("panel-control");
+        }else{
+          console.error("Error al reactivar grupo:", result);
+        navigate("panel-control");
+        }
+        return;
+      }
+
+      navigate("/agregar-grupo");
+
+    } catch (ex) {
+      console.error("Error en el flujo de suscripción:", err);
+      navigate("/agregar-grupo");
     }
   };
 

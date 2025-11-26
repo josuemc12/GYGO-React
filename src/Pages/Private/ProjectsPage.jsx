@@ -95,7 +95,7 @@ function ProjectPage() {
   //Hook para cuando abrir el modal
   const [openModalTask, setOpenModalTask] = useState(false);
   const [openModalProjects, setOpenModalProjects] = useState(false);
-
+  const [openModalDeleteProject, setOpenModalDeleteProject] = useState(null);
   //Hook para cuando un loading
   const [loading, setLoading] = useState(false);
 
@@ -131,6 +131,8 @@ function ProjectPage() {
   const [IsEditing, setIsEditing] = useState(false);
   const [enableEmissionFields, setEnableEmissionFields] = useState(false);
   const [errors, setErrors] = useState({});
+  const [submitting, setSubmitting] = useState(false);
+
   const handleTabChange = (event, newValue) => {
     setTabIndex(newValue);
   };
@@ -143,15 +145,12 @@ function ProjectPage() {
       let data = [];
       if (startDate && endDate) {
         const formattedStart = encodeURIComponent(
-  dayjs(startDate, "DD-MM-YYYY").format("MM/DD/YYYY")
-);
+          dayjs(startDate, "DD-MM-YYYY").format("MM/DD/YYYY")
+        );
 
-const formattedEnd = encodeURIComponent(
-  dayjs(endDate, "DD-MM-YYYY").format("MM/DD/YYYY")
-);
-
-        console.log(formattedStart);
-        console.log(formattedEnd);
+        const formattedEnd = encodeURIComponent(
+          dayjs(endDate, "DD-MM-YYYY").format("MM/DD/YYYY")
+        );
 
         data = await getProjectsByDates(formattedStart, formattedEnd);
         setData(data);
@@ -186,8 +185,6 @@ const formattedEnd = encodeURIComponent(
     setData(0);
   };
 
-
-
   const CreatePDFAPI = async () => {
     try {
       const formattedStart = encodeURIComponent(
@@ -196,7 +193,6 @@ const formattedEnd = encodeURIComponent(
       const formattedEnd = encodeURIComponent(
         dayjs(endDate).format("MM-DD-YYYY")
       );
-
       const projectsPDF = await getProjectsPDF(formattedStart, formattedEnd);
 
       CreatePDF(projectsPDF);
@@ -270,9 +266,8 @@ const formattedEnd = encodeURIComponent(
         return;
       }
       if (modoEdicion) {
-        console.log("Editar");
         result = await UpdateProject(projectData);
-        console.log(result);
+
         if (result.success) {
           setOpenModalProjects(false);
           Swal.fire({
@@ -297,9 +292,8 @@ const formattedEnd = encodeURIComponent(
           fetchProjects();
         }
       } else {
-        
         result = await AddProject(projectData);
-        console.log(result);
+
         if (result.success) {
           setOpenModalProjects(false);
           Swal.fire({
@@ -335,10 +329,19 @@ const formattedEnd = encodeURIComponent(
       fetchProjects();
     }
   };
+  const handleDelete = (projectoID) => {
+    setOpenModalDeleteProject(projectoID);
+  };
+
+  const closeModalDeleteProject = () => {
+    fetchProjects();
+    setOpenModalDeleteProject(null);
+  };
 
   const DeleteProject = async (projectID) => {
     let project = await DProject(projectID);
     setOpenModalProjects(false);
+    setOpenModalDeleteProject(null);
     if (project) {
       Swal.fire({
         icon: "success",
@@ -515,7 +518,7 @@ const formattedEnd = encodeURIComponent(
       }
 
       const result = await UpdateTaskt(taskData);
-
+      console.log(result);
       if (result.success) {
         setOpenModalTask(false);
         setEditTaskId(null);
@@ -612,8 +615,7 @@ const formattedEnd = encodeURIComponent(
     setEnableEmissionFields(hasOptionalValues);
   };
 
-
-    const UpdateStatusTasks = (taskId) => (event) => {
+  const UpdateStatusTasks = (taskId) => (event) => {
     const newStatus = event.target.checked;
     setTaskStatus((prev) => ({
       ...prev,
@@ -694,7 +696,7 @@ const formattedEnd = encodeURIComponent(
           <IconButton
             size="small"
             color="error"
-            onClick={() => DeleteProject(project.proyectoId)}
+            onClick={() => handleDelete(project.proyectoId)}
           >
             <DeleteOutlineOutlined fontSize="small" />
           </IconButton>
@@ -710,11 +712,14 @@ const formattedEnd = encodeURIComponent(
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <MDBox mb={2}>
             <MDBox
-              borderRadius="xl"
-              border="1px solid #ccc"
-              p={3}
-              mb={2}
-              bgColor="white"
+              sx={{
+                borderRadius: 2,
+                p: 3,
+                mb: 2,
+                background: "#ffffff",
+                border: "1px solid #e5e7eb",
+                boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+              }}
             >
               <Grid
                 container
@@ -724,13 +729,10 @@ const formattedEnd = encodeURIComponent(
                 <Grid item>
                   <MDBox display="flex" flexDirection="column">
                     <MDBox display="flex" alignItems="center" gap={1}>
-                      <FilterAltOutlinedIcon fontSize="medium" />
-                      <MDTypography variant="h6">
-                        Filtros y Acciones
-                      </MDTypography>
+                      <MDTypography variant="h6">Proyectos</MDTypography>
                     </MDBox>
                     <MDTypography variant="body2" color="text">
-                      Filtra los proyectos por estado y fechas
+                      Filtra, organiza y administra tus proyectos fácilmente.
                     </MDTypography>
                   </MDBox>
                 </Grid>
@@ -790,16 +792,10 @@ const formattedEnd = encodeURIComponent(
                         <DatePicker
                           label="Fecha Inicio"
                           value={
-                            startDate ? dayjs(startDate, "DD/MM/YYYY") : null
+                            startDate ? dayjs(startDate, "DD-MM-YYYY") : null
                           }
-                          onChange={(newValue) => {
-                            if (newValue) {
-                              setStartDate(newValue.format("DD/MM/YYYY"));
-                            } else {
-                              setStartDate(null);
-                            }
-                          }}
-                          inputFormat="DD/MM/YYYY"
+                          onChange={(newValue) => setStartDate(newValue)}
+                          inputFormat="DD-MM-YYYY"
                           slotProps={{
                             textField: {
                               size: "small",
@@ -936,7 +932,16 @@ const formattedEnd = encodeURIComponent(
                     <Grid container spacing={5}>
                       <Grid size={{ xs: 12 }}>
                         <Card>
-                          <MDBox pt={3}>
+                          <MDBox
+                            pt={3}
+                            sx={{
+                              p: 3,
+                              textAlign: "center",
+                              width: "100%",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
                             <DataTable
                               table={{ columns, rows }}
                               isSorted={false}
@@ -1113,8 +1118,19 @@ const formattedEnd = encodeURIComponent(
           >
             Cancelar
           </MDButton>
-          <MDButton variant="gradient" color="success" onClick={HandleProjects}>
-            {modoEdicion ? "Guardar Cambios" : "Agregar"}
+          <MDButton
+            variant="gradient"
+            color="success"
+            onClick={HandleProjects}
+            disabled={submitting}
+          >
+            {submitting
+              ? modoEdicion
+                ? "Guardando cambios..."
+                : "Agregando consumo..."
+              : modoEdicion
+                ? "Guardar cambios"
+                : "Agregar consumo"}
           </MDButton>
         </DialogActions>
       </Dialog>
@@ -1197,6 +1213,7 @@ const formattedEnd = encodeURIComponent(
                   setTasktData({ ...taskData, descripcion: e.target.value });
                   setErrors((prev) => ({ ...prev, TareaDescripcion: "" }));
                 }}
+                 inputProps={{ maxLength: 50 }}
                 error={!!errors.TareaDescripcion}
                 helperText={errors.TareaDescripcion}
                 sx={{ mb: 2 }}
@@ -1301,56 +1318,56 @@ const formattedEnd = encodeURIComponent(
                         <Box
                           sx={{ display: "flex", alignItems: "center", gap: 1 }}
                         >
-                           <Tooltip title="Cambiar estado" arrow>
-                          <Switch
-                            checked={!!taskStatus[task.taskId]}
-                            onChange={UpdateStatusTasks(task.taskId)}
-                            slotProps={{
-                              input: {
-                                "aria-label": "cambiar estado tarea",
-                              },
-                            }}
-                            sx={{
-                              "& .MuiSwitch-thumb": {
-                                backgroundColor: taskStatus[task.taskId]
-                                  ? "#2DA14C"
-                                  : "#D32F2F",
-                              },
-                              "& .Mui-checked": {
-                                color: taskStatus[task.taskId]
-                                  ? "#2DA14C"
-                                  : "#D32F2F",
-                              },
-                              "& .MuiSwitch-track": {
-                                backgroundColor: taskStatus[task.taskId]
-                                  ? "#77d27dff"
-                                  : "#FFCDD2",
-                              },
-                            }}
-                          />
+                          <Tooltip title="Cambiar estado" arrow>
+                            <Switch
+                              checked={!!taskStatus[task.taskId]}
+                              onChange={UpdateStatusTasks(task.taskId)}
+                              slotProps={{
+                                input: {
+                                  "aria-label": "cambiar estado tarea",
+                                },
+                              }}
+                              sx={{
+                                "& .MuiSwitch-thumb": {
+                                  backgroundColor: taskStatus[task.taskId]
+                                    ? "#2DA14C"
+                                    : "#D32F2F",
+                                },
+                                "& .Mui-checked": {
+                                  color: taskStatus[task.taskId]
+                                    ? "#2DA14C"
+                                    : "#D32F2F",
+                                },
+                                "& .MuiSwitch-track": {
+                                  backgroundColor: taskStatus[task.taskId]
+                                    ? "#77d27dff"
+                                    : "#FFCDD2",
+                                },
+                              }}
+                            />
                           </Tooltip>
                           <Tooltip title="Editar tarea" arrow>
-                          <IconButton
-                            color="info"
-                            edge="end"
-                            aria-label="editar"
-                            onClick={() => handleEditTask(task)}
-                          >
-                            <EditOutlined />
-                          </IconButton>
+                            <IconButton
+                              color="info"
+                              edge="end"
+                              aria-label="editar"
+                              onClick={() => handleEditTask(task)}
+                            >
+                              <EditOutlined />
+                            </IconButton>
                           </Tooltip>
                           <Tooltip title="Eliminar tarea" arrow>
-                          <IconButton
-                            color="error"
-                            edge="end"
-                            aria-label="editar"
-                            sx={{ mr: 2 }}
-                            onClick={() => {
-                              DeleteTask(task.taskId);
-                            }}
-                          >
-                            <DeleteOutlineOutlined />
-                          </IconButton>
+                            <IconButton
+                              color="error"
+                              edge="end"
+                              aria-label="editar"
+                              sx={{ mr: 2 }}
+                              onClick={() => {
+                                DeleteTask(task.taskId);
+                              }}
+                            >
+                              <DeleteOutlineOutlined />
+                            </IconButton>
                           </Tooltip>
                         </Box>
                       }
@@ -1359,7 +1376,8 @@ const formattedEnd = encodeURIComponent(
                         primary={
                           task.titulo +
                           " - " +
-                          (task.emisionesCO2e === 0 || task.emisionesCO2e === null
+                          (task.emisionesCO2e === 0 ||
+                          task.emisionesCO2e === null
                             ? "N/A"
                             : task.emisionesCO2e)
                         }
@@ -1377,7 +1395,8 @@ const formattedEnd = encodeURIComponent(
                             <Box sx={{ display: "flex", gap: 2, mt: 0.5 }}>
                               <Typography variant="body2">
                                 <strong>Valor actividad:</strong>{" "}
-                                {task.valorActividad === 0 || task.valorActividad === null
+                                {task.valorActividad === 0 ||
+                                task.valorActividad === null
                                   ? "N/A"
                                   : task.valorActividad}
                               </Typography>
@@ -1416,6 +1435,61 @@ const formattedEnd = encodeURIComponent(
               Agregar Actividad
             </MDButton>
           )}
+        </DialogActions>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog
+        open={Boolean(openModalDeleteProject)}
+        onClose={closeModalDeleteProject}
+      >
+        <DialogTitle>
+          <MDBox
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <MDTypography variant="h5"> Confirmar eliminación</MDTypography>
+            <IconButton onClick={closeModalDeleteProject}>
+              <CloseIcon />
+            </IconButton>
+          </MDBox>
+        </DialogTitle>
+
+        <DialogContent dividers>
+          <MDTypography variant="body1" color="text">
+            ¿Confirma que desea eliminar este proyecto?
+            <br />
+            Tenga en cuenta que{" "}
+            <strong>
+              todas las tareas vinculadas también serán eliminadas
+            </strong>
+            .
+          </MDTypography>
+          <MDTypography
+            variant="body2"
+            color="error"
+            sx={{ mt: 1, fontWeight: 500 }}
+          >
+            Esta acción no se puede deshacer.
+          </MDTypography>
+        </DialogContent>
+
+        <DialogActions>
+          <MDButton
+            onClick={closeModalDeleteProject}
+            variant="outlined"
+            color="secondary"
+          >
+            Cancelar
+          </MDButton>
+          <MDButton
+            onClick={() => DeleteProject(openModalDeleteProject)}
+            variant="gradient"
+            color="error"
+          >
+            Eliminar
+          </MDButton>
         </DialogActions>
       </Dialog>
 

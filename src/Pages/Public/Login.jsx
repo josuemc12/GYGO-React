@@ -6,12 +6,12 @@ import { loginUser } from "../../API/Auth";
 import { RequestPasswordReset } from "../../API/ChangePassword";
 import CloseIcon from "@mui/icons-material/Close";
 import MDBox from "components/MDBox";
+import MDButton from "../../components/MDButton";
 import MDTypography from "components/MDTypography";
 import {
   Button,
   CssBaseline,
   TextField,
-  FormControlLabel,
   Checkbox,
   Link,
   Grid,
@@ -25,12 +25,14 @@ import {
   DialogContent,
   DialogTitle,
   CircularProgress,
+  FormControlLabel,
+  FormHelperText,
 } from "@mui/material";
 import { Visibility, VisibilityOff, ArrowBack } from "@mui/icons-material";
 import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
 import Swal from "sweetalert2";
 import { PublicHeader } from "../../components/PublicHeader";
-import logo from '../../assets/Logo.png';
+import logo from "../../assets/Logo.png";
 
 const theme = createTheme({
   palette: {
@@ -42,7 +44,7 @@ const theme = createTheme({
     fontFamily: "Arial, sans-serif",
   },
   shape: { borderRadius: 12 },
-})
+});
 
 const Paper = styled("div")(({ theme }) => ({
   padding: "40px",
@@ -52,7 +54,7 @@ const Paper = styled("div")(({ theme }) => ({
   width: "100%",
   maxWidth: 400,
   margin: "0 auto",
-}))
+}));
 
 export default function Login() {
   const { login } = useAuth();
@@ -62,11 +64,16 @@ export default function Login() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [errors, setErrors] = useState({});
   const [open, setOpen] = useState(false);
   const [emailReset, setEmailReset] = useState("");
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+    setErrors({});
+    setEmailReset("");
+  };
+  const [saving, setSaving] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -78,7 +85,8 @@ export default function Login() {
         icon: "warning",
         title: "No se pudo iniciar sesión",
         text: "Por favor, completá todos los campos.",
-        confirmButtonColor: "#f8bb86",
+        showConfirmButton: false,
+        timer: 3000,
       });
       return;
     }
@@ -92,7 +100,8 @@ export default function Login() {
           icon: "error",
           title: "Error al iniciar sesión",
           text: error,
-          confirmButtonColor: "#d33",
+          showConfirmButton: false,
+          timer: 3000,
         });
 
         return;
@@ -100,18 +109,19 @@ export default function Login() {
 
       if (isTwoFactor) {
         // Redirect to 2FA page
-        navigate(`/verify-2fa?tempToken=${encodeURIComponent(tempToken)}`);
+        navigate(`/verificar-2fa?tempToken=${encodeURIComponent(tempToken)}`);
       } else {
         login(rol, id);
         // Normal login success — redirect to dashboard or home
-        navigate("/Dashboard");
+        navigate("/panel-control");
       }
     } catch (error) {
       Swal.fire({
         icon: "error",
         title: "Error",
         text: "No se pudo conectar con el servidor, intentá nuevamente más tarde.",
-        confirmButtonColor: "#d33",
+        showConfirmButton: false,
+        timer: 3000,
       });
     } finally {
       setIsLoading(false);
@@ -120,33 +130,45 @@ export default function Login() {
 
   const handleSendReset = async () => {
     if (!emailReset.trim()) {
-      Swal.fire({
-        icon: "warning",
-        title: "Campo vacío",
-        text: "Por favor, ingresa un correo electrónico.",
+      setErrors({
+        email: !emailReset.trim() ? "Requerido" : "",
       });
-      handleClose();
       return;
     }
-
+    //Validacion de correo
+    if (!/\S+@\S+\.\S+/.test(emailReset)) {
+      setErrors((prev) => ({
+        ...prev,
+        email: "Correo electronico es obligatorio",
+      }));
+      return;
+    }
     try {
+      setSaving(true);
       const response = await RequestPasswordReset(emailReset);
-      console.log(response);
       if (response.success) {
         Swal.fire({
           icon: "success",
           title: "Correo enviado",
           text: "Se envió un enlace de recuperación a tu correo.",
+          showConfirmButton: false,
+          timer: 2000,
         });
+        setSaving(false);
         handleClose();
       } else {
+        setSaving(false);
         handleClose();
         Swal.fire({
           icon: "error",
           title: "Error",
           text: "No se pudo enviar el enlace. Verifica el correo.",
+          timer: 2000,
+          showConfirmButton: false,
         });
       }
+      setSaving(false);
+      setErrors({});
       setEmailReset("");
     } catch (error) {
       console.error("Error enviando reset:", error);
@@ -154,6 +176,8 @@ export default function Login() {
         icon: "error",
         title: "Error inesperado",
         text: "Hubo un error al intentar enviar el enlace.",
+        timer: 2000,
+        showConfirmButton: false,
       });
     }
   };
@@ -184,7 +208,8 @@ export default function Login() {
         <CssBaseline />
         <Box
           sx={{
-            background: "linear-gradient(135deg, #ecfdf5 0%, #ffffff 50%, #f0fdfa 100%)",
+            background:
+              "linear-gradient(135deg, #ecfdf5 0%, #ffffff 50%, #f0fdfa 100%)",
             minHeight: "100vh",
             display: "flex",
             alignItems: "center",
@@ -263,7 +288,7 @@ export default function Login() {
             >
               <Box sx={{ position: "relative" }}>
                 <IconButton
-                  onClick={() => navigate(-1)}
+                  onClick={() => navigate("/pagina-inicio")}
                   sx={{
                     position: "absolute",
                     top: -8,
@@ -280,11 +305,7 @@ export default function Login() {
               </Box>
 
               <Box textAlign="center" mb={2}>
-                <img
-                  src={logo}
-                  alt="Logo"
-                  style={{ maxWidth: "120px" }}
-                />
+                <img src={logo} alt="Logo" style={{ maxWidth: "120px" }} />
               </Box>
 
               <Box textAlign="center" mb={5}>
@@ -314,7 +335,10 @@ export default function Login() {
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
-                        <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                        <IconButton
+                          onClick={() => setShowPassword(!showPassword)}
+                          edge="end"
+                        >
                           {showPassword ? <VisibilityOff /> : <Visibility />}
                         </IconButton>
                       </InputAdornment>
@@ -360,39 +384,58 @@ export default function Login() {
             </Paper>
           </Container>
         </Box>
-
-        {/* Modal de recuperación */}
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          fullWidth
-          maxWidth="sm"
-          sx={{
-            "& .MuiDialog-paper": { minHeight: "200px", minWidth: "300px" },
-          }}
-        >
-          <DialogTitle>Recuperar contraseña</DialogTitle>
-          <DialogContent>
-            <TextField
-              label="Correo electrónico"
-              type="email"
-              fullWidth
-              value={emailReset}
-              onChange={(e) => setEmailReset(e.target.value)}
-              sx={{ mt: 4 }}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button variant="outlined" color="error" onClick={handleClose}>
-              Cancelar
-            </Button>
-            <Button onClick={handleSendReset} variant="contained" color="primary">
-              Enviar
-            </Button>
-          </DialogActions>
-        </Dialog>
       </ThemeProvider>
-    </div>
-  )
-}
 
+      {/* Modal de recuperación */}
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        fullWidth
+        maxWidth="sm"
+        sx={{
+          "& .MuiDialog-paper": { minHeight: "200px", minWidth: "300px" },
+        }}
+      >
+        <DialogTitle>
+          <MDBox
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <MDTypography variant="h5">Recuperar Contraseña</MDTypography>
+            <IconButton onClick={handleClose}>
+              <CloseIcon />
+            </IconButton>
+          </MDBox>
+        </DialogTitle>
+        <DialogContent dividers>
+          <TextField
+            label="Correo electrónico"
+            type="email"
+            fullWidth
+            value={emailReset}
+            onChange={(e) => {
+              setEmailReset(e.target.value);
+              setErrors((prev) => ({ ...prev, email: "" }));
+            }}
+            error={!!errors.email}
+            helperText={errors.email}
+            sx={{ mb: 2 }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <MDButton variant="outlined" color="error" onClick={handleClose}>
+            Cancelar
+          </MDButton>
+          <MDButton
+            onClick={handleSendReset}
+            variant="contained"
+            color="success"
+          >
+            {saving ? <CircularProgress size={24} color="inherit" /> : "Enviar"}
+          </MDButton>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
+}
