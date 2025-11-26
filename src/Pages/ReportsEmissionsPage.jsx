@@ -233,28 +233,12 @@ export const ReportsEmissionsPage = () => {
             </Grid>
 
             <Grid container spacing={2} mt={2} justifyContent="center" pt={4}>
-              <Grid item xs={12}>
-                <Box sx={{ display: "flex", justifyContent: "center" }}>
-                  <ButtonGroup
-                    variant="outlined"
-                    size="large"
-                    sx={{
-                      "& .MuiButton-root": {
-                        color: "#0d1b2a",
-                        px: 3,
-                        py: 1.5,
-                        fontWeight: "medium",
-                        borderRadius: "8px",
-                        mx: 0.5,
-                        transition: "all 0.2s ease",
-                        "&:hover": {
-                          transform: "translateY(-2px)",
-                          boxShadow: 3,
-                        },
-                      },
-                    }}
-                  >
+              <Grid size={{xs:12, sm: 12, md: "auto"}}>
+                
+                  <Stack direction={{ xs: "column", md:"row"}} spacing={2} sx={{width: {xs:"100%", md:"auto"}}}>
                     <Button
+                    fullWidth={{ xs: true, md: false }}
+                    size="large"
                       onClick={() => handleReportTypeChange("monthly")}
                       color={
                         selectedReport === "monthly" ? "primary" : "inherit"
@@ -273,6 +257,8 @@ export const ReportsEmissionsPage = () => {
                     </Button>
 
                     <Button
+                    fullWidth={{ xs: true, md: false }}
+                    size="large"
                       onClick={() => handleReportTypeChange("sources")}
                       color={
                         selectedReport === "sources" ? "primary" : "inherit"
@@ -291,6 +277,8 @@ export const ReportsEmissionsPage = () => {
                     </Button>
 
                     <Button
+                    fullWidth={{ xs: true, md: false }}
+                    size="large"
                       onClick={() => handleReportTypeChange("rangeMonths")}
                       color={
                         selectedReport === "rangeMonths" ? "primary" : "inherit"
@@ -311,6 +299,8 @@ export const ReportsEmissionsPage = () => {
                     </Button>
 
                     <Button
+                    fullWidth={{ xs: true, md: false }}
+                    size="large"
                       onClick={() => handleReportTypeChange("rangeYears")}
                       color={
                         selectedReport === "rangeYears" ? "primary" : "inherit"
@@ -329,8 +319,7 @@ export const ReportsEmissionsPage = () => {
                     >
                       Rango de Años
                     </Button>
-                  </ButtonGroup>
-                </Box>
+                  </Stack>
               </Grid>
             </Grid>
           </MDBox>
@@ -392,7 +381,7 @@ export const ReportsEmissionsPage = () => {
                             borderRadius: 2,
                             fontWeight: "bold",
                             background: "#376D4F",
-                            color: "#ffffff",
+                            color: "#e6e6e6ff",
                             "&:hover": {
                               transform: "translateY(-2px)",
                               boxShadow: 3,

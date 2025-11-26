@@ -31,7 +31,7 @@ import {
 import { Visibility, VisibilityOff, ArrowBack } from "@mui/icons-material";
 import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
 import Swal from "sweetalert2";
-import { PublicHeader } from "../../components/PublicHeader";
+import  {PublicHeader}  from "../../components/PublicHeader";
 import logo from "../../assets/Logo.png";
 
 const theme = createTheme({
