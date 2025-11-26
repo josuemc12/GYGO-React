@@ -198,32 +198,28 @@ const EmissionFactorModal = ({
   if (!isOpen) return null;
 
   return (
-    <Dialog
+ <Dialog
       open={isOpen}
       onClose={() => {
-        setErrors({});
-        onClose();
+        setErrors({})
+        onClose()
       }}
       aria-labelledby="add-product-modal"
       fullWidth
-      maxWidth="lg"
+      maxWidth={{ xs: "sm", md: "md" }}
     >
       <DialogTitle>
-        <MDBox
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-        >
-          <MDTypography variant="h5" fontWeight="bold" color="dark">
-            {editingFactor
-              ? "Editar Factor de Emisión"
-              : "Crear Factor de Emisión"}
+        <MDBox display="flex" justifyContent="space-between" alignItems="center" flexDirection={{ xs: "row" }} gap={1}>
+          <MDTypography variant="h5" fontWeight="bold" color="dark" sx={{ fontSize: { xs: "1.1rem", md: "1.5rem" } }}>
+            {editingFactor ? "Editar Factor de Emisión" : "Crear Factor de Emisión"}
           </MDTypography>
 
-          <IconButton onClick={() => {
-             setErrors({});
-             onClose();
-          }}>
+          <IconButton
+            onClick={() => {
+              setErrors({})
+              onClose()
+            }}
+          >
             <CloseIcon />
           </IconButton>
         </MDBox>
@@ -231,7 +227,7 @@ const EmissionFactorModal = ({
 
       {/* Form */}
       <form onSubmit={handleSubmit}>
-        <DialogContent dividers>
+        <DialogContent dividers sx={{ p: { xs: 2, md: 3 } }}>
           <MDBox mb={2}>
             <TextField
               fullWidth
@@ -247,23 +243,24 @@ const EmissionFactorModal = ({
             />
           </MDBox>
 
-          <MDBox display="flex" gap={2} flexWrap="wrap" mb={2}>
-            <MDBox flex={1} minWidth="45%">
+          <MDBox display="flex" gap={2} flexWrap="wrap" mb={2} sx={{ flexDirection: { xs: "column", md: "row" } }}>
+            <MDBox flex={{ xs: "1 1 100%", md: 1 }} minWidth={{ xs: "100%", md: "45%" }}>
               <MDTypography variant="caption" fontWeight="medium" mb={1}>
                 Unidad de medida primaria
               </MDTypography>
               <Select
+                fullWidth
                 name="unit"
                 value={formData.unit}
                 onChange={handleInputChange}
                 error={!!errors.unit}
-                style={{
+                sx={{
                   width: "100%",
                   padding: "10px",
-                  borderRadius: 8,
+                  borderRadius: 1,
                   border: "1.5px solid #e0e3e7",
                   backgroundColor: "#f8f9fa",
-                  fontSize: "1rem",
+                  fontSize: { xs: "0.875rem", md: "1rem" },
                   color: "#344767",
                 }}
               >
@@ -276,22 +273,23 @@ const EmissionFactorModal = ({
               </Select>
             </MDBox>
 
-            <MDBox flex={1} minWidth="45%">
+            <MDBox flex={{ xs: "1 1 100%", md: 1 }} minWidth={{ xs: "100%", md: "45%" }}>
               <MDTypography variant="caption" fontWeight="medium" mb={1}>
                 Unidad de medida del carbono
               </MDTypography>
               <Select
+                fullWidth
                 name="unitCarbon"
                 value={formData.unitCarbon}
                 onChange={handleInputChange}
                 error={!!errors.unitCarbon}
-                style={{
+                sx={{
                   width: "100%",
                   padding: "10px",
-                  borderRadius: 8,
+                  borderRadius: 1,
                   border: "1.5px solid #e0e3e7",
                   backgroundColor: "#f8f9fa",
-                  fontSize: "1rem",
+                  fontSize: { xs: "0.875rem", md: "1rem" },
                   color: "#344767",
                 }}
               >
@@ -305,8 +303,8 @@ const EmissionFactorModal = ({
             </MDBox>
           </MDBox>
 
-          <MDBox display="flex" gap={2} flexWrap="wrap" mb={2}>
-            <MDBox flex={1} minWidth="45%">
+          <MDBox display="flex" gap={2} flexWrap="wrap" mb={2} sx={{ flexDirection: { xs: "column", md: "row" } }}>
+            <MDBox flex={{ xs: "1 1 100%", md: 1 }} minWidth={{ xs: "100%", md: "45%" }}>
               <TextField
                 fullWidth
                 type="number"
@@ -324,7 +322,7 @@ const EmissionFactorModal = ({
               />
             </MDBox>
 
-            <MDBox flex={1} minWidth="45%">
+            <MDBox flex={{ xs: "1 1 100%", md: 1 }} minWidth={{ xs: "100%", md: "45%" }}>
               <TextField
                 fullWidth
                 type="number"
@@ -352,39 +350,35 @@ const EmissionFactorModal = ({
               color="info"
               sx={{
                 backgroundColor: "#e3f2fd",
-                borderRadius: "8px",
-                padding: "10px",
+                borderRadius: 1,
+                padding: { xs: "8px", md: "10px" },
                 width: "fit-content",
                 userSelect: "none",
+                fontSize: { xs: "0.875rem", md: "1rem" },
               }}
             >
-              {formData.valueFactor !== 0
-                ? (formData.unitValue / formData.carbonValue).toFixed(4)
-                : "N/A"}
+              {formData.valueFactor !== 0 ? (formData.unitValue / formData.carbonValue).toFixed(4) : "N/A"}
             </MDTypography>
           </MDBox>
+
           <MDBox mb={2}>
             <MDTypography variant="caption" fontWeight="medium" mb={1}>
               PCG (Greenhouse Gas)
             </MDTypography>
             <Select
+              fullWidth
               name="pcgId"
               value={formData.pcgId}
               onChange={handleInputChange}
               error={!!errors.pcgId}
-              style={{
+              sx={{
                 width: "100%",
                 padding: "10px 12px",
-                borderRadius: "8px",
+                borderRadius: 1,
                 border: "1.5px solid #e0e3e7",
                 backgroundColor: "#f8f9fa",
-                fontSize: "1rem",
+                fontSize: { xs: "0.875rem", md: "1rem" },
                 color: "#344767",
-                appearance: "none",
-                WebkitAppearance: "none",
-                MozAppearance: "none",
-                outline: "none",
-                cursor: "pointer",
               }}
             >
               <MenuItem value={0} disabled hidden style={{ color: "#888" }}>
@@ -397,22 +391,24 @@ const EmissionFactorModal = ({
               ))}
             </Select>
           </MDBox>
-          <MDBox flex={1} minWidth="45%">
+
+          <MDBox flex={{ xs: "1 1 100%" }} minWidth="100%">
             <MDTypography variant="caption" fontWeight="medium" mb={1}>
               Fuente
             </MDTypography>
             <Select
+              fullWidth
               name="sourceId"
               value={formData.sourceId}
               onChange={handleInputChange}
               error={!!errors.sourceId}
-              style={{
+              sx={{
                 width: "100%",
                 padding: "10px",
-                borderRadius: 8,
+                borderRadius: 1,
                 border: "1.5px solid #e0e3e7",
                 backgroundColor: "#f8f9fa",
-                fontSize: "1rem",
+                fontSize: { xs: "0.875rem", md: "1rem" },
                 color: "#344767",
               }}
             >
@@ -426,17 +422,23 @@ const EmissionFactorModal = ({
           </MDBox>
         </DialogContent>
 
-        <DialogActions>
-          {/* Footer Buttons */}
-          <MDBox display="flex" justifyContent="flex-end" gap={2} mt={3}>
+        <DialogActions sx={{ p: { xs: 2, md: 3 }, flexDirection: { xs: "column-reverse", md: "row" } }}>
+          <MDBox
+            display="flex"
+            justifyContent={{ xs: "stretch", md: "flex-end" }}
+            gap={2}
+            width={{ xs: "100%", md: "auto" }}
+            sx={{ flexDirection: { xs: "column", md: "row" } }}
+          >
             <MDButton
               variant="outlined"
               color="error"
               onClick={() => {
-             setErrors({});
-             onClose();
-          }}
+                setErrors({})
+                onClose()
+              }}
               disabled={isSubmitting}
+              fullWidth={{ xs: true, md: false }}
             >
               Cerrar
             </MDButton>
@@ -445,12 +447,9 @@ const EmissionFactorModal = ({
               variant="gradient"
               color="success"
               disabled={isSubmitting}
+              fullWidth={{ xs: true, md: false }}
             >
-              {isSubmitting
-                ? "Guardando..."
-                : editingFactor
-                  ? "Editar"
-                  : "Guardar"}
+              {isSubmitting ? "Guardando..." : editingFactor ? "Editar" : "Guardar"}
             </MDButton>
           </MDBox>
         </DialogActions>

@@ -1,31 +1,38 @@
+import { DateRange } from "@mui/icons-material";
 import { appsettings } from "../settings/appsettings";
 import { fetchWithAuth } from "../utils/fetchWithAuth";
 
 export async function verify2FACode(tempToken, code) {
   try {
-    const response = await fetch(
-      `${appsettings.apiUrl}Auth/verify-2FA`,
-      {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ tempToken, code }),
-      }
-    );
+    const response = await fetch(`${appsettings.apiUrl}Auth/verify-2FA`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ tempToken, code }),
+    });
 
     if (!response) return;
 
     const data = await response.json();
+    console.log(data.message);
+    console.log(data);
 
+    const errorMessage =
+      data.message || // por si tu backend envía "message"
+      data.errors?.[0] || // por si envía "errors"
+      "Código inválido o error desconocido.";
+
+      console.log(errorMessage);
     if (response.ok) {
       return { success: true, rol: data.rol };
     } else {
-      return { success: false, error: data.error };
+      console.log("esta aqui");
+      return { success: false, error: errorMessage  };
     }
   } catch (err) {
-    return { success: false, error: "Request failed." };
+    return { success: false, error: data.message };
   }
 }
 
@@ -92,6 +99,52 @@ export async function sendInvite(email) {
 
     const data = await response.json();
     return { success: false, error: data };
+  } catch (error) {
+    return { success: false, error: "Error en la solicitud." };
+  }
+}
+
+//Probar
+export async function Resend2FACode(tempToken) {
+  try {
+    if (!tempToken) {
+      return {
+        success: false,
+        message: "Token temporal no proporcionado.",
+      };
+    }
+
+    const response = await fetch(`${appsettings.apiUrl}Auth/2FA-Code`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(tempToken),
+    });
+
+    const data = await response.json();
+
+    // ✅ Verificar si expiró
+    if (data.data?.expired) {
+      return {
+        success: false,
+        expired: true, // Flag para el componente
+        message:
+          data.message ||
+          "Tu sesión expiró. Por favor, inicia sesión nuevamente.",
+      };
+    }
+    if (response.ok && data.success) {
+      return {
+        success: true,
+        message: "Código reenviado correctamente.",
+      };
+    }
+    return {
+      success: false,
+      message: "Ocurrió un error al reenviar el código.",
+    };
   } catch (error) {
     return { success: false, error: "Error en la solicitud." };
   }

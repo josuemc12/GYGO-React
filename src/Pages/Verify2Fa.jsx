@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
-import { verify2FACode } from "../API/Auth";
+import { verify2FACode, Resend2FACode } from "../API/Auth";
 import { useAuth } from "../context/AuthContext";
 import {
   Box,
@@ -17,9 +17,11 @@ export function Verify2FA() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const tempToken = searchParams.get("tempToken");
+  const [tempToken, setTempToken] = useState(searchParams.get("tempToken"));
+
   const [code, setCode] = useState("");
   const [message, setMessage] = useState("");
+  const [isResending, setIsResending] = useState(false); // Para deshabilitar botón mientras reenvía
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,14 +32,14 @@ export function Verify2FA() {
       if (!code) {
         Swal.fire({
           icon: "warning",
-          title: "No se pudo iniciar sesión",
+          title: "No se pudo verificar el código",
           text: "Por favor, completá todos los campos.",
           showConfirmButton: false,
           timer: 3000,
         });
         return;
       }
-      console.log(success);
+      console.log("fadfsd");
       console.log(error);
       if (success) {
         login(rol);
@@ -46,28 +48,98 @@ export function Verify2FA() {
           title: "¡Código verificado!",
           text: "Has ingresado correctamente.",
           confirmButtonColor: "#2DA14C",
-          timer: 1500,
+          timer: 3000,
           showConfirmButton: false,
         });
 
         setTimeout(() => {
           navigate("/panel-control");
-        }, 1600); // pequeño margen por si tarda en cerrarse el Swal
+        }, 3000); // pequeño margen por si tarda en cerrarse el Swal
+      }
+      else if (error?.includes("expirado")) {
+        Swal.fire({
+          icon: "warning",
+          title: "Token expirado",
+          text: "Tu token ha caducado, solicitá uno nuevo.",
+          timer: 3000,
+          showConfirmButton: false,
+        });
+
+        setTimeout(() => {
+          navigate("/inicio-sesion"); 
+        }, 3000);
+
+        return;
       } else {
         Swal.fire({
           icon: "error",
           title: "Código incorrecto",
           text: error,
-          confirmButtonColor: "#d33",
+          showConfirmButton: false,
+          timer: 3000,
         });
       }
+
+
+
     } catch (error) {
       Swal.fire({
         icon: "error",
         title: "Error",
         text: "No se pudo conectar con el servidor, intentá nuevamente más tarde.",
-        confirmButtonColor: "#d33",
+        showConfirmButton: false,
+        timer: 3000,
       });
+    }
+  };
+
+  const handleResendCode = async () => {
+    setIsResending(true);
+
+    try {
+      const response = await Resend2FACode(tempToken);
+
+      // si se expiro el token
+      if (response.expired) {
+        Swal.fire({
+          icon: "warning",
+          title: "Sesión expirada",
+          text: response.message,
+          timer: 2500,
+          showConfirmButton: false,
+        }).then(() => {
+          navigate("/inicio-sesion");
+        });
+        return;
+      }
+
+      if (response.success) {
+        Swal.fire({
+          icon: "success",
+          title: "Código reenviado",
+          text: response.message,
+          timer: 2500,
+          showConfirmButton: false,
+        });
+
+        // Limpiar el campo del código
+        setCode("");
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: response.message,
+        });
+      }
+    } catch (error) {
+      console.error("Error en handleResendCode:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "No se pudo conectar con el servidor.",
+      });
+    } finally {
+      setIsResending(false);
     }
   };
 
@@ -140,6 +212,25 @@ export function Verify2FA() {
             }}
           >
             Verificar
+          </Button>
+
+          <Button
+            type="button"
+            variant="contained"
+            fullWidth
+            size="large"
+            sx={{
+              mt: 2,
+              backgroundColor: "#2DA14C", // verde
+              color: "#fff", // letras blancas
+              "&:hover": {
+                backgroundColor: "#1fcc4bff", // verde más oscuro al hacer hover
+              },
+            }}
+            onClick={handleResendCode}
+            disabled={isResending}
+          >
+            {isResending ? "Reenviando..." : "Reenviar código"}
           </Button>
         </form>
       </Paper>
