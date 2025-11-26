@@ -72,7 +72,9 @@ import MDTypography from "components/MDTypography";
 import MDAvatar from "components/MDAvatar";
 import MDButton from "components/MDButton";
 import MDBadge from "components/MDBadge";
-
+import { useMediaQuery, useTheme } from "@mui/material"
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined"
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined"
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
@@ -82,6 +84,8 @@ dayjs.extend(localizedFormat);
 dayjs.locale("es");
 
 function ProjectPage() {
+   const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"))
   //Hook para manejar el JSON de proyectos
   const [projects, setProjects] = useState([]);
   //Hook para manejar el JSON de proyectos filtro
@@ -709,412 +713,437 @@ function ProjectPage() {
     <DashboardLayout>
       <DashboardNavbar></DashboardNavbar>
       <MDBox py={3}>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <MDBox mb={2}>
-            <MDBox
+  <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <MDBox mb={2}>
+      <MDBox
+        sx={{
+          borderRadius: 2,
+          p: 3,
+          mb: 2,
+          background: "#ffffff",
+          border: "1px solid #e5e7eb",
+          boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+        }}
+      >
+        {/* <CHANGE> Header responsive */}
+        <Grid
+          container
+          alignItems="center"
+          justifyContent="space-between"
+          spacing={{ xs: 1, md: 2 }}
+          sx={{ flexDirection: { xs: "column", md: "row" }, gap: { xs: 2, md: 0 } }}
+        >
+          <Grid item xs={12} md="auto">
+            <MDBox display="flex" flexDirection="column">
+              <MDBox display="flex" alignItems="center" gap={1}>
+                <MDTypography variant="h6">Proyectos</MDTypography>
+              </MDBox>
+              <MDTypography variant="body2" color="text">
+                Filtra, organiza y administra tus proyectos fácilmente.
+              </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md="auto">
+            <MDButton
+              variant="outlined"
+              startIcon={<AddOutlined />}
+              fullWidth={{ xs: true, md: false }}
               sx={{
-                borderRadius: 2,
-                p: 3,
-                mb: 2,
-                background: "#ffffff",
-                border: "1px solid #e5e7eb",
-                boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+                borderColor: "#4CAF50",
+                color: "#4CAF50",
+                "&:hover": {
+                  backgroundColor: "#E8F5E9",
+                  borderColor: "#43A047",
+                  color: "#388E3C",
+                },
               }}
+              onClick={ModalSaveProject}
             >
-              <Grid
-                container
-                alignItems="center"
-                justifyContent="space-between"
-              >
-                <Grid item>
-                  <MDBox display="flex" flexDirection="column">
-                    <MDBox display="flex" alignItems="center" gap={1}>
-                      <MDTypography variant="h6">Proyectos</MDTypography>
-                    </MDBox>
-                    <MDTypography variant="body2" color="text">
-                      Filtra, organiza y administra tus proyectos fácilmente.
-                    </MDTypography>
-                  </MDBox>
-                </Grid>
-                <Grid item>
-                  <MDButton
-                    variant="outlined"
-                    startIcon={<AddOutlined />}
-                    sx={{
-                      borderColor: "#4CAF50",
-                      color: "#4CAF50",
-                      "&:hover": {
-                        backgroundColor: "#E8F5E9",
-                        borderColor: "#43A047",
-                        color: "#388E3C",
-                      },
-                    }}
-                    onClick={ModalSaveProject}
+              Agregar Proyecto
+            </MDButton>
+          </Grid>
+        </Grid>
+
+        {/* <CHANGE> Filtros responsive - vertical en móvil, horizontal en desktop */}
+        <Grid
+          container
+          alignItems={{ xs: "stretch", md: "center" }}
+          justifyContent="space-between"
+          spacing={2}
+          mt={2}
+          sx={{ flexDirection: { xs: "column", md: "row" } }}
+        >
+          <Grid item xs={12} md="auto">
+            <Grid container spacing={2} sx={{ flexDirection: { xs: "column", md: "row" } }}>
+              <Grid item xs={12} sm={6} md="auto">
+                <FormControl size="medium" sx={{ width: "100%" }}>
+                  <InputLabel id="Estado-label">Estado</InputLabel>
+                  <Select
+                    labelId="Estado-label"
+                    name="estado"
+                    label="Estado"
+                    fullWidth
+                    value={filter}
+                    onChange={(e) => setFilter(e.target.value)}
+                    sx={{ height: 45, textAlign: "left" }}
                   >
-                    Agregar Proyecto
-                  </MDButton>
-                </Grid>
+                    <MenuItem value="todos">Todos</MenuItem>
+                    <MenuItem value="true">Realizados</MenuItem>
+                    <MenuItem value="false">Pendientes</MenuItem>
+                  </Select>
+                </FormControl>
               </Grid>
 
-              <Grid
-                container
-                alignItems="center"
-                justifyContent="space-between"
-                spacing={2}
-                mt={2}
+              <Grid item xs={12} sm={6} md="auto">
+                <LocalizationProvider
+                  dateAdapter={AdapterDayjs}
+                  adapterLocale="es"
+                >
+                  <DatePicker
+                    label="Fecha Inicio"
+                    value={
+                      startDate ? dayjs(startDate, "DD-MM-YYYY") : null
+                    }
+                    onChange={(newValue) => setStartDate(newValue)}
+                    inputFormat="DD-MM-YYYY"
+                    slotProps={{
+                      textField: {
+                        size: "small",
+                        sx: {
+                          width: "100%",
+                          fontFamily:
+                            '"Roboto", "Helvetica", "Arial", sans-serif',
+                          fontSize: "0.875rem",
+                          color: "rgba(0, 0, 0, 0.87)",
+                          "& .MuiInputBase-input": {
+                            fontSize: "0.875rem",
+                            padding: "10px 14px",
+                            color: "rgba(0, 0, 0, 0.87)",
+                          },
+                          "& .MuiInputLabel-root": {
+                            fontSize: "0.875rem",
+                            color: "rgba(0, 0, 0, 0.6)",
+                          },
+                          "& .MuiOutlinedInput-root": {
+                            "& fieldset": {
+                              borderColor: "rgba(0, 0, 0, 0.23)",
+                            },
+                            "&:hover fieldset": {
+                              borderColor: "#1976d2",
+                            },
+                            "&.Mui-focused fieldset": {
+                              borderColor: "#1976d2",
+                            },
+                          },
+                        },
+                      },
+                    }}
+                  />
+                </LocalizationProvider>
+              </Grid>
+
+              <Grid item xs={12} sm={6} md="auto">
+                <LocalizationProvider
+                  dateAdapter={AdapterDayjs}
+                  adapterLocale="es"
+                >
+                  <DatePicker
+                    label="Fecha Fin"
+                    value={endDate}
+                    onChange={(newValue) => setEndDate(newValue)}
+                    inputFormat="DD-MM-YYYY"
+                    slotProps={{
+                      textField: {
+                        size: "small",
+                        sx: {
+                          width: "100%",
+                          fontFamily:
+                            '"Roboto", "Helvetica", "Arial", sans-serif',
+                          fontSize: "0.875rem",
+                          color: "rgba(0, 0, 0, 0.87)",
+                          "& .MuiInputBase-input": {
+                            fontSize: "0.875rem",
+                            padding: "10px 14px",
+                            color: "rgba(0, 0, 0, 0.87)",
+                          },
+                          "& .MuiInputLabel-root": {
+                            fontSize: "0.875rem",
+                            color: "rgba(0, 0, 0, 0.6)",
+                          },
+                          "& .MuiOutlinedInput-root": {
+                            "& fieldset": {
+                              borderColor: "rgba(0, 0, 0, 0.23)",
+                            },
+                            "&:hover fieldset": {
+                              borderColor: "#1976d2",
+                            },
+                            "&.Mui-focused fieldset": {
+                              borderColor: "#1976d2",
+                            },
+                          },
+                        },
+                      },
+                    }}
+                  />
+                </LocalizationProvider>
+              </Grid>
+            </Grid>
+          </Grid>
+
+          {/* <CHANGE> Botones responsive - apilados en móvil */}
+          <Grid item xs={12} md="auto">
+            <MDBox display="flex" gap={1} sx={{ flexDirection: { xs: "column", md: "row" } }}>
+              <MDButton
+                onClick={SearchByDate}
+                variant="outlined"
+                color="info"
+                fullWidth={{ xs: true, md: false }}
               >
-                <Grid item>
-                  <Grid container spacing={2}>
-                    <Grid item>
-                      <FormControl size="medium" sx={{ width: 180 }}>
-                        <InputLabel id="Estado-label">Estado</InputLabel>
-                        <Select
-                          labelId="Estado-label"
-                          name="estado"
-                          label="Estado"
-                          fullWidth
-                          value={filter}
-                          onChange={(e) => setFilter(e.target.value)}
-                          sx={{ height: 45, textAlign: "left" }}
-                        >
-                          <MenuItem value="todos">Todos</MenuItem>
-                          <MenuItem value="true">Realizados</MenuItem>
-                          <MenuItem value="false">Pendientes</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Grid>
+                Buscar por fecha
+              </MDButton>
+              <MDButton
+                onClick={ClearDates}
+                variant="outlined"
+                color="secondary"
+                fullWidth={{ xs: true, md: false }}
+              >
+                Limpiar fechas
+              </MDButton>
+              {Array.isArray(data) && data.length > 0 && (
+                <MDButton
+                  variant="outlined"
+                  onClick={CreatePDFAPI}
+                  color="error"
+                  fullWidth={{ xs: true, md: false }}
+                >
+                  Descargar Reporte
+                </MDButton>
+              )}
+            </MDBox>
+          </Grid>
+        </Grid>
+      </MDBox>
 
-                    <Grid item>
-                      <LocalizationProvider
-                        dateAdapter={AdapterDayjs}
-                        adapterLocale="es"
-                      >
-                        <DatePicker
-                          label="Fecha Inicio"
-                          value={
-                            startDate ? dayjs(startDate, "DD-MM-YYYY") : null
-                          }
-                          onChange={(newValue) => setStartDate(newValue)}
-                          inputFormat="DD-MM-YYYY"
-                          slotProps={{
-                            textField: {
-                              size: "small",
-                              sx: {
-                                width: 180,
-                                fontFamily:
-                                  '"Roboto", "Helvetica", "Arial", sans-serif',
-                                fontSize: "0.875rem",
-                                color: "rgba(0, 0, 0, 0.87)", // mismo color de texto por defecto
-                                "& .MuiInputBase-input": {
-                                  fontSize: "0.875rem",
-                                  padding: "10px 14px", // iguala el padding del Select
-                                  color: "rgba(0, 0, 0, 0.87)", // color del texto de la fecha
-                                },
-                                "& .MuiInputLabel-root": {
-                                  fontSize: "0.875rem",
-                                  color: "rgba(0, 0, 0, 0.6)", // color del label
-                                },
-                                "& .MuiOutlinedInput-root": {
-                                  "& fieldset": {
-                                    borderColor: "rgba(0, 0, 0, 0.23)", // color del borde
-                                  },
-                                  "&:hover fieldset": {
-                                    borderColor: "#1976d2", // color al pasar el mouse (igual que el Select)
-                                  },
-                                  "&.Mui-focused fieldset": {
-                                    borderColor: "#1976d2", // color al enfocar
-                                  },
-                                },
-                              },
-                            },
-                          }}
-                        />
-                      </LocalizationProvider>
-                    </Grid>
-
-                    <Grid item>
-                      <LocalizationProvider
-                        dateAdapter={AdapterDayjs}
-                        adapterLocale="es"
-                      >
-                        <DatePicker
-                          label="Fecha Fin"
-                          value={endDate}
-                          onChange={(newValue) => setEndDate(newValue)}
-                          inputFormat="DD-MM-YYYY"
-                          slotProps={{
-                            textField: {
-                              size: "small",
-                              sx: {
-                                width: 180,
-                                fontFamily:
-                                  '"Roboto", "Helvetica", "Arial", sans-serif',
-                                fontSize: "0.875rem",
-                                color: "rgba(0, 0, 0, 0.87)", // mismo color de texto por defecto
-                                "& .MuiInputBase-input": {
-                                  fontSize: "0.875rem",
-                                  padding: "10px 14px", // iguala el padding del Select
-                                  color: "rgba(0, 0, 0, 0.87)", // color del texto de la fecha
-                                },
-                                "& .MuiInputLabel-root": {
-                                  fontSize: "0.875rem",
-                                  color: "rgba(0, 0, 0, 0.6)", // color del label
-                                },
-                                "& .MuiOutlinedInput-root": {
-                                  "& fieldset": {
-                                    borderColor: "rgba(0, 0, 0, 0.23)", // color del borde
-                                  },
-                                  "&:hover fieldset": {
-                                    borderColor: "#1976d2", // color al pasar el mouse (igual que el Select)
-                                  },
-                                  "&.Mui-focused fieldset": {
-                                    borderColor: "#1976d2", // color al enfocar
-                                  },
-                                },
-                              },
-                            },
-                          }}
-                        />
-                      </LocalizationProvider>
-                    </Grid>
-                  </Grid>
-                </Grid>
-
-                <Grid item>
-                  <MDBox display="flex" gap={1}>
-                    <MDButton
-                      onClick={SearchByDate}
-                      variant="outlined"
-                      color="info"
+      {/* <CHANGE> Tabla con tamaño responsivo */}
+      <Grid size={{ xs: 12 }} mt={{ xs: 5, md: 10 }}>
+        <Card>
+          <MDBox
+            mx={2}
+            mt={-3}
+            py={3}
+            px={2}
+            variant="gradient"
+            bgColor="success"
+            borderRadius="lg"
+            coloredShadow="success"
+          >
+            <MDTypography variant="h6" color="white" align="left">
+              Proyectos
+            </MDTypography>
+          </MDBox>
+          <MDBox>
+            <MDBox>
+              <Grid container spacing={5}>
+                <Grid size={{ xs: 12 }}>
+                  <Card>
+                    <MDBox
+                      pt={3}
+                      sx={{
+                        p: { xs: 2, md: 3 },
+                        textAlign: "center",
+                        width: "100%",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        overflowX: "auto",
+                      }}
                     >
-                      Buscar por fecha
-                    </MDButton>
-                    <MDButton
-                      onClick={ClearDates}
-                      variant="outlined"
-                      color="secondary"
-                    >
-                      Limpiar fechas
-                    </MDButton>
-                    {Array.isArray(data) && data.length > 0 && (
-                      <MDButton
-                        variant="outlined"
-                        onClick={CreatePDFAPI}
-                        color="error"
-                      >
-                        Descargar Reporte
-                      </MDButton>
-                    )}
-                  </MDBox>
+                      <DataTable
+                        table={{ columns, rows }}
+                        isSorted={false}
+                        entriesPerPage={false}
+                        showTotalEntries={true}
+                        noEndBorder
+                        loading={loading}
+                      />
+                    </MDBox>
+                  </Card>
                 </Grid>
               </Grid>
             </MDBox>
-
-            {/* Tabla de proyectos */}
-            <Grid size={{ xs: 12 }} mt={10}>
-              <Card>
-                <MDBox
-                  mx={2}
-                  mt={-3}
-                  py={3}
-                  px={2}
-                  variant="gradient"
-                  bgColor="success"
-                  borderRadius="lg"
-                  coloredShadow="success"
-                >
-                  <MDTypography variant="h6" color="white" align="left">
-                    Proyectos
-                  </MDTypography>
-                </MDBox>
-                <MDBox>
-                  <MDBox>
-                    <Grid container spacing={5}>
-                      <Grid size={{ xs: 12 }}>
-                        <Card>
-                          <MDBox
-                            pt={3}
-                            sx={{
-                              p: 3,
-                              textAlign: "center",
-                              width: "100%",
-                              alignItems: "center",
-                              justifyContent: "center",
-                            }}
-                          >
-                            <DataTable
-                              table={{ columns, rows }}
-                              isSorted={false}
-                              entriesPerPage={false}
-                              showTotalEntries={true}
-                              noEndBorder
-                              loading={loading}
-                            />
-                          </MDBox>
-                        </Card>
-                      </Grid>
-                    </Grid>
-                  </MDBox>
-                </MDBox>
-              </Card>
-            </Grid>
           </MDBox>
-        </LocalizationProvider>
-      </MDBox>
+        </Card>
+      </Grid>
+    </MDBox>
+  </LocalizationProvider>
+</MDBox>
 
-      {/* Modal para agregar un nuevo proyecto */}
-      <Dialog
-        open={openModalProjects}
-        onClose={closeModalProject}
-        fullWidth
-        maxWidth="md"
-      >
-        <DialogTitle>
-          <MDBox
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <MDTypography variant="h5">
-              {modoEdicion ? "Editar Proyecto" : "Nuevo Proyecto"}
-            </MDTypography>
-            <IconButton onClick={closeModalProject}>
-              <CloseIcon />
-            </IconButton>
-          </MDBox>
-        </DialogTitle>
-        <DialogContent dividers>
-          <TextField
-            fullWidth
-            label="Nombre"
-            name="nombre"
-            margin="normal"
-            value={projectData.nombre}
-            onChange={handleChange}
-            error={!!errors.nombre}
-            helperText={errors.nombre}
-            sx={{ mb: 2 }}
-          />
-          <TextField
-            fullWidth
-            label="Descripción"
-            name="descripcion"
-            margin="normal"
-            value={projectData.descripcion}
-            onChange={handleChange}
-            multiline
-            rows={3}
-            error={!!errors.descripcion}
-            helperText={errors.descripcion}
-            sx={{ mb: 2 }}
-          />
+    <Dialog
+      open={openModalProjects}
+      onClose={closeModalProject}
+      fullWidth
+      maxWidth="sm"
+      sx={{
+        "& .MuiDialog-paper": {
+          width: "90%",
+          maxWidth: { xs: "90%", sm: "90%", md: "500px" },
+        },
+      }}
+    >
+      <DialogTitle>
+        <MDBox display="flex" justifyContent="space-between" alignItems="center">
+          <MDTypography variant="h5">{modoEdicion ? "Editar Proyecto" : "Nuevo Proyecto"}</MDTypography>
+          <IconButton onClick={closeModalProject}>
+            <CloseIcon />
+          </IconButton>
+        </MDBox>
+      </DialogTitle>
 
-          <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
-            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
-              <DatePicker
-                label="Fecha de Inicio"
-                name="fechainicio"
-                value={
-                  projectData.fechaInicio
-                    ? dayjs(projectData.fechaInicio, "DD-MM-YYYY")
-                    : null
-                }
-                onChange={(newValue) => {
-                  setProjecttData((prev) => ({
-                    ...prev,
-                    fechaInicio: newValue ? newValue.format("DD-MM-YYYY") : "",
-                    fechaFinal: "",
-                  }));
-                  setErrors((prev) => ({ ...prev, fechainicio: "" }));
-                }}
-                inputFormat="DD-MM-YYYY"
-                minDate={dayjs()}
-                slotProps={{
-                  textField: {
-                    size: "small",
-                    error: !!errors.fechainicio,
-                    helperText: errors.fechainicio,
-                    sx: {
-                      width: 350, // más angosto
-                      "& .MuiInputBase-root": {
-                        fontSize: 2, // opcional: fuente más pequeña
-                      },
-                      "& input": {
-                        padding: "6px 8px",
-                        fontSize: 9, // menos espacio interno
-                      },
+      <DialogContent dividers>
+        <TextField
+          fullWidth
+          label="Nombre"
+          name="nombre"
+          margin="normal"
+          value={projectData.nombre}
+          onChange={(e) => setProjecttData({ ...projectData, nombre: e.target.value })}
+          error={!!errors.nombre}
+          helperText={errors.nombre}
+          sx={{
+            mb: 2,
+            "& .MuiInputBase-root": {
+              fontSize: { xs: "0.875rem", md: "1rem" },
+            },
+          }}
+        />
+
+        <TextField
+          fullWidth
+          label="Descripción"
+          name="descripcion"
+          margin="normal"
+          value={projectData.descripcion}
+          onChange={(e) => setProjecttData({ ...projectData, descripcion: e.target.value })}
+          multiline
+          rows={3}
+          error={!!errors.descripcion}
+          helperText={errors.descripcion}
+          sx={{
+            mb: 2,
+            "& .MuiInputBase-root": {
+              fontSize: { xs: "0.875rem", md: "1rem" },
+            },
+          }}
+        />
+
+        <Box
+          sx={{
+            display: "flex",
+            gap: 2,
+            mt: 2,
+            flexDirection: { xs: "column", md: "row" },
+          }}
+        >
+          <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
+            <DatePicker
+              label="Fecha de Inicio"
+              name="fechainicio"
+              value={projectData.fechaInicio ? dayjs(projectData.fechaInicio, "DD-MM-YYYY") : null}
+              onChange={(newValue) => {
+                setProjecttData({
+                  ...projectData,
+                  fechaInicio: newValue ? newValue.format("DD-MM-YYYY") : "",
+                  fechaFinal: "",
+                })
+                setErrors({ ...errors, fechainicio: "" })
+              }}
+              inputFormat="DD-MM-YYYY"
+              minDate={dayjs()}
+              slotProps={{
+                textField: {
+                  size: "small",
+                  error: !!errors.fechainicio,
+                  helperText: errors.fechainicio,
+                  fullWidth: true,
+                  sx: {
+                    flex: { xs: 1, md: 1 },
+                    "& .MuiInputBase-root": {
+                      fontSize: { xs: "0.75rem", md: "0.875rem" },
+                    },
+                    "& input": {
+                      padding: { xs: "8px 10px", md: "10px 12px" },
+                      fontSize: { xs: "0.75rem", md: "0.875rem" },
                     },
                   },
-                }}
-              />
-            </LocalizationProvider>
+                },
+              }}
+            />
+          </LocalizationProvider>
 
-            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
-              <DatePicker
-                label="Fecha Final"
-                name="fechafinal"
-                value={
-                  projectData.fechaFinal
-                    ? dayjs(projectData.fechaFinal, "DD-MM-YYYY")
-                    : null
-                }
-                onChange={(newValue) => {
-                  if (newValue) {
-                    const fechaInicio = dayjs(
-                      projectData.fechaInicio,
-                      "DD-MM-YYYY"
-                    );
-                    const diferencia = newValue.diff(fechaInicio, "day");
+          <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
+            <DatePicker
+              label="Fecha Final"
+              name="fechafinal"
+              value={projectData.fechaFinal ? dayjs(projectData.fechaFinal, "DD-MM-YYYY") : null}
+              onChange={(newValue) => {
+                if (newValue) {
+                  const fechaInicio = dayjs(projectData.fechaInicio, "DD-MM-YYYY")
+                  const diferencia = newValue.diff(fechaInicio, "day")
 
-                    if (diferencia < 5) {
-                      alert(
-                        "La fecha final debe ser al menos 5 días después de la fecha de inicio."
-                      );
-                      return;
-                    }
+                  if (diferencia < 5) {
+                    alert("La fecha final debe ser al menos 5 días después de la fecha de inicio.")
+                    return
                   }
-
-                  setProjecttData((prev) => ({
-                    ...prev,
-                    fechaFinal: newValue ? newValue.format("DD-MM-YYYY") : "",
-                  }));
-                  setErrors((prev) => ({ ...prev, fechafinal: "" }));
-                }}
-                inputFormat="DD-MM-YYYY"
-                disabled={!projectData.fechaInicio}
-                minDate={
-                  projectData.fechaInicio
-                    ? dayjs(projectData.fechaInicio, "DD-MM-YYYY").add(5, "day")
-                    : dayjs()
                 }
-                slotProps={{
-                  textField: {
-                    size: "small",
-                    error: !!errors.fechafinal,
-                    helperText: errors.fechafinal,
-                    sx: {
-                      width: 350, // más angosto
-                      "& .MuiInputBase-root": {
-                        fontSize: 2, // opcional: fuente más pequeña
-                      },
-                      "& input": {
-                        padding: "6px 8px",
-                        fontSize: 9, // menos espacio interno
-                      },
+
+                setProjecttData({
+                  ...projectData,
+                  fechaFinal: newValue ? newValue.format("DD-MM-YYYY") : "",
+                })
+                setErrors({ ...errors, fechafinal: "" })
+              }}
+              inputFormat="DD-MM-YYYY"
+              disabled={!projectData.fechaInicio}
+              minDate={projectData.fechaInicio ? dayjs(projectData.fechaInicio, "DD-MM-YYYY").add(5, "day") : dayjs()}
+              slotProps={{
+                textField: {
+                  size: "small",
+                  error: !!errors.fechafinal,
+                  helperText: errors.fechafinal,
+                  fullWidth: true,
+                  sx: {
+                    flex: { xs: 1, md: 1 },
+                    "& .MuiInputBase-root": {
+                      fontSize: { xs: "0.75rem", md: "0.875rem" },
+                    },
+                    "& input": {
+                      padding: { xs: "8px 10px", md: "10px 12px" },
+                      fontSize: { xs: "0.75rem", md: "0.875rem" },
                     },
                   },
-                }}
-              />
-            </LocalizationProvider>
-          </Box>
-        </DialogContent>
+                },
+              }}
+            />
+          </LocalizationProvider>
+        </Box>
+      </DialogContent>
 
-        <DialogActions>
+      <DialogActions>
+        <MDBox
+          sx={{
+            display: "flex",
+            gap: 1,
+            flexDirection: { xs: "column-reverse", md: "row" },
+            width: { xs: "100%", md: "auto" },
+          }}
+        >
           <MDButton
             variant="outlined"
             color="error"
             onClick={closeModalProject}
-            sx={{ mr: 1 }}
+            sx={{
+              mr: { xs: 0, md: 1 },
+              width: { xs: "100%", md: "auto" },
+            }}
           >
             Cancelar
           </MDButton>
@@ -1123,6 +1152,9 @@ function ProjectPage() {
             color="success"
             onClick={HandleProjects}
             disabled={submitting}
+            sx={{
+              width: { xs: "100%", md: "auto" },
+            }}
           >
             {submitting
               ? modoEdicion
@@ -1132,311 +1164,338 @@ function ProjectPage() {
                 ? "Guardar cambios"
                 : "Agregar consumo"}
           </MDButton>
-        </DialogActions>
-      </Dialog>
+        </MDBox>
+      </DialogActions>
+    </Dialog>
       {/* Fin del Modal para agregar un nuevo proyecto */}
 
-      <Dialog
-        open={openModalTask}
-        onClose={CloseModalTaks}
-        fullWidth
-        maxWidth="md"
-      >
-        <DialogTitle>
-          <MDBox
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <MDTypography variant="h5">Gestión de Actividades</MDTypography>
-            <IconButton onClick={CloseModalTaks}>
-              <CloseIcon />
-            </IconButton>
-          </MDBox>
-        </DialogTitle>
-        <DialogContent dividers>
-          <Tabs
-            value={tabIndex}
-            onChange={handleTabChange}
+     <Dialog
+      open={openModalTask}
+      onClose={CloseModalTaks}
+      fullWidth
+      maxWidth={isMobile ? "sm" : "md"}
+      sx={{
+        "& .MuiDialog-paper": {
+          width: isMobile ? "95%" : "100%",
+          maxWidth: isMobile ? "95vw" : undefined,
+        },
+      }}
+    >
+      <DialogTitle>
+        <MDBox display="flex" justifyContent="space-between" alignItems="center">
+          <MDTypography variant={isMobile ? "h6" : "h5"}>Gestión de Actividades</MDTypography>
+          <IconButton onClick={CloseModalTaks}>
+            <CloseIcon />
+          </IconButton>
+        </MDBox>
+      </DialogTitle>
+      <DialogContent dividers>
+        <Tabs
+          value={tabIndex}
+          onChange={handleTabChange}
+          variant={isMobile ? "scrollable" : "standard"}
+          scrollButtons={isMobile ? "auto" : false}
+          sx={{
+            "& .MuiTabs-indicator": {
+              backgroundColor: "#308D21",
+              color: "#FFFFFF",
+            },
+            "& .MuiTab-root": {
+              fontSize: isMobile ? "0.75rem" : "0.875rem",
+              minWidth: isMobile ? "auto" : "160px",
+            },
+          }}
+        >
+          <Tab
+            label="Agregar Actividades"
             sx={{
-              "& .MuiTabs-indicator": {
+              "&.Mui-selected": {
                 backgroundColor: "#308D21",
-                color: "#FFFFFF", // color de la línea inferior
+                color: "#FFFFFF !important",
               },
             }}
-          >
-            <Tab
-              label="Agregar Actividades"
-              sx={{
-                "&.Mui-selected": {
-                  backgroundColor: "#308D21", // fondo del tab seleccionado
-                  color: "#FFFFFF", // texto en blanco
-                },
+          />
+          <Tab
+            label="Ver Actividades"
+            sx={{
+              "&.Mui-selected": {
+                backgroundColor: "#308D21",
+                color: "#FFFFFF !important",
+              },
+            }}
+          />
+        </Tabs>
+
+        {tabIndex === 0 && (
+          <Box mt={2} sx={{ px: { xs: 0, md: 2 } }}>
+            <TextField
+              fullWidth
+              label="Título"
+              name="Tareatitulo"
+              margin="normal"
+              value={taskData.titulo}
+              onChange={(e) => {
+                setTasktData({ ...taskData, titulo: e.target.value })
+                setErrors((prev) => ({ ...prev, Tareatitulo: "" }))
               }}
+              error={!!errors.Tareatitulo}
+              helperText={errors.Tareatitulo}
+              sx={{ mb: 2 }}
+              size={isMobile ? "small" : "medium"}
             />
-            <Tab
-              label="Ver Actividades"
-              sx={{
-                "&.Mui-selected": {
-                  backgroundColor: "#308D21",
-                  color: "#FFFFFF",
-                },
+            <TextField
+              fullWidth
+              label="Descripción"
+              name="TareaDescripcion"
+              margin="normal"
+              multiline
+              rows={isMobile ? 2 : 3}
+              value={taskData.descripcion}
+              onChange={(e) => {
+                setTasktData({ ...taskData, descripcion: e.target.value })
+                setErrors((prev) => ({ ...prev, TareaDescripcion: "" }))
               }}
+              inputProps={{ maxLength: 50 }}
+              error={!!errors.TareaDescripcion}
+              helperText={errors.TareaDescripcion}
+              sx={{ mb: 2 }}
+              size={isMobile ? "small" : "medium"}
             />
-          </Tabs>
 
-          {tabIndex === 0 && (
-            <Box mt={2}>
-              <TextField
-                fullWidth
-                label="Título"
-                name="Tareatitulo"
-                margin="normal"
-                value={taskData.titulo}
-                onChange={(e) => {
-                  setTasktData({ ...taskData, titulo: e.target.value });
-                  setErrors((prev) => ({ ...prev, Tareatitulo: "" }));
-                }}
-                error={!!errors.Tareatitulo}
-                helperText={errors.Tareatitulo}
-                sx={{ mb: 2 }}
-              />
-              <TextField
-                fullWidth
-                label="Descripción"
-                name="TareaDescripcion"
-                margin="normal"
-                multiline
-                rows={2}
-                value={taskData.descripcion}
-                onChange={(e) => {
-                  setTasktData({ ...taskData, descripcion: e.target.value });
-                  setErrors((prev) => ({ ...prev, TareaDescripcion: "" }));
-                }}
-                 inputProps={{ maxLength: 50 }}
-                error={!!errors.TareaDescripcion}
-                helperText={errors.TareaDescripcion}
-                sx={{ mb: 2 }}
-              />
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={enableEmissionFields}
+                  onChange={(e) => setEnableEmissionFields(e.target.checked)}
+                  color="primary"
+                  size={isMobile ? "small" : "medium"}
+                />
+              }
+              label={<Typography variant={isMobile ? "body2" : "body1"}>Agregar datos de emisión</Typography>}
+            />
 
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={enableEmissionFields}
-                    onChange={(e) => setEnableEmissionFields(e.target.checked)}
-                    color="primary"
-                  />
-                }
-                label="Agregar datos de emisión"
-              />
-
-              {enableEmissionFields && (
-                <>
-                  <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
-                    {/* Campo Valor Actividad */}
-                    <TextField
-                      fullWidth
-                      label="Valor Actividad"
-                      name="valorActividad"
-                      type="number"
-                      value={taskData.valorActividad || ""}
-                      error={!!errors.valorActividad}
-                      helperText={errors.valorActividad}
-                      sx={{ mb: 2 }}
-                      onChange={(e) => {
-                        handleTaskDataChange("valorActividad", e.target.value);
-                        setErrors((prev) => ({ ...prev, valorActividad: "" }));
-                      }}
-                    />
-
-                    {/* Campo Factor de emisión */}
-                    <FormControl
-                      fullWidth
-                      error={!!errors.factorEmisionId}
-                      sx={{ mb: 2 }}
-                    >
-                      <InputLabel id="unidad-label">Factor emisión</InputLabel>
-                      <Select
-                        labelId="unidad-label"
-                        id="factorEmisionId"
-                        name="factorEmisionId"
-                        label="factorEmisionId"
-                        value={taskData.factorEmisionId || ""}
-                        sx={{ height: 40 }}
-                        onChange={(e) => {
-                          handleTaskDataChange(
-                            "factorEmisionId",
-                            e.target.value
-                          );
-                          setErrors((prev) => ({
-                            ...prev,
-                            factorEmisionId: "",
-                          }));
-                        }}
-                      >
-                        {Array.isArray(reductionUnit) &&
-                          reductionUnit.map((unidad) => (
-                            <MenuItem key={unidad.id} value={unidad.id}>
-                              {unidad.name}
-                            </MenuItem>
-                          ))}
-                      </Select>
-                      {errors.factorEmisionId && (
-                        <FormHelperText>
-                          {errors.factorEmisionId}
-                        </FormHelperText>
-                      )}
-                    </FormControl>
-                  </Box>
-
+            {enableEmissionFields && (
+              <>
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: 2,
+                    mt: 2,
+                    flexDirection: { xs: "column", md: "row" },
+                  }}
+                >
                   <TextField
                     fullWidth
-                    label="Emisiones CO2"
-                    name="EmisionesCO2e"
-                    margin="normal"
-                    value={taskData.emisionesCO2e || ""}
-                    InputProps={{
-                      readOnly: true, // así el usuario no lo puede cambiar
+                    label="Valor Actividad"
+                    name="valorActividad"
+                    type="number"
+                    value={taskData.valorActividad || ""}
+                    error={!!errors.valorActividad}
+                    helperText={errors.valorActividad}
+                    sx={{ mb: 2 }}
+                    onChange={(e) => {
+                      handleTaskDataChange("valorActividad", e.target.value)
+                      setErrors((prev) => ({ ...prev, valorActividad: "" }))
                     }}
+                    size={isMobile ? "small" : "medium"}
                   />
-                </>
-              )}
-            </Box>
-          )}
 
-          {tabIndex === 1 && (
-            <Box mt={2}>
-              {tasks.length === 0 ? (
-                <Typography>No hay actividades registradas.</Typography>
-              ) : (
-                <List>
-                  {tasks.map((task) => (
-                    <ListItem
-                      key={task.taskId}
-                      divider
-                      secondaryAction={
-                        <Box
-                          sx={{ display: "flex", alignItems: "center", gap: 1 }}
-                        >
-                          <Tooltip title="Cambiar estado" arrow>
-                            <Switch
-                              checked={!!taskStatus[task.taskId]}
-                              onChange={UpdateStatusTasks(task.taskId)}
-                              slotProps={{
-                                input: {
-                                  "aria-label": "cambiar estado tarea",
-                                },
-                              }}
-                              sx={{
-                                "& .MuiSwitch-thumb": {
-                                  backgroundColor: taskStatus[task.taskId]
-                                    ? "#2DA14C"
-                                    : "#D32F2F",
-                                },
-                                "& .Mui-checked": {
-                                  color: taskStatus[task.taskId]
-                                    ? "#2DA14C"
-                                    : "#D32F2F",
-                                },
-                                "& .MuiSwitch-track": {
-                                  backgroundColor: taskStatus[task.taskId]
-                                    ? "#77d27dff"
-                                    : "#FFCDD2",
-                                },
-                              }}
-                            />
-                          </Tooltip>
-                          <Tooltip title="Editar tarea" arrow>
-                            <IconButton
-                              color="info"
-                              edge="end"
-                              aria-label="editar"
-                              onClick={() => handleEditTask(task)}
-                            >
-                              <EditOutlined />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title="Eliminar tarea" arrow>
-                            <IconButton
-                              color="error"
-                              edge="end"
-                              aria-label="editar"
-                              sx={{ mr: 2 }}
-                              onClick={() => {
-                                DeleteTask(task.taskId);
-                              }}
-                            >
-                              <DeleteOutlineOutlined />
-                            </IconButton>
-                          </Tooltip>
-                        </Box>
-                      }
+                  <FormControl
+                    fullWidth
+                    error={!!errors.factorEmisionId}
+                    sx={{ mb: 2 }}
+                    size={isMobile ? "small" : "medium"}
+                  >
+                    <InputLabel id="unidad-label">Factor emisión</InputLabel>
+                    <Select
+                      labelId="unidad-label"
+                      id="factorEmisionId"
+                      name="factorEmisionId"
+                      label="factorEmisionId"
+                      value={taskData.factorEmisionId || ""}
+                      onChange={(e) => {
+                        handleTaskDataChange("factorEmisionId", e.target.value)
+                        setErrors((prev) => ({
+                          ...prev,
+                          factorEmisionId: "",
+                        }))
+                      }}
                     >
-                      <ListItemText
-                        primary={
-                          task.titulo +
-                          " - " +
-                          (task.emisionesCO2e === 0 ||
-                          task.emisionesCO2e === null
-                            ? "N/A"
-                            : task.emisionesCO2e)
-                        }
-                        secondary={
+                      {Array.isArray(reductionUnit) &&
+                        reductionUnit.map((unidad) => (
+                          <MenuItem key={unidad.id} value={unidad.id}>
+                            {unidad.name}
+                          </MenuItem>
+                        ))}
+                    </Select>
+                    {errors.factorEmisionId && <FormHelperText>{errors.factorEmisionId}</FormHelperText>}
+                  </FormControl>
+                </Box>
+
+                <TextField
+                  fullWidth
+                  label="Emisiones CO2"
+                  name="EmisionesCO2e"
+                  margin="normal"
+                  value={taskData.emisionesCO2e || ""}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  size={isMobile ? "small" : "medium"}
+                />
+              </>
+            )}
+          </Box>
+        )}
+
+        {tabIndex === 1 && (
+          <Box mt={2}>
+            {tasks.length === 0 ? (
+              <Typography>No hay actividades registradas.</Typography>
+            ) : (
+              <List sx={{ p: { xs: 0, md: 1 } }}>
+                {tasks.map((task) => (
+                  <ListItem
+                    key={task.taskId}
+                    divider
+                    secondaryAction={
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: isMobile ? 0.5 : 1,
+                          flexWrap: isMobile ? "wrap" : "nowrap",
+                        }}
+                      >
+                        <Tooltip title="Cambiar estado" arrow>
+                          <Switch
+                            checked={!!taskStatus[task.taskId]}
+                            onChange={UpdateStatusTasks(task.taskId)}
+                            slotProps={{
+                              input: {
+                                "aria-label": "cambiar estado tarea",
+                              },
+                            }}
+                            size={isMobile ? "small" : "medium"}
+                            sx={{
+                              "& .MuiSwitch-thumb": {
+                                backgroundColor: taskStatus[task.taskId] ? "#2DA14C" : "#D32F2F",
+                              },
+                              "& .Mui-checked": {
+                                color: taskStatus[task.taskId] ? "#2DA14C" : "#D32F2F",
+                              },
+                              "& .MuiSwitch-track": {
+                                backgroundColor: taskStatus[task.taskId] ? "#77d27dff" : "#FFCDD2",
+                              },
+                            }}
+                          />
+                        </Tooltip>
+                        <Tooltip title="Editar tarea" arrow>
+                          <IconButton
+                            color="info"
+                            edge="end"
+                            aria-label="editar"
+                            onClick={() => handleEditTask(task)}
+                            size={isMobile ? "small" : "medium"}
+                          >
+                            <EditOutlinedIcon fontSize={isMobile ? "small" : "inherit"} />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Eliminar tarea" arrow>
+                          <IconButton
+                            color="error"
+                            edge="end"
+                            aria-label="eliminar"
+                            onClick={() => {
+                              DeleteTask(task.taskId)
+                            }}
+                            size={isMobile ? "small" : "medium"}
+                            sx={{ mr: isMobile ? 0 : 2 }}
+                          >
+                            <DeleteOutlineOutlinedIcon fontSize={isMobile ? "small" : "inherit"} />
+                          </IconButton>
+                        </Tooltip>
+                      </Box>
+                    }
+                    sx={{
+                      flexDirection: isMobile ? "column" : "row",
+                      alignItems: isMobile ? "flex-start" : "center",
+                    }}
+                  >
+                    <ListItemText
+                      primary={
+                        <Typography variant={isMobile ? "body2" : "body1"} sx={{ wordBreak: "break-word" }}>
+                          {task.titulo} -{" "}
+                          {task.emisionesCO2e === 0 || task.emisionesCO2e === null ? "N/A" : task.emisionesCO2e}
+                        </Typography>
+                      }
+                      secondary={
+                        <Box
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 0.5,
+                            mt: isMobile ? 1 : 0.5,
+                          }}
+                        >
+                          <Typography variant={isMobile ? "caption" : "body2"} sx={{ wordBreak: "break-word" }}>
+                            <strong>Descripción:</strong> {task.descripcion}
+                          </Typography>
                           <Box
                             sx={{
                               display: "flex",
-                              flexDirection: "column",
-                              gap: 0.5,
+                              gap: isMobile ? 1 : 2,
+                              mt: 0.5,
+                              flexDirection: { xs: "column", sm: "row" },
                             }}
                           >
-                            <Typography variant="body2">
-                              <strong>Descripción:</strong> {task.descripcion}
+                            <Typography variant={isMobile ? "caption" : "body2"}>
+                              <strong>Valor actividad:</strong>{" "}
+                              {task.valorActividad === 0 || task.valorActividad === null ? "N/A" : task.valorActividad}
                             </Typography>
-                            <Box sx={{ display: "flex", gap: 2, mt: 0.5 }}>
-                              <Typography variant="body2">
-                                <strong>Valor actividad:</strong>{" "}
-                                {task.valorActividad === 0 ||
-                                task.valorActividad === null
-                                  ? "N/A"
-                                  : task.valorActividad}
-                              </Typography>
-                              <Typography variant="body2">
-                                <strong>Factor de emisión:</strong>{" "}
-                                {task.factorEmisionName}
-                              </Typography>
-                            </Box>
+                            <Typography variant={isMobile ? "caption" : "body2"}>
+                              <strong>Factor de emisión:</strong> {task.factorEmisionName}
+                            </Typography>
                           </Box>
-                        }
-                      />
-                    </ListItem>
-                  ))}
-                </List>
-              )}
-            </Box>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <MDButton color="error" variant="outlined" onClick={CloseModalTaks}>
-            Cerrar
-          </MDButton>
+                        </Box>
+                      }
+                    />
+                  </ListItem>
+                ))}
+              </List>
+            )}
+          </Box>
+        )}
+      </DialogContent>
+      <DialogActions
+        sx={{
+          flexDirection: isMobile ? "column" : "row",
+          gap: isMobile ? 1 : 0,
+          p: isMobile ? 2 : 1,
+        }}
+      >
+        <MDButton color="error" variant="outlined" onClick={CloseModalTaks} fullWidth={isMobile}>
+          Cerrar
+        </MDButton>
 
-          {tabIndex === 0 && (
-            <MDButton
-              variant="contained"
-              color="success"
-              onClick={() => {
-                if (IsEditing) {
-                  UpdateTask(); // método de actualizar
-                } else {
-                  SubmitModalTask(); // método de crear
-                }
-              }}
-            >
-              Agregar Actividad
-            </MDButton>
-          )}
-        </DialogActions>
-      </Dialog>
+        {tabIndex === 0 && (
+          <MDButton
+            variant="contained"
+            color="success"
+            onClick={() => {
+              if (IsEditing) {
+                UpdateTask()
+              } else {
+                SubmitModalTask()
+              }
+            }}
+            fullWidth={isMobile}
+          >
+            Agregar Actividad
+          </MDButton>
+        )}
+      </DialogActions>
+    </Dialog>
 
       {/* Delete Confirmation Dialog */}
       <Dialog

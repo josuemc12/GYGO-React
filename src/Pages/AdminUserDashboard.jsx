@@ -284,183 +284,209 @@ const AdminUserDashboard = () => {
       <DashboardNavbar></DashboardNavbar>
       <MDBox py={3}>
         <MDBox mb={2}>
-          <MDBox
-            sx={{
-              borderRadius: 2,
-              p: 3,
-              mb: 2,
-              background: "#ffffff",
-              border: "1px solid #e5e7eb",
-              boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-            }}
-          >
-            <Grid container alignItems="center" justifyContent="space-between">
-              <Grid item>
-                <MDBox display="flex" flexDirection="column">
-                  <MDBox display="flex" alignItems="center" gap={1}>
-                    <MDTypography variant="h6">Usuarios</MDTypography>
-                  </MDBox>
-                  <MDTypography variant="body2" color="text">
-                    Visualiza los usuarios activos y revisa el historial de
-                    eliminaciones.
-                  </MDTypography>
-                </MDBox>
-              </Grid>
+           <MDBox
+      sx={{
+        borderRadius: 2,
+        p: { xs: 2, md: 3 },
+        mb: 2,
+        background: "#ffffff",
+        border: "1px solid #e5e7eb",
+        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+      }}
+    >
+      <Grid
+        container
+        alignItems={{ xs: "flex-start", md: "center" }}
+        justifyContent="space-between"
+        spacing={2}
+        sx={{ flexDirection: { xs: "column", md: "row" }, gap: { xs: 2, md: 0 } }}
+      >
+        <Grid item xs={12} md="auto">
+          <MDBox display="flex" flexDirection="column">
+            <MDBox display="flex" alignItems="center" gap={1}>
+              <MDTypography variant="h6">Usuarios</MDTypography>
+            </MDBox>
+            <MDTypography variant="body2" color="text">
+              Visualiza los usuarios activos y revisa el historial de eliminaciones.
+            </MDTypography>
+          </MDBox>
+        </Grid>
 
-              <Grid>
-                <MDButton
-                  variant="outlined"
-                  sx={{
-                    mr: 2,
-                    borderColor: "#bfdcff",
-                    color: "#1479fc",
-                    "&:hover": {
-                      backgroundColor: "#dbe6f5ff",
-                      borderColor: "#1479fc",
-                      color: "#065fd4ff",
-                    },
-                  }}
-                  onClick={() => setShowHistory(!showHistory)}
-                >
-                  {showHistory ? "Usuarios" : "Historial de Eliminaciones"}
-                </MDButton>
+        <Grid item xs={12} md="auto">
+          <MDBox display="flex" gap={1} sx={{ flexDirection: { xs: "column", md: "row" } }}>
+            <MDButton
+              variant="outlined"
+              fullWidth={{ xs: true, md: false }}
+              sx={{
+                borderColor: "#bfdcff",
+                color: "#1479fc",
+                "&:hover": {
+                  backgroundColor: "#dbe6f5ff",
+                  borderColor: "#1479fc",
+                  color: "#065fd4ff",
+                },
+              }}
+              onClick={() => setShowHistory(!showHistory)}
+            >
+              {showHistory ? "Usuarios" : "Historial de Eliminaciones"}
+            </MDButton>
 
-                <MDButton
-                  variant="outlined"
-                  sx={{
-                    borderColor: "#bfdcff",
-                    color: "#1479fc",
-                    "&:hover": {
-                      backgroundColor: "#dbe6f5ff",
-                      borderColor: "#1479fc",
-                      color: "#065fd4ff",
-                    },
-                  }}
-                  onClick={() => {
-                    setShowHistory(false);
-                    setInviteModalOpen(true);
-                  }}
-                >
-                  + Invitar
-                </MDButton>
-              </Grid>
-            </Grid>
-            {/* Stats Cards */}
+            <MDButton
+              variant="outlined"
+              fullWidth={{ xs: true, md: false }}
+              sx={{
+                borderColor: "#bfdcff",
+                color: "#1479fc",
+                "&:hover": {
+                  backgroundColor: "#dbe6f5ff",
+                  borderColor: "#1479fc",
+                  color: "#065fd4ff",
+                },
+              }}
+              onClick={() => {
+                setShowHistory(false)
+                setInviteModalOpen(true)
+              }}
+            >
+              + Invitar
+            </MDButton>
+          </MDBox>
+        </Grid>
+      </Grid>
 
-            {/* Stats Cards */}
-            {/* Stats Cards */}
-            <MDBox display="flex" gap={2} sx={{ mt: 3 }}>
-              {/* Card 1: Usuarios Activos */}
-              <MDBox
+      <MDBox
+        display="flex"
+        gap={2}
+        sx={{
+          mt: 3,
+          flexDirection: { xs: "column", md: "row" },
+        }}
+      >
+        {/* Card 1: Usuarios Activos */}
+        <MDBox
+          sx={{
+            flex: 1,
+            p: { xs: 2, md: 2.5 },
+            borderRadius: 2,
+            border: "1px solid #e5e7eb",
+            backgroundColor: "#ffffff",
+            transition: "all 0.3s ease",
+            "&:hover": {
+              border: "1px solid #80D8FF",
+              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.06)",
+              transform: "translateY(-2px)",
+            },
+          }}
+        >
+          <MDBox display="flex" alignItems="center" gap={2} sx={{ flexDirection: { xs: "row", md: "row" } }}>
+            <MDBox
+              sx={{
+                width: { xs: 40, md: 48 },
+                height: { xs: 40, md: 48 },
+                borderRadius: 2,
+                backgroundColor: "#EAFBF1",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+              }}
+            >
+              <Users size={24} color="#4CAF50" />
+            </MDBox>
+
+            <MDBox>
+              <MDTypography
+                variant="caption"
                 sx={{
-                  flex: 1,
-                  p: 2.5,
-                  borderRadius: 2,
-                  border: "1px solid #e5e7eb",
-                  backgroundColor: "#ffffff",
-                  transition: "all 0.3s ease",
-                  "&:hover": {
-                    border: "1px solid #80D8FF", // ← Borde azul estilo AZURE
-                    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.06)",
-                    transform: "translateY(-2px)",
-                  },
+                  color: "#9CA3AF",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.5px",
+                  fontWeight: 600,
+                  fontSize: { xs: "0.65rem", md: "0.75rem" },
                 }}
               >
-                <MDBox display="flex" alignItems="center" gap={2}>
-                  <MDBox
-                    sx={{
-                      width: 48,
-                      height: 48,
-                      borderRadius: 2,
-                      backgroundColor: "#EAFBF1",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Users size={28} color="#4CAF50" />
-                  </MDBox>
+                Usuarios Activos
+              </MDTypography>
 
-                  <MDBox>
-                    <MDTypography
-                      variant="caption"
-                      sx={{
-                        color: "#9CA3AF",
-                        textTransform: "uppercase",
-                        letterSpacing: "0.5px",
-                        fontWeight: 600,
-                      }}
-                    >
-                      Usuarios Activos
-                    </MDTypography>
-
-                    <MDTypography
-                      variant="h3"
-                      fontWeight="bold"
-                      sx={{ color: "#111827", lineHeight: 1.1, mt: 0.25 }}
-                    >
-                      {users.length}
-                    </MDTypography>
-                  </MDBox>
-                </MDBox>
-              </MDBox>
-
-              {/* Card 2: Usuarios Eliminados */}
-              <MDBox
+              <MDTypography
+                variant="h3"
+                fontWeight="bold"
                 sx={{
-                  flex: 1,
-                  p: 2.5,
-                  borderRadius: 2,
-                  border: "1px solid #e5e7eb",
-                  backgroundColor: "#ffffff",
-                  transition: "all 0.3s ease",
-                  "&:hover": {
-                    border: "1px solid #80D8FF", // ← Borde azul estilo AZURE
-                    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.06)",
-                    transform: "translateY(-2px)",
-                  },
+                  color: "#111827",
+                  lineHeight: 1.1,
+                  mt: 0.25,
+                  fontSize: { xs: "1.75rem", md: "2.5rem" },
                 }}
               >
-                <MDBox display="flex" alignItems="center" gap={2}>
-                  <MDBox
-                    sx={{
-                      width: 48,
-                      height: 48,
-                      borderRadius: 2,
-                      backgroundColor: "#FDECEC",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Trash2 size={28} color="#EF5350" />
-                  </MDBox>
-
-                  <MDBox>
-                    <MDTypography
-                      variant="caption"
-                      sx={{
-                        color: "#9CA3AF",
-                        textTransform: "uppercase",
-                        letterSpacing: "0.5px",
-                        fontWeight: 600,
-                      }}
-                    >
-                      Usuarios Eliminados
-                    </MDTypography>
-
-                    <MDTypography
-                      variant="h3"
-                      fontWeight="bold"
-                      sx={{ color: "#111827", lineHeight: 1.1, mt: 0.25 }}
-                    >
-                      {deleteCount}
-                    </MDTypography>
-                  </MDBox>
-                </MDBox>
-              </MDBox>
+                {users.length}
+              </MDTypography>
             </MDBox>
           </MDBox>
+        </MDBox>
+
+        {/* Card 2: Usuarios Eliminados */}
+        <MDBox
+          sx={{
+            flex: 1,
+            p: { xs: 2, md: 2.5 },
+            borderRadius: 2,
+            border: "1px solid #e5e7eb",
+            backgroundColor: "#ffffff",
+            transition: "all 0.3s ease",
+            "&:hover": {
+              border: "1px solid #80D8FF",
+              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.06)",
+              transform: "translateY(-2px)",
+            },
+          }}
+        >
+          <MDBox display="flex" alignItems="center" gap={2} sx={{ flexDirection: { xs: "row", md: "row" } }}>
+            <MDBox
+              sx={{
+                width: { xs: 40, md: 48 },
+                height: { xs: 40, md: 48 },
+                borderRadius: 2,
+                backgroundColor: "#FDECEC",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+              }}
+            >
+              <Trash2 size={24} color="#EF5350" />
+            </MDBox>
+
+            <MDBox>
+              <MDTypography
+                variant="caption"
+                sx={{
+                  color: "#9CA3AF",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.5px",
+                  fontWeight: 600,
+                  fontSize: { xs: "0.65rem", md: "0.75rem" },
+                }}
+              >
+                Usuarios Eliminados
+              </MDTypography>
+
+              <MDTypography
+                variant="h3"
+                fontWeight="bold"
+                sx={{
+                  color: "#111827",
+                  lineHeight: 1.1,
+                  mt: 0.25,
+                  fontSize: { xs: "1.75rem", md: "2.5rem" },
+                }}
+              >
+                {deleteCount}
+              </MDTypography>
+            </MDBox>
+          </MDBox>
+        </MDBox>
+      </MDBox>
+    </MDBox>
 
           <MDBox pt={6} pb={3}>
             <Grid container spacing={6}>
