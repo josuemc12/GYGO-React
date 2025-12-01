@@ -66,8 +66,8 @@ export function Messages() {
       scrollToBottom();
     }
   }, [messages.length]); // Solo depende de la longitud, no del array completo
-  //const URL = "/api/chatHub" para el proxy en package.json;
-  const URL = "https://localhost:5135/chathub"; //ruta directa al hub de SignalR
+  const URL = "/api/chatHub" // para el proxy en package.json;
+  //const URL = "https://localhost:5135/chathub"; //ruta directa al hub de SignalR
 
   // Conexión SignalR
   useEffect(() => {
