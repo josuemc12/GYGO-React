@@ -48,13 +48,19 @@ export async function loginUser(email, password) {
       body: JSON.stringify({ email, password }),
     });
 
+
     const data = await response.json();
 
     if (!data.isSuccess) {
       if (response.status === 401) {
-        return { success: false, error: data.errors };
+
+        return { success: false, error: data.errors || "Login failed" };
+ 
       }
     }
+
+
+
 
     if (data.message === "2FA required") {
       return {
