@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
 import SuperAdminSubscriptionManager from "./SuperAdminSubscriptionManager";
@@ -14,8 +14,11 @@ import MDTypography from "@/components/MDTypography";
 import MDButton from "@/components/MDButton";
 
 import { useAuth } from "../../context/AuthContext";  // IMPORTA solo useAuth
-import { getSubscriptionByUserId } from "../../API/Subscription";
+import {refreshLogin} from "../../API/Auth";
+import { getSubscriptionByUserId, confirmSubscription, sendSubscriptionEmail } from "../../API/Subscription";
 import WebhookTestButtons from "../../components/WebhooksTestButtons";
+import { DoesUserHaveGroup, reactivateGroup } from "../../API/AddGroup";
+import PaymentHistoryTable from "../../components/PaymentHistoryTable";
 
 export default function SubscriptionSwitch() {
   const { role, userId, markUserAsPaid, updateRole} = useAuth();
@@ -23,53 +26,113 @@ export default function SubscriptionSwitch() {
   const [modalMessage, setModalMessage] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [hasSubscription, setHasSubscription] = useState(false);
-  const [paypalSubscriptionId, setPaypalSubscriptionId] = useState(null);
   const [subscriptionSuccess, setSubscriptionSuccess] = useState(false);
   const navigate = useNavigate();
+  const [paypalSubscriptionId, setPaypalSubscriptionId] = useState(null);
+  const [emailSent, setEmailSent] = useState(false);
 
+  const status = searchParams.get("status");
+  const processedRef = useRef(false);
+
+  const reloadSubscription = async () => {
+    try {
+      const subscription = await getSubscriptionByUserId(userId);
+      if (subscription && subscription.status !== "Cancelled") {
+        setHasSubscription(true);
+        setPaypalSubscriptionId(subscription.payPalSubscriptionId);
+      } else {
+        setHasSubscription(false);
+        setPaypalSubscriptionId(null);
+      }
+    } catch (err) {
+      setHasSubscription(false);
+      setPaypalSubscriptionId(null);
+    }
+  };
 
 useEffect(() => {
-  const status = searchParams.get("status");
-  if (status === "success") {
-    setSubscriptionSuccess(true);
-    setModalMessage("¡Suscripción realizada con éxito!");
-    setModalOpen(true);
-    markUserAsPaid();
-    updateRole("GA");
-  } else if (status === "cancel") {
-    setModalMessage("Suscripción cancelada.");
-    setModalOpen(true);
-  }
-}, [searchParams, markUserAsPaid, updateRole]);
+    if (!status) return;
+    if (processedRef.current) return;
+    processedRef.current = true;
+
+    if (status === "success") {
+      setSubscriptionSuccess(true);
+      setModalMessage("¡Suscripción realizada con éxito!");
+      setModalOpen(true);
+      markUserAsPaid();
+      updateRole("GA");
+
+      (async () => {
+        try {
+          const confirmation = await confirmSubscription();
+          await reloadSubscription();
+          await refreshLogin();
+          await sendSubscriptionEmail();
+          setEmailSent(true);
+        } catch (error) {
+          console.error(error);
+        }
+      })();
+    }
+
+    if (status === "cancel") {
+      updateRole("DEF");
+      setModalMessage("Suscripción cancelada.");
+      setModalOpen(true);
+    }
+  }, [status]);
 
   useEffect(() => {
-    const checkSubscription = async () => {
-      if (userId) {
-        try {
-          const subscription = await getSubscriptionByUserId();
-          if (subscription && subscription.status !== "Cancelled") {
-            setHasSubscription(true);
-            setPaypalSubscriptionId(subscription.payPalSubscriptionId);
-          } else {
-            setHasSubscription(false);
-            setPaypalSubscriptionId(null);
-          }
-        } catch (error) {
-          console.warn("No subscription found or error:", error.message);
+  const checkSubscription = async () => {
+    if (userId) {
+      try {
+        const subscription = await getSubscriptionByUserId(userId);
+        if (subscription && subscription.status !== "Cancelled") {
+          setHasSubscription(true);
+          setPaypalSubscriptionId(subscription.payPalSubscriptionId);
+        } else {
           setHasSubscription(false);
           setPaypalSubscriptionId(null);
         }
+      } catch (error) {
+        console.warn("No subscription found or error:", error.message);
+        setHasSubscription(false);
+        setPaypalSubscriptionId(null);
       }
-    };
+    }
+  };
 
-    checkSubscription();
-  }, [role, userId]);
+  checkSubscription();
+}, [userId]);
 
-  
-  const handleClose = () => {
+  const handleClose = async () => {
     setModalOpen(false);
-    if (subscriptionSuccess) {
-      navigate("/addGroup");
+    if(!subscriptionSuccess){
+      return
+    }
+
+    try {
+      const groupCheck = await DoesUserHaveGroup();
+      if(groupCheck?.state === true){
+        const groupId = groupCheck.grupo.grupoId;
+        const result = await reactivateGroup(groupId);
+
+        if(result?.message === 'Grupo reactivado correctamente'){
+          await refreshLogin();
+
+          navigate("panel-control");
+        }else{
+          console.error("Error al reactivar grupo:", result);
+        navigate("panel-control");
+        }
+        return;
+      }
+
+      navigate("/agregar-grupo");
+
+    } catch (ex) {
+      console.error("Error en el flujo de suscripción:", err);
+      navigate("/agregar-grupo");
     }
   };
 
