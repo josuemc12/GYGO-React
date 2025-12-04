@@ -261,7 +261,7 @@ export const routes = [
     name: "Confirm Emission Incident",
     key: "confirm-incident",
     icon: <Icon fontSize="small">check_circle</Icon>,
-    route: "/emisiones/confirmación",
+    route: "/emisiones/confirmacion",
 
     component: (
       <ProtectedElement roles={["GA", "GU", "DEV"]}>
