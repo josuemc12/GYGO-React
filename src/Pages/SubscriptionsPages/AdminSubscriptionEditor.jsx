@@ -196,6 +196,10 @@ export default function AdminSubscriptionEditor() {
               </div>
             </div>
           </div>
+
+
+
+          
           <div className="Historial">
             <PaymentHistoryTable />
           </div>
