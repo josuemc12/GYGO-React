@@ -287,7 +287,6 @@ export default function Login() {
             <Paper
               sx={{
                 backgroundColor: "rgba(255, 255, 255, 0.8)",
-                backdropFilter: "blur(8px)",
                 border: "1px solid rgba(209, 250, 229, 0.5)",
               }}
             >
