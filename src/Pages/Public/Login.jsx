@@ -286,7 +286,7 @@ export default function Login() {
           <Container maxWidth="xs" sx={{ position: "relative", zIndex: 1 }}>
             <Paper
               sx={{
-                backgroundColor: "rgba(255, 255, 255, 0.8)",
+                backgroundColor: "rgba(255, 255, 255, 1)",
                 border: "1px solid rgba(209, 250, 229, 0.5)",
               }}
             >
