@@ -210,8 +210,11 @@ export default function Login() {
         <CssBaseline />
         <Box
           sx={{
-            
-            backgroundImage: `url(${beneficiosambientales}`,
+            backgroundImage: `linear-gradient(135deg, rgba(6, 95, 70, 0.7) 0%, rgba(4, 120, 87, 0.7) 100%), url(${beneficiosambientales})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundAttachment: "fixed",
+            backdropFilter: "blur(3px)",
             minHeight: "100vh",
             display: "flex",
             alignItems: "center",
@@ -290,7 +293,7 @@ export default function Login() {
             >
               <Box sx={{ position: "relative" }}>
                 <IconButton
-                  onClick={() => navigate("/pagina-inicio")}
+                  onClick={() => navigate(-1)}
                   sx={{
                     position: "absolute",
                     top: -8,
@@ -307,7 +310,11 @@ export default function Login() {
               </Box>
 
               <Box textAlign="center" mb={2}>
-                <img src={logo} alt="Logo" style={{ maxWidth: "120px" }} />
+                <img
+                  src={logo}
+                  alt="Logo"
+                  style={{ maxWidth: "120px" }}
+                />
               </Box>
 
               <Box textAlign="center" mb={5}>
@@ -337,10 +344,7 @@ export default function Login() {
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
-                        <IconButton
-                          onClick={() => setShowPassword(!showPassword)}
-                          edge="end"
-                        >
+                        <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
                           {showPassword ? <VisibilityOff /> : <Visibility />}
                         </IconButton>
                       </InputAdornment>
