@@ -8,6 +8,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import MDBox from "components/MDBox";
 import MDButton from "../../components/MDButton";
 import MDTypography from "components/MDTypography";
+import beneficiosambientales from '../../assets/10-beneficios-ambientales-de-plantar-un-arbol.jpg';
+
 import {
   Button,
   CssBaseline,
@@ -208,8 +210,8 @@ export default function Login() {
         <CssBaseline />
         <Box
           sx={{
-            background:
-              "linear-gradient(135deg, #ecfdf5 0%, #ffffff 50%, #f0fdfa 100%)",
+            
+            backgroundImage: `url(${beneficiosambientales}`,
             minHeight: "100vh",
             display: "flex",
             alignItems: "center",
