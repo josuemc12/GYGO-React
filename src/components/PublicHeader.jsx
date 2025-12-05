@@ -95,10 +95,11 @@ export const PublicHeader = () => {
 
   const handleLogoutClick = async () => {
     const success = await logoutSesion()
-    logoutRol();
+    logoutRol()
     if (success) {
       setIsLoggedIn(false)
       localStorage.clear()
+      sessionStorage.clear()
       closeMenu()
       navigate("/pagina-inicio")
     }
