@@ -62,7 +62,7 @@ export function GrupoProfilePage() {
       console.log("Base URL:", baseUrl);
       console.log("Logo URL from result:", result.logoURL);
 
-      setPreviewLogo(result.logoURL ? `${baseUrl}/${result.logoURL}` : null);
+      setPreviewLogo(result.logoURL ? `${baseUrl}${result.logoURL}` : null);
 
       console.log("URL del logo:", previewLogo);
 

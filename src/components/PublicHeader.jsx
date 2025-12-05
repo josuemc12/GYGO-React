@@ -3,7 +3,7 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import Logo from '../assets/Logo.png';
 import { logoutSesion, checkUserSession } from '../API/Auth';
-
+import {logoutRol} from '../context/AuthContext';
 
 export const PublicHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -95,6 +95,7 @@ export const PublicHeader = () => {
 
   const handleLogoutClick = async () => {
     const success = await logoutSesion()
+    logoutRol();
     if (success) {
       setIsLoggedIn(false)
       localStorage.clear()
