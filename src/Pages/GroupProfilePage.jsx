@@ -53,8 +53,6 @@ export function GrupoProfilePage() {
       setGrupo(result);
 
       const baseUrl = import.meta.env.VITE_API_URL;
-      console.log("Base URL para logos:", baseUrl); 
-      console.log("Datos del grupo obtenidos:", result.logoURL);
       setGroupData({
         nombre: result.nombre,
         correo: result.correo,
