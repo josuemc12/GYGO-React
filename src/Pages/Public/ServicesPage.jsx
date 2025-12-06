@@ -106,7 +106,7 @@ export const ServicesHomePage = () => {
                 <p className="platform-subtitle">
                   Puedes ingresar a nuestra plataforma de gestión de huella de carbono
                 </p>
-                <Link to="/login" className="platform-btn">
+                <Link to="/inicio-sesion" className="platform-btn">
                   Ingresar a la Plataforma
                 </Link>
               </div>
