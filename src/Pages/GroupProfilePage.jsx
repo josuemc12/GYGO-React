@@ -56,7 +56,7 @@ export function GrupoProfilePage() {
       setGroupData({
         nombre: result.nombre,
         correo: result.correo,
-        logoUrl: result.logoURL ? `${baseUrl}/${result.logoURL}` : "",
+        logoUrl: result.logoURL,
         logoFile: null,
       });
       console.log("Base URL:", baseUrl);
