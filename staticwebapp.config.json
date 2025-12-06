@@ -1,4 +1,10 @@
 {
+  "routes": [
+    {
+      "route": "/images/*",
+      "allowedRoles": ["anonymous"]
+    }
+  ],
   "navigationFallback": {
     "rewrite": "/index.html",
     "exclude": ["/static/*", "/api/*", "/images/*"]
