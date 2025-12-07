@@ -185,28 +185,21 @@ export default function AdminSubscriptionEditor() {
                   width: "100%",
                 }}
               >
-                <CancelSubscriptionButton
-                  userId={subscription.userId}
-                  subscriptionId={subscription.payPalSubscriptionId}
-                  onSuccess={() => {
-                    console.log("Cancelación exitosa");
-                    window.location.reload();
-                  }}
-                />
+                {subscription.status !== "Cancelled" && (
+                  <CancelSubscriptionButton
+                    userId={subscription.userId}
+                    subscriptionId={subscription.payPalSubscriptionId}
+                    onSuccess={() => {
+                      console.log("Cancelación exitosa");
+                      window.location.reload();
+                    }}
+                  />
+                )}
               </div>
             </div>
           </div>
-
-
-
-          
           <div className="Historial">
             <PaymentHistoryTable />
-          </div>
-          <div className="webhook-section">
-            <WebhookTestButtons
-              paypalSubscriptionId={subscription.payPalSubscriptionId}
-            />
           </div>
         </div>
       </div>
