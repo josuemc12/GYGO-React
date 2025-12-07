@@ -13,7 +13,7 @@ export default function CancelSubscriptionButton({
     setLoading(true);
     try {
       
-      const url = new URL(`${appsettings.apiUrl}Subscription/cancel`);
+      const url = new URL(`${appsettings.apiUrl}Subscription/cancel`, window.location.origin);
       url.searchParams.append("subscriptionId", subscriptionId);
       url.searchParams.append("reason", "User requested cancellation");
       
