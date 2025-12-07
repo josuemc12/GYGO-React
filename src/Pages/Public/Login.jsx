@@ -34,6 +34,7 @@ import { Visibility, VisibilityOff, ArrowBack } from "@mui/icons-material";
 import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
 import Swal from "sweetalert2";
 import logo from "../../assets/Logo.png";
+import beneficiosambientales from '../../assets/10-beneficios-ambientales-de-plantar-un-arbol.jpg';
 
 const theme = createTheme({
   palette: {
