@@ -66,7 +66,7 @@ export const ChangePasswordForm = () => {
         });
         return;
       }
-      console.log(result);
+      
     
       if (result.success) {
         Swal.fire({
