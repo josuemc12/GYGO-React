@@ -89,7 +89,7 @@ const EmissionFactorModal = ({
 
   const handleInputChange = (e) => {
 
-    console.log("KKFKFKEF");
+   
     const { name, value } = e.target;
     const numericFields = [
       "unit",
@@ -120,7 +120,7 @@ const EmissionFactorModal = ({
 
     try {
       //Validaciones básicas
-      console.log("Datos antes de validar:", formData);
+      
       if (
         !formData.name.trim() ||
         !formData.unit ||
@@ -130,7 +130,7 @@ const EmissionFactorModal = ({
         !formData.pcgId ||
         !formData.sourceId
       ) {
-        console.log("Validation failed");
+       
         setErrors({
           name: !formData.name.trim() ? "Requerido" : "",
           unit: !formData.unit ? "Requerido" : "",
@@ -156,7 +156,7 @@ const EmissionFactorModal = ({
       };
 
 
-      console.log("holla");
+      
 
       // 3. Llamar a la función del padre
       await onSubmit(payload);

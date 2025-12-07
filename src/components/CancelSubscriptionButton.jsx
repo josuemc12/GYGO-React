@@ -12,11 +12,11 @@ export default function CancelSubscriptionButton({
   const handleCancel = async () => {
     setLoading(true);
     try {
-      console.log("subscriptionId:", subscriptionId);
+      
       const url = new URL(`${appsettings.apiUrl}Subscription/cancel`);
       url.searchParams.append("subscriptionId", subscriptionId);
       url.searchParams.append("reason", "User requested cancellation");
-      console.log("Request URL:", url.toString());
+      
 
       const response = await fetch(url.toString(), {
         method: "POST",

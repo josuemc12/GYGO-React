@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }) => {
   const refreshUserData = async () => {
     try {
       const data = await refreshLogin();
-      console.log("Datos recibidos del refresh:", data); // ← Para debug
+      
       
       if (data?.user?.role && data?.user?.id) {
         setRole(data.user.role);

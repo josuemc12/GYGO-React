@@ -189,7 +189,7 @@ export default function AdminSubscriptionEditor() {
                   userId={subscription.userId}
                   subscriptionId={subscription.payPalSubscriptionId}
                   onSuccess={() => {
-                    console.log("Cancelación exitosa");
+                    
                     window.location.reload();
                   }}
                 />

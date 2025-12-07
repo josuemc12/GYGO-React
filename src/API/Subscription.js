@@ -159,7 +159,7 @@ export async function fetchPaymentHistory() {
 
 export async function cancelAdminSubscription(groupId, reason) {
   try {
-    console.log("Llamando a API con:", { groupId, reason }); // <-- Añade esto
+    
     
     const response = await fetch(`${appsettings.apiUrl}Subscription/cancel-admin/${groupId}`, {
       method: "POST",
@@ -170,17 +170,17 @@ export async function cancelAdminSubscription(groupId, reason) {
       body: JSON.stringify(reason) // Envía solo el string
     });
 
-    console.log("Respuesta recibida:", response.status); // <-- Añade esto
+    
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("Error en respuesta:", errorText); // <-- Añade esto
+      
       throw new Error(errorText);
     }
 
     return await response.text();
   } catch (error) {
-    console.error("Error en fetch:", error); // <-- Añade esto
+    
     throw error;
   }
 }
@@ -193,8 +193,7 @@ export async function confirmSubscription() {
       headers: { "Content-Type": "application/json" },
     });
 
-    console.log("Response Status:", response.status);  // Log status code
-    console.log("Response Body:", await response.text());  // Log raw body
+    
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
