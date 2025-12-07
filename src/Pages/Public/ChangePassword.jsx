@@ -143,7 +143,7 @@ export const ChangePassword = () => {
         });
         return;
       } else {
-        console.log(result.message);
+        
         Swal.fire({
           icon: "error",
           title: "Error al cambiar la contraseña",

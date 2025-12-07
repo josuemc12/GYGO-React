@@ -74,7 +74,7 @@ export async function ResetPassword(token, newPassword, ConfirmPassword) {
     if (!response) return;
 
     const data = await response.json();
-    console.log(data);
+    
 
     if (!data.success) {
       return { success: false, message: data.message };
