@@ -12,6 +12,7 @@ import {
   Button, CircularProgress
 } from "@mui/material";
 import Swal from "sweetalert2";
+import beneficiosambientales from '../assets/10-beneficios-ambientales-de-plantar-un-arbol.jpg';
 
 export function Verify2FA() {
   const { login } = useAuth();
@@ -148,11 +149,17 @@ export function Verify2FA() {
   return (
     <Box
       sx={{
+        backgroundImage: `linear-gradient(135deg, rgba(6, 95, 70, 0.7) 0%, rgba(4, 120, 87, 0.7) 100%), url(${beneficiosambientales})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundAttachment: "fixed",
+        backdropFilter: "blur(3px)",
         minHeight: "100vh",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        bgcolor: "#f5f5f5",
+        position: "relative",
+        overflow: "hidden",
         p: 2,
       }}
     >

@@ -22,6 +22,7 @@ import { Visibility, VisibilityOff, Email,ArrowBack } from "@mui/icons-material"
 import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
 import Swal from "sweetalert2";
 import logo from "../../assets/Logo.png";
+import beneficiosambientales from '../../assets/10-beneficios-ambientales-de-plantar-un-arbol.jpg';
 
 const theme = createTheme({
   palette: {
@@ -187,11 +188,17 @@ export function Register() {
         <CssBaseline />
         <Box
           sx={{
-            backgroundColor: "background.default",
-            minHeight: "88vh",
+            backgroundImage: `linear-gradient(135deg, rgba(6, 95, 70, 0.7) 0%, rgba(4, 120, 87, 0.7) 100%), url(${beneficiosambientales})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundAttachment: "fixed",
+            backdropFilter: "blur(3px)",
+            minHeight: "100vh",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            position: "relative",
+            overflow: "hidden",
           }}
         >
           <Container maxWidth="xs">
