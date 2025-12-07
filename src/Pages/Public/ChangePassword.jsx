@@ -29,6 +29,8 @@ import MDTypography from "components/MDTypography";
 import MDBox from "components/MDBox";
 import MDButton from "components/MDButton";
 import { ConsoleLogger } from "@microsoft/signalr/dist/esm/Utils";
+import logo from "../../assets/Logo.png";
+
 
 const theme = createTheme({
   palette: {
@@ -141,7 +143,7 @@ export const ChangePassword = () => {
         });
         return;
       } else {
-        console.log(result.message);
+        
         Swal.fire({
           icon: "error",
           title: "Error al cambiar la contraseña",
@@ -174,7 +176,7 @@ export const ChangePassword = () => {
             <Paper sx={{ p: 4 }}>
               <Box textAlign="center" mb={2}>
                 <img
-                  src="/src/assets/Logo.png"
+                  src={logo}
                   alt="Logo"
                   style={{ maxWidth: "120px" }}
                 />

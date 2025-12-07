@@ -53,15 +53,19 @@ export function GrupoProfilePage() {
       setGrupo(result);
 
       const baseUrl = import.meta.env.VITE_API_URL;
-
       setGroupData({
         nombre: result.nombre,
         correo: result.correo,
         logoUrl: result.logoURL ? `${baseUrl}/${result.logoURL}` : "",
         logoFile: null,
       });
+      console.log("Base URL:", baseUrl);
+      console.log("Logo URL from result:", result.logoURL);
 
-      setPreviewLogo(result.logoURL ? `${baseUrl}/${result.logoURL}` : null);
+      setPreviewLogo(result.logoURL ? `${baseUrl}${result.logoURL}` : null);
+
+      console.log("URL del logo:", previewLogo);
+
     } catch (error) {
       console.error("Error al cargar el perfil del grupo:", error);
     } finally {

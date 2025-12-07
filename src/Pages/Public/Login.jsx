@@ -95,7 +95,7 @@ export default function Login() {
     try {
       const { success, isTwoFactor, tempToken, error, rol, id } =
         await loginUser(email, password);
-      console.log(success, isTwoFactor, tempToken, error, rol, id);
+      
       
       if (!success) {
       Swal.fire({

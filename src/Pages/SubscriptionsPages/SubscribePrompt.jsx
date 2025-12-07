@@ -35,7 +35,7 @@ export default function SubscribePrompt() {
   const handleSubscribe = async (planId) => {
     try {
       const result = await subscribeToPlan(planId);
-      console.log("subscribeToPlan result:", result);
+      
       if (result.approvalUrl) {
         window.location.href = result.approvalUrl;
       } else {

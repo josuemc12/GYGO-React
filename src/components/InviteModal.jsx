@@ -38,7 +38,7 @@ const InviteModal = ({ isOpen, onClose, onInvite, loading }) => {
       setError("Por favor ingresa una dirección de correo electrónico válida.");
       return;
     }
-    console.log("ds");
+    
     onInvite(email);
      setEmail("");
   };
