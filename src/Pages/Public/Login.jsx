@@ -8,6 +8,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import MDBox from "components/MDBox";
 import MDButton from "../../components/MDButton";
 import MDTypography from "components/MDTypography";
+import beneficiosambientales from '../../assets/10-beneficios-ambientales-de-plantar-un-arbol.jpg';
+
 import {
   Button,
   CssBaseline,
@@ -32,6 +34,7 @@ import { Visibility, VisibilityOff, ArrowBack } from "@mui/icons-material";
 import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
 import Swal from "sweetalert2";
 import logo from "../../assets/Logo.png";
+import beneficiosambientales from '../../assets/10-beneficios-ambientales-de-plantar-un-arbol.jpg';
 
 const theme = createTheme({
   palette: {
@@ -208,8 +211,11 @@ export default function Login() {
         <CssBaseline />
         <Box
           sx={{
-            background:
-              "linear-gradient(135deg, #ecfdf5 0%, #ffffff 50%, #f0fdfa 100%)",
+            backgroundImage: `linear-gradient(135deg, rgba(6, 95, 70, 0.7) 0%, rgba(4, 120, 87, 0.7) 100%), url(${beneficiosambientales})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundAttachment: "fixed",
+            backdropFilter: "blur(3px)",
             minHeight: "100vh",
             display: "flex",
             alignItems: "center",
@@ -281,14 +287,13 @@ export default function Login() {
           <Container maxWidth="xs" sx={{ position: "relative", zIndex: 1 }}>
             <Paper
               sx={{
-                backgroundColor: "rgba(255, 255, 255, 0.8)",
-                backdropFilter: "blur(8px)",
+                backgroundColor: "rgba(255, 255, 255, 1)",
                 border: "1px solid rgba(209, 250, 229, 0.5)",
               }}
             >
               <Box sx={{ position: "relative" }}>
                 <IconButton
-                  onClick={() => navigate("/pagina-inicio")}
+                  onClick={() => navigate(-1)}
                   sx={{
                     position: "absolute",
                     top: -8,
@@ -305,7 +310,11 @@ export default function Login() {
               </Box>
 
               <Box textAlign="center" mb={2}>
-                <img src={logo} alt="Logo" style={{ maxWidth: "120px" }} />
+                <img
+                  src={logo}
+                  alt="Logo"
+                  style={{ maxWidth: "120px" }}
+                />
               </Box>
 
               <Box textAlign="center" mb={5}>
@@ -335,10 +344,7 @@ export default function Login() {
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
-                        <IconButton
-                          onClick={() => setShowPassword(!showPassword)}
-                          edge="end"
-                        >
+                        <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
                           {showPassword ? <VisibilityOff /> : <Visibility />}
                         </IconButton>
                       </InputAdornment>

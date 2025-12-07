@@ -38,7 +38,7 @@ export default function SubscriptionSwitch() {
   const reloadSubscription = async () => {
     try {
       const subscription = await getSubscriptionByUserId(userId);
-      if (subscription && subscription.status !== "Cancelled") {
+      if (subscription) {
         setHasSubscription(true);
         setPaypalSubscriptionId(subscription.payPalSubscriptionId);
       } else {
