@@ -3,5 +3,5 @@ export const appsettings = {
     //este para AZURE
     // apiUrl:"/api/"
     //ESTE PARA LOCAL:
-    apiUrl:"https://localhost:7217/api/"
+    apiUrl:"/api/"
 }

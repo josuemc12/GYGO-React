@@ -79,7 +79,7 @@ const PaymentHistoryTable = () => {
   ];
 
   const handleViewDetails = (payment) => {
-    console.log("View details for payment:", payment);
+    
     // You might want to implement a modal or detailed view here
   };
 

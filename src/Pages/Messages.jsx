@@ -125,7 +125,7 @@ export function Messages() {
       setChats(prev => [...prev, newConnection]);
       setIsModalOpen(false);
       // Opcional: mostrar notificación de éxito
-      console.log("Contacto añadido exitosamente:", newConnection);
+      
     });
 
     connectionRef.current = connection;

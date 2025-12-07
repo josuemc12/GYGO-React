@@ -5,7 +5,7 @@ import { fetchWithAuth } from "../utils/fetchWithAuth";
 //API para llamar los proyectos por grupo
 export async function AddTask(taskData) {
   try {
-    console.log(taskData);
+    
     const response = await fetchWithAuth(`${appsettings.apiUrl}Tasks/AddTask`, {
       method: "POST",
       //credentials: "include",

@@ -9,7 +9,7 @@ import {
   Paper,
   Typography,
   TextField,
-  Button,
+  Button, CircularProgress
 } from "@mui/material";
 import Swal from "sweetalert2";
 import beneficiosambientales from '../assets/10-beneficios-ambientales-de-plantar-un-arbol.jpg';
@@ -19,18 +19,20 @@ export function Verify2FA() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [tempToken, setTempToken] = useState(searchParams.get("tempToken"));
-
+  const [isLoading, setIsLoading] = useState(false);
   const [code, setCode] = useState("");
   const [message, setMessage] = useState("");
   const [isResending, setIsResending] = useState(false); // Para deshabilitar botón mientras reenvía
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
     try {
       const { success, rol, error } = await verify2FACode(tempToken, code);
 
       if (!code) {
+        setIsLoading(false);
         Swal.fire({
           icon: "warning",
           title: "No se pudo verificar el código",
@@ -40,8 +42,6 @@ export function Verify2FA() {
         });
         return;
       }
-      console.log("fadfsd");
-      console.log(error);
       if (success) {
         login(rol);
         Swal.fire({
@@ -91,6 +91,8 @@ export function Verify2FA() {
         showConfirmButton: false,
         timer: 3000,
       });
+    }finally{
+      setIsLoading(false);
     }
   };
 
@@ -218,7 +220,11 @@ export function Verify2FA() {
               },
             }}
           >
-            Verificar
+            {isLoading ? (
+                    <CircularProgress size={24} color="inherit" />
+                  ) : (
+                    "Verificar"
+                  )}
           </Button>
 
           <Button

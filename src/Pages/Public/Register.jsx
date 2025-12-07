@@ -15,7 +15,7 @@ import {
   Box,
   Typography,
   Container,
-  InputAdornment,
+  InputAdornment, CircularProgress,
   IconButton,
 } from "@mui/material";
 import { Visibility, VisibilityOff, Email,ArrowBack } from "@mui/icons-material";
@@ -51,6 +51,7 @@ export function Register() {
   const [form, setForm] = useState({ email: "", username: "", password: "" });
   const [message, setMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -86,8 +87,9 @@ export function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setIsLoading(true);
     if (!form.email || !form.password || !form.username) {
+      setIsLoading(false);
       Swal.fire({
         icon: "warning",
         title: "No se pudo registrar al usuario",
@@ -99,6 +101,7 @@ export function Register() {
     }
     //Verifica la contraseña
     if (!isPasswordValid(form.password)) {
+      setIsLoading(false);
       Swal.fire({
         icon: "warning",
         title: "Problemas con la contraseña",
@@ -141,6 +144,8 @@ export function Register() {
         showConfirmButton: false,
         timer: 3000,
       });
+    }finally{
+      setIsLoading(false);
     }
   };
 
@@ -279,7 +284,11 @@ export function Register() {
                   size="large"
                   sx={{ mt: 3, mb: 2, py: 1.5, borderRadius: 2 }}
                 >
-                  Registrar
+                  {isLoading ? (
+                    <CircularProgress size={24} color="inherit" />
+                  ) : (
+                    "Registrar"
+                  )}
                 </Button>
                 {!inviteToken && (
                   <Button

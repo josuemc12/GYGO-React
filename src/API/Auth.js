@@ -16,19 +16,18 @@ export async function verify2FACode(tempToken, code) {
     if (!response) return;
 
     const data = await response.json();
-    console.log(data.message);
-    console.log(data);
+    
 
     const errorMessage =
       data.message || // por si tu backend envía "message"
       data.errors?.[0] || // por si envía "errors"
       "Código inválido o error desconocido.";
 
-      console.log(errorMessage);
+      
     if (response.ok) {
       return { success: true, rol: data.rol };
     } else {
-      console.log("esta aqui");
+      
       return { success: false, error: errorMessage  };
     }
   } catch (err) {

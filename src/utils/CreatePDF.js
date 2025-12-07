@@ -46,7 +46,7 @@ export async function CreatePDF(datos) {
 
   // Convertimos el Map a array
   const proyectos = Array.from(proyectosMap.values());
-  console.log(proyectos);
+  
   const fecha = new Date();
   const año = fecha.getFullYear();
   const mes = String(fecha.getMonth() + 1).padStart(2, "0");

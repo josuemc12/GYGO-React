@@ -183,7 +183,7 @@ const AdminUserDashboard = () => {
   };
 
   const handleDelete = (userId) => {
-    console.log("Eliminar usuario ID:", userId);
+    
     setOpenModalDeleteUser(userId);
   };
 

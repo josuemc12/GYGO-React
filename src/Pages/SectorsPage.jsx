@@ -46,7 +46,7 @@ export default function SectorsIndexPage() {
       const data = await getSectors();
 
       setSectors(data);
-      console.log(sectors);
+      
     } catch (e) {
       console.error("Error cargando sectores", e);
     } finally {
