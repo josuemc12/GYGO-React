@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 import { verify2FACode, Resend2FACode } from "../API/Auth";
 import { useAuth } from "../context/AuthContext";
+import beneficiosambientales from '../assets/10-beneficios-ambientales-de-plantar-un-arbol.jpg';
 import {
   Box,
   Container,
@@ -148,14 +149,20 @@ export function Verify2FA() {
   return (
     <Box
       sx={{
+        backgroundImage: `linear-gradient(135deg, rgba(6, 95, 70, 0.7) 0%, rgba(4, 120, 87, 0.7) 100%), url(${beneficiosambientales})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundAttachment: "fixed",
+        backdropFilter: "blur(3px)",
         minHeight: "100vh",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        bgcolor: "#f5f5f5",
+        position: "relative",
+        overflow: "hidden",
         p: 2,
       }}
-    >
+>
       <Paper
         elevation={6}
         sx={{
