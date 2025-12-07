@@ -27,7 +27,7 @@ export default function SubscriptionSwitch() {
   const [modalOpen, setModalOpen] = useState(false);
   const [hasSubscription, setHasSubscription] = useState(false);
   const [subscriptionSuccess, setSubscriptionSuccess] = useState(false);
-  const [subscriptionLoading, setSubscriptionLoading] = useState(true);
+  const [subscriptionLoading, setSubscriptionLoading] = useState(false);
   const navigate = useNavigate();
   const [paypalSubscriptionId, setPaypalSubscriptionId] = useState(null);
   const [emailSent, setEmailSent] = useState(false);
@@ -84,30 +84,44 @@ useEffect(() => {
   }, [status]);
 
   useEffect(() => {
+  if (!userId) {
+    setSubscriptionLoading(false);
+    return;
+  }
+
+  let isMounted = true;
+
   const checkSubscription = async () => {
-    if(!userId) return;
     setSubscriptionLoading(true);
-    if (userId) {
-      try {
-        const subscription = await getSubscriptionByUserId(userId);
-        if (subscription) {
-          setHasSubscription(true);
-          setPaypalSubscriptionId(subscription.payPalSubscriptionId);
-        } else {
-          setHasSubscription(false);
-          setPaypalSubscriptionId(null);
-        }
-      } catch (error) {
-        console.warn("No subscription found or error:", error.message);
+
+    try {
+      const subscription = await getSubscriptionByUserId(userId);
+
+      if (!isMounted) return;
+
+      if (subscription && subscription.status !== "Cancelled") {
+        setHasSubscription(true);
+        setPaypalSubscriptionId(subscription.payPalSubscriptionId);
+      } else {
         setHasSubscription(false);
         setPaypalSubscriptionId(null);
-      }finally{
+      }
+    } catch {
+      if (!isMounted) return;
+      setHasSubscription(false);
+      setPaypalSubscriptionId(null);
+    } finally {
+      if (isMounted) {
         setSubscriptionLoading(false);
       }
     }
   };
 
   checkSubscription();
+
+  return () => {
+    isMounted = false;
+  };
 }, [userId]);
 
   const handleClose = async () => {
@@ -141,7 +155,13 @@ useEffect(() => {
     }
   };
 
-  if (!role || subscriptionLoading) return <p>Cargando suscripción...</p>;
+  if (!role) {
+  return <p>Cargando usuario...</p>;
+}
+
+if (subscriptionLoading) {
+  return <p>Cargando suscripción...</p>;
+}
 
   const renderContent = () => {
     switch (role) {
