@@ -13,6 +13,7 @@ import {
   Button, CircularProgress
 } from "@mui/material";
 import Swal from "sweetalert2";
+import beneficiosambientales from '../assets/10-beneficios-ambientales-de-plantar-un-arbol.jpg';
 
 export function Verify2FA() {
   const { login } = useAuth();
