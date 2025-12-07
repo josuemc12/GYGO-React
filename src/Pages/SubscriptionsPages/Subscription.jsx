@@ -41,6 +41,11 @@ export default function SubscriptionSwitch() {
       if (subscription) {
         setHasSubscription(true);
         setPaypalSubscriptionId(subscription.payPalSubscriptionId);
+        //hacer una recarga de la pagina aqui para la primera vez que entra
+         if (!sessionStorage.getItem("subscriptionReloaded")) {
+        sessionStorage.setItem("subscriptionReloaded", "true");
+        window.location.reload();
+      }
       } else {
         setHasSubscription(false);
         setPaypalSubscriptionId(null);
