@@ -200,7 +200,7 @@ export function Register() {
             position: "relative",
             overflow: "hidden",
           }}
-        >
+>
           <Container maxWidth="xs">
             <Paper>
  <Box sx={{ position: "relative" }}>

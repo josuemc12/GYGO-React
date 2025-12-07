@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 import { verify2FACode, Resend2FACode } from "../API/Auth";
 import { useAuth } from "../context/AuthContext";
+import beneficiosambientales from '../assets/10-beneficios-ambientales-de-plantar-un-arbol.jpg';
 import {
   Box,
   Container,
@@ -162,7 +163,7 @@ export function Verify2FA() {
         overflow: "hidden",
         p: 2,
       }}
-    >
+>
       <Paper
         elevation={6}
         sx={{

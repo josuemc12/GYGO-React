@@ -27,6 +27,7 @@ export default function SubscriptionSwitch() {
   const [modalOpen, setModalOpen] = useState(false);
   const [hasSubscription, setHasSubscription] = useState(false);
   const [subscriptionSuccess, setSubscriptionSuccess] = useState(false);
+  const [subscriptionLoading, setSubscriptionLoading] = useState(true);
   const navigate = useNavigate();
   const [paypalSubscriptionId, setPaypalSubscriptionId] = useState(null);
   const [emailSent, setEmailSent] = useState(false);
@@ -84,6 +85,8 @@ useEffect(() => {
 
   useEffect(() => {
   const checkSubscription = async () => {
+    if(!userId) return;
+    setSubscriptionLoading(true);
     if (userId) {
       try {
         const subscription = await getSubscriptionByUserId(userId);
@@ -98,6 +101,8 @@ useEffect(() => {
         console.warn("No subscription found or error:", error.message);
         setHasSubscription(false);
         setPaypalSubscriptionId(null);
+      }finally{
+        setSubscriptionLoading(false);
       }
     }
   };
@@ -136,7 +141,7 @@ useEffect(() => {
     }
   };
 
-  if (!role) return <p>Loading user role...</p>;
+  if (!role || subscriptionLoading) return <p>Cargando suscripción...</p>;
 
   const renderContent = () => {
     switch (role) {
@@ -147,7 +152,7 @@ useEffect(() => {
       case "GA":
         return hasSubscription ? <AdminSubscriptionEditor /> : <SubscribePrompt />;
       default:
-        return <p>Access denied</p>;
+        return <p>Acceso denegado</p>;
     }
   };
 
