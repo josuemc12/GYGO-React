@@ -89,8 +89,7 @@ useEffect(() => {
   }, [status]);
 
   useEffect(() => {
-  if (!userId) {
-    setSubscriptionLoading(false);
+  if (!userId || !role) {
     return;
   }
 
@@ -127,7 +126,7 @@ useEffect(() => {
   return () => {
     isMounted = false;
   };
-}, [userId]);
+}, [userId, role]);
 
   const handleClose = async () => {
     setModalOpen(false);
