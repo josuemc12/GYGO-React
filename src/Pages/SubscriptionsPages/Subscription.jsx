@@ -99,7 +99,7 @@ useEffect(() => {
 
       if (!isMounted) return;
 
-      if (subscription && subscription.status !== "Cancelled") {
+      if (subscription) {
         setHasSubscription(true);
         setPaypalSubscriptionId(subscription.payPalSubscriptionId);
       } else {
