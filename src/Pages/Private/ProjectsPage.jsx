@@ -1207,18 +1207,18 @@ function ProjectPage() {
               variant="gradient"
               color="success"
               onClick={HandleProjects}
-              disabled={submitting}
+              disabled={loading}
               sx={{
                 width: { xs: "100%", md: "auto" },
               }}
             >
-              {submitting
+              {loading
                 ? modoEdicion
                   ? "Guardando cambios..."
-                  : "Agregando consumo..."
+                  : "Agregando proyecto..."
                 : modoEdicion
                   ? "Guardar cambios"
-                  : "Agregar consumo"}
+                  : "Agregar proyecto"}
             </MDButton>
           </MDBox>
         </DialogActions>
@@ -1600,6 +1600,14 @@ function ProjectPage() {
               fullWidth={isMobile}
             >
               Agregar Actividad
+
+               {loading
+                ? modoEdicion
+                  ? "Guardando cambios..."
+                  : "Agregando tarea..."
+                : modoEdicion
+                  ? "Guardar cambios"
+                  : "Agregar tarea"}
             </MDButton>
           )}
         </DialogActions>
