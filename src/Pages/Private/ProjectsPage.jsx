@@ -101,7 +101,7 @@ function ProjectPage() {
   const [openModalProjects, setOpenModalProjects] = useState(false);
   const [openModalDeleteProject, setOpenModalDeleteProject] = useState(null);
   //Hook para cuando un loading
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const [taskStatus, setTaskStatus] = useState({});
 
