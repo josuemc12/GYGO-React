@@ -254,6 +254,7 @@ function ProjectPage() {
 
   const HandleProjects = async () => {
     try {
+      setLoading(true);
       let result;
       if (
         !projectData.nombre.trim() ||
@@ -267,6 +268,7 @@ function ProjectPage() {
           fechainicio: !projectData.fechaInicio.trim() ? "Requerido" : "",
           fechafinal: !projectData.fechaFinal.trim() ? "Requerido" : "",
         });
+        setLoading(false);
         return;
       }
       if (modoEdicion) {
@@ -281,6 +283,7 @@ function ProjectPage() {
             showConfirmButton: false,
             timer: 2000,
           });
+
           fetchProjects();
         } else {
           setOpenModalProjects(false);
@@ -295,6 +298,7 @@ function ProjectPage() {
           });
           fetchProjects();
         }
+        setLoading(false);
       } else {
         result = await AddProject(projectData);
 
@@ -321,8 +325,10 @@ function ProjectPage() {
           });
           fetchProjects();
         }
+        setLoading(false);
       }
     } catch (error) {
+      setLoading(false);
       Swal.fire({
         icon: "error",
         title: "Error en el servidor",
@@ -405,11 +411,14 @@ function ProjectPage() {
 
   const SubmitModalTask = async () => {
     try {
+      setLoading(true);
+
       if (!taskData?.titulo?.trim() || !taskData?.descripcion?.trim()) {
         setErrors({
           Tareatitulo: !taskData?.titulo?.trim() ? "Requerido" : "",
           TareaDescripcion: !taskData?.descripcion?.trim() ? "Requerido" : "",
         });
+        setLoading(false);
         return;
       }
 
@@ -438,6 +447,7 @@ function ProjectPage() {
 
         if (Object.keys(errores).length > 0) {
           setErrors(errores);
+          setLoading(false);
           return;
         }
       }
@@ -468,8 +478,10 @@ function ProjectPage() {
         fetchProjects();
         setOpenModalTask(false);
         setEnableEmissionFields(false);
+        setLoading(false);
       }
     } catch (error) {
+      setLoading(false);
       setOpenModalTask(false);
       Swal.fire({
         icon: "error",
@@ -483,12 +495,14 @@ function ProjectPage() {
   };
 
   const UpdateTask = async () => {
+    setLoading(true);
     try {
       if (!taskData?.titulo?.trim() || !taskData?.descripcion?.trim()) {
         setErrors({
           Tareatitulo: !taskData?.titulo?.trim() ? "Requerido" : "",
           TareaDescripcion: !taskData?.descripcion?.trim() ? "Requerido" : "",
         });
+        setLoading(false);
         return;
       }
 
@@ -516,13 +530,14 @@ function ProjectPage() {
         }
 
         if (Object.keys(errores).length > 0) {
+          setLoading(false);
           setErrors(errores);
           return;
         }
       }
 
       const result = await UpdateTaskt(taskData);
-      
+
       if (result.success) {
         setOpenModalTask(false);
         setEditTaskId(null);
@@ -547,8 +562,10 @@ function ProjectPage() {
           timer: 3000,
         });
       }
+      setLoading(false);
       setEnableEmissionFields(false);
     } catch (error) {
+      setLoading(false);
       setOpenModalTask(false);
       Swal.fire({
         icon: "error",
@@ -1022,9 +1039,10 @@ function ProjectPage() {
             name="nombre"
             margin="normal"
             value={projectData.nombre}
-            onChange={(e) =>
-              setProjecttData({ ...projectData, nombre: e.target.value })
-            }
+            onChange={(e) => {
+              setProjecttData({ ...projectData, nombre: e.target.value });
+              setErrors((prev) => ({ ...prev, nombre: "" }));
+            }}
             error={!!errors.nombre}
             helperText={errors.nombre}
             sx={{
@@ -1041,9 +1059,10 @@ function ProjectPage() {
             name="descripcion"
             margin="normal"
             value={projectData.descripcion}
-            onChange={(e) =>
-              setProjecttData({ ...projectData, descripcion: e.target.value })
-            }
+            onChange={(e) =>{
+              setProjecttData({ ...projectData, descripcion: e.target.value });
+              setErrors((prev) => ({ ...prev, descripcion: "" }));
+            }}
             multiline
             rows={3}
             error={!!errors.descripcion}
@@ -1189,18 +1208,18 @@ function ProjectPage() {
               variant="gradient"
               color="success"
               onClick={HandleProjects}
-              disabled={submitting}
+             
               sx={{
                 width: { xs: "100%", md: "auto" },
               }}
             >
-              {submitting
-                ? modoEdicion
-                  ? "Guardando cambios..."
-                  : "Agregando consumo..."
-                : modoEdicion
-                  ? "Guardar cambios"
-                  : "Agregar consumo"}
+              {loading ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : modoEdicion ? (
+                "Guardar cambios"
+              ) : (
+                "Agregar proyecto"
+              )}
             </MDButton>
           </MDBox>
         </DialogActions>
@@ -1581,7 +1600,11 @@ function ProjectPage() {
               }}
               fullWidth={isMobile}
             >
-              Agregar Actividad
+              {loading ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+                "Guardar tarea"
+              )}
             </MDButton>
           )}
         </DialogActions>

@@ -96,8 +96,9 @@ export async function CreatePDF(datos) {
   // Inserta logo de la empresa en portada
   if (proyectos[0].logoUrl) {
     try {
+      const baseUrl = import.meta.env.VITE_API_URL;
       const logoEmpresa = await getBase64FromUrl(
-        "https://localhost:7217/" + proyectos[0].logoUrl
+        baseUrl + proyectos[0].logoUrl
       );
       doc.addImage(logoEmpresa, "PNG", pageWidth - 60, pageHeight - 25, 40, 15);
     } catch (error) {
