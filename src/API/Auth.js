@@ -37,7 +37,7 @@ export async function verify2FACode(tempToken, code) {
 
 export async function loginUser(email, password) {
   try {
-    const response = await fetchWithAuth(`${appsettings.apiUrl}Auth/login`, {
+    const response = await fetch(`${appsettings.apiUrl}Auth/login`, {
       method: "POST",
       credentials: "include",
       headers: {
@@ -159,7 +159,7 @@ export async function registerUser(inviteToken, { email, username, password }) {
   const url = inviteToken ? `User/register/${inviteToken}` : "User/Register";
 
   try {
-    const response = await fetchWithAuth(`${appsettings.apiUrl}${url}`, {
+    const response = await fetch(`${appsettings.apiUrl}${url}`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
