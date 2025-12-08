@@ -57,10 +57,7 @@ export async function loginUser(email, password) {
  
       }
     }
-
-
-
-
+    
     if (data.message === "2FA required") {
       return {
         success: true,
