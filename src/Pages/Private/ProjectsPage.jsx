@@ -101,7 +101,7 @@ function ProjectPage() {
   const [openModalProjects, setOpenModalProjects] = useState(false);
   const [openModalDeleteProject, setOpenModalDeleteProject] = useState(null);
   //Hook para cuando un loading
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const [taskStatus, setTaskStatus] = useState({});
 
@@ -254,6 +254,7 @@ function ProjectPage() {
 
   const HandleProjects = async () => {
     try {
+      setLoading(true);
       let result;
       if (
         !projectData.nombre.trim() ||
@@ -267,6 +268,7 @@ function ProjectPage() {
           fechainicio: !projectData.fechaInicio.trim() ? "Requerido" : "",
           fechafinal: !projectData.fechaFinal.trim() ? "Requerido" : "",
         });
+        setLoading(false);
         return;
       }
       if (modoEdicion) {
@@ -281,6 +283,7 @@ function ProjectPage() {
             showConfirmButton: false,
             timer: 2000,
           });
+
           fetchProjects();
         } else {
           setOpenModalProjects(false);
@@ -295,6 +298,7 @@ function ProjectPage() {
           });
           fetchProjects();
         }
+        setLoading(false);
       } else {
         result = await AddProject(projectData);
 
@@ -321,8 +325,10 @@ function ProjectPage() {
           });
           fetchProjects();
         }
+        setLoading(false);
       }
     } catch (error) {
+       setLoading(false);
       Swal.fire({
         icon: "error",
         title: "Error en el servidor",
@@ -405,11 +411,14 @@ function ProjectPage() {
 
   const SubmitModalTask = async () => {
     try {
+      setLoading(true);
+
       if (!taskData?.titulo?.trim() || !taskData?.descripcion?.trim()) {
         setErrors({
           Tareatitulo: !taskData?.titulo?.trim() ? "Requerido" : "",
           TareaDescripcion: !taskData?.descripcion?.trim() ? "Requerido" : "",
         });
+        setLoading(false);
         return;
       }
 
@@ -438,6 +447,7 @@ function ProjectPage() {
 
         if (Object.keys(errores).length > 0) {
           setErrors(errores);
+          setLoading(false);
           return;
         }
       }
@@ -468,8 +478,10 @@ function ProjectPage() {
         fetchProjects();
         setOpenModalTask(false);
         setEnableEmissionFields(false);
+        setLoading(false);
       }
     } catch (error) {
+      setLoading(false);
       setOpenModalTask(false);
       Swal.fire({
         icon: "error",
@@ -483,13 +495,16 @@ function ProjectPage() {
   };
 
   const UpdateTask = async () => {
+    setLoading(true);
     try {
       if (!taskData?.titulo?.trim() || !taskData?.descripcion?.trim()) {
         setErrors({
           Tareatitulo: !taskData?.titulo?.trim() ? "Requerido" : "",
           TareaDescripcion: !taskData?.descripcion?.trim() ? "Requerido" : "",
         });
+        setLoading(false);
         return;
+        
       }
 
       if (
@@ -516,13 +531,14 @@ function ProjectPage() {
         }
 
         if (Object.keys(errores).length > 0) {
+           setLoading(false);
           setErrors(errores);
           return;
         }
       }
 
       const result = await UpdateTaskt(taskData);
-      
+
       if (result.success) {
         setOpenModalTask(false);
         setEditTaskId(null);
@@ -547,8 +563,10 @@ function ProjectPage() {
           timer: 3000,
         });
       }
+       setLoading(false);
       setEnableEmissionFields(false);
     } catch (error) {
+       setLoading(false);
       setOpenModalTask(false);
       Swal.fire({
         icon: "error",
