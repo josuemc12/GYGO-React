@@ -328,7 +328,7 @@ function ProjectPage() {
         setLoading(false);
       }
     } catch (error) {
-       setLoading(false);
+      setLoading(false);
       Swal.fire({
         icon: "error",
         title: "Error en el servidor",
@@ -504,7 +504,6 @@ function ProjectPage() {
         });
         setLoading(false);
         return;
-        
       }
 
       if (
@@ -531,7 +530,7 @@ function ProjectPage() {
         }
 
         if (Object.keys(errores).length > 0) {
-           setLoading(false);
+          setLoading(false);
           setErrors(errores);
           return;
         }
@@ -563,10 +562,10 @@ function ProjectPage() {
           timer: 3000,
         });
       }
-       setLoading(false);
+      setLoading(false);
       setEnableEmissionFields(false);
     } catch (error) {
-       setLoading(false);
+      setLoading(false);
       setOpenModalTask(false);
       Swal.fire({
         icon: "error",
@@ -1207,18 +1206,18 @@ function ProjectPage() {
               variant="gradient"
               color="success"
               onClick={HandleProjects}
-              disabled={loading}
+             
               sx={{
                 width: { xs: "100%", md: "auto" },
               }}
             >
-              {loading
-                ? modoEdicion
-                  ? "Guardando cambios..."
-                  : "Agregando proyecto..."
-                : modoEdicion
-                  ? "Guardar cambios"
-                  : "Agregar proyecto"}
+              {loading ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : modoEdicion ? (
+                "Guardar cambios"
+              ) : (
+                "Agregar proyecto"
+              )}
             </MDButton>
           </MDBox>
         </DialogActions>
@@ -1599,15 +1598,11 @@ function ProjectPage() {
               }}
               fullWidth={isMobile}
             >
-              Agregar Actividad
-
-               {loading
-                ? modoEdicion
-                  ? "Guardando cambios..."
-                  : "Agregando tarea..."
-                : modoEdicion
-                  ? "Guardar cambios"
-                  : "Agregar tarea"}
+              {loading ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+                "Guardar tarea"
+              )}
             </MDButton>
           )}
         </DialogActions>
