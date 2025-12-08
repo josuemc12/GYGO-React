@@ -1039,9 +1039,10 @@ function ProjectPage() {
             name="nombre"
             margin="normal"
             value={projectData.nombre}
-            onChange={(e) =>
-              setProjecttData({ ...projectData, nombre: e.target.value })
-            }
+            onChange={(e) => {
+              setProjecttData({ ...projectData, nombre: e.target.value });
+              setErrors((prev) => ({ ...prev, nombre: "" }));
+            }}
             error={!!errors.nombre}
             helperText={errors.nombre}
             sx={{
@@ -1058,9 +1059,10 @@ function ProjectPage() {
             name="descripcion"
             margin="normal"
             value={projectData.descripcion}
-            onChange={(e) =>
-              setProjecttData({ ...projectData, descripcion: e.target.value })
-            }
+            onChange={(e) =>{
+              setProjecttData({ ...projectData, descripcion: e.target.value });
+              setErrors((prev) => ({ ...prev, descripcion: "" }));
+            }}
             multiline
             rows={3}
             error={!!errors.descripcion}
