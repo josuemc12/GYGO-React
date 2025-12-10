@@ -30,7 +30,7 @@ import MDBox from "components/MDBox";
 import MDButton from "components/MDButton";
 import { ConsoleLogger } from "@microsoft/signalr/dist/esm/Utils";
 import logo from "../../assets/Logo.png";
-
+import beneficiosambientales from "../../assets/10-beneficios-ambientales-de-plantar-un-arbol.jpg";
 
 const theme = createTheme({
   palette: {
@@ -136,14 +136,12 @@ export const ChangePassword = () => {
 
           text: "La contraseña se cambió correctamente.",
           showConfirmButton: false,
-          timer: 2000, 
-
+          timer: 2000,
         }).then(() => {
           window.location.href = "/inicio-sesion";
         });
         return;
       } else {
-        
         Swal.fire({
           icon: "error",
           title: "Error al cambiar la contraseña",
@@ -164,22 +162,23 @@ export const ChangePassword = () => {
           component="form"
           onSubmit={handleSubmit}
           sx={{
-            backgroundColor: "background.default",
+            backgroundImage: `linear-gradient(135deg, rgba(6, 95, 70, 0.7) 0%, rgba(4, 120, 87, 0.7) 100%), url(${beneficiosambientales})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundAttachment: "fixed",
+            backdropFilter: "blur(3px)",
             minHeight: "100vh",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            px: 2,
+            position: "relative",
+            overflow: "hidden",
           }}
         >
           <Container maxWidth="xs">
             <Paper sx={{ p: 4 }}>
               <Box textAlign="center" mb={2}>
-                <img
-                  src={logo}
-                  alt="Logo"
-                  style={{ maxWidth: "120px" }}
-                />
+                <img src={logo} alt="Logo" style={{ maxWidth: "120px" }} />
               </Box>
 
               <Box textAlign="center" mb={5}>
