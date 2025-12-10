@@ -98,7 +98,7 @@ export default function Login() {
       
       
       if (!success) {
-        if(error[1]&error[1]==="LoggedSession"){
+        if(error && error[1] === "LoggedSession"){
           Swal.fire({
             icon: "warning",
             title: "Sesión activa detectada",
