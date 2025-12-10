@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 //import { useAuth } from '../../AuthContext';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { loginUser, logoutSesion } from "../../API/Auth";
 import { RequestPasswordReset } from "../../API/ChangePassword";
 import CloseIcon from "@mui/icons-material/Close";
@@ -75,6 +75,8 @@ export default function Login() {
     setEmailReset("");
   };
   const [saving, setSaving] = useState(false);
+  const location = useLocation();
+  const from = location.state?.from || "/panel-control";
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -152,17 +154,22 @@ export default function Login() {
           showConfirmButton: false,
           timer: 3000,
         });
+        setIsLoading(false);
+        return;
       }
 
       
      
       if (isTwoFactor) {
         // Redirect to 2FA page
-        navigate(`/verificar-2fa?tempToken=${encodeURIComponent(tempToken)}`);
+        navigate(`/verificar-2fa?tempToken=${encodeURIComponent(tempToken)}`,
+      {
+      state: { from }
+    });
       } else {
         login(rol, id);
         // Normal login success — redirect to dashboard or home
-        navigate("/panel-control");
+        navigate(from, {replace: true});
       }
     } catch (error) {
       Swal.fire({
