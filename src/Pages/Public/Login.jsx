@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 //import { useAuth } from '../../AuthContext';
 import { useNavigate, useLocation } from "react-router-dom";
-import { loginUser } from "../../API/Auth";
+import { loginUser, logoutSesion } from "../../API/Auth";
 import { RequestPasswordReset } from "../../API/ChangePassword";
 import CloseIcon from "@mui/icons-material/Close";
 import MDBox from "components/MDBox";
@@ -75,8 +75,6 @@ export default function Login() {
     setEmailReset("");
   };
   const [saving, setSaving] = useState(false);
-  const location = useLocation();
-  const from = location.state?.from || "/panel-control";
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -100,7 +98,54 @@ export default function Login() {
       
       
       if (!success) {
-      Swal.fire({
+        if(error && error[1] === "LoggedSession"){
+          Swal.fire({
+            icon: "warning",
+            title: "Sesión activa detectada",
+            text: "Ya tenés una sesión activa. Si querés iniciar una nueva, cerrá la sesión en el otro dispositivo.",
+            showConfirmButton: true,
+            allowOutsideClick: false,
+            didOpen: (modal) => {
+              modal.querySelector(".swal2-confirm").textContent = "Cerrar sesión";
+              modal.querySelector(".swal2-deny").textContent = "Intentar de nuevo";
+              modal.querySelector(".swal2-confirm").style.marginRight = "10px";
+            },
+            preConfirm: async () => {
+              const logoutSuccess = await logoutSesion();
+              if (logoutSuccess) {
+                Swal.fire({
+                  icon: "success",
+                  title: "Sesión cerrada",
+                  text: "Tu sesión anterior ha sido cerrada. Ahora puedes iniciar sesión.",
+                  showConfirmButton: false,
+                  timer: 2000,
+                });
+                setEmail("");
+                setPassword("");
+                return true;
+              } else {
+                Swal.fire({
+                  icon: "error",
+                  title: "Error",
+                  text: "No se pudo cerrar la sesión anterior.",
+                  showConfirmButton: false,
+                  timer: 2000,
+                });
+              }
+            },
+            preDeny: () => {
+              // Solo desaparece el modal
+              return true;
+            },
+          });
+          setIsLoading(false);
+          return;
+        }
+
+      
+
+
+        Swal.fire({
           icon: "error",
           title: "Error al iniciar sesión",
           text: error,
@@ -115,14 +160,11 @@ export default function Login() {
      
       if (isTwoFactor) {
         // Redirect to 2FA page
-        navigate(`/verificar-2fa?tempToken=${encodeURIComponent(tempToken)}`,
-      {
-      state: { from }
-    });
+        navigate(`/verificar-2fa?tempToken=${encodeURIComponent(tempToken)}`);
       } else {
         login(rol, id);
         // Normal login success — redirect to dashboard or home
-        navigate(from, {replace: true});
+        navigate("/panel-control");
       }
     } catch (error) {
       Swal.fire({
