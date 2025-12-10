@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 //import { useAuth } from '../../AuthContext';
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../../API/Auth";
+import { loginUser, logoutSesion } from "../../API/Auth";
 import { RequestPasswordReset } from "../../API/ChangePassword";
 import CloseIcon from "@mui/icons-material/Close";
 import MDBox from "components/MDBox";
@@ -98,7 +98,54 @@ export default function Login() {
       
       
       if (!success) {
-      Swal.fire({
+        if(error[1]&error[1]==="LoggedSession"){
+          Swal.fire({
+            icon: "warning",
+            title: "Sesión activa detectada",
+            text: "Ya tenés una sesión activa. Si querés iniciar una nueva, cerrá la sesión en el otro dispositivo.",
+            showConfirmButton: true,
+            allowOutsideClick: false,
+            didOpen: (modal) => {
+              modal.querySelector(".swal2-confirm").textContent = "Cerrar sesión";
+              modal.querySelector(".swal2-deny").textContent = "Intentar de nuevo";
+              modal.querySelector(".swal2-confirm").style.marginRight = "10px";
+            },
+            preConfirm: async () => {
+              const logoutSuccess = await logoutSesion();
+              if (logoutSuccess) {
+                Swal.fire({
+                  icon: "success",
+                  title: "Sesión cerrada",
+                  text: "Tu sesión anterior ha sido cerrada. Ahora puedes iniciar sesión.",
+                  showConfirmButton: false,
+                  timer: 2000,
+                });
+                setEmail("");
+                setPassword("");
+                return true;
+              } else {
+                Swal.fire({
+                  icon: "error",
+                  title: "Error",
+                  text: "No se pudo cerrar la sesión anterior.",
+                  showConfirmButton: false,
+                  timer: 2000,
+                });
+              }
+            },
+            preDeny: () => {
+              // Solo desaparece el modal
+              return true;
+            },
+          });
+          setIsLoading(false);
+          return;
+        }
+
+      
+
+
+        Swal.fire({
           icon: "error",
           title: "Error al iniciar sesión",
           text: error,
