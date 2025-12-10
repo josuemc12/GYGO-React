@@ -107,7 +107,7 @@ const IncidentsHistoryPage = () => {
     { Header: "Fecha", accessor: "fecha", align: "left" },
     { Header: "Promedio Esperado", accessor: "promedio", align: "center" },
     { Header: "Emisiones Reales", accessor: "reales", align: "center" },
-    { Header: "Leído", accessor: "leido", align: "center" },
+    { Header: "Notificado", accessor: "leido", align: "center" },
   ];
 
   const rows = filteredIncidents.map((i) => ({

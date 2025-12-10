@@ -75,8 +75,6 @@ export default function Login() {
     setEmailReset("");
   };
   const [saving, setSaving] = useState(false);
-  const location = useLocation();
-  const from = location.state?.from || "/panel-control";
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -162,14 +160,11 @@ export default function Login() {
      
       if (isTwoFactor) {
         // Redirect to 2FA page
-        navigate(`/verificar-2fa?tempToken=${encodeURIComponent(tempToken)}`,
-      {
-      state: { from }
-    });
+        navigate(`/verificar-2fa?tempToken=${encodeURIComponent(tempToken)}`);
       } else {
         login(rol, id);
         // Normal login success — redirect to dashboard or home
-        navigate(from, {replace: true});
+        navigate("/panel-control");
       }
     } catch (error) {
       Swal.fire({
