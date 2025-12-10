@@ -59,12 +59,11 @@ export function GrupoProfilePage() {
         logoUrl: result.logoURL ? `${baseUrl}${result.logoURL}` : "",
         logoFile: null,
       });
-      console.log("Base URL:", baseUrl);
-      console.log("Logo URL from result:", result.logoURL);
+
 
       setPreviewLogo(result.logoURL ? `${baseUrl}${result.logoURL}` : null);
 
-      console.log("URL del logo:", previewLogo);
+
 
     } catch (error) {
       console.error("Error al cargar el perfil del grupo:", error);
@@ -151,9 +150,7 @@ export function GrupoProfilePage() {
 
         if (!validTypes.includes(groupData.logoFile.type)) {
           setErrors({
-            nombre: "",
-            correo: "",
-            logo: "Formato no válido. Use JPG, PNG",
+            logoFile: "Formato no válido. Use JPG, PNG",
           });
           setSaving(false);
           return;
