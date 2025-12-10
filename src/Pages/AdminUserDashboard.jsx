@@ -335,14 +335,14 @@ const AdminUserDashboard = () => {
               variant="outlined"
               fullWidth={{ xs: true, md: false }}
               sx={{
-                borderColor: "#bfdcff",
-                color: "#1479fc",
-                "&:hover": {
-                  backgroundColor: "#dbe6f5ff",
-                  borderColor: "#1479fc",
-                  color: "#065fd4ff",
-                },
-              }}
+                  borderColor: "#4CAF50",
+                  color: "#4CAF50",
+                  "&:hover": {
+                    backgroundColor: "#E8F5E9",
+                    borderColor: "#43A047",
+                    color: "#388E3C",
+                  },
+                }}
               onClick={() => {
                 setShowHistory(false)
                 setInviteModalOpen(true)
