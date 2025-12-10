@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 import { verify2FACode, Resend2FACode } from "../API/Auth";
 import { useAuth } from "../context/AuthContext";
@@ -23,6 +23,9 @@ export function Verify2FA() {
   const [code, setCode] = useState("");
   const [message, setMessage] = useState("");
   const [isResending, setIsResending] = useState(false); // Para deshabilitar botón mientras reenvía
+  const location = useLocation();
+  const from = location.state?.from || "/panel-control";
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -54,7 +57,7 @@ export function Verify2FA() {
         });
 
         setTimeout(() => {
-          navigate("/panel-control");
+          navigate(from, { replace: true });
         }, 3000); // pequeño margen por si tarda en cerrarse el Swal
       }
       else if (error?.includes("expirado")) {

@@ -1,6 +1,6 @@
 /// Manejo de los roles
 import { useAuth } from "./context/AuthContext";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 ///Iconos
 import Icon from "@mui/material/Icon";
 import { EnergySavingsLeaf } from "@mui/icons-material";
@@ -52,9 +52,10 @@ import NotFound from "./Pages/NotFound";
 
 const ProtectedElement = ({ children, roles }) => {
   const { role } = useAuth();
+  const location = useLocation();
 
   // No está logueado
-  if (!role) return <Navigate to="/login" replace />;
+  if (!role) return <Navigate to="/login" replace state={{ from: location.pathname + location.search}} />;
 
   // No tiene rol permitido
   if (roles && !roles.includes(role)) return <Navigate to="/" replace />;

@@ -34,6 +34,7 @@ import { Visibility, VisibilityOff, ArrowBack } from "@mui/icons-material";
 import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
 import Swal from "sweetalert2";
 import logo from "../../assets/Logo.png";
+import { useLocation } from "react-router-dom";
 
 const theme = createTheme({
   palette: {
@@ -75,6 +76,8 @@ export default function Login() {
     setEmailReset("");
   };
   const [saving, setSaving] = useState(false);
+  const location = useLocation();
+  const from = location.state?.from || "/panel-control";
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -105,17 +108,22 @@ export default function Login() {
           showConfirmButton: false,
           timer: 3000,
         });
+        setIsLoading(false);
+        return;
       }
 
       
      
       if (isTwoFactor) {
         // Redirect to 2FA page
-        navigate(`/verificar-2fa?tempToken=${encodeURIComponent(tempToken)}`);
+        navigate(`/verificar-2fa?tempToken=${encodeURIComponent(tempToken)}`,
+      {
+      state: { from }
+    });
       } else {
         login(rol, id);
         // Normal login success — redirect to dashboard or home
-        navigate("/panel-control");
+        navigate(from, {replace: true});
       }
     } catch (error) {
       Swal.fire({
