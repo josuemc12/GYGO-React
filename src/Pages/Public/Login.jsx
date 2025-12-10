@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 //import { useAuth } from '../../AuthContext';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { loginUser } from "../../API/Auth";
 import { RequestPasswordReset } from "../../API/ChangePassword";
 import CloseIcon from "@mui/icons-material/Close";
@@ -34,7 +34,6 @@ import { Visibility, VisibilityOff, ArrowBack } from "@mui/icons-material";
 import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
 import Swal from "sweetalert2";
 import logo from "../../assets/Logo.png";
-import { useLocation } from "react-router-dom";
 
 const theme = createTheme({
   palette: {
