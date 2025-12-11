@@ -11,6 +11,9 @@ export const PublicHeader = () => {
   const [isMobile, setIsMobile] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const navigate = useNavigate()
+  
+  // Flag para evitar múltiples llamadas a checkSession
+  const [sessionChecked, setSessionChecked] = useState(false)
 
   // Detectar tamaño de pantalla
   useEffect(() => {
@@ -48,6 +51,8 @@ export const PublicHeader = () => {
 
   // Detectar si el usuario tiene sesión (AuthToken)
   useEffect(() => {
+    if (sessionChecked) return; // Evitar ejecuciones múltiples
+    
     const checkSession = async () => {
       const data = await checkUserSession();
       if (data?.user) {
@@ -55,9 +60,10 @@ export const PublicHeader = () => {
       } else {
         setIsLoggedIn(false);
       }
+      setSessionChecked(true); // Marcar como completado
     };
     checkSession();
-  }, []);
+  }, [sessionChecked]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
