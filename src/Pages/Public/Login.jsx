@@ -341,7 +341,7 @@ export default function Login() {
             >
               <Box sx={{ position: "relative" }}>
                 <IconButton
-                  onClick={() => navigate(-1)}
+                 onClick={() => navigate('/pagina-inicio')}
                   sx={{
                     position: "absolute",
                     top: -8,
