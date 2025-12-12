@@ -25,7 +25,7 @@ export async function verify2FACode(tempToken, code) {
 
       
     if (response.ok) {
-      return { success: true, rol: data.rol };
+      return { success: true, rol: data.rol ,id: data.id};
     } else {
       
       return { success: false, error: errorMessage  };
