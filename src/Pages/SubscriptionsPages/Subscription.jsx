@@ -42,10 +42,10 @@ export default function SubscriptionSwitch() {
         setHasSubscription(true);
         setPaypalSubscriptionId(subscription.payPalSubscriptionId);
         //hacer una recarga de la pagina aqui para la primera vez que entra
-         if (!sessionStorage.getItem("subscriptionReloaded")) {
-        sessionStorage.setItem("subscriptionReloaded", "true");
-        window.location.reload();
-      }
+        //  if (!sessionStorage.getItem("subscriptionReloaded")) {
+        // sessionStorage.setItem("subscriptionReloaded", "true");
+        // window.location.reload();
+      // }
       } else {
         setHasSubscription(false);
         setPaypalSubscriptionId(null);
@@ -163,9 +163,7 @@ useEffect(() => {
   return <p>Cargando usuario...</p>;
 }
 
-if (subscriptionLoading) {
-  return <p>Cargando suscripción...</p>;
-}
+
 
   const renderContent = () => {
     switch (role) {
@@ -173,8 +171,9 @@ if (subscriptionLoading) {
       case "SA":
         return <SuperAdminSubscriptionManager />;
       case "DEF":
+        return <SubscribePrompt />
       case "GA":
-        return hasSubscription ? <AdminSubscriptionEditor /> : <SubscribePrompt />;
+        return  <AdminSubscriptionEditor /> 
       default:
         return <p>Acceso denegado</p>;
     }

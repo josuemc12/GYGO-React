@@ -29,7 +29,7 @@ export function Verify2FA() {
     setIsLoading(true);
 
     try {
-      const { success, rol, error } = await verify2FACode(tempToken, code);
+      const { success, rol, error,id } = await verify2FACode(tempToken, code);
 
       if (!code) {
         setIsLoading(false);
@@ -43,7 +43,7 @@ export function Verify2FA() {
         return;
       }
       if (success) {
-        login(rol);
+        login(rol,id);
         Swal.fire({
           icon: "success",
           title: "¡Código verificado!",
