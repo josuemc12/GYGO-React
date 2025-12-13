@@ -113,7 +113,7 @@ export function AddConsumptionForm() {
             {loading ? (
               <CircularProgress size={24} />
             ) : (
-              <FormControl>
+              <FormControl size="medium" sx={{ width: "100%" }}>
                 <InputLabel id="factor-emision-label">
                   Factor de Emisión *
                 </InputLabel>
@@ -127,8 +127,9 @@ export function AddConsumptionForm() {
                   onChange={handleChange}
                   error={!!errors.factorEmisionId}
                   helperText={errors.factorEmisionId}
+                  displayEmpty
                 >
-                  <MenuItem value="">Seleccione un factor</MenuItem>
+                  <MenuItem value=""></MenuItem>
                   {factoresEmision.map((f) => (
                     <MenuItem key={f.id} value={f.id}>
                       {f.name} ({f.unitCarbono})
