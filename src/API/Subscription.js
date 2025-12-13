@@ -177,7 +177,7 @@ export async function cancelAdminSubscription(groupId, reason) {
  
       // Caso: ya cancelada
       if (
-        response.status === 422 ||
+        response.status === 500 ||
         errorText.toLowerCase().includes("ya fue cancelada")
       ) {
         throw new Error(
