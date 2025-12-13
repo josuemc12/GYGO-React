@@ -24,7 +24,7 @@ export async function getAllPlans() {
     const plans = await response.json();
     return plans;
   } catch (error) {
-    console.error("getAllPlans error:", error);
+    // console.error("getAllPlans error:", error);
     throw error;
   }
 }
@@ -48,7 +48,7 @@ export async function subscribeToPlan(planId) {
     // Retorna la respuesta JSON, que debería incluir approvalUrl
     return await response.json();
   } catch (error) {
-    console.error("subscribeToPlan error:", error);
+    // console.error("subscribeToPlan error:", error);
     throw error;
   }
 }
@@ -72,7 +72,7 @@ export async function cancelSubscription(userId, planId, reason) {
 
     return await response.json();
   } catch (error) {
-    console.error("cancelSubscription error:", error);
+    // console.error("cancelSubscription error:", error);
     throw error;
   }
 }
@@ -98,7 +98,7 @@ export async function getSubscription(planId) {
 
     return await response.json();
   } catch (error) {
-    console.error("getSubscription error:", error);
+    // console.error("getSubscription error:", error);
     throw error;
   }
 }
@@ -120,7 +120,7 @@ export async function getSubscriptionByUserId() {
 
     return await response.json();
   } catch (error) {
-    console.error("getSubscriptionByUserId error:", error);
+    // console.error("getSubscriptionByUserId error:", error);
     throw error;
   }
 }
@@ -152,36 +152,47 @@ export async function fetchPaymentHistory() {
 
     return await response.json();
   } catch (error) {
-    console.error("fetchPaymentHistory error:", error);
+    // console.error("fetchPaymentHistory error:", error);
     throw new Error(error.message || "Failed to load payment history");
   }
 }
 
 export async function cancelAdminSubscription(groupId, reason) {
   try {
-    
-    
-    const response = await fetch(`${appsettings.apiUrl}Subscription/cancel-admin/${groupId}`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json", // Asegúrate que este header esté presente
-      },
-      body: JSON.stringify(reason) // Envía solo el string
-    });
-
-    
-
+    const response = await fetch(
+      `${appsettings.apiUrl}Subscription/cancel-admin/${groupId}`,
+      {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(reason),
+      }
+    );
+ 
+    // console.log("Respuesta recibida:", response.status);
     if (!response.ok) {
       const errorText = await response.text();
-      
-      throw new Error(errorText);
+ 
+      // Caso: ya cancelada
+      if (
+        response.status === 422 ||
+        errorText.toLowerCase().includes("ya fue cancelada")
+      ) {
+        throw new Error(
+          "La suscripción ya fue cancelada y no puede cancelarse nuevamente."
+        );
+      }
+ 
+      // Otros errores
+      throw new Error(errorText || "No fue posible cancelar la suscripción.");
     }
-
+ 
     return await response.text();
   } catch (error) {
-    
-    throw error;
+    // console.error("Error en cancelación:", error);
+    throw error; 
   }
 }
 
@@ -207,7 +218,7 @@ export async function confirmSubscription() {
 
     return data;
   } catch (error) {
-    console.error("Error confirming subscription:", error);
+    // console.error("Error confirming subscription:", error);
     return { success: false, message: "Error al confirmar la suscripción." };
   }
 }
@@ -224,7 +235,7 @@ export async function sendSubscriptionEmail() {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Error sending subscription email:", error);
+    // console.error("Error sending subscription email:", error);
     return { success: false, message: "Error al enviar el correo de suscripción." };
   }
 }
