@@ -21,6 +21,7 @@ export default function AdminSubscriptionEditor() {
   const [subscription, setSubscription] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
 
   useEffect(() => {
     const fetchSubscription = async () => {
@@ -58,6 +59,20 @@ export default function AdminSubscriptionEditor() {
         return "pending";
     }
   };
+
+  const getStatusLabel = (status) => {
+    switch (status?.toLowerCase()) {
+      case "active":
+        return "Activo";
+      case "cancelled":
+        return "Cancelada";
+      case "pending":
+        return "Pendiente";
+      default:
+        return status;
+    }
+  };
+
   if (loading) {
     return (
       <div className="subscription-details-container">
@@ -127,7 +142,7 @@ export default function AdminSubscriptionEditor() {
                   <div
                     className={`subscription-status ${getStatusClass(subscription.status)}`}
                   >
-                    {subscription.status}
+                    {getStatusLabel(subscription.status)}
                   </div>
                 </Box>
               </div>
