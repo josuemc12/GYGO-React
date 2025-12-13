@@ -10,6 +10,7 @@ import {
   Alert,
   FormControl,
   FormControlLabel,
+  InputLabel
 } from "@mui/material";
 import { AddOutlined, ErrorOutline } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
@@ -19,7 +20,6 @@ import MDTypography from "components/MDTypography";
 import { getFactoresEmision } from "../API/FactorEmision";
 import { addConsumption } from "../API/Consumptions/Consumption";
 import Swal from "sweetalert2";
-import { FormControl } from "react-bootstrap";
 
 export function AddConsumptionForm() {
   const navigate = useNavigate();
