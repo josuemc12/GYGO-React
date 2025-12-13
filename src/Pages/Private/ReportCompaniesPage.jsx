@@ -387,7 +387,7 @@ export function ReportCompanies() {
             justifyContent="space-between"
             alignItems="center"
           >
-            <MDTypography variant="h5">Detallles de la empresa</MDTypography>
+            <MDTypography variant="h5">Detalles de la empresa</MDTypography>
             <IconButton onClick={handleCloseModal}>
               <CloseIcon />
             </IconButton>
